@@ -11,7 +11,7 @@ const LAYERS: ThematicLayer[] = [
   { id: 'rain-anomaly', label: 'Rainfall', module: 'drought' },
   { id: 'vci', label: 'Vegetation', module: 'drought' },
   { id: 'storage', label: 'Dam Storage', module: 'dams' },
-  { id: 'flow-class', label: 'Surface Water', module: 'surface-water' },
+  { id: 'flow-status', label: 'Surface Water', module: 'surface-water' },
   { id: 'gw-level', label: 'Groundwater', module: 'groundwater' },
   { id: 'wqi', label: 'Water Quality', module: 'water-quality' },
   { id: 'coverage', label: 'Water Services', module: 'services' },

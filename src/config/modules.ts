@@ -60,7 +60,7 @@ export type GroupId = 'Monitoring' | 'Water Quality & Compliance' | 'Resource Ma
 
 /** Page-specific entity selector shown in the filter bar. */
 export interface PageSelector {
-  key: 'dam' | 'station' | 'borehole' | 'aquifer' | 'wwtw' | 'wss' | 'wqStation' | 'settlement' | 'rwqoSite';
+  key: 'dam' | 'station' | 'borehole' | 'aquifer' | 'wwtw' | 'wss' | 'wqStation' | 'settlement' | 'rwqoSite' | 'municipality';
   label: string;
 }
 
@@ -101,8 +101,8 @@ export const MODULES: ModuleDef[] = [
   { id: 'rwqo', path: '/rwqo', label: 'Resource Water Quality Objectives (RWQO)', short: 'RWQO', group: 'Water Quality & Compliance', icon: ShieldCheck, keywords: ['Ecological condition', 'Resource Directed Measures', 'Ecological Reserve', 'Catchment objectives'], hasForecast: false, presets: STD, selector: { key: 'rwqoSite', label: 'Select Site' }, spec: '§15' },
   { id: 'iwrm', path: '/iwrm', label: 'Water Resource Management (IWRM)', short: 'IWRM', group: 'Resource Management', icon: Layers, keywords: ['Availability', 'Demand', 'National water balance', 'Ecological reserve', 'Transfers'], hasForecast: false, presets: ['12M', '5Y', '10Y', 'historical'], spec: '§16' },
   { id: 'water-quantity', path: '/water-quantity', label: 'Water Quantity Assessment', short: 'Quantity', group: 'Resource Management', icon: Gauge, keywords: ['Surface storage', 'River flows', 'Groundwater', 'Inter-basin transfers', 'Allocation'], hasForecast: false, presets: STD, spec: '§17' },
-  { id: 'services', path: '/services', label: 'Water Services & Infrastructure', short: 'Services', group: 'Services & Economics', icon: Wrench, keywords: ['Access & coverage', 'Infrastructure', 'Non-revenue water', 'Supply reliability'], hasForecast: true, presets: ['latest', '3M', '12M', '24M', '5Y'], spec: '§18' },
-  { id: 'tariffs', path: '/tariffs', label: 'Water Tariffs & Raw Water Pricing', short: 'Tariffs', group: 'Services & Economics', icon: Coins, keywords: ['Raw water pricing', 'Municipal tariffs', 'Affordability', 'Cost recovery'], hasForecast: true, presets: ['12M', '24M', '5Y', '10Y'], spec: '§19' },
+  { id: 'services', path: '/services', label: 'Water Services & Infrastructure', short: 'Services', group: 'Services & Economics', icon: Wrench, keywords: ['Access & coverage', 'Infrastructure', 'Non-revenue water', 'Supply reliability'], hasForecast: true, presets: ['latest', '3M', '12M', '24M', '5Y'], selector: { key: 'municipality', label: 'Select Municipality / WSA' }, spec: '§18' },
+  { id: 'tariffs', path: '/tariffs', label: 'Water Tariffs & Raw Water Pricing', short: 'Tariffs', group: 'Services & Economics', icon: Coins, keywords: ['Raw water pricing', 'Municipal tariffs', 'Affordability', 'Cost recovery'], hasForecast: true, presets: ['12M', '24M', '5Y', '10Y'], selector: { key: 'municipality', label: 'Select Municipality / WSA' }, spec: '§19' },
   { id: 'settlements', path: '/settlements', label: 'Drought-Affected Settlements', short: 'Settlements', group: 'Services & Economics', icon: AlertTriangle, keywords: ['Vulnerability', 'Supply reliability', 'Alternative supply', 'Response'], hasForecast: true, presets: STD, selector: { key: 'settlement', label: 'Select Settlement' }, spec: '§20' },
   { id: 'ai', path: '/ai', label: 'AI & Predictive Analytics', short: 'AI Analytics', group: 'Intelligence', icon: BrainCircuit, keywords: ['Machine learning', 'Forecasting', 'Early warning', 'Scenario analysis'], hasForecast: false, presets: ['3M', '6M', '12M', '24M'], spec: '§22' },
   { id: 'alerts', path: '/alerts', label: 'Alerts & Early Warnings', short: 'Alerts', group: 'Intelligence', icon: BarChart3, keywords: ['Unified alerts', 'All modules', 'Acknowledge & assign'], hasForecast: false, presets: ['latest', '1M', '3M', '12M'], spec: '§2.2' },

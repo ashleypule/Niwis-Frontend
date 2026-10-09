@@ -6,5 +6,6 @@ import { rainfall, vegetation } from './vegrain';
 import { runoff, surfaceWater } from './surface';
 import { groundwater, groundwaterReserve } from './groundwater';
 import { blueDrop, greenDrop, rwqo, waterQuality } from './quality';
+import { iwrm, services, settlements, tariffs, waterQuantity } from './resources';
 
-export const EXTRA_MODULES: Record<string, ModuleHandlers> = { roadmap, governance, climate, vegetation, rainfall, runoff, 'surface-water': surfaceWater, groundwater, 'groundwater-reserve': groundwaterReserve, 'water-quality': waterQuality, 'green-drop': greenDrop, 'blue-drop': blueDrop, rwqo };
+export const EXTRA_MODULES: Record<string, ModuleHandlers> = { roadmap, governance, climate, vegetation, rainfall, runoff, 'surface-water': surfaceWater, groundwater, 'groundwater-reserve': groundwaterReserve, 'water-quality': waterQuality, 'green-drop': greenDrop, 'blue-drop': blueDrop, rwqo, iwrm, 'water-quantity': waterQuantity, services, tariffs, settlements };
