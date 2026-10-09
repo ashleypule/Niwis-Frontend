@@ -53,7 +53,7 @@ export default function DataIntegrationReportPage() {
         <div className="relative z-10 flex flex-wrap items-center gap-4">
           <DwsLogo />
           <div className="flex-1">
-            <p className="text-2xl font-extrabold">NIWIS – Data Integration Report</p>
+            <h1 className="text-2xl font-extrabold">NIWIS – Data Integration Report</h1>
             <p className="text-sm text-white/80">Unified water data from multiple sources for monitoring, analysis and forecasting</p>
           </div>
           <div className="text-right text-xs text-white/80">

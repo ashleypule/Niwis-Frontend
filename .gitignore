@@ -4,5 +4,5 @@ dist
 .env.local
 test-results
 playwright-report
-tests/screenshots/*.png
+tests/screenshots/**/*.png
 !tests/screenshots/.gitkeep

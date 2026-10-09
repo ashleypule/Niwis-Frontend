@@ -78,7 +78,7 @@ export const iwrm: ModuleHandlers = {
       const v = [b.agricultural, b.municipal, b.industrial, b.miningPower];
       return categories('iwrm-sector', 'Mm³/yr', cats, [{ key: 'v', name: 'Demand', values: v }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#8E44AD'], center: { value: `${Math.round(b.demand).toLocaleString('en-ZA').replace(/,/g, ' ')}`, label: 'Mm³/yr demand' } });
     },
-    transfers: () => categories('transfers', 'Mm³/yr', TRANSFERS.map((t) => t.name.replace(/ \(.*\)$/, '')), [{ key: 'v', name: 'Transfer volume (last 12 months)', values: TRANSFERS.map((t) => transferVolume(t)) }], { colors: TRANSFERS.map((_, k) => ['#1565C0', '#2E9E5B', '#F2A900', '#8E44AD', '#0FA3B1', '#E4572E', '#6D4C41'][k]) }),
+    transfers: () => categories('transfers', 'Mm³/yr', TRANSFERS.map((t) => t.name.replace(/ \(.*\)$/, '')), [{ key: 'v', name: 'Transfer volume (last 12 months)', values: TRANSFERS.map((t) => transferVolume(t)) }], { colors: TRANSFERS.map((_, k) => ['#1565C0', '#2E9E5B', '#F2A900', '#8E44AD', '#0FA3B1', '#E95F35', '#6D4C41'][k]) }),
     'reserve-compliance': (ctx) => {
       const ys = years(ctx);
       const req = ys.map((y) => waterBalance(ctx.scope, yEnd(y, ctx)).reserve);
@@ -292,7 +292,7 @@ export const services: ModuleHandlers = {
         const l = MUNI_SERVICES.filter((m) => m.province === p);
         return [svcWeighted(l, (m) => m.inDwelling), svcWeighted(l, (m) => m.onSite), svcWeighted(l, (m) => m.communal), svcWeighted(l, (m) => m.belowRdp)];
       });
-      return categories('service-levels', '% of households', PROVINCE_ORDER, cats.map((c, k) => ({ key: c, name: c, values: rows.map((r) => r[k]), color: ['#1565C0', '#2E9E5B', '#F2A900', '#E4572E'][k], stack: 's' })));
+      return categories('service-levels', '% of households', PROVINCE_ORDER, cats.map((c, k) => ({ key: c, name: c, values: rows.map((r) => r[k]), color: ['#1565C0', '#2E9E5B', '#F2A900', '#E95F35'][k], stack: 's' })));
     },
     'asset-condition': (ctx) => {
       const l = svcIn(ctx);
@@ -305,7 +305,7 @@ export const services: ModuleHandlers = {
     maintenance: (ctx) => {
       const n = svcIn(ctx).reduce((s, m) => s + m.reservoirs * 2 + m.pumpStations * 3, 0);
       const sh = [0.74, 0.14, 0.08, 0.04];
-      return categories('maintenance', 'work orders', ['Completed', 'In progress', 'Overdue', 'Cancelled'], [{ key: 'n', name: 'Work orders', values: sh.map((x) => Math.round(n * x)) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E4572E'], center: { value: n.toLocaleString('en-ZA').replace(/,/g, ' '), label: 'Work orders' } });
+      return categories('maintenance', 'work orders', ['Completed', 'In progress', 'Overdue', 'Cancelled'], [{ key: 'n', name: 'Work orders', values: sh.map((x) => Math.round(n * x)) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E95F35'], center: { value: n.toLocaleString('en-ZA').replace(/,/g, ' '), label: 'Work orders' } });
     },
     pipelines: (ctx) => {
       const km = svcIn(ctx).reduce((s, m) => s + m.pipelineKm, 0);
@@ -433,7 +433,7 @@ export const tariffs: ModuleHandlers = {
     },
     blocks: (ctx) => {
       const m = pickMuni(ctx);
-      return categories('blocks', 'R/kL', ['0–6 kL (FBW)', '6–10.5 kL', '10.5–20 kL', '20–35 kL', '35–50 kL', '> 50 kL'], [{ key: 'v', name: `${m.name} domestic tariff`, values: m.blocks }], { colors: ['#2E9E5B', '#8BC34A', '#F6CF3E', '#F2A900', '#F28C28', '#E4572E'] });
+      return categories('blocks', 'R/kL', ['0–6 kL (FBW)', '6–10.5 kL', '10.5–20 kL', '20–35 kL', '35–50 kL', '> 50 kL'], [{ key: 'v', name: `${m.name} domestic tariff`, values: m.blocks }], { colors: ['#2E9E5B', '#8BC34A', '#F6CF3E', '#F2A900', '#F28C28', '#E95F35'] });
     },
     affordability: (ctx) => {
       const m = pickMuni(ctx);
@@ -568,7 +568,7 @@ export const settlements: ModuleHandlers = {
     'by-type': (ctx) => {
       const types = ['Rural village', 'Farming community', 'Informal settlement', 'Peri-urban', 'Small town'] as const;
       const a = affected(setIn(ctx));
-      return categories('by-type', 'thousand people', [...types], [{ key: 'v', name: 'Population affected', values: types.map((t) => a.filter((x) => x.type === t).reduce((s, x) => s + x.population, 0) / 1000) }], { colors: ['#8E44AD', '#2E9E5B', '#E4572E', '#F2A900', '#1565C0'] });
+      return categories('by-type', 'thousand people', [...types], [{ key: 'v', name: 'Population affected', values: types.map((t) => a.filter((x) => x.type === t).reduce((s, x) => s + x.population, 0) / 1000) }], { colors: ['#8E44AD', '#2E9E5B', '#E95F35', '#F2A900', '#1565C0'] });
     },
     supply: (ctx) => {
       const months = Array.from({ length: 12 }, (_, k) => ctx.last - 11 + k);
@@ -587,14 +587,14 @@ export const settlements: ModuleHandlers = {
     interventions: (ctx) => {
       const n = setIn(ctx).map((x) => settlementNow(x.id).status);
       const cats = ['Planned', 'In progress', 'Intervention', 'Monitoring'] as const;
-      return categories('interventions', 'settlements', ['Planned', 'In progress', 'Active intervention', 'Monitoring only'], [{ key: 'n', name: 'Settlements', values: cats.map((c) => n.filter((x) => x === c).length) }], { colors: ['#94A3B8', '#1565C0', '#E4572E', '#8BC34A'] });
+      return categories('interventions', 'settlements', ['Planned', 'In progress', 'Active intervention', 'Monitoring only'], [{ key: 'n', name: 'Settlements', values: cats.map((c) => n.filter((x) => x === c).length) }], { colors: ['#94A3B8', '#1565C0', '#E95F35', '#8BC34A'] });
     },
     infrastructure: (ctx) => {
       const a = affected(setIn(ctx));
       const cats = ['Functional', 'Partially functional', 'Non-functional', 'No infrastructure'];
       const v = [0, 0, 0, 0];
       a.forEach((x) => v[x.waterBacklogPct > 45 ? 3 : x.vulnerability > 0.7 ? 2 : x.vulnerability > 0.5 ? 1 : 0]++);
-      return categories('infrastructure', 'settlements', cats, [{ key: 'n', name: 'Settlements', values: v }], { colors: ['#2E9E5B', '#F2A900', '#E4572E', '#7B8794'] });
+      return categories('infrastructure', 'settlements', cats, [{ key: 'n', name: 'Settlements', values: v }], { colors: ['#2E9E5B', '#F2A900', '#E95F35', '#7B8794'] });
     },
   },
   table: {

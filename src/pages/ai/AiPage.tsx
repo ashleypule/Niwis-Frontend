@@ -11,7 +11,7 @@ import { useEntities } from '@/api/queries/core';
 import { ScenarioModal } from './ScenarioModal';
 
 const MODULE_CARDS = [
-  { icon: Sun, title: 'Drought forecast', model: 'LSTM + Transformer ensemble', out: '1–6 month drought class (D0–D4)', color: '#E65100' },
+  { icon: Sun, title: 'Drought forecast', model: 'LSTM + Transformer ensemble', out: '1–6 month drought class (D0–D4)', color: '#C74300' },
   { icon: Waves, title: 'Streamflow forecast', model: 'CNN-LSTM spatio-temporal', out: '7–90 day river flow', color: '#1565C0' },
   { icon: Landmark, title: 'Reservoir forecast', model: 'Random Forest + LSTM', out: '30–180 day dam level', color: '#0FA3B1' },
   { icon: FlaskConical, title: 'Water quality', model: 'Gradient Boosting + LSTM', out: 'Exceedance probability', color: '#8E44AD' },
@@ -26,7 +26,7 @@ const FRAMEWORK = [
   { title: 'Input data', color: '#1565C0', icon: Database, items: [{ title: 'Climate & weather', lines: ['SAWS stations, CHIRPS, ERA5'] }, { title: 'Hydrology & storage', lines: ['DWS gauges, dams, NGA boreholes'] }, { title: 'Earth observation', lines: ['SANSA NDVI, LST, soil moisture, GRACE-FO'] }, { title: 'Socio-economic', lines: ['Stats SA, municipal returns, tariffs'] }] },
   { title: 'Pre-processing', color: '#00838F', icon: Cpu, items: [{ title: 'Quality control', lines: ['Range / spike / spatial checks'] }, { title: 'Gap filling', lines: ['Kriging, LSTM imputation (< 10% missing)'] }, { title: 'Feature engineering', lines: ['Lags 1–24 m, rolling means, anomalies'] }] },
   { title: 'AI / ML models', color: '#7B1FA2', icon: BrainCircuit, items: [{ title: 'Deep learning', lines: ['LSTM, CNN-LSTM, Transformer'] }, { title: 'Ensembles', lines: ['Random Forest, XGBoost, GBM'] }, { title: 'Anomaly detection', lines: ['Isolation Forest'] }] },
-  { title: 'Validation', color: '#E65100', icon: ShieldCheck, items: [{ title: 'Hold-out 2019–2024', lines: ['RMSE, NSE, MAE, R²'] }, { title: 'Expert review', lines: ['DWS / SAWS drought labels'] }, { title: 'Uncertainty', lines: ['Quantile p10 / p50 / p90'] }] },
+  { title: 'Validation', color: '#C74300', icon: ShieldCheck, items: [{ title: 'Hold-out 2019–2024', lines: ['RMSE, NSE, MAE, R²'] }, { title: 'Expert review', lines: ['DWS / SAWS drought labels'] }, { title: 'Uncertainty', lines: ['Quantile p10 / p50 / p90'] }] },
   { title: 'Outputs', color: '#2E7D32', icon: LineChart, items: [{ title: 'Forecasts & maps', lines: ['Module forecast tabs, API'] }, { title: 'Early warnings', lines: ['Alerts, SMS / e-mail'] }, { title: 'Scenario analysis', lines: ['Baseline, RCP 2.6, RCP 8.5'] }] },
 ];
 

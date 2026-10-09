@@ -50,7 +50,7 @@ export const PIPELINE: FlowColumn[] = [
   },
   {
     title: 'Outputs & services',
-    color: '#E65100',
+    color: '#C74300',
     icon: BarChart3,
     items: [
       { title: 'Dashboards', lines: ['NIWIS portal (desktop & mobile)'] },
@@ -69,6 +69,6 @@ export const LAYERS8 = [
   { n: 4, name: 'Processing & harmonisation', desc: 'ETL pipelines, unit conversion, datum alignment, gap filling (kriging / LSTM imputation)', color: '#2E7D32' },
   { n: 5, name: 'Storage', desc: 'Data lake (10 PB target), time-series DB, PostGIS, metadata registry (ISO 19115)', color: '#558B2F' },
   { n: 6, name: 'Analytics & AI', desc: 'Index pipelines (SPI, SPEI, VCI, SSI, SGI), forecasting models, digital-twin layer', color: '#7B1FA2' },
-  { n: 7, name: 'Services & APIs', desc: 'API gateway (REST / GraphQL, OAuth 2.0), OGC services, alert engine, report generator', color: '#E65100' },
+  { n: 7, name: 'Services & APIs', desc: 'API gateway (REST / GraphQL, OAuth 2.0), OGC services, alert engine, report generator', color: '#C74300' },
   { n: 8, name: 'Users & channels', desc: 'NIWIS dashboard, mobile app, open data portal, partner systems, public bulletins', color: '#C62828' },
 ];

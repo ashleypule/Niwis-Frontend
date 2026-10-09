@@ -178,7 +178,7 @@ export const drought: ModuleHandlers = {
       const n = Number(ctx.q('window') ?? 1);
       const from = windowStart(ctx, 12);
       const pts = monthly(from, ctx.to, (mi) => rainAnomalyPct(ctx.scope, mi, n));
-      return seriesSet('rain-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })]);
+      return seriesSet('rain-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })]);
     },
     'dam-flows': (ctx) => {
       const dams = damsIn(ctx.scope);
@@ -306,7 +306,7 @@ export const drought: ModuleHandlers = {
       const k = scaleOf(ctx, 6);
       const rows = PROVINCES.map((p) => ({ name: p.name, v: areaInDrought(droughtAreaFractions(resolveScope({ province: p.id }), k, ctx.last), 'D1') * 100 })).sort((a, b) => b.v - a.v);
       return categories('province-area', '%', rows.map((r) => r.name), [{ key: 'area', name: 'Area in drought (D1–D4)', values: rows.map((r) => r.v) }], {
-        colors: rows.map((r) => (r.v >= 60 ? '#B2182B' : r.v >= 40 ? '#E4572E' : r.v >= 25 ? '#F2A900' : r.v >= 10 ? '#C0CA33' : '#2E9E5B')),
+        colors: rows.map((r) => (r.v >= 60 ? '#B2182B' : r.v >= 40 ? '#E95F35' : r.v >= 25 ? '#F2A900' : r.v >= 10 ? '#C0CA33' : '#2E9E5B')),
       });
     },
     restrictions: (ctx) => {

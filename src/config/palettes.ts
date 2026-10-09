@@ -49,7 +49,7 @@ export const COLORS = {
   warn: '#E69500',
   bad: '#C62828',
   neutral: '#64748B',
-  series: ['#1565C0', '#E4572E', '#2E9E5B', '#8E44AD', '#F2A900', '#0FA3B1', '#6D4C41', '#D81B60', '#546E7A'],
+  series: ['#1565C0', '#E95F35', '#2E9E5B', '#8E44AD', '#F2A900', '#0FA3B1', '#6D4C41', '#D81B60', '#546E7A'],
 } as const;
 
 export const SCALES = {
@@ -320,7 +320,7 @@ export const SCALES = {
   ]),
   severity: c('severity', 'Alert severity', [
     { id: 'critical', label: 'Critical', color: '#B71C1C', ink: '#fff' },
-    { id: 'high', label: 'High', color: '#E4572E', ink: '#fff' },
+    { id: 'high', label: 'High', color: '#E95F35', ink: '#fff' },
     { id: 'moderate', label: 'Moderate', color: '#F2A900' },
     { id: 'low', label: 'Low', color: '#8BC34A' },
     { id: 'info', label: 'Info', color: '#1565C0', ink: '#fff' },
@@ -336,7 +336,7 @@ export const SCALES = {
   feed: c('feed', 'Feed status', [
     { id: 'Online', label: 'Online', color: '#2E9E5B', ink: '#fff' },
     { id: 'Delayed', label: 'Delayed', color: '#F2A900' },
-    { id: 'Degraded', label: 'Degraded', color: '#E4572E', ink: '#fff' },
+    { id: 'Degraded', label: 'Degraded', color: '#E95F35', ink: '#fff' },
     { id: 'Offline', label: 'Offline', color: '#7B8794', ink: '#fff' },
   ]),
   progress: c('progress', 'Delivery status', [
@@ -344,12 +344,12 @@ export const SCALES = {
     { id: 'On Track', label: 'On track', color: '#1565C0', ink: '#fff' },
     { id: 'In Progress', label: 'In progress', color: '#1565C0', ink: '#fff' },
     { id: 'At Risk', label: 'At risk', color: '#F2A900' },
-    { id: 'Delayed', label: 'Delayed', color: '#E4572E', ink: '#fff' },
+    { id: 'Delayed', label: 'Delayed', color: '#E95F35', ink: '#fff' },
     { id: 'Not Started', label: 'Not started', color: '#94A3B8', ink: '#fff' },
     { id: 'Planned', label: 'Planned', color: '#94A3B8', ink: '#fff' },
   ]),
   response: c('response', 'Response status', [
-    { id: 'Intervention', label: 'Intervention', color: '#E4572E', ink: '#fff' },
+    { id: 'Intervention', label: 'Intervention', color: '#E95F35', ink: '#fff' },
     { id: 'In progress', label: 'In progress', color: '#1565C0', ink: '#fff' },
     { id: 'Planned', label: 'Planned', color: '#94A3B8', ink: '#fff' },
     { id: 'Monitoring', label: 'Monitoring', color: '#8BC34A' },
@@ -361,7 +361,7 @@ export const SCALES = {
   trendClass: c('trendClass', 'Trend', [
     { id: 'Rising', label: 'Rising', color: '#1565C0', ink: '#fff' },
     { id: 'Stable', label: 'Stable', color: '#2E9E5B', ink: '#fff' },
-    { id: 'Declining', label: 'Declining', color: '#E4572E', ink: '#fff' },
+    { id: 'Declining', label: 'Declining', color: '#E95F35', ink: '#fff' },
   ]),
   wq: c('wq', 'Quality', [
     { id: 'Good', label: 'Good', color: '#2E9E5B', ink: '#fff' },

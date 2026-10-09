@@ -1,3 +1,4 @@
+import { inkFor } from '@/config/palettes';
 import { ArrowDown, ArrowRight, type LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -20,14 +21,14 @@ export function FlowDiagram({ columns, compact = false }: { columns: FlowColumn[
         return (
           <li key={c.title} className="flex flex-col xl:flex-1 xl:flex-row">
             <section className="flex flex-1 flex-col overflow-hidden rounded-xl border border-line bg-surface-2">
-              <header className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white" style={{ background: c.color }}>
+              <header className="flex items-center gap-2 px-3 py-2 text-sm font-semibold" style={{ background: c.color, color: inkFor(c.color) }}>
                 {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
                 {c.title}
               </header>
               <ul className={clsx('flex flex-1 flex-col gap-1.5 p-2', compact && 'gap-1')}>
                 {c.items.map((it) => (
-                  <li key={it.title} className="rounded-lg border border-line bg-surface p-2">
-                    <p className="text-[12px] font-semibold leading-tight" style={{ color: c.color }}>
+                  <li key={it.title} className="rounded-lg border border-l-[3px] border-line bg-surface p-2" style={{ borderLeftColor: c.color }}>
+                    <p className="text-[12px] font-semibold leading-tight text-ink">
                       {it.title}
                     </p>
                     {it.lines && (

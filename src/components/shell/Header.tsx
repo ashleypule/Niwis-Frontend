@@ -10,12 +10,12 @@ export function SampleDataBadge() {
   if (!isMock) return null;
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/60 bg-amber-400/15 px-2.5 py-1 text-[11px] font-semibold text-amber-100"
+      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-amber-300/60 bg-amber-400/15 px-2.5 py-1 text-[11px] font-semibold text-amber-100"
       title="All figures are generated sample data for design and testing. Do not use for operational decisions."
       role="note"
     >
       <span className="h-1.5 w-1.5 rounded-full bg-amber-300" aria-hidden="true" />
-      Sample data — not for operational decisions
+      Sample data<span className="hidden md:inline">&nbsp;— not for operational decisions</span>
     </span>
   );
 }

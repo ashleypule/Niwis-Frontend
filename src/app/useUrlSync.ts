@@ -1,21 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
-import { FILTER_KEYS, useUi, type Filters } from '@/store/filters';
-import type { PeriodPreset } from '@/config/modules';
-
-const PRESETS: PeriodPreset[] = ['latest', '1M', '3M', '6M', '12M', '24M', '5Y', '10Y', 'historical'];
-
-function fromParams(sp: URLSearchParams): Partial<Filters> {
-  const f: Partial<Filters> = {};
-  for (const k of FILTER_KEYS) {
-    const v = sp.get(k);
-    if (v == null) continue;
-    if (k === 'compare') f.compare = v === '1';
-    else if (k === 'period') f.period = PRESETS.includes(v as PeriodPreset) ? (v as PeriodPreset) : '12M';
-    else (f as Record<string, string>)[k] = v;
-  }
-  return f;
-}
+import { FILTER_KEYS, filtersFromParams, useUi, type Filters } from '@/store/filters';
 
 function toSearch(f: Filters, keep: URLSearchParams): URLSearchParams {
   const sp = new URLSearchParams();
@@ -46,7 +31,7 @@ export function useUrlSync() {
   useEffect(() => {
     const s = sp.toString();
     if (s === lastWritten.current) return;
-    const parsed = fromParams(sp);
+    const parsed = filtersFromParams(sp);
     setFilters({
       province: undefined,
       wma: undefined,

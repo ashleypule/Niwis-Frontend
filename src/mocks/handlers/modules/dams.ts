@@ -200,7 +200,7 @@ export const dams: ModuleHandlers = {
         const lt = mean(Array.from({ length: 30 }, (_, k) => s.storage[damT(monthIndex(1991 + k, miMonth(mi)))]));
         return ((s.storage[damT(mi)] - lt) / lt) * 100;
       });
-      return seriesSet('dam-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Above long-term mean', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Below long-term mean', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })], { note: `${d.name} Dam` });
+      return seriesSet('dam-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Above long-term mean', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Below long-term mean', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })], { note: `${d.name} Dam` });
     },
     'low-storage-prob': (ctx) => {
       const list = damsIn(ctx.scope).filter((d) => d.capacity >= 50);
@@ -214,7 +214,7 @@ export const dams: ModuleHandlers = {
         })) * 100;
         pts.push([miToIso(ctx.last + h), round(p, 1)]);
       }
-      return seriesSet('low-storage-prob', [{ unit: '%', label: 'Probability', min: 0, max: 100 }], [area('p', 'Probability storage < 30% (mean of major dams)', pts, { color: '#E4572E' })]);
+      return seriesSet('low-storage-prob', [{ unit: '%', label: 'Probability', min: 0, max: 100 }], [area('p', 'Probability storage < 30% (mean of major dams)', pts, { color: '#E95F35' })]);
     },
   },
 

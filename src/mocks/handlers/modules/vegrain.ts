@@ -158,7 +158,7 @@ export const vegetation: ModuleHandlers = {
       const clim = regionClimatology(ctx.scope, 'ndvi');
       const from = win(ctx, 24);
       const pts = monthly(from, ctx.to, (mi) => ((s[tOf(mi)] - clim[miMonth(mi)]) / clim[miMonth(mi)]) * 100);
-      return seriesSet('veg-anomaly', [{ unit: '%', label: 'NDVI anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })]);
+      return seriesSet('veg-anomaly', [{ unit: '%', label: 'NDVI anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })]);
     },
     drivers: (ctx) => {
       const v = ctx.q('var') ?? 'rain';
@@ -343,7 +343,7 @@ export const rainfall: ModuleHandlers = {
       const n = Number(ctx.q('window') ?? 1);
       const from = win(ctx, 12);
       const pts = monthly(from, ctx.to, (mi) => rainAnomalyPct(ctx.scope, mi, n));
-      return seriesSet('anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })]);
+      return seriesSet('anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Positive anomaly', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })]);
     },
     'spi-spei': (ctx) => {
       const from = win(ctx, 30);

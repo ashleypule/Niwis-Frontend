@@ -4,7 +4,7 @@ import { formatNumber } from '@/lib/format';
 export function RingGauge({ value, label, size = 76, sub }: { value: number; label: string; size?: number; sub?: string }) {
   const r = (size - 10) / 2;
   const c = 2 * Math.PI * r;
-  const color = value >= 90 ? '#2E9E5B' : value >= 75 ? '#8BC34A' : value >= 60 ? '#F2A900' : '#E4572E';
+  const color = value >= 90 ? '#2E9E5B' : value >= 75 ? '#8BC34A' : value >= 60 ? '#F2A900' : '#E95F35';
   return (
     <figure className="flex flex-col items-center gap-1 text-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${label}: ${formatNumber(value, 0)}%`}>

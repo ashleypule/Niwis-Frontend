@@ -69,7 +69,7 @@ export const ai: ModuleHandlers = {
     },
   },
   breakdown: {
-    importance: () => categories('importance', '%', ['Antecedent rainfall (SPI-6)', 'Soil moisture', 'SST / ENSO (Niño 3.4)', 'NDVI anomaly', 'Reservoir storage', 'Temperature / PET', 'Groundwater (SGI)'], [{ key: 'v', name: 'Relative importance (drought model)', values: [27, 19, 15, 12, 11, 10, 6] }], { colors: ['#1565C0', '#0FA3B1', '#8E44AD', '#2E9E5B', '#F2A900', '#E4572E', '#6D4C41'] }),
+    importance: () => categories('importance', '%', ['Antecedent rainfall (SPI-6)', 'Soil moisture', 'SST / ENSO (Niño 3.4)', 'NDVI anomaly', 'Reservoir storage', 'Temperature / PET', 'Groundwater (SGI)'], [{ key: 'v', name: 'Relative importance (drought model)', values: [27, 19, 15, 12, 11, 10, 6] }], { colors: ['#1565C0', '#0FA3B1', '#8E44AD', '#2E9E5B', '#F2A900', '#E95F35', '#6D4C41'] }),
   },
   forecast: {
     drought: drought.forecast!.spi,
@@ -122,7 +122,7 @@ export const dataIntegration: ModuleHandlers = {
   breakdown: {
     'source-status': () => {
       const st = ['Online', 'Delayed', 'Degraded', 'Offline'];
-      return categories('source-status', 'feeds', ['Operational', 'Delayed', 'Degraded', 'Offline'], [{ key: 'n', name: 'Feeds', values: st.map((x) => FEEDS.filter((f) => f.status === x).length) }], { colors: ['#2E9E5B', '#F2A900', '#E4572E', '#7B8794'], center: { value: String(FEEDS.length), label: 'Feeds' } });
+      return categories('source-status', 'feeds', ['Operational', 'Delayed', 'Degraded', 'Offline'], [{ key: 'n', name: 'Feeds', values: st.map((x) => FEEDS.filter((f) => f.status === x).length) }], { colors: ['#2E9E5B', '#F2A900', '#E95F35', '#7B8794'], center: { value: String(FEEDS.length), label: 'Feeds' } });
     },
     'by-type': () => {
       const v = [0, 0, 0, 0, 0];
@@ -199,13 +199,13 @@ export const governance: ModuleHandlers = {
       const v = [96, 94, 97, 92, 95, 98, 96];
       return categories('standards', '%', st, [{ key: 'v', name: 'Compliance', values: v }], { colors: v.map((x) => (x >= 95 ? '#2E9E5B' : x >= 90 ? '#8BC34A' : '#F2A900')) });
     },
-    inventory: () => categories('inventory', 'datasets', ['Climate', 'Surface water', 'Groundwater', 'Water quality', 'Infrastructure', 'Socio-economic', 'Ecosystems', 'Operational', 'Other'], [{ key: 'v', name: 'Datasets', values: [142, 128, 96, 76, 68, 54, 38, 46, 22] }], { colors: ['#1565C0', '#2E9E5B', '#0FA3B1', '#F2A900', '#E4572E', '#8E44AD', '#6D4C41', '#94A3B8', '#B0BEC5'] }),
-    frequency: () => categories('frequency', 'datasets', ['Real-time', '15-minute', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Other'], [{ key: 'v', name: 'Datasets', values: [164, 92, 61, 113, 41, 31, 10] }], { colors: ['#1565C0', '#2E9E5B', '#F2A900', '#8E44AD', '#E4572E', '#0FA3B1', '#94A3B8'], center: { value: '512', label: 'Datasets' } }),
+    inventory: () => categories('inventory', 'datasets', ['Climate', 'Surface water', 'Groundwater', 'Water quality', 'Infrastructure', 'Socio-economic', 'Ecosystems', 'Operational', 'Other'], [{ key: 'v', name: 'Datasets', values: [142, 128, 96, 76, 68, 54, 38, 46, 22] }], { colors: ['#1565C0', '#2E9E5B', '#0FA3B1', '#F2A900', '#E95F35', '#8E44AD', '#6D4C41', '#94A3B8', '#B0BEC5'] }),
+    frequency: () => categories('frequency', 'datasets', ['Real-time', '15-minute', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Other'], [{ key: 'v', name: 'Datasets', values: [164, 92, 61, 113, 41, 31, 10] }], { colors: ['#1565C0', '#2E9E5B', '#F2A900', '#8E44AD', '#E95F35', '#0FA3B1', '#94A3B8'], center: { value: '512', label: 'Datasets' } }),
     metadata: () => {
       const m = platformSummary().metadata;
       return categories('metadata', '%', ['Complete', 'Partial', 'Missing'], [{ key: 'v', name: 'Datasets', values: [m, 100 - m - 1, 1] }], { colors: ['#2E9E5B', '#F2A900', '#C62828'], center: { value: `${m}%`, label: 'Complete' } });
     },
-    access: () => categories('access', 'requests', ['Approved', 'Pending', 'Rejected', 'Expired'], [{ key: 'v', name: 'Requests', values: [1002, 154, 77, 51] }], { colors: ['#2E9E5B', '#1565C0', '#E4572E', '#F2A900'], center: { value: '1 284', label: 'Requests' } }),
+    access: () => categories('access', 'requests', ['Approved', 'Pending', 'Rejected', 'Expired'], [{ key: 'v', name: 'Requests', values: [1002, 154, 77, 51] }], { colors: ['#2E9E5B', '#1565C0', '#E95F35', '#F2A900'], center: { value: '1 284', label: 'Requests' } }),
   },
   table: {
     ...govBase.table,
@@ -257,7 +257,7 @@ export const roadmap: ModuleHandlers = {
     milestones: () => {
       const c = { Completed: 0, 'On Track': 0, 'At Risk': 0, Delayed: 0, 'Not Started': 0 } as Record<string, number>;
       SUB_PHASES.forEach((s) => s.deliverables.forEach(() => c[subPhaseProgress(s).status]++));
-      return categories('milestones', 'milestones', Object.keys(c), [{ key: 'n', name: 'Milestones', values: Object.values(c) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E4572E', '#94A3B8'], center: { value: String(Object.values(c).reduce((a, b) => a + b, 0)), label: 'Milestones' } });
+      return categories('milestones', 'milestones', Object.keys(c), [{ key: 'n', name: 'Milestones', values: Object.values(c) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E95F35', '#94A3B8'], center: { value: String(Object.values(c).reduce((a, b) => a + b, 0)), label: 'Milestones' } });
     },
   },
   table: {
@@ -300,7 +300,7 @@ drought.timeseries!['recovery-province'] = (ctx) => {
     const sc = resolveScope({ province: p });
     const spi = regionSpi(sc, 3)[tOf(ctx.last)] ?? 0;
     const fc = dampedForecast(`rec-${sc.key}`, spi, { mu: 0, phi: 0.8, sigma: 0.95, horizon: 12, startMi: ctx.last, outlook: outlookShift(sc.key) });
-    return line(p, provinceName(p), months.map((mi, h) => [miToIso(mi), 100 * (1 - 0.5 * (1 + erf((-0.5 - fc[h].median) / (((fc[h].p90 - fc[h].p10) / 2.5632) * Math.SQRT2))))]), { color: ['#1565C0', '#2E9E5B', '#E4572E', '#F2A900', '#8E44AD', '#0FA3B1'][i], symbol: true });
+    return line(p, provinceName(p), months.map((mi, h) => [miToIso(mi), 100 * (1 - 0.5 * (1 + erf((-0.5 - fc[h].median) / (((fc[h].p90 - fc[h].p10) / 2.5632) * Math.SQRT2))))]), { color: ['#1565C0', '#2E9E5B', '#E95F35', '#F2A900', '#8E44AD', '#0FA3B1'][i], symbol: true });
   }));
 };
 drought.table!['forecast-kpis'] = (ctx) => drought.table!['forecast-indicators'](ctx);

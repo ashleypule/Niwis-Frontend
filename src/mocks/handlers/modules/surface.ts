@@ -196,7 +196,7 @@ export const runoff: ModuleHandlers = {
           { key: 'lt', name: 'Long-term (2011–2020)', kind: 'line', color: '#13233A', dash: true, data: lt.map(([p, q]) => [p, Math.max(0.01, round(q, 2))]) },
         ],
         refLines: [
-          { y: Math.max(0.01, round(n.q90, 2)), label: 'Q90 (low flow)', color: '#E4572E' },
+          { y: Math.max(0.01, round(n.q90, 2)), label: 'Q90 (low flow)', color: '#E95F35' },
           { y: Math.max(0.01, round(n.q10, 2)), label: 'Q10 (high flow)', color: '#1565C0' },
         ],
         note: st.name,
@@ -426,7 +426,7 @@ export const surfaceWater: ModuleHandlers = {
         const lt = mean(Array.from({ length: 30 }, (_, k) => mon[monthIndex(1981 + k, miMonth(mi)) - START_MI]));
         return clamp(((mon[mi - START_MI] - lt) / Math.max(0.01, lt)) * 100, -100, 200);
       })));
-      return seriesSet('flow-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Above average', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Below average', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })]);
+      return seriesSet('flow-anomaly', [{ unit: '%', label: 'Anomaly' }], [bar('pos', 'Above average', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Below average', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })]);
     },
   },
   breakdown: {
@@ -461,11 +461,12 @@ export const surfaceWater: ModuleHandlers = {
         by.set(s.river, (by.get(s.river) ?? 0) + stationNow(s.id).ltMean * 0.9);
       });
       const rows = [...by.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-      return categories('abstraction', 'Mm³/yr', rows.map((r) => r[0]), [{ key: 'v', name: 'Licensed abstraction', values: rows.map((r) => r[1]) }], { colors: rows.map((_, k) => ['#1565C0', '#2E9E5B', '#F2A900', '#E4572E', '#8E44AD', '#0FA3B1', '#6D4C41', '#94A3B8'][k]) });
+      return categories('abstraction', 'Mm³/yr', rows.map((r) => r[0]), [{ key: 'v', name: 'Licensed abstraction', values: rows.map((r) => r[1]) }], { colors: rows.map((_, k) => ['#1565C0', '#2E9E5B', '#F2A900', '#E95F35', '#8E44AD', '#0FA3B1', '#6D4C41', '#94A3B8'][k]) });
     },
   },
   table: {
     'top-stations': runoff.table!['top-stations'],
+    statistics: runoff.table!.statistics,
     'gauge-quality': (ctx) => {
       const st = pickStation(ctx);
       const wq = [...WQ_STATIONS].filter((w) => w.type === 'River').sort((a, b) => (a.lat - st.lat) ** 2 + (a.lon - st.lon) ** 2 - ((b.lat - st.lat) ** 2 + (b.lon - st.lon) ** 2))[0];

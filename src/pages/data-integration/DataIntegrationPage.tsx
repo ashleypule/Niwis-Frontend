@@ -1,3 +1,4 @@
+import { inkFor } from '@/config/palettes';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { FileText } from 'lucide-react';
@@ -16,7 +17,7 @@ export function LayeredArchitecture() {
     <ol className="space-y-1.5" aria-label="Eight-layer architecture">
       {LAYERS8.map((l) => (
         <li key={l.n} className="flex items-stretch overflow-hidden rounded-lg border border-line">
-          <span className="flex w-10 shrink-0 items-center justify-center text-sm font-bold text-white" style={{ background: l.color }}>
+          <span className="flex w-10 shrink-0 items-center justify-center text-sm font-bold" style={{ background: l.color, color: inkFor(l.color) }}>
             {l.n}
           </span>
           <div className="flex-1 bg-surface-2 px-3 py-2">

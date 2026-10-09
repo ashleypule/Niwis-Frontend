@@ -148,7 +148,7 @@ export const waterQuality: ModuleHandlers = {
       const t = wqT(ctx.last);
       const ps = ['ph', 'do', 'ec', 'turbidity', 'nitrate', 'phosphate', 'ecoli', 'cod'];
       const v = ps.map((p) => (list.filter((s) => passes(p, wqSamples(s.id)[p][t])).length / Math.max(1, list.length)) * 100);
-      return categories('param-compliance', '%', ps.map((p) => paramDef(p).label), [{ key: 'v', name: 'Stations within guideline', values: v }], { colors: v.map((x) => (x >= 85 ? '#2E9E5B' : x >= 70 ? '#8BC34A' : x >= 55 ? '#F2A900' : '#E4572E')) });
+      return categories('param-compliance', '%', ps.map((p) => paramDef(p).label), [{ key: 'v', name: 'Stations within guideline', values: v }], { colors: v.map((x) => (x >= 85 ? '#2E9E5B' : x >= 70 ? '#8BC34A' : x >= 55 ? '#F2A900' : '#E95F35')) });
     },
   },
   table: {
@@ -474,7 +474,7 @@ export const blueDrop: ModuleHandlers = {
       const list = wsIn(ctx);
       const t = ct(ctx.last);
       const v = DW_PARAMS.map((k) => (list.filter((p) => sans241Pass(k, drinking(p.id)[k][t])).length / Math.max(1, list.length)) * 100);
-      return categories('bd-param', '%', DW_PARAMS.map((k) => SANS_241.find((x) => x.id === k)?.label ?? k), [{ key: 'v', name: 'Systems compliant (SANS 241)', values: v }], { colors: v.map((x) => (x >= 97 ? '#1F6FD1' : x >= 90 ? '#2E9E5B' : x >= 80 ? '#F2A900' : '#E4572E')) });
+      return categories('bd-param', '%', DW_PARAMS.map((k) => SANS_241.find((x) => x.id === k)?.label ?? k), [{ key: 'v', name: 'Systems compliant (SANS 241)', values: v }], { colors: v.map((x) => (x >= 97 ? '#1F6FD1' : x >= 90 ? '#2E9E5B' : x >= 80 ? '#F2A900' : '#E95F35')) });
     },
   },
   table: {

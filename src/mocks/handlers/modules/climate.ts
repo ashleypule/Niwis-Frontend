@@ -148,7 +148,7 @@ export const climate: ModuleHandlers = {
       const ys = Array.from({ length: ly - 1960 + 1 }, (_, k) => 1960 + k);
       const e = ys.map((y) => scopeEtccdi(ctx.scope.cells, y));
       return seriesSet('extremes', [{ unit: 'days', label: 'Spell length' }, { unit: 'mm', label: 'Max rainfall' }], [
-        bar('cdd', 'CDD', e.map((x) => [yIso(x.year), x.cdd]), { color: '#E4572E' }),
+        bar('cdd', 'CDD', e.map((x) => [yIso(x.year), x.cdd]), { color: '#E95F35' }),
         bar('cwd', 'CWD', e.map((x) => [yIso(x.year), x.cwd]), { color: '#1E88E5' }),
         line('rx1', 'Rx1day', e.map((x) => [yIso(x.year), x.rx1day]), { axis: 1, color: '#2E9E5B' }),
         line('rx5', 'Rx5day', e.map((x) => [yIso(x.year), x.rx5day]), { axis: 1, color: '#8E44AD' }),

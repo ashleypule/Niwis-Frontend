@@ -25,7 +25,6 @@ const TYPE_LABEL: Record<string, string> = {
 export function CommandPalette() {
   const open = useUi((s) => s.searchOpen);
   const setOpen = useUi((s) => s.setSearchOpen);
-  const setFilters = useUi((s) => s.setFilters);
   const navigate = useNavigate();
   const [q, setQ] = useState('');
   const [active, setActive] = useState(0);
@@ -51,7 +50,7 @@ export function CommandPalette() {
 
   const choose = (h: SearchHit) => {
     setOpen(false);
-    if (h.params) setFilters({ province: undefined, wma: undefined, catchment: undefined, municipality: undefined, entity: undefined, ...h.params });
+    // URL → store sync applies the scope; writing the store here as well would race the navigation
     navigate({ pathname: h.path, search: h.params ? `?${new URLSearchParams(h.params).toString()}` : '' });
   };
 

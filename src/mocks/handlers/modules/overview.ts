@@ -99,7 +99,7 @@ export const overview: ModuleHandlers = {
         const f = (k: 'inDwelling' | 'onSite' | 'communal' | 'belowRdp') => list.reduce((a, m) => a + m[k] * m.households, 0) / w;
         return [f('inDwelling'), f('onSite'), f('communal'), f('belowRdp')];
       });
-      return categories('services-access', '% of households', PROVINCE_ORDER, cats.map((c, i) => ({ key: `k${i}`, name: c, values: rows.map((r) => r[i]), color: ['#1565C0', '#2E9E5B', '#F2A900', '#E4572E'][i], stack: 's' })));
+      return categories('services-access', '% of households', PROVINCE_ORDER, cats.map((c, i) => ({ key: `k${i}`, name: c, values: rows.map((r) => r[i]), color: ['#1565C0', '#2E9E5B', '#F2A900', '#E95F35'][i], stack: 's' })));
     },
   },
 

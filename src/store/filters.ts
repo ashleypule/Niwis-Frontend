@@ -46,6 +46,27 @@ interface UiState {
 
 const DEFAULT_FILTERS: Filters = { period: '12M', compare: false };
 
+export const PERIOD_PRESETS: PeriodPreset[] = ['latest', '1M', '3M', '6M', '12M', '24M', '5Y', '10Y', 'historical'];
+
+/** URL search params → filters (only keys present in the URL). */
+export function filtersFromParams(sp: URLSearchParams): Partial<Filters> {
+  const f: Partial<Filters> = {};
+  for (const k of FILTER_KEYS) {
+    const v = sp.get(k);
+    if (v == null) continue;
+    if (k === 'compare') f.compare = v === '1';
+    else if (k === 'period') f.period = PERIOD_PRESETS.includes(v as PeriodPreset) ? (v as PeriodPreset) : '12M';
+    else (f as Record<string, string>)[k] = v;
+  }
+  return f;
+}
+
+// seeded synchronously from the URL so the first render (and the store → URL sync) never sees stale defaults
+function initialFilters(): Filters {
+  if (typeof window === 'undefined') return DEFAULT_FILTERS;
+  return { ...DEFAULT_FILTERS, ...filtersFromParams(new URLSearchParams(window.location.search)) };
+}
+
 function initialTheme(): Theme {
   try {
     const t = localStorage.getItem('niwis-theme');
@@ -82,7 +103,7 @@ function save(key: string, v: string) {
 }
 
 export const useUi = create<UiState>((set) => ({
-  filters: DEFAULT_FILTERS,
+  filters: initialFilters(),
   theme: initialTheme(),
   sidebarCollapsed: readBool('niwis-sidebar-collapsed', false),
   mobileNavOpen: false,

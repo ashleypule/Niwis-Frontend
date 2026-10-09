@@ -136,7 +136,7 @@ export const groundwater: ModuleHandlers = {
         const L = boreholeLevels(b.id);
         return mean(Array.from({ length: 20 }, (_, k) => L[gwT(monthIndex(2000 + k, miMonth(mi)))])) - L[gwT(mi)];
       })));
-      return seriesSet('gw-anomaly', [{ unit: 'm', label: 'Anomaly (+ = shallower)' }], [bar('pos', 'Positive anomaly (higher level)', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly (lower level)', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E4572E', stack: 'a' })]);
+      return seriesSet('gw-anomaly', [{ unit: 'm', label: 'Anomaly (+ = shallower)' }], [bar('pos', 'Positive anomaly (higher level)', pts.map(([x, y]) => [x, y != null && y >= 0 ? y : null]), { color: '#2E9E5B', stack: 'a' }), bar('neg', 'Negative anomaly (lower level)', pts.map(([x, y]) => [x, y != null && y < 0 ? y : null]), { color: '#E95F35', stack: 'a' })]);
     },
     sgi: (ctx) => {
       const b = pickBorehole(ctx);
@@ -195,7 +195,7 @@ export const groundwater: ModuleHandlers = {
       const uses = ['Agriculture', 'Municipal', 'Industrial', 'Mining'] as const;
       const v = uses.map((u) => (list.filter((b) => b.use === u).reduce((a, b) => a + b.abstraction, 0) * 365) / 1e6);
       const scale = AQUIFER_UNITS.filter((u) => ctx.scope.level === 'national' || ctx.scope.includes({ province: u.province })).reduce((a, u) => a + u.abstraction, 0) / Math.max(1, v.reduce((a, b) => a + b, 0));
-      return categories('sector', 'Mm³/yr', [...uses], [{ key: 'v', name: 'Abstraction', values: v.map((x) => x * scale) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E4572E'] });
+      return categories('sector', 'Mm³/yr', [...uses], [{ key: 'v', name: 'Abstraction', values: v.map((x) => x * scale) }], { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E95F35'] });
     },
     distribution: (ctx) => {
       const list = bhIn(ctx.scope);

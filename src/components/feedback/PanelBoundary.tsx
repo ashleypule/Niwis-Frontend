@@ -41,5 +41,5 @@ export function EmptyState({ message = 'No data for the selected filters.', heig
 }
 
 export function Skeleton({ height = 200, className }: { height?: number | string; className?: string }) {
-  return <div className={`skeleton ${className ?? ''}`} style={{ height }} aria-hidden="true" />;
+  return <div className={`skeleton ${className ?? ''}`} style={{ height }} aria-hidden="true" aria-busy="true" />;
 }

@@ -366,7 +366,7 @@ export function categoryOption(set: CategorySet, t: ChartTheme, variant: Categor
       { type: 'bar', stack: 'wf', data: helper, itemStyle: { color: 'transparent' }, emphasis: { disabled: true }, tooltip: { show: false }, name: '__helper' },
       { type: 'bar', stack: 'wf', name: 'Total', data: tot, itemStyle: { color: t.primary, borderRadius: [3, 3, 0, 0] }, label: { show: true, position: 'top', color: t.text2, fontSize: 11, formatter: (p: { value: number }) => fmt(p.value, '') } },
       { type: 'bar', stack: 'wf', name: 'Increase', data: pos, itemStyle: { color: '#2E9E5B' }, label: { show: true, position: 'top', color: t.text2, fontSize: 11, formatter: (p: { value: number }) => `+${fmt(p.value, '')}` } },
-      { type: 'bar', stack: 'wf', name: 'Decrease', data: neg, itemStyle: { color: '#E4572E' }, label: { show: true, position: 'bottom', color: t.text2, fontSize: 11, formatter: (p: { value: number }) => `−${fmt(p.value, '')}` } },
+      { type: 'bar', stack: 'wf', name: 'Decrease', data: neg, itemStyle: { color: '#E95F35' }, label: { show: true, position: 'bottom', color: t.text2, fontSize: 11, formatter: (p: { value: number }) => `−${fmt(p.value, '')}` } },
     ];
     return {
       ...b,

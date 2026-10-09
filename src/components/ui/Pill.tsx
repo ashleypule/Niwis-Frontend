@@ -27,7 +27,7 @@ function shortLabel(bin: ScaleBin): string {
 }
 
 const SEV_ICON = { critical: AlertOctagon, high: TriangleAlert, moderate: AlertTriangle, low: CircleCheck, info: Info } as const;
-const SEV_COLOR: Record<Severity, string> = { critical: '#B71C1C', high: '#E4572E', moderate: '#C98A00', low: '#5E9E2F', info: '#1565C0' };
+const SEV_COLOR: Record<Severity, string> = { critical: '#B71C1C', high: '#E95F35', moderate: '#C98A00', low: '#5E9E2F', info: '#1565C0' };
 
 export function SeverityIcon({ severity, className }: { severity: Severity; className?: string }) {
   const Icon = SEV_ICON[severity];
