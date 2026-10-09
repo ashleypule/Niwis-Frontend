@@ -13,6 +13,7 @@ export function ForecastKpis({ module, metric, extra, icons = [] }: { module: Mo
   if (!q.data) return <Skeleton height={104} />;
   const cols = q.data.columns;
   const last = cols[cols.length - 1];
+  const cur = cols.find((c) => /current|baseline/i.test(c.label));
   const mid = cols.length > 3 ? cols[Math.floor(cols.length / 2)] : undefined;
   return (
     <section aria-label="Forecast indicators" data-testid="kpi-strip" className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 desk:grid-cols-6">
@@ -28,8 +29,8 @@ export function ForecastKpis({ module, metric, extra, icons = [] }: { module: Mo
             </div>
             <p className="num mt-2 text-2xl font-bold text-ink">{String(r[last.key])}</p>
             <p className="text-[11px] text-muted">
-              {last.label}
-              {mid ? ` · ${mid.label}: ${String(r[mid.key])}` : ''}
+              Forecast, {last.label}
+              {cur ? ` · now ${String(r[cur.key])}` : mid ? ` · ${mid.label}: ${String(r[mid.key])}` : ''}
             </p>
           </article>
         );

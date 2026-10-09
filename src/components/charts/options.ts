@@ -245,7 +245,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
   return {
     ...b,
     legend: o.legend === false ? { show: false } : { ...(b.legend as Obj), data: set.series.filter((s) => !s.name.startsWith('__')).map((s) => s.name) },
-    grid: { left: 8, right: axes.length > 1 ? 8 : 14, top: o.legend === false ? 12 : legendTop(set.series.filter((s) => !s.name.startsWith('__')).map((s) => s.name)), bottom: o.dataZoom ? 46 : 8, containLabel: true },
+    grid: { left: 8, right: axes.length > 1 ? 8 : 14, top: (o.legend === false ? 12 : legendTop(set.series.filter((s) => !s.name.startsWith('__')).map((s) => s.name))) + (set.asOf ? 16 : 0), bottom: o.dataZoom ? 46 : 8, containLabel: true },
     xAxis,
     yAxis: axes.map((a, i) => valueAxis(t, a.unit, { label: a.label, min: a.min, max: a.max, inverse: a.inverse, log: a.log, position: i === 0 ? 'left' : 'right', showGrid: i === 0 })),
     dataZoom: o.dataZoom ? [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 6, borderColor: t.border, textStyle: { color: t.axis } }] : undefined,

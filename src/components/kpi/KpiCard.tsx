@@ -48,7 +48,7 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
           <Icon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-[13px] font-semibold leading-tight text-ink" title={kpi.label}>
+          <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-ink" title={kpi.label}>
             {kpi.label}
           </h3>
           {kpi.sublabel && (
