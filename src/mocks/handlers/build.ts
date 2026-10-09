@@ -32,7 +32,17 @@ export interface ModuleHandlers {
   entity?: (ctx: Ctx, id: string) => import('@/types/api').EntityDetail;
 }
 
-const PERIOD_MONTHS: Record<string, number> = { latest: 12, '1M': 1, '3M': 3, '6M': 6, '12M': 12, '24M': 24, '5Y': 60, '10Y': 120, historical: 0 };
+const PERIOD_MONTHS: Record<string, number> = {
+  latest: 12,
+  '1M': 1,
+  '3M': 3,
+  '6M': 6,
+  '12M': 12,
+  '24M': 24,
+  '5Y': 60,
+  '10Y': 120,
+  historical: 0,
+};
 
 /** Window in months requested by a period preset (0 = whole record). */
 export function periodMonths(params: URLSearchParams, fallback = 12): number {
@@ -84,7 +94,13 @@ export function kpi(id: string, metricId: string, value: number | null, o: KpiOp
 export type Point = [string | number, number | null];
 
 export function line(key: string, name: string, data: Point[], o: Partial<Series> = {}): Series {
-  return { key, name, kind: 'line', data: data.map(([x, y]) => [x, y == null || Number.isNaN(y) ? null : round(y, 3)]), ...o };
+  return {
+    key,
+    name,
+    kind: 'line',
+    data: data.map(([x, y]) => [x, y == null || Number.isNaN(y) ? null : round(y, 3)]),
+    ...o,
+  };
 }
 export function bar(key: string, name: string, data: Point[], o: Partial<Series> = {}): Series {
   return line(key, name, data, { kind: 'bar', ...o });
@@ -92,7 +108,12 @@ export function bar(key: string, name: string, data: Point[], o: Partial<Series>
 export function area(key: string, name: string, data: Point[], o: Partial<Series> = {}): Series {
   return line(key, name, data, { kind: 'area', ...o });
 }
-export function band(key: string, name: string, data: [string | number, number | null, number | null][], o: Partial<Series> = {}): Series {
+export function band(
+  key: string,
+  name: string,
+  data: [string | number, number | null, number | null][],
+  o: Partial<Series> = {},
+): Series {
   return {
     key,
     name,
@@ -109,27 +130,75 @@ export function monthly(from: number, to: number, fn: (mi: number) => number | n
   return out;
 }
 
-export function seriesSet(id: string, axes: SeriesSet['axes'], series: Series[], extra: Partial<SeriesSet> = {}): SeriesSet {
+export function seriesSet(
+  id: string,
+  axes: SeriesSet['axes'],
+  series: Series[],
+  extra: Partial<SeriesSet> = {},
+): SeriesSet {
   return { id, xType: 'time', axes, series, ...extra };
 }
 
 // ------------------------------------------------------------------ categories & tables
-export function categories(id: string, unit: string, cats: string[], series: CategorySet['series'], extra: Partial<CategorySet> = {}): CategorySet {
-  return { id, unit, categories: cats, series: series.map((s) => ({ ...s, values: s.values.map((v) => (v == null ? null : round(v, 3))) })), ...extra };
+export function categories(
+  id: string,
+  unit: string,
+  cats: string[],
+  series: CategorySet['series'],
+  extra: Partial<CategorySet> = {},
+): CategorySet {
+  return {
+    id,
+    unit,
+    categories: cats,
+    series: series.map((s) => ({ ...s, values: s.values.map((v) => (v == null ? null : round(v, 3))) })),
+    ...extra,
+  };
 }
 
-export function table(id: string, columns: Column[], rows: Record<string, string | number | null>[], extra: Partial<TableSet> = {}): TableSet {
+export function table(
+  id: string,
+  columns: Column[],
+  rows: Record<string, string | number | null>[],
+  extra: Partial<TableSet> = {},
+): TableSet {
   return { id, columns, rows, ...extra };
 }
 
 export const col = {
   rank: (): Column => ({ key: 'rank', label: '#', type: 'rank', align: 'center' }),
   text: (key: string, label: string): Column => ({ key, label, type: 'text' }),
-  num: (key: string, label: string, unit?: string, decimals = 0, extra: Partial<Column> = {}): Column => ({ key, label, type: 'number', unit, decimals, align: 'right', ...extra }),
+  num: (key: string, label: string, unit?: string, decimals = 0, extra: Partial<Column> = {}): Column => ({
+    key,
+    label,
+    type: 'number',
+    unit,
+    decimals,
+    align: 'right',
+    ...extra,
+  }),
   cls: (key: string, label: string, scale: string): Column => ({ key, label, type: 'class', scale, align: 'center' }),
-  trend: (key: string, label = 'Trend', goodDirection: 'up' | 'down' | 'neutral' = 'up', unit?: string, decimals = 1): Column => ({ key, label, type: 'trend', goodDirection, unit, decimals, align: 'right' }),
-  delta: (key: string, label: string, goodDirection: 'up' | 'down' | 'neutral' = 'up', unit?: string, decimals = 1): Column => ({ key, label, type: 'delta', goodDirection, unit, decimals, align: 'right' }),
-  bar: (key: string, label: string, unit?: string, scale?: string): Column => ({ key, label, type: 'bar', unit, scale }),
+  trend: (
+    key: string,
+    label = 'Trend',
+    goodDirection: 'up' | 'down' | 'neutral' = 'up',
+    unit?: string,
+    decimals = 1,
+  ): Column => ({ key, label, type: 'trend', goodDirection, unit, decimals, align: 'right' }),
+  delta: (
+    key: string,
+    label: string,
+    goodDirection: 'up' | 'down' | 'neutral' = 'up',
+    unit?: string,
+    decimals = 1,
+  ): Column => ({ key, label, type: 'delta', goodDirection, unit, decimals, align: 'right' }),
+  bar: (key: string, label: string, unit?: string, scale?: string): Column => ({
+    key,
+    label,
+    type: 'bar',
+    unit,
+    scale,
+  }),
   date: (key: string, label = 'Date'): Column => ({ key, label, type: 'date' }),
 };
 

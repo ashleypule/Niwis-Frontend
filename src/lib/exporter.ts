@@ -66,7 +66,10 @@ export async function downloadAll(prefix: string): Promise<number> {
     used.add(n);
     zip.file(`${n}.csv`, '﻿' + toCsv(it.rows));
   }
-  zip.file('README.txt', `NIWIS data export\nGenerated: ${new Date().toISOString()}\nSAMPLE DATA - NOT FOR OPERATIONAL DECISIONS (when running against the mock API).\n`);
+  zip.file(
+    'README.txt',
+    `NIWIS data export\nGenerated: ${new Date().toISOString()}\nSAMPLE DATA - NOT FOR OPERATIONAL DECISIONS (when running against the mock API).\n`,
+  );
   const blob = await zip.generateAsync({ type: 'blob' });
   download(`${prefix}-${stamp}.zip`, blob, 'application/zip');
   return items.length;

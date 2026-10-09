@@ -33,9 +33,19 @@ export default function RainfallPage() {
       <PageTabs mod={mod} />
       <KpiStrip module="rainfall" count={8} />
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <MapPanel module="rainfall" title="Rainfall Distribution Map – South Africa" layers={RAIN_LAYERS} height={520} />
+        <MapPanel
+          module="rainfall"
+          title="Rainfall Distribution Map – South Africa"
+          layers={RAIN_LAYERS}
+          height={520}
+        />
         <div className="grid content-start gap-3">
-          <SeriesPanel module="rainfall" metric="monthly" title="Monthly Rainfall – Current vs Previous Years" height={220} />
+          <SeriesPanel
+            module="rainfall"
+            metric="monthly"
+            title="Monthly Rainfall – Current vs Previous Years"
+            height={220}
+          />
           <SeriesPanel
             module="rainfall"
             metric="anomaly"
@@ -60,7 +70,13 @@ export default function RainfallPage() {
       <Row className="md:grid-cols-2 xl:grid-cols-3">
         <SeriesPanel module="rainfall" metric="spi-spei" title="SPI and SPEI Trends" height={240} />
         <SeriesPanel module="rainfall" metric="intensity" title="Rainfall Intensity and Extreme Events" height={240} />
-        <CategoryPanel module="rainfall" metric="seasonal" title="Seasonal Rainfall Distribution (DJF / MAM / JJA / SON)" variant="bar" height={240} />
+        <CategoryPanel
+          module="rainfall"
+          metric="seasonal"
+          title="Seasonal Rainfall Distribution (DJF / MAM / JJA / SON)"
+          variant="bar"
+          height={240}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
         <SeriesPanel module="rainfall" metric="dry-wet" title="Consecutive Dry and Wet Days" height={230} />
@@ -76,7 +92,14 @@ export default function RainfallPage() {
           height={210}
         />
         <MiniMap module="rainfall" layer="cdd" title="Consecutive Dry Days (Current)" />
-        <SeriesPanel module="rainfall" metric="station" title="Rainfall Indices Time Series (Selected Station)" context={station.name} extra={{ entityId: station.id }} height={230} />
+        <SeriesPanel
+          module="rainfall"
+          metric="station"
+          title="Rainfall Indices Time Series (Selected Station)"
+          context={station.name}
+          extra={{ entityId: station.id }}
+          height={230}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1fr_1.3fr_1fr]">
         <TablePanel module="rainfall" metric="sources" title="Rainfall Data Sources and Coverage" />

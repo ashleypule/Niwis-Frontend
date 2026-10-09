@@ -47,16 +47,30 @@ function UserMenu() {
         <ChevronDown className="h-4 w-4 text-white/70" aria-hidden="true" />
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-pop">
+        <div
+          role="menu"
+          className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-pop"
+        >
           <div className="border-b border-line px-3 py-2">
             <div className="text-sm font-semibold">DWS User</div>
             <div className="text-xs text-muted">Analyst · National Office</div>
           </div>
-          <button role="menuitem" type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-2" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <button
+            role="menuitem"
+            type="button"
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-2"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             {theme === 'dark' ? 'Light theme' : 'Dark theme'}
           </button>
-          <button role="menuitem" type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2" onClick={() => setOpen(false)} title="Single sign-on is configured by the backend team">
+          <button
+            role="menuitem"
+            type="button"
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2"
+            onClick={() => setOpen(false)}
+            title="Single sign-on is configured by the backend team"
+          >
             <LogOut className="h-4 w-4" /> Sign out
           </button>
         </div>
@@ -75,12 +89,20 @@ export function Header() {
   const read = useUi((s) => s.readAlerts);
   const { data } = useAlerts({ limit: 50 });
   const unread = data ? data.items.filter((a) => !read.includes(a.id)).length : 0;
-  const title = mod.id === 'overview' ? 'National Integrated Water Information System' : `${mod.label}${forecast ? ' – Predictions & Forecasting' : ''}`;
+  const title =
+    mod.id === 'overview'
+      ? 'National Integrated Water Information System'
+      : `${mod.label}${forecast ? ' – Predictions & Forecasting' : ''}`;
 
   return (
     <header className="hero no-print shrink-0 text-white">
       <div className="relative z-10 mx-auto flex max-w-[1920px] flex-wrap items-center gap-x-4 gap-y-2 px-3 py-3 sm:px-4 lg:px-5">
-        <button type="button" className="rounded-lg p-2 hover:bg-white/10 lg:hidden" onClick={() => setMobile(true)} aria-label="Open navigation">
+        <button
+          type="button"
+          className="rounded-lg p-2 hover:bg-white/10 lg:hidden"
+          onClick={() => setMobile(true)}
+          aria-label="Open navigation"
+        >
           <Menu className="h-5 w-5" />
         </button>
         <div className="min-w-0 flex-1">
@@ -98,13 +120,24 @@ export function Header() {
             aria-label="Search locations, dams, stations and pages (Ctrl+K)"
           >
             <Search className="h-4 w-4" aria-hidden="true" />
-            <span className="hidden flex-1 truncate whitespace-nowrap text-left md:inline">Search location, dam, station…</span>
-            <kbd className="hidden rounded border border-white/25 px-1.5 text-[11px] text-white/70 md:inline">Ctrl K</kbd>
+            <span className="hidden flex-1 truncate whitespace-nowrap text-left md:inline">
+              Search location, dam, station…
+            </span>
+            <kbd className="hidden rounded border border-white/25 px-1.5 text-[11px] text-white/70 md:inline">
+              Ctrl K
+            </kbd>
           </button>
-          <button type="button" onClick={() => setNotifOpen(true)} className="relative rounded-lg p-2 hover:bg-white/10" aria-label={`Notifications, ${unread} unread`}>
+          <button
+            type="button"
+            onClick={() => setNotifOpen(true)}
+            className="relative rounded-lg p-2 hover:bg-white/10"
+            aria-label={`Notifications, ${unread} unread`}
+          >
             <Bell className="h-5 w-5" />
             {unread > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 min-w-[18px] rounded-full bg-[#e53935] px-1 text-center text-[11px] font-bold leading-[18px] text-white">{unread > 99 ? '99+' : unread}</span>
+              <span className="absolute -right-0.5 -top-0.5 min-w-[18px] rounded-full bg-[#e53935] px-1 text-center text-[11px] font-bold leading-[18px] text-white">
+                {unread > 99 ? '99+' : unread}
+              </span>
             )}
           </button>
           <UserMenu />

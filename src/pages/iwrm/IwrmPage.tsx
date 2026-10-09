@@ -23,9 +23,21 @@ export default function IwrmPage() {
       <PageTabs mod={mod} />
       <KpiStrip module="iwrm" count={7} />
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.25fr)_minmax(0,1.35fr)_minmax(0,0.9fr)]">
-        <MapPanel module="iwrm" title="Integrated Water Resources Map – South Africa" layers={IWRM_LAYERS} height={520} />
+        <MapPanel
+          module="iwrm"
+          title="Integrated Water Resources Map – South Africa"
+          layers={IWRM_LAYERS}
+          height={520}
+        />
         <div className="grid content-start gap-3">
-          <CategoryPanel module="iwrm" metric="waterfall" title="Water Balance (Mm³/yr)" info="Spec §17.2 anchors: MAR ≈ 49 000, recharge ≈ 19 000, municipal 4 200, agricultural 11 000, industrial 1 800, ecological reserve 2 800 Mm³/yr. Only part of the natural resource is utilisable." variant="waterfall" height={300} />
+          <CategoryPanel
+            module="iwrm"
+            metric="waterfall"
+            title="Water Balance (Mm³/yr)"
+            info="Spec §17.2 anchors: MAR ≈ 49 000, recharge ≈ 19 000, municipal 4 200, agricultural 11 000, industrial 1 800, ecological reserve 2 800 Mm³/yr. Only part of the natural resource is utilisable."
+            variant="waterfall"
+            height={300}
+          />
           <SeriesPanel module="iwrm" metric="availability" title="Water Availability Trends" height={220} />
         </div>
         <div className="grid content-start gap-3">
@@ -34,8 +46,20 @@ export default function IwrmPage() {
         </div>
       </div>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <CategoryPanel module="iwrm" metric="reserve-compliance" title="Ecological Reserve and Compliance" variant="mixed" height={230} />
-        <CategoryPanel module="iwrm" metric="transfers" title="Inter-Basin Transfers (Major Schemes)" variant="hbar" height={230} />
+        <CategoryPanel
+          module="iwrm"
+          metric="reserve-compliance"
+          title="Ecological Reserve and Compliance"
+          variant="mixed"
+          height={230}
+        />
+        <CategoryPanel
+          module="iwrm"
+          metric="transfers"
+          title="Inter-Basin Transfers (Major Schemes)"
+          variant="hbar"
+          height={230}
+        />
         <CategoryPanel module="iwrm" metric="recycled" title="Recycled and Return Flows" variant="bar" height={230} />
         <SeriesPanel module="iwrm" metric="nrw" title="Non-Revenue Water (Municipal Sector)" height={230} />
       </Row>

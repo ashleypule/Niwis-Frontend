@@ -49,7 +49,12 @@ const MESSAGES: Record<number, string> = {
   503: 'The data service is temporarily unavailable.',
 };
 
-export async function apiGet<T>(path: string, params: QueryParams, schema: ZodType<T, ZodTypeDef, unknown>, signal?: AbortSignal): Promise<T> {
+export async function apiGet<T>(
+  path: string,
+  params: QueryParams,
+  schema: ZodType<T, ZodTypeDef, unknown>,
+  signal?: AbortSignal,
+): Promise<T> {
   const headers: Record<string, string> = { Accept: 'application/json' };
   const token = tokenProvider ? await tokenProvider() : null;
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -67,14 +72,20 @@ export async function apiGet<T>(path: string, params: QueryParams, schema: ZodTy
     } catch {
       /* body not JSON */
     }
-    const kind: ApiErrorKind = res.status === 401 || res.status === 403 ? 'auth' : res.status === 404 ? 'not-found' : 'http';
+    const kind: ApiErrorKind =
+      res.status === 401 || res.status === 403 ? 'auth' : res.status === 404 ? 'not-found' : 'http';
     throw new ApiError(kind, MESSAGES[res.status] ?? `Request failed (${res.status}).`, res.status, details);
   }
   const json: unknown = await res.json();
   const parsed = schema.safeParse(json);
   if (!parsed.success) {
     console.error('[api] schema validation failed', path, parsed.error.issues.slice(0, 5));
-    throw new ApiError('schema', 'The data received did not match the expected format.', res.status, parsed.error.issues);
+    throw new ApiError(
+      'schema',
+      'The data received did not match the expected format.',
+      res.status,
+      parsed.error.issues,
+    );
   }
   return parsed.data;
 }

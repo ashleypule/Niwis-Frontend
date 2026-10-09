@@ -19,5 +19,11 @@ export const DROUGHT_LAYERS: ThematicLayer[] = [
 export const DROUGHT_POINTS: PointLayerDef[] = [
   { id: 'dams', label: 'Dams / reservoirs (% FSC)', module: 'drought', layer: 'dams' },
   { id: 'boreholes', label: 'Groundwater stations (SGI)', module: 'drought', layer: 'boreholes', shape: 'square' },
-  { id: 'settlements', label: 'Drought-affected settlements', module: 'drought', layer: 'settlements', shape: 'triangle' },
+  {
+    id: 'settlements',
+    label: 'Drought-affected settlements',
+    module: 'drought',
+    layer: 'settlements',
+    shape: 'triangle',
+  },
 ];

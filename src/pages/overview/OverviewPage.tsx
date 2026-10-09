@@ -33,7 +33,14 @@ export default function OverviewPage() {
       <KpiStrip module="overview" count={8} />
 
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.6fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
-        <MapPanel module="overview" title="South Africa Water Status Map (Multi-Layer View)" layers={LAYERS} pointLayers={POINTS} height={470} className="desk:row-span-2" />
+        <MapPanel
+          module="overview"
+          title="South Africa Water Status Map (Multi-Layer View)"
+          layers={LAYERS}
+          pointLayers={POINTS}
+          height={470}
+          className="desk:row-span-2"
+        />
         <SeriesPanel
           module="drought"
           metric="drought-area"
@@ -42,15 +49,31 @@ export default function OverviewPage() {
           height={200}
           info="Share of the land area in each drought class, from gridded SPI-6."
         />
-        <TablePanel module="dams" metric="top10" title="Major Dam Storage (Top 10 by Capacity)" viewAllHref="/dams" maxHeight={240} />
+        <TablePanel
+          module="dams"
+          metric="top10"
+          title="Major Dam Storage (Top 10 by Capacity)"
+          viewAllHref="/dams"
+          maxHeight={240}
+        />
         <SeriesPanel
           module="overview"
           metric="key-indicators"
           title="Key Indicators (Last 12 Months)"
-          tabs={['rainfall', 'streamflow', 'groundwater', 'quality', 'demand'].map((t) => ({ value: t, label: t === 'quality' ? 'Water Quality' : t[0].toUpperCase() + t.slice(1), params: { tab: t } }))}
+          tabs={['rainfall', 'streamflow', 'groundwater', 'quality', 'demand'].map((t) => ({
+            value: t,
+            label: t === 'quality' ? 'Water Quality' : t[0].toUpperCase() + t.slice(1),
+            params: { tab: t },
+          }))}
           height={210}
         />
-        <CategoryPanel module="overview" metric="services-access" title="Water Services Access by Province" variant="stacked100" height={240} />
+        <CategoryPanel
+          module="overview"
+          metric="services-access"
+          title="Water Services Access by Province"
+          variant="stacked100"
+          height={240}
+        />
       </div>
 
       <Row className="xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1.25fr)_minmax(0,1fr)]">
@@ -67,7 +90,13 @@ export default function OverviewPage() {
           ]}
           height={230}
         />
-        <TablePanel module="overview" metric="settlements" title="Drought-Affected Settlements (Top 10)" viewAllHref="/settlements" maxHeight={300} />
+        <TablePanel
+          module="overview"
+          metric="settlements"
+          title="Drought-Affected Settlements (Top 10)"
+          viewAllHref="/settlements"
+          maxHeight={300}
+        />
         <AlertsList limit={8} />
       </Row>
 

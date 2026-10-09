@@ -9,10 +9,18 @@ import { Pill } from '@/components/ui/Pill';
 /** Semantic delta tone: depends on the metric's goodDirection, not on the sign. */
 export function deltaTone(delta: number | null | undefined, good: GoodDirection): 'good' | 'bad' | 'neutral' {
   if (delta == null || delta === 0 || good === 'neutral') return 'neutral';
-  return (delta > 0) === (good === 'up') ? 'good' : 'bad';
+  return delta > 0 === (good === 'up') ? 'good' : 'bad';
 }
 
-export function Sparkline({ data, tone, height = 26 }: { data: number[]; tone: 'good' | 'bad' | 'neutral'; height?: number }) {
+export function Sparkline({
+  data,
+  tone,
+  height = 26,
+}: {
+  data: number[];
+  tone: 'good' | 'bad' | 'neutral';
+  height?: number;
+}) {
   if (data.length < 2) return null;
   const w = 120;
   const min = Math.min(...data);
@@ -24,7 +32,14 @@ export function Sparkline({ data, tone, height = 26 }: { data: number[]; tone: '
   return (
     <svg viewBox={`0 0 ${w} ${height}`} preserveAspectRatio="none" className="h-[26px] w-full" aria-hidden="true">
       <path d={`${d}L${w},${height}L0,${height}Z`} fill={color} opacity="0.1" />
-      <path d={d} fill="none" stroke={color} strokeWidth="1.6" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+      <path
+        d={d}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.6"
+        vectorEffect="non-scaling-stroke"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -42,9 +57,16 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
   const sparkTone = good === 'neutral' ? 'neutral' : tone;
 
   return (
-    <article className="anim-in flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface px-3 pb-2 pt-3 shadow-card" aria-label={`${kpi.label}: ${kpi.text ?? withUnit(valueText, unit)}`}>
+    <article
+      className="anim-in flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface px-3 pb-2 pt-3 shadow-card"
+      aria-label={`${kpi.label}: ${kpi.text ?? withUnit(valueText, unit)}`}
+    >
       <div className="flex items-start gap-2.5">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: tint.bg, color: tint.fg }} aria-hidden="true">
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+          style={{ background: tint.bg, color: tint.fg }}
+          aria-hidden="true"
+        >
           <Icon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
@@ -64,12 +86,21 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
         ) : (
           <p className="num min-w-0 whitespace-nowrap font-bold leading-none tracking-tight text-ink">
             <span className={compact ? 'text-xl' : 'text-[26px]'}>{valueText}</span>
-            {unit && !kpi.text && <span className="ml-1 text-sm font-semibold text-ink-2">{unit === 'people' || unit === 'records' ? '' : unit}</span>}
+            {unit && !kpi.text && (
+              <span className="ml-1 text-sm font-semibold text-ink-2">
+                {unit === 'people' || unit === 'records' ? '' : unit}
+              </span>
+            )}
           </p>
         )}
         {kpi.delta != null && (
           <span
-            className={clsx('num flex items-center gap-0.5 whitespace-nowrap text-xs font-semibold', tone === 'good' && 'text-good', tone === 'bad' && 'text-bad', tone === 'neutral' && 'text-muted')}
+            className={clsx(
+              'num flex items-center gap-0.5 whitespace-nowrap text-xs font-semibold',
+              tone === 'good' && 'text-good',
+              tone === 'bad' && 'text-bad',
+              tone === 'neutral' && 'text-muted',
+            )}
             title={tone === 'good' ? 'Improving' : tone === 'bad' ? 'Worsening' : 'Change'}
           >
             <Arrow className="h-3.5 w-3.5" aria-hidden="true" />

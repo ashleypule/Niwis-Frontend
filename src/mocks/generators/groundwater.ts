@@ -11,7 +11,17 @@ import { CELLS, END_MI, START_MI } from './climate';
 import { regionGwDriver, LAST } from './hydromet';
 import { resolveScope } from './scope';
 
-export type AquiferType = 'Karoo (Fractured)' | 'Karoo (Intergranular)' | 'Table Mountain Group' | 'Dolomite' | 'Cape Flats' | 'Kalahari' | 'Basement (Weathered)' | 'Basement (Fractured)' | 'Coastal' | 'Alluvial';
+export type AquiferType =
+  | 'Karoo (Fractured)'
+  | 'Karoo (Intergranular)'
+  | 'Table Mountain Group'
+  | 'Dolomite'
+  | 'Cape Flats'
+  | 'Kalahari'
+  | 'Basement (Weathered)'
+  | 'Basement (Fractured)'
+  | 'Coastal'
+  | 'Alluvial';
 
 export interface AquiferDef {
   id: string;
@@ -26,16 +36,96 @@ export interface AquiferDef {
 }
 
 export const AQUIFERS: AquiferDef[] = [
-  { id: 'aq-karoo-f', name: 'Karoo (Fractured)', type: 'Karoo (Fractured)', depth: [18, 55], transmissivity: [1, 50], storativity: '0.001–0.005', thickness: [20, 200] },
-  { id: 'aq-karoo-i', name: 'Karoo (Intergranular)', type: 'Karoo (Intergranular)', depth: [12, 40], transmissivity: [5, 80], storativity: '0.01–0.05', thickness: [15, 120] },
-  { id: 'aq-tmg', name: 'Table Mountain Group', type: 'Table Mountain Group', depth: [10, 35], transmissivity: [10, 200], storativity: '0.0005–0.002', thickness: [100, 900] },
-  { id: 'aq-dolomite', name: 'Dolomite (Malmani)', type: 'Dolomite', depth: [15, 45], transmissivity: [100, 2000], storativity: '0.01–0.08', thickness: [50, 1000] },
-  { id: 'aq-cape-flats', name: 'Cape Flats', type: 'Cape Flats', depth: [2, 7], transmissivity: [50, 500], storativity: '0.1–0.2', thickness: [10, 50] },
-  { id: 'aq-kalahari', name: 'Kalahari', type: 'Kalahari', depth: [40, 110], transmissivity: [5, 150], storativity: '0.002–0.02', thickness: [20, 250] },
-  { id: 'aq-basement-w', name: 'Basement (Weathered)', type: 'Basement (Weathered)', depth: [8, 25], transmissivity: [2, 40], storativity: '0.005–0.03', thickness: [10, 60] },
-  { id: 'aq-basement-f', name: 'Basement (Fractured)', type: 'Basement (Fractured)', depth: [15, 45], transmissivity: [1, 30], storativity: '0.0005–0.003', thickness: [20, 150] },
-  { id: 'aq-coastal', name: 'Coastal (Maputaland / Zululand)', type: 'Coastal', depth: [3, 12], transmissivity: [100, 1000], storativity: '0.1–0.25', thickness: [20, 80] },
-  { id: 'aq-alluvial', name: 'Alluvial', type: 'Alluvial', depth: [3, 10], transmissivity: [50, 800], storativity: '0.05–0.2', thickness: [5, 30] },
+  {
+    id: 'aq-karoo-f',
+    name: 'Karoo (Fractured)',
+    type: 'Karoo (Fractured)',
+    depth: [18, 55],
+    transmissivity: [1, 50],
+    storativity: '0.001–0.005',
+    thickness: [20, 200],
+  },
+  {
+    id: 'aq-karoo-i',
+    name: 'Karoo (Intergranular)',
+    type: 'Karoo (Intergranular)',
+    depth: [12, 40],
+    transmissivity: [5, 80],
+    storativity: '0.01–0.05',
+    thickness: [15, 120],
+  },
+  {
+    id: 'aq-tmg',
+    name: 'Table Mountain Group',
+    type: 'Table Mountain Group',
+    depth: [10, 35],
+    transmissivity: [10, 200],
+    storativity: '0.0005–0.002',
+    thickness: [100, 900],
+  },
+  {
+    id: 'aq-dolomite',
+    name: 'Dolomite (Malmani)',
+    type: 'Dolomite',
+    depth: [15, 45],
+    transmissivity: [100, 2000],
+    storativity: '0.01–0.08',
+    thickness: [50, 1000],
+  },
+  {
+    id: 'aq-cape-flats',
+    name: 'Cape Flats',
+    type: 'Cape Flats',
+    depth: [2, 7],
+    transmissivity: [50, 500],
+    storativity: '0.1–0.2',
+    thickness: [10, 50],
+  },
+  {
+    id: 'aq-kalahari',
+    name: 'Kalahari',
+    type: 'Kalahari',
+    depth: [40, 110],
+    transmissivity: [5, 150],
+    storativity: '0.002–0.02',
+    thickness: [20, 250],
+  },
+  {
+    id: 'aq-basement-w',
+    name: 'Basement (Weathered)',
+    type: 'Basement (Weathered)',
+    depth: [8, 25],
+    transmissivity: [2, 40],
+    storativity: '0.005–0.03',
+    thickness: [10, 60],
+  },
+  {
+    id: 'aq-basement-f',
+    name: 'Basement (Fractured)',
+    type: 'Basement (Fractured)',
+    depth: [15, 45],
+    transmissivity: [1, 30],
+    storativity: '0.0005–0.003',
+    thickness: [20, 150],
+  },
+  {
+    id: 'aq-coastal',
+    name: 'Coastal (Maputaland / Zululand)',
+    type: 'Coastal',
+    depth: [3, 12],
+    transmissivity: [100, 1000],
+    storativity: '0.1–0.25',
+    thickness: [20, 80],
+  },
+  {
+    id: 'aq-alluvial',
+    name: 'Alluvial',
+    type: 'Alluvial',
+    depth: [3, 10],
+    transmissivity: [50, 800],
+    storativity: '0.05–0.2',
+    thickness: [5, 30],
+  },
 ];
 
 function aquiferAt(lon: number, lat: number, r: Rng): AquiferDef {
@@ -44,7 +134,8 @@ function aquiferAt(lon: number, lat: number, r: Rng): AquiferDef {
   if (r.bool(0.08)) return byType('Alluvial');
   if (lat > -28 && lon < 23.8) return byType('Kalahari');
   if (lon > 32.0 && lat > -28.8) return byType('Coastal');
-  if (lon > 26.3 && lon < 28.8 && lat > -26.9 && lat < -24.9) return r.bool(0.6) ? byType('Dolomite') : byType('Basement (Weathered)');
+  if (lon > 26.3 && lon < 28.8 && lat > -26.9 && lat < -24.9)
+    return r.bool(0.6) ? byType('Dolomite') : byType('Basement (Weathered)');
   if (lat < -32.6 && lon < 25.5) return byType('Table Mountain Group');
   if (lat > -25.8 && lon > 28.5) return r.bool(0.55) ? byType('Basement (Weathered)') : byType('Basement (Fractured)');
   return r.bool(0.7) ? byType('Karoo (Fractured)') : byType('Karoo (Intergranular)');
@@ -89,9 +180,14 @@ export const BOREHOLES: Borehole[] = (() => {
     const aq = aquiferAt(lon, lat, r);
     counters[c.province] = (counters[c.province] ?? 0) + 1;
     const nga = r.bool(0.35);
-    const id = nga ? `H${String(r.int(1, 99)).padStart(2, '0')}-${String(r.int(1, 9999)).padStart(4, '0')}` : `BH-${c.province}-${String(counters[c.province]).padStart(4, '0')}`;
+    const id = nga
+      ? `H${String(r.int(1, 99)).padStart(2, '0')}-${String(r.int(1, 9999)).padStart(4, '0')}`
+      : `BH-${c.province}-${String(counters[c.province]).padStart(4, '0')}`;
     const base = r.range(aq.depth[0], aq.depth[1]) * (1 + c.aridity * 0.35);
-    const use = r.weighted(['Municipal', 'Agriculture', 'Industrial', 'Mining', 'Monitoring'] as const, [0.3, 0.38, 0.06, 0.06, 0.2]);
+    const use = r.weighted(
+      ['Municipal', 'Agriculture', 'Industrial', 'Mining', 'Monitoring'] as const,
+      [0.3, 0.38, 0.06, 0.06, 0.2],
+    );
     out.push({
       id,
       name: id,
@@ -108,7 +204,10 @@ export const BOREHOLES: Borehole[] = (() => {
       trend: use === 'Monitoring' ? r.range(-0.04, 0.06) : r.range(0, 0.22) * (c.aridity + 0.3),
       depthDrilled: Math.round(base * r.range(2, 4) + 20),
       screen: '',
-      abstraction: use === 'Monitoring' ? 0 : Math.round(r.lognormal(use === 'Municipal' ? 180 : use === 'Mining' ? 300 : 90, 0.7)),
+      abstraction:
+        use === 'Monitoring'
+          ? 0
+          : Math.round(r.lognormal(use === 'Municipal' ? 180 : use === 'Mining' ? 300 : 90, 0.7)),
       use,
     });
   }
@@ -149,7 +248,9 @@ export const boreholeLevels = memo((id: string): Float64Array => {
 });
 
 /** SGI calibrated on 2001–2025 (the NGA record is short and non-stationary under abstraction). */
-export const boreholeSgi = memo((id: string) => standardisedIndex({ start: GW_START, values: Array.from(boreholeLevels(id)) }, { from: 2001, to: 2025 }, true));
+export const boreholeSgi = memo((id: string) =>
+  standardisedIndex({ start: GW_START, values: Array.from(boreholeLevels(id)) }, { from: 2001, to: 2025 }, true),
+);
 
 export interface BoreholeNow {
   level: number;
@@ -224,7 +325,13 @@ export const AQUIFER_UNITS: AquiferUnit[] = (() => {
     const cells = new Set(bhs.map((b) => b.cell));
     const areaKm2 = Math.round([...cells].reduce((s, i) => s + CELLS[i].areaKm2, 0) * r.range(1.4, 2.4));
     const map = mean([...cells].map((i) => CELLS[i].map));
-    const rechargeMm = Math.round(map * (0.012 + 0.05 * Math.min(1, map / 900)) * (aq.type === 'Dolomite' ? 1.8 : aq.type === 'Kalahari' ? 0.4 : 1) * 10) / 10;
+    const rechargeMm =
+      Math.round(
+        map *
+          (0.012 + 0.05 * Math.min(1, map / 900)) *
+          (aq.type === 'Dolomite' ? 1.8 : aq.type === 'Kalahari' ? 0.4 : 1) *
+          10,
+      ) / 10;
     const recharge = Math.round((rechargeMm * areaKm2) / 1000);
     const abstraction = Math.round(recharge * r.range(0.04, 0.42) * (CELLS[bhs[0].cell].aridity + 0.5) ** 2);
     const eco = Math.round(recharge * r.range(0.1, 0.22));

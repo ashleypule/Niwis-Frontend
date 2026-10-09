@@ -45,8 +45,20 @@ const slug = (s: string) =>
 const NAMED: Settlement[] = SETTLEMENT_ROWS.map(([name, lat, lon, type = 'Rural village']) => {
   const r = new Rng(`settlement-${name}`);
   const loc = locate(lon, lat);
-  const pop = Math.round(type === 'Small town' ? r.range(2500, 18000) : type === 'Peri-urban' ? r.range(8000, 45000) : type === 'Informal settlement' ? r.range(3000, 25000) : r.range(800, 9000));
-  const vulnerability = clamp((type === 'Small town' ? 0.35 : type === 'Peri-urban' ? 0.5 : 0.62) + r.normal(0, 0.12), 0.1, 0.95);
+  const pop = Math.round(
+    type === 'Small town'
+      ? r.range(2500, 18000)
+      : type === 'Peri-urban'
+        ? r.range(8000, 45000)
+        : type === 'Informal settlement'
+          ? r.range(3000, 25000)
+          : r.range(800, 9000),
+  );
+  const vulnerability = clamp(
+    (type === 'Small town' ? 0.35 : type === 'Peri-urban' ? 0.5 : 0.62) + r.normal(0, 0.12),
+    0.1,
+    0.95,
+  );
   return {
     id: `set-${slug(name)}`,
     name,
@@ -60,7 +72,10 @@ const NAMED: Settlement[] = SETTLEMENT_ROWS.map(([name, lat, lon, type = 'Rural 
     povertyIndex: Math.round(clamp(vulnerability * 100 + r.normal(0, 8), 5, 95)),
     waterBacklogPct: Math.round(clamp(vulnerability * 45 + r.normal(0, 8), 2, 80)),
     storageLitresPerHh: Math.round(r.range(80, 1200)),
-    primarySource: r.weighted(['Borehole', 'Dam / reservoir', 'River abstraction', 'Bulk scheme'] as const, [0.45, 0.25, 0.1, 0.2]),
+    primarySource: r.weighted(
+      ['Borehole', 'Dam / reservoir', 'River abstraction', 'Bulk scheme'] as const,
+      [0.45, 0.25, 0.1, 0.2],
+    ),
   };
 });
 
@@ -72,7 +87,9 @@ const CLUSTERS: Settlement[] = (() => {
   const r = new Rng('settlement-clusters');
   const out: Settlement[] = [];
   const idx = CELLS.map((_, i) => i);
-  const w = CELLS.map((c) => 0.25 + c.aridity * 1.4 + (c.province === 'LP' || c.province === 'EC' || c.province === 'KZN' ? 0.5 : 0));
+  const w = CELLS.map(
+    (c) => 0.25 + c.aridity * 1.4 + (c.province === 'LP' || c.province === 'EC' || c.province === 'KZN' ? 0.5 : 0),
+  );
   const counter = new Map<string, number>();
   for (let k = 0; k < 1120; k++) {
     const ci = r.weighted(idx, w);
@@ -83,8 +100,17 @@ const CLUSTERS: Settlement[] = (() => {
     const muni = MUNI_NAMES.get(loc.municipality) ?? 'Rural';
     const n = (counter.get(loc.municipality) ?? 0) + 1;
     counter.set(loc.municipality, n);
-    const type = r.weighted(['Rural village', 'Farming community', 'Informal settlement', 'Peri-urban'] as const, [0.55, 0.2, 0.15, 0.1]);
-    const pop = Math.round(type === 'Peri-urban' ? r.range(3000, 15000) : type === 'Informal settlement' ? r.range(1500, 9000) : r.range(400, 4500));
+    const type = r.weighted(
+      ['Rural village', 'Farming community', 'Informal settlement', 'Peri-urban'] as const,
+      [0.55, 0.2, 0.15, 0.1],
+    );
+    const pop = Math.round(
+      type === 'Peri-urban'
+        ? r.range(3000, 15000)
+        : type === 'Informal settlement'
+          ? r.range(1500, 9000)
+          : r.range(400, 4500),
+    );
     const vulnerability = clamp((type === 'Peri-urban' ? 0.5 : 0.62) + r.normal(0, 0.12), 0.1, 0.95);
     out.push({
       id: `set-c${String(k + 1).padStart(4, '0')}`,
@@ -99,7 +125,10 @@ const CLUSTERS: Settlement[] = (() => {
       povertyIndex: Math.round(clamp(vulnerability * 100 + r.normal(0, 8), 5, 95)),
       waterBacklogPct: Math.round(clamp(vulnerability * 45 + r.normal(0, 8), 2, 80)),
       storageLitresPerHh: Math.round(r.range(60, 900)),
-      primarySource: r.weighted(['Borehole', 'Dam / reservoir', 'River abstraction', 'Bulk scheme'] as const, [0.55, 0.15, 0.15, 0.15]),
+      primarySource: r.weighted(
+        ['Borehole', 'Dam / reservoir', 'River abstraction', 'Bulk scheme'] as const,
+        [0.55, 0.15, 0.15, 0.15],
+      ),
     });
   }
   return out;
@@ -126,7 +155,9 @@ function nearestDams(lat: number, lon: number, n = 2) {
     .slice(0, n);
 }
 function nearestBoreholes(lat: number, lon: number, n = 3) {
-  return [...BOREHOLES].sort((a, b) => (a.lat - lat) ** 2 + (a.lon - lon) ** 2 - ((b.lat - lat) ** 2 + (b.lon - lon) ** 2)).slice(0, n);
+  return [...BOREHOLES]
+    .sort((a, b) => (a.lat - lat) ** 2 + (a.lon - lon) ** 2 - ((b.lat - lat) ** 2 + (b.lon - lon) ** 2))
+    .slice(0, n);
 }
 
 export interface SettlementNow {
@@ -154,7 +185,14 @@ export const settlementNow = memo((id: string, mi: number = LAST): SettlementNow
   const near = nearestOf(s);
   const damPct = mean(near.dams.map((d) => damNow(d).pct));
   const sgi = mean(near.bhs.map((b) => boreholeNow(b).sgi));
-  const exposure = clamp(0.35 * clamp((-spi6 + 0.5) / 2.5, 0, 1) + 0.25 * clamp((50 - vci) / 50, 0, 1) + 0.2 * clamp((60 - damPct) / 60, 0, 1) + 0.2 * clamp((-sgi + 0.3) / 2, 0, 1), 0, 1);
+  const exposure = clamp(
+    0.35 * clamp((-spi6 + 0.5) / 2.5, 0, 1) +
+      0.25 * clamp((50 - vci) / 50, 0, 1) +
+      0.2 * clamp((60 - damPct) / 60, 0, 1) +
+      0.2 * clamp((-sgi + 0.3) / 2, 0, 1),
+    0,
+    1,
+  );
   const score = clamp(exposure * (0.55 + 0.5 * s.vulnerability), 0, 1);
   const r = new Rng(`setnow-${id}`);
   const risk = riskFromScore(score);
@@ -170,7 +208,18 @@ export const settlementNow = memo((id: string, mi: number = LAST): SettlementNow
     droughtClass: droughtClassFromSpi(spi6),
     reliability,
     altSupply: Math.round(clamp(30 + score * 60 + r.normal(0, 8), 5, 98)),
-    status: risk === 'Very High' ? 'Intervention' : risk === 'High' ? (r.bool(0.5) ? 'Intervention' : 'In progress') : risk === 'Moderate' ? (r.bool(0.5) ? 'Planned' : 'Monitoring') : 'Monitoring',
+    status:
+      risk === 'Very High'
+        ? 'Intervention'
+        : risk === 'High'
+          ? r.bool(0.5)
+            ? 'Intervention'
+            : 'In progress'
+          : risk === 'Moderate'
+            ? r.bool(0.5)
+              ? 'Planned'
+              : 'Monitoring'
+            : 'Monitoring',
     tankerDays: risk === 'Very High' || risk === 'High' ? Math.round(r.range(20, 180)) : 0,
   };
 });

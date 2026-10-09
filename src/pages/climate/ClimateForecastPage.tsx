@@ -18,22 +18,66 @@ export default function ClimateForecastPage() {
       <PageTabs mod={mod} />
       <div className="mb-3 flex flex-wrap items-center gap-3">
         <span className="text-sm font-medium text-ink-2">Emission scenario</span>
-        <Tabs label="Scenario" size="md" value={scenario} onChange={setScenario} options={[{ value: 'rcp45', label: 'RCP 4.5 (moderate)' }, { value: 'rcp85', label: 'RCP 8.5 (high)' }]} />
+        <Tabs
+          label="Scenario"
+          size="md"
+          value={scenario}
+          onChange={setScenario}
+          options={[
+            { value: 'rcp45', label: 'RCP 4.5 (moderate)' },
+            { value: 'rcp85', label: 'RCP 8.5 (high)' },
+          ]}
+        />
       </div>
       <ForecastKpis module="climate" metric="forecast-summary" extra={p} />
       <Row className="md:grid-cols-2 xl:grid-cols-3">
         <YearMap module="climate" layer="proj-temp" title="Projected Temperature Change (°C)" params={p} />
         <YearMap module="climate" layer="proj-rain" title="Projected Annual Rainfall Change (%)" params={p} />
-        <SeriesPanel module="climate" metric="indicator-trends" title="Key Climate Indicators – Trends & Forecasts" extra={p} height={300} />
+        <SeriesPanel
+          module="climate"
+          metric="indicator-trends"
+          title="Key Climate Indicators – Trends & Forecasts"
+          extra={p}
+          height={300}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <CategoryPanel module="climate" metric="projection-bars" title="Extreme Heat Days (days per year)" extra={{ ...p, kind: 'heat' }} variant="bar" labels height={220} />
-        <CategoryPanel module="climate" metric="projection-bars" title="Drought Frequency (events / decade)" extra={{ ...p, kind: 'drought' }} variant="bar" labels height={220} />
-        <CategoryPanel module="climate" metric="projection-bars" title="Extreme Rainfall Events (% change)" extra={{ ...p, kind: 'extreme' }} variant="bar" labels height={220} />
+        <CategoryPanel
+          module="climate"
+          metric="projection-bars"
+          title="Extreme Heat Days (days per year)"
+          extra={{ ...p, kind: 'heat' }}
+          variant="bar"
+          labels
+          height={220}
+        />
+        <CategoryPanel
+          module="climate"
+          metric="projection-bars"
+          title="Drought Frequency (events / decade)"
+          extra={{ ...p, kind: 'drought' }}
+          variant="bar"
+          labels
+          height={220}
+        />
+        <CategoryPanel
+          module="climate"
+          metric="projection-bars"
+          title="Extreme Rainfall Events (% change)"
+          extra={{ ...p, kind: 'extreme' }}
+          variant="bar"
+          labels
+          height={220}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
         <YearMap module="climate" layer="proj-spi" title="Projected SPI Change (Drought Risk)" params={p} />
-        <YearMap module="climate" layer="proj-availability" title="Projected Water Availability Change (%)" params={p} />
+        <YearMap
+          module="climate"
+          layer="proj-availability"
+          title="Projected Water Availability Change (%)"
+          params={p}
+        />
         <TablePanel module="climate" metric="forecast-summary" title="Climate Indicator Forecast Summary" extra={p} />
         <TablePanel module="climate" metric="risk-outlook" title="Climate Risk Outlook (2050)" extra={p} />
       </Row>

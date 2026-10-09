@@ -18,7 +18,11 @@ export function DwsLogo({ compact = false }: { compact?: boolean }) {
     );
   }
   return (
-    <div className="flex items-center gap-2" aria-label="Department of Water and Sanitation, Republic of South Africa (logo placeholder)" role="img">
+    <div
+      className="flex items-center gap-2"
+      aria-label="Department of Water and Sanitation, Republic of South Africa (logo placeholder)"
+      role="img"
+    >
       <svg viewBox="0 0 40 40" className="h-9 w-9 shrink-0" aria-hidden="true">
         <rect width="40" height="40" rx="9" fill="#ffffff" fillOpacity="0.08" stroke="#ffffff" strokeOpacity="0.25" />
         <path d="M20 7c-5.6 7.4-10 12.6-10 17.4a10 10 0 0 0 20 0C30 19.6 25.6 14.4 20 7z" fill="#3B8EEA" />

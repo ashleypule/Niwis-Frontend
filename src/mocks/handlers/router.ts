@@ -28,8 +28,11 @@ import { alertsHandler } from './alerts';
 import { referenceHandler, searchHandler } from './reference';
 
 function ctxOf(request: Request): Ctx {
-  const url = new URL(request.url);
-  const params = url.searchParams;
+  return ctxFromParams(new URL(request.url).searchParams);
+}
+
+/** Handler context from query params (also used by scripts/generate-docs.ts). */
+export function ctxFromParams(params: URLSearchParams): Ctx {
   const scope = resolveScope(params);
   const n = periodMonths(params, 12);
   let to = LAST_MONTH;
@@ -44,7 +47,10 @@ function ok(schema: ZodTypeAny, body: unknown) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     console.error('[mock] response failed schema validation', parsed.error.issues.slice(0, 5), body);
-    return HttpResponse.json({ error: 'Mock response failed schema validation', issues: parsed.error.issues.slice(0, 10) }, { status: 500 });
+    return HttpResponse.json(
+      { error: 'Mock response failed schema validation', issues: parsed.error.issues.slice(0, 10) },
+      { status: 500 },
+    );
   }
   return HttpResponse.json(parsed.data);
 }
@@ -55,8 +61,8 @@ async function latency() {
   if (APP.mockLatencyMs > 0) await delay(APP.mockLatencyMs * (0.6 + Math.random() * 0.8));
 }
 
-type Kind = 'timeseries' | 'forecast' | 'breakdown' | 'table' | 'matrix' | 'map';
-const KIND_SCHEMA: Record<Kind, ZodTypeAny> = {
+export type Kind = 'timeseries' | 'forecast' | 'breakdown' | 'table' | 'matrix' | 'map';
+export const KIND_SCHEMA: Record<Kind, ZodTypeAny> = {
   timeseries: SeriesSetSchema,
   forecast: SeriesSetSchema,
   breakdown: CategorySetSchema,
@@ -95,7 +101,12 @@ export const handlers = [
     const mod = MODULE_HANDLERS[String(params.module)] as ModuleHandlers | undefined;
     if (!mod?.summary) return notFound(`${params.module}/summary`);
     const ctx = ctxOf(request);
-    const r = run(() => ({ module: String(params.module), asOf: asOfIso(), scope: { level: ctx.scope.level, id: ctx.scope.id, name: ctx.scope.name }, kpis: mod.summary!(ctx) }));
+    const r = run(() => ({
+      module: String(params.module),
+      asOf: asOfIso(),
+      scope: { level: ctx.scope.level, id: ctx.scope.id, name: ctx.scope.name },
+      kpis: mod.summary!(ctx),
+    }));
     return r instanceof Response ? r : ok(KpiSetSchema, r);
   }),
   http.get('*/api/v1/:module/entities', async ({ request, params }) => {

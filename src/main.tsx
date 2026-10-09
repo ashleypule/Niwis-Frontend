@@ -9,7 +9,8 @@ import './index.css';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: (count, err) => count < 2 && (err as { kind?: string }).kind !== 'schema' && (err as { kind?: string }).kind !== 'not-found',
+      retry: (count, err) =>
+        count < 2 && (err as { kind?: string }).kind !== 'schema' && (err as { kind?: string }).kind !== 'not-found',
       refetchOnWindowFocus: false,
     },
   },

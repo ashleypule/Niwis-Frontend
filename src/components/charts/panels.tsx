@@ -41,11 +41,34 @@ interface PanelBase {
 function useTabs(tabs?: PanelTab[]) {
   const [tab, setTab] = useState(tabs?.[0]?.value ?? '');
   const active = tabs?.find((t) => t.value === tab);
-  const tabRow = tabs && tabs.length > 1 ? <Tabs label="View" value={tab} onChange={setTab} options={tabs.map((t) => ({ value: t.value, label: t.label }))} /> : null;
+  const tabRow =
+    tabs && tabs.length > 1 ? (
+      <Tabs
+        label="View"
+        value={tab}
+        onChange={setTab}
+        options={tabs.map((t) => ({ value: t.value, label: t.label }))}
+      />
+    ) : null;
   return { active, tabRow };
 }
 
-export function SeriesPanel({ module, metric, title, context, info, extra, tabs, height = 220, className, controls, footer, band, forecast, opts }: PanelBase & { forecast?: boolean; opts?: SeriesOpts }) {
+export function SeriesPanel({
+  module,
+  metric,
+  title,
+  context,
+  info,
+  extra,
+  tabs,
+  height = 220,
+  className,
+  controls,
+  footer,
+  band,
+  forecast,
+  opts,
+}: PanelBase & { forecast?: boolean; opts?: SeriesOpts }) {
   const { active, tabRow } = useTabs(tabs);
   const params = { ...extra, ...active?.params };
   const m = active?.metric ?? metric;
@@ -82,15 +105,47 @@ export function SeriesPanel({ module, metric, title, context, info, extra, tabs,
   );
 }
 
-export function CategoryPanel({ module, metric, title, context, info, extra, tabs, height = 220, className, controls, footer, band, variant = 'bar', labels, log, legend }: PanelBase & { variant?: CategoryVariant; labels?: boolean; log?: boolean; legend?: boolean }) {
+export function CategoryPanel({
+  module,
+  metric,
+  title,
+  context,
+  info,
+  extra,
+  tabs,
+  height = 220,
+  className,
+  controls,
+  footer,
+  band,
+  variant = 'bar',
+  labels,
+  log,
+  legend,
+}: PanelBase & { variant?: CategoryVariant; labels?: boolean; log?: boolean; legend?: boolean }) {
   const { active, tabRow } = useTabs(tabs);
   const q = useBreakdown(module, active?.metric ?? metric, { ...extra, ...active?.params });
   const t = useChartTheme();
-  const option = useMemo(() => (q.data ? categoryOption(q.data, t, variant, { labels, log, legend }) : undefined), [q.data, t, variant, labels, log, legend]);
+  const option = useMemo(
+    () => (q.data ? categoryOption(q.data, t, variant, { labels, log, legend }) : undefined),
+    [q.data, t, variant, labels, log, legend],
+  );
   const rows = useMemo(() => (q.data ? categoryRows(q.data) : undefined), [q.data]);
   if (variant === 'donut') {
     return (
-      <ChartCard title={title} context={context} info={info} className={className} band={band} isLoading={q.isLoading} isError={q.isError} onRetry={() => q.refetch()} rows={rows} footer={footer} controls={tabRow ?? controls}>
+      <ChartCard
+        title={title}
+        context={context}
+        info={info}
+        className={className}
+        band={band}
+        isLoading={q.isLoading}
+        isError={q.isError}
+        onRetry={() => q.refetch()}
+        rows={rows}
+        footer={footer}
+        controls={tabRow ?? controls}
+      >
         {q.data && option && <DonutBody set={q.data} option={option} height={height} title={title} />}
       </ChartCard>
     );
@@ -122,7 +177,19 @@ export function CategoryPanel({ module, metric, title, context, info, extra, tab
   );
 }
 
-export function MatrixPanel({ module, metric, title, context, info, extra, tabs, height = 240, className, controls, band }: PanelBase) {
+export function MatrixPanel({
+  module,
+  metric,
+  title,
+  context,
+  info,
+  extra,
+  tabs,
+  height = 240,
+  className,
+  controls,
+  band,
+}: PanelBase) {
   const { active, tabRow } = useTabs(tabs);
   const q = useMatrix(module, active?.metric ?? metric, { ...extra, ...active?.params });
   const t = useChartTheme();
@@ -154,30 +221,48 @@ export function MatrixPanel({ module, metric, title, context, info, extra, tabs,
   );
 }
 
-function DonutBody({ set, option, height, title }: { set: import('@/types/api').CategorySet; option: import('./echarts').EChartsOption; height: number; title: string }) {
+function DonutBody({
+  set,
+  option,
+  height,
+  title,
+}: {
+  set: import('@/types/api').CategorySet;
+  option: import('./echarts').EChartsOption;
+  height: number;
+  title: string;
+}) {
   const s = set.series[0];
   const total = s.values.reduce<number>((a, v) => a + (v ?? 0), 0);
   const t = useChartTheme();
   return (
     <div className="@container">
-     <div className="flex flex-col items-center gap-3 @[22rem]:flex-row">
-      <div className="w-full max-w-[200px] shrink-0 @[22rem]:w-[44%]">
-        <EChart option={option} height={height} ariaLabel={`${title} donut chart`} />
+      <div className="flex flex-col items-center gap-3 @[22rem]:flex-row">
+        <div className="w-full max-w-[200px] shrink-0 @[22rem]:w-[44%]">
+          <EChart option={option} height={height} ariaLabel={`${title} donut chart`} />
+        </div>
+        <ul className="w-full min-w-0 flex-1 space-y-1.5 text-[12px]">
+          {set.categories.map((c, i) => {
+            const v = s.values[i] ?? 0;
+            return (
+              <li key={c} className="flex items-start gap-2">
+                <span
+                  className="mt-0.5 h-3 w-3 shrink-0 rounded-sm"
+                  style={{ background: set.colors?.[i] ?? t.series[i % t.series.length] }}
+                  aria-hidden="true"
+                />
+                <span className="min-w-0 flex-1 leading-tight text-ink-2">{c}</span>
+                <span className="num shrink-0 whitespace-nowrap font-semibold text-ink">
+                  {fmt(v, set.unit === 'dams' || set.unit === 'km²' ? '' : set.unit)}
+                </span>
+                <span className="num w-9 shrink-0 text-right text-muted">
+                  {formatNumber(total ? (v / total) * 100 : 0, 0)}%
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
-      <ul className="min-w-0 flex-1 space-y-1.5 text-[12px]">
-        {set.categories.map((c, i) => {
-          const v = s.values[i] ?? 0;
-          return (
-            <li key={c} className="flex items-start gap-2">
-              <span className="mt-0.5 h-3 w-3 shrink-0 rounded-sm" style={{ background: set.colors?.[i] ?? t.series[i % t.series.length] }} aria-hidden="true" />
-              <span className="min-w-0 flex-1 leading-tight text-ink-2">{c}</span>
-              <span className="num whitespace-nowrap font-semibold text-ink">{fmt(v, set.unit === 'dams' || set.unit === 'km²' ? '' : set.unit)}</span>
-              <span className="num w-9 text-right text-muted">{formatNumber(total ? (v / total) * 100 : 0, 0)}%</span>
-            </li>
-          );
-        })}
-      </ul>
-     </div>
     </div>
   );
 }

@@ -21,7 +21,17 @@ export interface Filters {
   compare: boolean;
 }
 
-export const FILTER_KEYS = ['province', 'wma', 'catchment', 'municipality', 'entity', 'from', 'to', 'period', 'compare'] as const;
+export const FILTER_KEYS = [
+  'province',
+  'wma',
+  'catchment',
+  'municipality',
+  'entity',
+  'from',
+  'to',
+  'period',
+  'compare',
+] as const;
 
 interface UiState {
   filters: Filters;
@@ -74,7 +84,9 @@ function initialTheme(): Theme {
   } catch {
     /* storage unavailable */
   }
-  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
 }
 
 function readList(key: string): string[] {

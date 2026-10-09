@@ -18,11 +18,35 @@ export const RIVERS_BY_WMA: Record<string, string[]> = {
   WMA4: ['Thukela', 'uMngeni', 'Mvoti', 'Mfolozi', 'Phongolo', 'Mkomazi', 'Buffalo', 'Mooi', 'Msunduzi', 'Mhlathuze'],
   WMA5: ['Vaal', 'Klip', 'Wilge', 'Suikerbosrand', 'Mooi', 'Vet', 'Harts', 'Riet', 'Modder', 'Sand'],
   WMA6: ['Orange', 'Caledon', 'Kraai', 'Ongers', 'Hartbees', 'Seekoei', 'Brak'],
-  WMA7: ['Mzimvubu', 'Great Kei', 'Buffalo', 'Keiskamma', 'Great Fish', 'Sundays', 'Gamtoos', 'Kromme', 'Swartkops', 'Tsitsa'],
+  WMA7: [
+    'Mzimvubu',
+    'Great Kei',
+    'Buffalo',
+    'Keiskamma',
+    'Great Fish',
+    'Sundays',
+    'Gamtoos',
+    'Kromme',
+    'Swartkops',
+    'Tsitsa',
+  ],
   WMA8: ['Breede', 'Gouritz', 'Olifants (Gouritz)', 'Gamka', 'Riviersonderend', 'Hex', 'Duiwenhoks'],
   WMA9: ['Berg', 'Olifants (Western)', 'Eerste', 'Diep', 'Doring', 'Lourens'],
 };
-const BIG_RIVERS = new Set(['Orange', 'Vaal', 'Limpopo', 'Thukela', 'Olifants', 'Komati', 'Mzimvubu', 'Great Fish', 'Breede', 'Crocodile (West)', 'Phongolo', 'Great Kei']);
+const BIG_RIVERS = new Set([
+  'Orange',
+  'Vaal',
+  'Limpopo',
+  'Thukela',
+  'Olifants',
+  'Komati',
+  'Mzimvubu',
+  'Great Fish',
+  'Breede',
+  'Crocodile (West)',
+  'Phongolo',
+  'Great Kei',
+]);
 
 export interface Station {
   id: string;
@@ -158,7 +182,15 @@ export const stationNow = memo((id: string): StationNow => {
   const r = new Rng(`stnow-${id}`);
   const offline = !s.telemetry || r.bool(0.03);
   const delayed = !offline && r.bool(0.05);
-  const status: StationNow['status'] = offline ? 'Offline' : delayed ? 'Data Delayed' : pct >= 0.9 ? 'High Flow' : pct <= 0.15 ? 'Low Flow' : 'Normal';
+  const status: StationNow['status'] = offline
+    ? 'Offline'
+    : delayed
+      ? 'Data Delayed'
+      : pct >= 0.9
+        ? 'High Flow'
+        : pct <= 0.15
+          ? 'Low Flow'
+          : 'Normal';
   const last12 = Array.from(mon.slice(t - 11, t + 1));
   const sed = 25 * Math.pow(Math.max(0.01, q) / Math.max(0.01, meanQ), 0.7) * (1 + CELLS[s.cell].aridity);
   return {
@@ -175,7 +207,9 @@ export const stationNow = memo((id: string): StationNow => {
     q90,
     q10,
     eflowPct: (last12.filter((v) => v >= q90).length / 12) * 100,
-    lastReading: new Date(APP.asOf.getTime() - (offline ? r.range(3, 30) : delayed ? r.range(1, 3) : r.range(0.01, 0.2)) * DAY_MS).toISOString(),
+    lastReading: new Date(
+      APP.asOf.getTime() - (offline ? r.range(3, 30) : delayed ? r.range(1, 3) : r.range(0.01, 0.2)) * DAY_MS,
+    ).toISOString(),
   };
 });
 

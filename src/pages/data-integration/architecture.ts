@@ -8,8 +8,14 @@ export const PIPELINE: FlowColumn[] = [
     color: '#1565C0',
     icon: Cloud,
     items: [
-      { title: 'Hydro-meteorological', lines: ['SAWS stations (800+)', 'DWS Hydstra / telemetry', 'Satellite rainfall (CHIRPS, TAMSAT)'] },
-      { title: 'Surface & groundwater', lines: ['Rivers, dams, reservoirs', 'NGA boreholes', 'Water quality labs (NWQMS)'] },
+      {
+        title: 'Hydro-meteorological',
+        lines: ['SAWS stations (800+)', 'DWS Hydstra / telemetry', 'Satellite rainfall (CHIRPS, TAMSAT)'],
+      },
+      {
+        title: 'Surface & groundwater',
+        lines: ['Rivers, dams, reservoirs', 'NGA boreholes', 'Water quality labs (NWQMS)'],
+      },
       { title: 'Services & infrastructure', lines: ['Municipalities / WSAs (WSNIS)', 'Water boards, TCTA'] },
       { title: 'Socio-economic & spatial', lines: ['Stats SA census & GHS', 'SANBI, SANSA land cover'] },
       { title: 'External & research', lines: ['WRC, universities', 'NASA GRACE-FO, NOAA ENSO'] },
@@ -63,12 +69,52 @@ export const PIPELINE: FlowColumn[] = [
 
 /** Eight-layer architecture view. */
 export const LAYERS8 = [
-  { n: 1, name: 'Data sources', desc: 'SAWS · SANSA · DWS Hydstra / Telemetry · laboratories · municipalities / WSAs · Stats SA · SANBI · NGA · water boards · global (GRACE-FO, NOAA, CHIRPS)', color: '#1565C0' },
-  { n: 2, name: 'Connectivity & ingestion', desc: 'MQTT broker, REST connectors, FTP / THREDDS / S3 pulls, WSNIS API, NWQMS database links', color: '#1E88E5' },
-  { n: 3, name: 'Quality assurance', desc: 'ML-based QC engine: range, spike, spatial consistency, duplicate detection, calibration tracking', color: '#00838F' },
-  { n: 4, name: 'Processing & harmonisation', desc: 'ETL pipelines, unit conversion, datum alignment, gap filling (kriging / LSTM imputation)', color: '#2E7D32' },
-  { n: 5, name: 'Storage', desc: 'Data lake (10 PB target), time-series DB, PostGIS, metadata registry (ISO 19115)', color: '#558B2F' },
-  { n: 6, name: 'Analytics & AI', desc: 'Index pipelines (SPI, SPEI, VCI, SSI, SGI), forecasting models, digital-twin layer', color: '#7B1FA2' },
-  { n: 7, name: 'Services & APIs', desc: 'API gateway (REST / GraphQL, OAuth 2.0), OGC services, alert engine, report generator', color: '#C74300' },
-  { n: 8, name: 'Users & channels', desc: 'NIWIS dashboard, mobile app, open data portal, partner systems, public bulletins', color: '#C62828' },
+  {
+    n: 1,
+    name: 'Data sources',
+    desc: 'SAWS · SANSA · DWS Hydstra / Telemetry · laboratories · municipalities / WSAs · Stats SA · SANBI · NGA · water boards · global (GRACE-FO, NOAA, CHIRPS)',
+    color: '#1565C0',
+  },
+  {
+    n: 2,
+    name: 'Connectivity & ingestion',
+    desc: 'MQTT broker, REST connectors, FTP / THREDDS / S3 pulls, WSNIS API, NWQMS database links',
+    color: '#1E88E5',
+  },
+  {
+    n: 3,
+    name: 'Quality assurance',
+    desc: 'ML-based QC engine: range, spike, spatial consistency, duplicate detection, calibration tracking',
+    color: '#00838F',
+  },
+  {
+    n: 4,
+    name: 'Processing & harmonisation',
+    desc: 'ETL pipelines, unit conversion, datum alignment, gap filling (kriging / LSTM imputation)',
+    color: '#2E7D32',
+  },
+  {
+    n: 5,
+    name: 'Storage',
+    desc: 'Data lake (10 PB target), time-series DB, PostGIS, metadata registry (ISO 19115)',
+    color: '#558B2F',
+  },
+  {
+    n: 6,
+    name: 'Analytics & AI',
+    desc: 'Index pipelines (SPI, SPEI, VCI, SSI, SGI), forecasting models, digital-twin layer',
+    color: '#7B1FA2',
+  },
+  {
+    n: 7,
+    name: 'Services & APIs',
+    desc: 'API gateway (REST / GraphQL, OAuth 2.0), OGC services, alert engine, report generator',
+    color: '#C74300',
+  },
+  {
+    n: 8,
+    name: 'Users & channels',
+    desc: 'NIWIS dashboard, mobile app, open data portal, partner systems, public bulletins',
+    color: '#C62828',
+  },
 ];

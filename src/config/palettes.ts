@@ -38,7 +38,13 @@ const s = (id: string, title: string, unit: string | undefined, bins: ScaleBin[]
   bins,
   noData: NO_DATA,
 });
-const c = (id: string, title: string, bins: ScaleBin[]): ScaleDef => ({ id, title, kind: 'category', bins, noData: NO_DATA });
+const c = (id: string, title: string, bins: ScaleBin[]): ScaleDef => ({
+  id,
+  title,
+  kind: 'category',
+  bins,
+  noData: NO_DATA,
+});
 
 /** Base semantic colours (also mirrored as CSS variables in index.css). */
 export const COLORS = {
@@ -397,7 +403,10 @@ export function getScale(id: ScaleId | string): ScaleDef {
 }
 
 /** Find the bin for a value (number → threshold, string → category id). */
-export function classify(scale: ScaleId | string | ScaleDef, value: number | string | null | undefined): ScaleBin | null {
+export function classify(
+  scale: ScaleId | string | ScaleDef,
+  value: number | string | null | undefined,
+): ScaleBin | null {
   const sc = typeof scale === 'object' ? scale : getScale(scale);
   if (value == null || (typeof value === 'number' && Number.isNaN(value))) return null;
   if (typeof value === 'string' || sc.kind === 'category') {

@@ -15,7 +15,10 @@ const V: Record<Variant, string> = {
   danger: 'bg-bad text-white hover:opacity-90 border border-transparent',
 };
 
-export const Button = forwardRef<HTMLButtonElement, Props>(function Button({ variant = 'primary', size = 'md', className, type = 'button', ...rest }, ref) {
+export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  { variant = 'primary', size = 'md', className, type = 'button', ...rest },
+  ref,
+) {
   return (
     <button
       ref={ref}

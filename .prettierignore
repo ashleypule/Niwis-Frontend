@@ -3,3 +3,5 @@ public/geo
 public/mockServiceWorker.js
 docs/reference
 src/mocks/reference/generated.ts
+docs/API_CONTRACT.md
+docs/DATA_DICTIONARY.md

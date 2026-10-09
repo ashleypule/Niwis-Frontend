@@ -1,59 +1,69 @@
 # NIWIS Frontend — Build Plan
 
-Source of truth: `docs/reference/NIWIS-data-requirements-spec.md` (DRS v1.0, May 2026) + the 61 mockups in `docs/reference/screens/`.
+Source of truth: the NIWIS Data Requirements Specification (DRS v1.0, May 2026, supplied with the brief; § references throughout the code) + the 61 mockups in `docs/reference/screens/`.
 Read this file and `PROGRESS.md` first after any context reset.
 
 ## 1. Screenshot → module map
 
 Screens are numbered `1.jpg … 61.jpg` (the order they were supplied). Variants per module are merged into one page.
 
-| Module | Status screens | Forecast screen |
-|---|---|---|
-| National Overview | 1 | — |
-| Drought Status Monitoring | 2, 3, 4, 5, 6 | (none supplied → built from spec §22 + other forecast screens) |
-| Climate Change Indicators | 7, 8, 9, 10 | 11 |
-| Vegetation Condition | 12, 13, 14 | 15 |
-| Rainfall Status Monitoring | 16, 17 | — (forecast tab still built: 3-month outlook) |
-| Runoff Status Monitoring | 18, 19 | — |
-| Dam & Reservoir Status | 20, 21, 22, 23 | 24 |
-| Surface Water Monitoring | 25, 26, 27 | — |
-| Groundwater Level Monitoring | 28, 29, 30 | — |
-| Groundwater Reserve Assessment | 31 | — |
-| Water Quality Monitoring | 32, 33 | 34 |
-| Wastewater Compliance (Green Drop) | 35 | — |
-| Drinking Water Compliance (Blue Drop) | 36 | — |
-| RWQO, IWRM, Water Quantity, Services, Tariffs, Settlements, AI, Data Integration, Governance, Roadmap | 37 – 61 (to be re-checked page by page while building phases 5–8) | |
+| Module                                         | Status screens                                               | Forecast screen                                  |
+| ---------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------ |
+| National Overview                              | 1                                                            | —                                                |
+| Drought Status Monitoring                      | 2, 3, 4, 5, 6                                                | 53                                               |
+| Climate Change Indicators                      | 7, 8, 9, 10                                                  | 11                                               |
+| Vegetation Condition                           | 12, 13, 14                                                   | 15                                               |
+| Rainfall Status Monitoring                     | 16, 17                                                       | 54                                               |
+| Runoff Status Monitoring                       | 18, 19, 55                                                   | 56                                               |
+| Dam & Reservoir Status                         | 20, 21, 22, 23                                               | 24                                               |
+| Surface Water Monitoring                       | 25, 26, 27                                                   | 57                                               |
+| Groundwater Level Monitoring                   | 28, 29, 30, 58                                               | —                                                |
+| Groundwater Reserve Assessment                 | 31                                                           | —                                                |
+| Water Quality Monitoring                       | 32, 33, 59                                                   | 34                                               |
+| Wastewater Compliance (Green Drop)             | 35                                                           | —                                                |
+| Drinking Water Compliance (Blue Drop)          | 36                                                           | —                                                |
+| Resource Water Quality Objectives (RWQO)       | 37                                                           | —                                                |
+| Water Resource Management (IWRM)               | 38                                                           | —                                                |
+| Water Quantity Assessment                      | 39                                                           | —                                                |
+| Water Services & Infrastructure                | 40, 41                                                       | 42                                               |
+| Water Tariffs & Pricing                        | 43, 44                                                       | 45                                               |
+| Drought-Affected Settlements                   | 46, 47                                                       | 48                                               |
+| AI & Predictive Analytics                      | 49                                                           | —                                                |
+| Data Integration                               | 50, 51 (architecture)                                        | — · report view: 60 (`/data-integration/report`) |
+| Implementation Roadmap                         | 52                                                           | —                                                |
+| Data Governance & Quality                      | 61                                                           | —                                                |
+| Alerts, Reports, Print view, `/dev/components` | (no screens — built from spec §20–22 and the shell patterns) | —                                                |
 
 ## 2. Routes
 
-| Route | Page | Forecast route |
-|---|---|---|
-| `/` | National Overview | |
-| `/drought` | Drought Status Monitoring | `/drought/forecast` |
-| `/climate` | Climate Change Indicators | `/climate/forecast` |
-| `/vegetation` | Vegetation Condition | `/vegetation/forecast` |
-| `/rainfall` | Rainfall Status Monitoring | `/rainfall/forecast` |
-| `/runoff` | Runoff Status Monitoring | `/runoff/forecast` |
-| `/dams` | Dam & Reservoir Status | `/dams/forecast` |
-| `/surface-water` | Surface Water Monitoring | `/surface-water/forecast` |
-| `/groundwater` | Groundwater Level Monitoring | |
-| `/groundwater-reserve` | Groundwater Reserve Assessment | |
-| `/water-quality` | Water Quality Monitoring | `/water-quality/forecast` |
-| `/green-drop` | Wastewater Compliance (Green Drop) | |
-| `/blue-drop` | Drinking Water Compliance (Blue Drop) | |
-| `/rwqo` | Resource Water Quality Objectives | |
-| `/iwrm` | Water Resource Management | |
-| `/water-quantity` | Water Quantity Assessment | |
-| `/services` | Water Services & Infrastructure | `/services/forecast` |
-| `/tariffs` | Water Tariffs & Raw Water Pricing | `/tariffs/forecast` |
-| `/settlements` | Drought-Affected Settlements | `/settlements/forecast` |
-| `/ai` | AI & Predictive Analytics | |
-| `/data-integration` | Data Integration (+ `/data-integration/report` printable) | |
-| `/governance` | Data Governance & QA | |
-| `/roadmap` | Implementation Roadmap | |
-| `/alerts` | Alerts & Early Warnings | |
-| `/reports` | Reports & Downloads (+ `/reports/print` print view) | |
-| `/dev/components` | Component gallery (dev) | |
+| Route                  | Page                                                      | Forecast route            |
+| ---------------------- | --------------------------------------------------------- | ------------------------- |
+| `/`                    | National Overview                                         |                           |
+| `/drought`             | Drought Status Monitoring                                 | `/drought/forecast`       |
+| `/climate`             | Climate Change Indicators                                 | `/climate/forecast`       |
+| `/vegetation`          | Vegetation Condition                                      | `/vegetation/forecast`    |
+| `/rainfall`            | Rainfall Status Monitoring                                | `/rainfall/forecast`      |
+| `/runoff`              | Runoff Status Monitoring                                  | `/runoff/forecast`        |
+| `/dams`                | Dam & Reservoir Status                                    | `/dams/forecast`          |
+| `/surface-water`       | Surface Water Monitoring                                  | `/surface-water/forecast` |
+| `/groundwater`         | Groundwater Level Monitoring                              |                           |
+| `/groundwater-reserve` | Groundwater Reserve Assessment                            |                           |
+| `/water-quality`       | Water Quality Monitoring                                  | `/water-quality/forecast` |
+| `/green-drop`          | Wastewater Compliance (Green Drop)                        |                           |
+| `/blue-drop`           | Drinking Water Compliance (Blue Drop)                     |                           |
+| `/rwqo`                | Resource Water Quality Objectives                         |                           |
+| `/iwrm`                | Water Resource Management                                 |                           |
+| `/water-quantity`      | Water Quantity Assessment                                 |                           |
+| `/services`            | Water Services & Infrastructure                           | `/services/forecast`      |
+| `/tariffs`             | Water Tariffs & Raw Water Pricing                         | `/tariffs/forecast`       |
+| `/settlements`         | Drought-Affected Settlements                              | `/settlements/forecast`   |
+| `/ai`                  | AI & Predictive Analytics                                 |                           |
+| `/data-integration`    | Data Integration (+ `/data-integration/report` printable) |                           |
+| `/governance`          | Data Governance & QA                                      |                           |
+| `/roadmap`             | Implementation Roadmap                                    |                           |
+| `/alerts`              | Alerts & Early Warnings                                   |                           |
+| `/reports`             | Reports & Downloads (+ `/reports/print` print view)       |                           |
+| `/dev/components`      | Component gallery (dev)                                   |                           |
 
 ## 3. Panels per page (main ones; source screens in brackets)
 
@@ -77,17 +87,17 @@ Screens are numbered `1.jpg … 61.jpg` (the order they were supplied). Variants
 
 Generic endpoint family, per module (`{m}` = module id):
 
-| Endpoint | Returns (zod schema) |
-|---|---|
-| `GET /api/v1/{m}/summary` | `KpiSet` — KPI cards |
-| `GET /api/v1/{m}/timeseries?metric=&entityId=&from=&to=&interval=` | `SeriesSet` — series + axes (units), bands, as-of marker |
-| `GET /api/v1/{m}/breakdown?metric=` | `CategorySet` — categories × series (bars, donuts, stacked, waterfall) |
-| `GET /api/v1/{m}/table?metric=` | `TableSet` — typed columns + rows |
-| `GET /api/v1/{m}/matrix?metric=` | `MatrixSet` — heatmaps |
-| `GET /api/v1/{m}/map?layer=&level=&date=` | `MapLayer` — choropleth / grid / points |
-| `GET /api/v1/{m}/entities` · `/entities/{id}` | `EntityList` · `EntityDetail` |
-| `GET /api/v1/{m}/forecast?metric=&horizon=&entityId=` | `SeriesSet` with p10/p90 band + as-of |
-| `GET /api/v1/alerts` · `/reference/{type}` · `/search?q=` | alerts, reference lists, search hits |
+| Endpoint                                                           | Returns (zod schema)                                                   |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| `GET /api/v1/{m}/summary`                                          | `KpiSet` — KPI cards                                                   |
+| `GET /api/v1/{m}/timeseries?metric=&entityId=&from=&to=&interval=` | `SeriesSet` — series + axes (units), bands, as-of marker               |
+| `GET /api/v1/{m}/breakdown?metric=`                                | `CategorySet` — categories × series (bars, donuts, stacked, waterfall) |
+| `GET /api/v1/{m}/table?metric=`                                    | `TableSet` — typed columns + rows                                      |
+| `GET /api/v1/{m}/matrix?metric=`                                   | `MatrixSet` — heatmaps                                                 |
+| `GET /api/v1/{m}/map?layer=&level=&date=`                          | `MapLayer` — choropleth / grid / points                                |
+| `GET /api/v1/{m}/entities` · `/entities/{id}`                      | `EntityList` · `EntityDetail`                                          |
+| `GET /api/v1/{m}/forecast?metric=&horizon=&entityId=`              | `SeriesSet` with p10/p90 band + as-of                                  |
+| `GET /api/v1/alerts` · `/reference/{type}` · `/search?q=`          | alerts, reference lists, search hits                                   |
 
 All accept global filter params: `province, wma, catchment, municipality, entityId, from, to, period, compare`.
 Classification is never sent as colour: rows/points carry the value (and optionally a class id); the client colours it via `config/palettes.ts`.

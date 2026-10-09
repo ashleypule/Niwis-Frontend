@@ -27,7 +27,8 @@ describe('seeded determinism', () => {
 describe('aggregation consistency', () => {
   it('national %FSC = Σ volume / Σ capacity = capacity-weighted mean of dam %FSC', () => {
     const agg = aggregateStorage(DAMS);
-    const weighted = DAMS.reduce((s, d) => s + damNow(d.id).pct * d.capacity, 0) / DAMS.reduce((s, d) => s + d.capacity, 0);
+    const weighted =
+      DAMS.reduce((s, d) => s + damNow(d.id).pct * d.capacity, 0) / DAMS.reduce((s, d) => s + d.capacity, 0);
     expect(agg.pct).toBeCloseTo(weighted, 1);
   });
   it('every dam: 0 ≤ %FSC ≤ 100, %FSC = volume / capacity, storage never exceeds capacity', () => {

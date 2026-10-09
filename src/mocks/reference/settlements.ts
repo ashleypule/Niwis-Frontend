@@ -2,7 +2,8 @@
  * Settlements monitored for drought impact: real towns / villages with APPROXIMATE coordinates (±10–20 km).
  * Province is derived from coordinates in the generator. Verify before operational use.
  */
-export type SettlementType = 'Rural village' | 'Small town' | 'Informal settlement' | 'Farming community' | 'Peri-urban';
+export type SettlementType =
+  'Rural village' | 'Small town' | 'Informal settlement' | 'Farming community' | 'Peri-urban';
 
 type Row = [name: string, lat: number, lon: number, type?: SettlementType];
 

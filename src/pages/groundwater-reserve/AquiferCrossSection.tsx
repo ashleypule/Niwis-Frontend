@@ -4,12 +4,18 @@
  */
 export function AquiferCrossSection() {
   const ground = 'M0 60 C 80 52 150 66 230 58 S 380 48 470 62 L 560 70 L 560 0 L 0 0 Z';
-  const layer = (y1: number, y2: number) => `M0 ${y1} C 120 ${y1 - 6} 260 ${y1 + 8} 400 ${y1 + 2} S 520 ${y1 + 8} 560 ${y1 + 6} L 560 ${y2} L 0 ${y2} Z`;
+  const layer = (y1: number, y2: number) =>
+    `M0 ${y1} C 120 ${y1 - 6} 260 ${y1 + 8} 400 ${y1 + 2} S 520 ${y1 + 8} 560 ${y1 + 6} L 560 ${y2} L 0 ${y2} Z`;
   const wt = 'M0 92 C 100 88 200 104 300 98 S 470 112 560 118';
   const holes = [90, 210, 330, 450];
   return (
     <figure>
-      <svg viewBox="0 0 560 300" className="w-full" role="img" aria-label="Aquifer cross-section: topsoil, weathered zone, fractured aquifer and confining layer with boreholes, water table and recharge">
+      <svg
+        viewBox="0 0 560 300"
+        className="w-full"
+        role="img"
+        aria-label="Aquifer cross-section: topsoil, weathered zone, fractured aquifer and confining layer with boreholes, water table and recharge"
+      >
         <rect width="560" height="300" fill="var(--c-surface-2)" />
         <path d={layer(58, 300)} fill="#EAD9B9" />
         <path d={layer(78, 300)} fill="#E7B8A3" />
@@ -18,7 +24,12 @@ export function AquiferCrossSection() {
         <path d={ground} fill="#CFE8F7" />
         {/* fracture pattern */}
         {Array.from({ length: 22 }, (_, k) => (
-          <path key={k} d={`M${20 + k * 25} ${155 + (k % 3) * 18} l14 ${-10 + (k % 2) * 20}`} stroke="#7E95B0" strokeWidth="1.2" />
+          <path
+            key={k}
+            d={`M${20 + k * 25} ${155 + (k % 3) * 18} l14 ${-10 + (k % 2) * 20}`}
+            stroke="#7E95B0"
+            strokeWidth="1.2"
+          />
         ))}
         {/* water table */}
         <path d={wt} fill="none" stroke="#1565C0" strokeWidth="2.2" strokeDasharray="7 4" />

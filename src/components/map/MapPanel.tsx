@@ -99,63 +99,120 @@ function Panes() {
 }
 
 function NeighbourLayer({ data, dark }: { data?: GeoFC; dark: boolean }) {
-  useLeafletLayer(
-    () => {
-      if (!data) return null;
-      const g = L.layerGroup();
-      L.geoJSON(data, { pane: 'basefill', style: { color: dark ? '#3a4b63' : '#b9c2cc', weight: 0.8, fillColor: dark ? '#26354a' : '#d9dee4', fillOpacity: 1 }, interactive: false }).addTo(g);
-      data.features.forEach((f) => {
-        const p = labelPoint(f.geometry);
-        if (!p) return;
-        const name = (f.properties.name ?? '').replace('Republic of ', '').toUpperCase();
-        L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label country', interactive: false }).setLatLng(p).setContent(name).addTo(g);
-      });
-      L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label ocean' }).setLatLng([-33.4, 16.9]).setContent('Atlantic<br/>Ocean').addTo(g);
-      L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label ocean' }).setLatLng([-32.2, 31.6]).setContent('Indian Ocean').addTo(g);
-      return g;
-    },
-    [data, dark],
-  );
+  useLeafletLayer(() => {
+    if (!data) return null;
+    const g = L.layerGroup();
+    L.geoJSON(data, {
+      pane: 'basefill',
+      style: {
+        color: dark ? '#3a4b63' : '#b9c2cc',
+        weight: 0.8,
+        fillColor: dark ? '#26354a' : '#d9dee4',
+        fillOpacity: 1,
+      },
+      interactive: false,
+    }).addTo(g);
+    data.features.forEach((f) => {
+      const p = labelPoint(f.geometry);
+      if (!p) return;
+      const name = (f.properties.name ?? '').replace('Republic of ', '').toUpperCase();
+      L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label country', interactive: false })
+        .setLatLng(p)
+        .setContent(name)
+        .addTo(g);
+    });
+    L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label ocean' })
+      .setLatLng([-33.4, 16.9])
+      .setContent('Atlantic<br/>Ocean')
+      .addTo(g);
+    L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label ocean' })
+      .setLatLng([-32.2, 31.6])
+      .setContent('Indian Ocean')
+      .addTo(g);
+    return g;
+  }, [data, dark]);
   return null;
 }
 
-function OutlineLayer({ data, color, weight, dash, labels, pane }: { data?: GeoFC; color: string; weight: number; dash?: string; labels?: boolean; pane?: string }) {
-  useLeafletLayer(
-    () => {
-      if (!data) return null;
-      const g = L.layerGroup();
-      L.geoJSON(data, { style: { color, weight, dashArray: dash, fill: false }, interactive: false, pane: pane ?? 'outlines' }).addTo(g);
-      if (labels)
-        data.features.forEach((f) => {
-          const p = labelPoint(f.geometry);
-          if (p) L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label' }).setLatLng(p).setContent((f.properties.name ?? '').toUpperCase()).addTo(g);
-        });
-      return g;
-    },
-    [data, color, weight, dash, labels],
-  );
+function OutlineLayer({
+  data,
+  color,
+  weight,
+  dash,
+  labels,
+  pane,
+}: {
+  data?: GeoFC;
+  color: string;
+  weight: number;
+  dash?: string;
+  labels?: boolean;
+  pane?: string;
+}) {
+  useLeafletLayer(() => {
+    if (!data) return null;
+    const g = L.layerGroup();
+    L.geoJSON(data, {
+      style: { color, weight, dashArray: dash, fill: false },
+      interactive: false,
+      pane: pane ?? 'outlines',
+    }).addTo(g);
+    if (labels)
+      data.features.forEach((f) => {
+        const p = labelPoint(f.geometry);
+        if (p)
+          L.tooltip({ permanent: true, direction: 'center', className: 'niwis-label' })
+            .setLatLng(p)
+            .setContent((f.properties.name ?? '').toUpperCase())
+            .addTo(g);
+      });
+    return g;
+  }, [data, color, weight, dash, labels]);
   return null;
 }
 
 function RiversLayer({ data }: { data?: GeoFC }) {
-  useLeafletLayer(() => (data ? L.geoJSON(data, { style: (f) => ({ color: '#3b82c4', weight: f?.properties.scalerank != null && f.properties.scalerank <= 6 ? 1.6 : 1, opacity: 0.8 }), interactive: false, pane: 'rivers' }) : null), [data]);
+  useLeafletLayer(
+    () =>
+      data
+        ? L.geoJSON(data, {
+            style: (f) => ({
+              color: '#3b82c4',
+              weight: f?.properties.scalerank != null && f.properties.scalerank <= 6 ? 1.6 : 1,
+              opacity: 0.8,
+            }),
+            interactive: false,
+            pane: 'rivers',
+          })
+        : null,
+    [data],
+  );
   return null;
 }
 
 function TownsLayer({ data }: { data?: GeoFC }) {
-  useLeafletLayer(
-    () => {
-      if (!data) return null;
-      const g = L.layerGroup();
-      data.features.forEach((f) => {
-        const [lon, lat] = (f.geometry as GeoJSON.Point).coordinates;
-        L.circleMarker([lat, lon], { radius: 2.5, color: '#13233a', weight: 1, fillColor: '#fff', fillOpacity: 1, pane: 'rivers', interactive: false }).addTo(g);
-        if ((f.properties.pop ?? 0) > 400000) L.tooltip({ permanent: true, direction: 'right', offset: [4, 0], className: 'niwis-label', interactive: false }).setLatLng([lat, lon]).setContent(f.properties.name ?? '').addTo(g);
-      });
-      return g;
-    },
-    [data],
-  );
+  useLeafletLayer(() => {
+    if (!data) return null;
+    const g = L.layerGroup();
+    data.features.forEach((f) => {
+      const [lon, lat] = (f.geometry as GeoJSON.Point).coordinates;
+      L.circleMarker([lat, lon], {
+        radius: 2.5,
+        color: '#13233a',
+        weight: 1,
+        fillColor: '#fff',
+        fillOpacity: 1,
+        pane: 'rivers',
+        interactive: false,
+      }).addTo(g);
+      if ((f.properties.pop ?? 0) > 400000)
+        L.tooltip({ permanent: true, direction: 'right', offset: [4, 0], className: 'niwis-label', interactive: false })
+          .setLatLng([lat, lon])
+          .setContent(f.properties.name ?? '')
+          .addTo(g);
+    });
+    return g;
+  }, [data]);
   return null;
 }
 
@@ -171,94 +228,138 @@ function valueText(layer: MapLayer, v: number | string | null | undefined): stri
   return `${withUnit(formatNumber(v, dec), layer.unit)}${bin ? ` · ${bin.label.replace(/^[^A-Za-z]*\s/, '')}` : ''}`;
 }
 
-function ThematicLayerView({ layer, geo, selected, onSelect }: { layer: MapLayer; geo?: GeoFC; selected?: string; onSelect?: (id: string, kind: 'feature' | 'point') => void }) {
-  useLeafletLayer(
-    () => {
-      const g = L.layerGroup();
-      const canvas = L.canvas({ padding: 0.3, pane: 'thematic' });
-      if (layer.kind === 'choropleth' && geo && layer.values) {
-        L.geoJSON(geo, {
-          pane: 'thematic',
-          style: (f) => {
-            const id = f?.properties.id ?? '';
-            const sel = selected === id;
-            return { color: sel ? '#0b1f3a' : '#ffffff', weight: sel ? 2.5 : 0.6, fillColor: colorFor(layer.scale, layer.values![id] ?? null), fillOpacity: 0.92 };
+function ThematicLayerView({
+  layer,
+  geo,
+  selected,
+  onSelect,
+}: {
+  layer: MapLayer;
+  geo?: GeoFC;
+  selected?: string;
+  onSelect?: (id: string, kind: 'feature' | 'point') => void;
+}) {
+  useLeafletLayer(() => {
+    const g = L.layerGroup();
+    const canvas = L.canvas({ padding: 0.3, pane: 'thematic' });
+    if (layer.kind === 'choropleth' && geo && layer.values) {
+      L.geoJSON(geo, {
+        pane: 'thematic',
+        style: (f) => {
+          const id = f?.properties.id ?? '';
+          const sel = selected === id;
+          return {
+            color: sel ? '#0b1f3a' : '#ffffff',
+            weight: sel ? 2.5 : 0.6,
+            fillColor: colorFor(layer.scale, layer.values![id] ?? null),
+            fillOpacity: 0.92,
+          };
+        },
+        onEachFeature: (f, l) => {
+          const id = f.properties.id ?? '';
+          l.bindTooltip(tipHtml(f.properties.name ?? id, valueText(layer, layer.values![id])), {
+            sticky: true,
+            className: 'niwis-tip',
+          });
+          l.on('mouseover', () => (l as L.Path).setStyle({ weight: 2, color: '#0b1f3a' }));
+          l.on('mouseout', () =>
+            (l as L.Path).setStyle({
+              weight: selected === id ? 2.5 : 0.6,
+              color: selected === id ? '#0b1f3a' : '#ffffff',
+            }),
+          );
+          if (onSelect) l.on('click', () => onSelect(id, 'feature'));
+        },
+      }).addTo(g);
+    }
+    if (layer.kind === 'grid' && layer.cells) {
+      const h = (layer.cellSize ?? 0.25) / 2;
+      for (const [lon, lat, v] of layer.cells) {
+        L.rectangle(
+          [
+            [lat - h, lon - h],
+            [lat + h, lon + h],
+          ],
+          {
+            renderer: canvas,
+            stroke: false,
+            fillColor: colorFor(layer.scale, v),
+            fillOpacity: 0.95,
+            interactive: true,
           },
-          onEachFeature: (f, l) => {
-            const id = f.properties.id ?? '';
-            l.bindTooltip(tipHtml(f.properties.name ?? id, valueText(layer, layer.values![id])), { sticky: true, className: 'niwis-tip' });
-            l.on('mouseover', () => (l as L.Path).setStyle({ weight: 2, color: '#0b1f3a' }));
-            l.on('mouseout', () => (l as L.Path).setStyle({ weight: selected === id ? 2.5 : 0.6, color: selected === id ? '#0b1f3a' : '#ffffff' }));
-            if (onSelect) l.on('click', () => onSelect(id, 'feature'));
-          },
-        }).addTo(g);
+        )
+          .bindTooltip(tipHtml(`${Math.abs(lat).toFixed(2)}° S, ${lon.toFixed(2)}° E`, valueText(layer, v)), {
+            sticky: true,
+            className: 'niwis-tip',
+          })
+          .addTo(g);
       }
-      if (layer.kind === 'grid' && layer.cells) {
-        const h = (layer.cellSize ?? 0.25) / 2;
-        for (const [lon, lat, v] of layer.cells) {
-          L.rectangle(
-            [
-              [lat - h, lon - h],
-              [lat + h, lon + h],
-            ],
-            { renderer: canvas, stroke: false, fillColor: colorFor(layer.scale, v), fillOpacity: 0.95, interactive: true },
-          )
-            .bindTooltip(tipHtml(`${Math.abs(lat).toFixed(2)}° S, ${lon.toFixed(2)}° E`, valueText(layer, v)), { sticky: true, className: 'niwis-tip' })
-            .addTo(g);
-        }
-      }
-      return g;
-    },
-    [layer, geo, selected],
-  );
+    }
+    return g;
+  }, [layer, geo, selected]);
   return null;
 }
 
-function PointsView({ layer, selected, onSelect, shape = 'circle' }: { layer: MapLayer; selected?: string; onSelect?: (id: string) => void; shape?: 'circle' | 'triangle' | 'square' }) {
-  useLeafletLayer(
-    () => {
-      if (!layer.points) return null;
-      const g = L.layerGroup();
-      const canvas = L.canvas({ padding: 0.3, pane: 'points' });
-      const pts = [...layer.points].sort((a, b) => (b.size ?? 0) - (a.size ?? 0));
-      for (const p of pts) {
-        const sel = selected === p.id;
-        const r = 4 + (p.size ?? 0.3) * 9;
-        const color = colorFor(layer.scale, p.value);
-        const opts = { renderer: canvas, radius: sel ? r + 3 : r, color: sel ? '#0b1f3a' : '#ffffff', weight: sel ? 3 : 1.2, fillColor: color, fillOpacity: 0.95 };
-        let m: L.Path;
-        if (shape === 'circle') m = L.circleMarker([p.lat, p.lon], opts);
-        else {
-          const d = (opts.radius / 111) * 1.1;
-          const pts2: [number, number][] =
-            shape === 'triangle'
-              ? [
-                  [p.lat + d, p.lon],
-                  [p.lat - d * 0.7, p.lon - d],
-                  [p.lat - d * 0.7, p.lon + d],
-                ]
-              : [
-                  [p.lat + d * 0.8, p.lon - d * 0.8],
-                  [p.lat + d * 0.8, p.lon + d * 0.8],
-                  [p.lat - d * 0.8, p.lon + d * 0.8],
-                  [p.lat - d * 0.8, p.lon - d * 0.8],
-                ];
-          m = L.polygon(pts2, { ...opts, radius: undefined } as L.PolylineOptions);
-        }
-        m.bindTooltip(tipHtml(p.name, valueText(layer, p.value), p.sub), { className: 'niwis-tip', direction: 'top' });
-        if (onSelect) m.on('click', () => onSelect(p.id));
-        m.addTo(g);
+function PointsView({
+  layer,
+  selected,
+  onSelect,
+  shape = 'circle',
+}: {
+  layer: MapLayer;
+  selected?: string;
+  onSelect?: (id: string) => void;
+  shape?: 'circle' | 'triangle' | 'square';
+}) {
+  useLeafletLayer(() => {
+    if (!layer.points) return null;
+    const g = L.layerGroup();
+    const canvas = L.canvas({ padding: 0.3, pane: 'points' });
+    const pts = [...layer.points].sort((a, b) => (b.size ?? 0) - (a.size ?? 0));
+    for (const p of pts) {
+      const sel = selected === p.id;
+      const r = 4 + (p.size ?? 0.3) * 9;
+      const color = colorFor(layer.scale, p.value);
+      const opts = {
+        renderer: canvas,
+        radius: sel ? r + 3 : r,
+        color: sel ? '#0b1f3a' : '#ffffff',
+        weight: sel ? 3 : 1.2,
+        fillColor: color,
+        fillOpacity: 0.95,
+      };
+      let m: L.Path;
+      if (shape === 'circle') m = L.circleMarker([p.lat, p.lon], opts);
+      else {
+        const d = (opts.radius / 111) * 1.1;
+        const pts2: [number, number][] =
+          shape === 'triangle'
+            ? [
+                [p.lat + d, p.lon],
+                [p.lat - d * 0.7, p.lon - d],
+                [p.lat - d * 0.7, p.lon + d],
+              ]
+            : [
+                [p.lat + d * 0.8, p.lon - d * 0.8],
+                [p.lat + d * 0.8, p.lon + d * 0.8],
+                [p.lat - d * 0.8, p.lon + d * 0.8],
+                [p.lat - d * 0.8, p.lon - d * 0.8],
+              ];
+        m = L.polygon(pts2, { ...opts, radius: undefined } as L.PolylineOptions);
       }
-      return g;
-    },
-    [layer, selected],
-  );
+      m.bindTooltip(tipHtml(p.name, valueText(layer, p.value), p.sub), { className: 'niwis-tip', direction: 'top' });
+      if (onSelect) m.on('click', () => onSelect(p.id));
+      m.addTo(g);
+    }
+    return g;
+  }, [layer, selected]);
   return null;
 }
 
 function Controls() {
   const map = useMap();
-  const btn = 'flex h-8 w-8 items-center justify-center rounded-md border border-line bg-surface text-ink shadow-card hover:bg-surface-2';
+  const btn =
+    'flex h-8 w-8 items-center justify-center rounded-md border border-line bg-surface text-ink shadow-card hover:bg-surface-2';
   return (
     <div className="absolute right-2 top-2 z-[500] flex flex-col gap-1">
       <button type="button" className={btn} onClick={() => map.zoomIn()} aria-label="Zoom in">
@@ -267,14 +368,25 @@ function Controls() {
       <button type="button" className={btn} onClick={() => map.zoomOut()} aria-label="Zoom out">
         <Minus className="h-4 w-4" />
       </button>
-      <button type="button" className={btn} onClick={() => map.fitBounds(SA_BOUNDS)} aria-label="Reset view to South Africa">
+      <button
+        type="button"
+        className={btn}
+        onClick={() => map.fitBounds(SA_BOUNDS)}
+        aria-label="Reset view to South Africa"
+      >
         <Home className="h-4 w-4" />
       </button>
       <button
         type="button"
         className={btn}
         aria-label="Zoom to my location"
-        onClick={() => navigator.geolocation?.getCurrentPosition((pos) => map.flyTo([pos.coords.latitude, pos.coords.longitude], 9), () => undefined, { timeout: 8000 })}
+        onClick={() =>
+          navigator.geolocation?.getCurrentPosition(
+            (pos) => map.flyTo([pos.coords.latitude, pos.coords.longitude], 9),
+            () => undefined,
+            { timeout: 8000 },
+          )
+        }
       >
         <Crosshair className="h-4 w-4" />
       </button>
@@ -291,7 +403,10 @@ function ScaleAndNorth() {
     };
   }, [map]);
   return (
-    <div className="pointer-events-none absolute bottom-8 right-3 z-[500] flex flex-col items-center text-ink" aria-hidden="true">
+    <div
+      className="pointer-events-none absolute bottom-8 right-3 z-[500] flex flex-col items-center text-ink"
+      aria-hidden="true"
+    >
       <span className="text-[11px] font-bold">N</span>
       <svg width="16" height="22" viewBox="0 0 16 22">
         <path d="M8 0 L15 22 L8 17 L1 22 Z" fill="currentColor" />
@@ -355,33 +470,66 @@ export function Legend({ layer, collapsible = false }: { layer?: MapLayer; colla
   const sc = getScale(layer.scale);
   return (
     <div className="rounded-lg border border-line bg-surface/95 p-2 text-[11px] shadow-card">
-      <button type="button" className="mb-1 flex w-full items-center justify-between gap-2 text-left font-semibold text-ink" onClick={() => collapsible && setOpen((o) => !o)} aria-expanded={open} disabled={!collapsible}>
+      <button
+        type="button"
+        className="mb-1 flex w-full items-center justify-between gap-2 text-left font-semibold text-ink"
+        onClick={() => collapsible && setOpen((o) => !o)}
+        aria-expanded={open}
+        disabled={!collapsible}
+      >
         <span className="leading-tight">{layer.title}</span>
         {collapsible && <span className="text-muted">{open ? '−' : '+'}</span>}
       </button>
-      {open && <ul className="max-h-[190px] space-y-0.5 overflow-y-auto">
-        {[...sc.bins].reverse().map((b) => (
-          <li key={b.label} className="flex items-center gap-1.5 text-ink-2">
-            <span className="h-3 w-4 shrink-0 rounded-sm border border-black/10" style={{ background: b.color }} aria-hidden="true" />
-            {b.label}
+      {open && (
+        <ul className="max-h-[190px] space-y-0.5 overflow-y-auto">
+          {[...sc.bins].reverse().map((b) => (
+            <li key={b.label} className="flex items-center gap-1.5 text-ink-2">
+              <span
+                className="h-3 w-4 shrink-0 rounded-sm border border-black/10"
+                style={{ background: b.color }}
+                aria-hidden="true"
+              />
+              {b.label}
+            </li>
+          ))}
+          <li className="flex items-center gap-1.5 text-muted">
+            <span
+              className="h-3 w-4 shrink-0 rounded-sm border border-black/10"
+              style={{ background: sc.noData }}
+              aria-hidden="true"
+            />
+            No data
           </li>
-        ))}
-        <li className="flex items-center gap-1.5 text-muted">
-          <span className="h-3 w-4 shrink-0 rounded-sm border border-black/10" style={{ background: sc.noData }} aria-hidden="true" />
-          No data
-        </li>
-      </ul>}
+        </ul>
+      )}
     </div>
   );
 }
 
-function PointLayerLoader({ def, selected, onSelect, onLoaded }: { def: PointLayerDef; selected?: string; onSelect?: (id: string, layer: MapLayer) => void; onLoaded?: (l: MapLayer) => void }) {
+function PointLayerLoader({
+  def,
+  selected,
+  onSelect,
+  onLoaded,
+}: {
+  def: PointLayerDef;
+  selected?: string;
+  onSelect?: (id: string, layer: MapLayer) => void;
+  onLoaded?: (l: MapLayer) => void;
+}) {
   const q = useMapLayer(def.module, def.layer);
   useEffect(() => {
     if (q.data) onLoaded?.(q.data);
   }, [q.data, onLoaded]);
   if (!q.data) return null;
-  return <PointsView layer={q.data} selected={selected} onSelect={onSelect ? (id) => onSelect(id, q.data!) : undefined} shape={def.shape} />;
+  return (
+    <PointsView
+      layer={q.data}
+      selected={selected}
+      onSelect={onSelect ? (id) => onSelect(id, q.data!) : undefined}
+      shape={def.shape}
+    />
+  );
 }
 
 export function MapPanel({
@@ -414,7 +562,16 @@ export function MapPanel({
   const layer = q.data;
   const neighbours = useGeo('neighbours');
   const level = layer?.kind === 'choropleth' ? layer.level : undefined;
-  const levelGeo = useGeo(level === 'province' ? 'provinces' : level === 'wma' ? 'wmas' : level === 'catchment' ? 'catchments' : 'municipalities', !!level);
+  const levelGeo = useGeo(
+    level === 'province'
+      ? 'provinces'
+      : level === 'wma'
+        ? 'wmas'
+        : level === 'catchment'
+          ? 'catchments'
+          : 'municipalities',
+    !!level,
+  );
   const provinces = useGeo('provinces', base.has('provinces') || mini);
   const wmas = useGeo('wmas', base.has('wmas'));
   const catchments = useGeo('catchments', base.has('catchments'));
@@ -446,7 +603,13 @@ export function MapPanel({
           <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Map layers</legend>
           {layers.map((l) => (
             <label key={l.id} className="flex cursor-pointer items-center gap-2 py-0.5">
-              <input type="radio" name={`layer-${title}`} checked={active === l.id} onChange={() => setActive(l.id)} className="accent-[var(--c-primary)]" />
+              <input
+                type="radio"
+                name={`layer-${title}`}
+                checked={active === l.id}
+                onChange={() => setActive(l.id)}
+                className="accent-[var(--c-primary)]"
+              />
               <span className="leading-tight">{l.label}</span>
             </label>
           ))}
@@ -457,7 +620,12 @@ export function MapPanel({
           <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Point layers</legend>
           {pointLayers.map((p) => (
             <label key={p.id} className="flex cursor-pointer items-center gap-2 py-0.5">
-              <input type="checkbox" checked={points.has(p.id)} onChange={() => setPoints((s) => toggle(s, p.id))} className="accent-[var(--c-primary)]" />
+              <input
+                type="checkbox"
+                checked={points.has(p.id)}
+                onChange={() => setPoints((s) => toggle(s, p.id))}
+                className="accent-[var(--c-primary)]"
+              />
               {p.label}
             </label>
           ))}
@@ -467,7 +635,12 @@ export function MapPanel({
         <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Base layers</legend>
         {baseLayers.map((b) => (
           <label key={b} className="flex cursor-pointer items-center gap-2 py-0.5">
-            <input type="checkbox" checked={base.has(b)} onChange={() => setBase((s) => toggle(s, b))} className="accent-[var(--c-primary)]" />
+            <input
+              type="checkbox"
+              checked={base.has(b)}
+              onChange={() => setBase((s) => toggle(s, b))}
+              className="accent-[var(--c-primary)]"
+            />
             {BASE_LABEL[b]}
           </label>
         ))}
@@ -476,7 +649,11 @@ export function MapPanel({
   );
 
   const map = (
-    <div className="relative min-w-0 flex-1 overflow-hidden rounded-lg border border-line" style={{ height: mini ? height : undefined }} data-testid="map">
+    <div
+      className="relative min-w-0 flex-1 overflow-hidden rounded-lg border border-line"
+      style={{ height: mini ? height : undefined }}
+      data-testid="map"
+    >
       <MapContainer
         bounds={SA_BOUNDS}
         zoomControl={false}
@@ -498,11 +675,30 @@ export function MapPanel({
         <NeighbourLayer data={neighbours.data} dark={dark} />
         {/* SA land underlay so cells/polygons without data read as land, not ocean */}
         {sa.data && <OutlineLayerFill data={sa.data} dark={dark} />}
-        {layer && (layer.kind !== 'points' ? <ThematicLayerView layer={layer} geo={levelGeo.data} selected={sel} onSelect={(id, k) => handleSelect(id, k, layer)} /> : <PointsView layer={layer} selected={sel} onSelect={(id) => handleSelect(id, 'point', layer)} />)}
-        {base.has('municipalities') && <OutlineLayer data={munis.data} color={dark ? '#8aa0bd' : '#ffffff'} weight={0.5} />}
+        {layer &&
+          (layer.kind !== 'points' ? (
+            <ThematicLayerView
+              layer={layer}
+              geo={levelGeo.data}
+              selected={sel}
+              onSelect={(id, k) => handleSelect(id, k, layer)}
+            />
+          ) : (
+            <PointsView layer={layer} selected={sel} onSelect={(id) => handleSelect(id, 'point', layer)} />
+          ))}
+        {base.has('municipalities') && (
+          <OutlineLayer data={munis.data} color={dark ? '#8aa0bd' : '#ffffff'} weight={0.5} />
+        )}
         {base.has('catchments') && <OutlineLayer data={catchments.data} color="#3b6ea5" weight={0.7} dash="3 3" />}
         {base.has('wmas') && <OutlineLayer data={wmas.data} color="#0f4c81" weight={1.4} dash="6 3" />}
-        {(base.has('provinces') || mini) && <OutlineLayer data={provinces.data} color={dark ? '#c4d2e3' : '#334155'} weight={mini ? 0.6 : 1.1} labels={!mini && base.has('provinces')} />}
+        {(base.has('provinces') || mini) && (
+          <OutlineLayer
+            data={provinces.data}
+            color={dark ? '#c4d2e3' : '#334155'}
+            weight={mini ? 0.6 : 1.1}
+            labels={!mini && base.has('provinces')}
+          />
+        )}
         {sa.data && <OutlineLayer data={sa.data} color={dark ? '#c4d2e3' : '#1f2d3d'} weight={1.4} />}
         {base.has('rivers') && <RiversLayer data={rivers.data} />}
         {base.has('towns') && <TownsLayer data={towns.data} />}
@@ -519,23 +715,40 @@ export function MapPanel({
           <ErrorState message="Map layer could not be loaded." onRetry={() => q.refetch()} />
         </div>
       )}
-      {q.isFetching && <div className="absolute left-2 top-2 z-[600] rounded-md bg-surface/90 px-2 py-1 text-[11px] text-muted shadow-card">Loading layer…</div>}
+      {q.isFetching && (
+        <div className="absolute left-2 top-2 z-[600] rounded-md bg-surface/90 px-2 py-1 text-[11px] text-muted shadow-card">
+          Loading layer…
+        </div>
+      )}
       {!mini && (
         <div className="pointer-events-auto absolute bottom-8 left-2 z-[500] hidden max-w-[210px] md:block">
           <Legend layer={layer} collapsible />
         </div>
       )}
       {!mini && (
-        <button type="button" onClick={() => setSheet(true)} className="absolute left-2 top-2 z-[500] flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-1.5 text-xs font-medium shadow-card md:hidden">
+        <button
+          type="button"
+          onClick={() => setSheet(true)}
+          className="absolute left-2 top-2 z-[500] flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-1.5 text-xs font-medium shadow-card md:hidden"
+        >
           <Layers className="h-4 w-4" /> Layers
         </button>
       )}
       {!mini && (
         <div className="absolute left-2 top-2 z-[510] hidden md:block wide:hidden">
-          <button type="button" onClick={() => setPanel((o) => !o)} aria-expanded={panel} className="flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-1.5 text-xs font-medium shadow-card hover:bg-surface-2">
+          <button
+            type="button"
+            onClick={() => setPanel((o) => !o)}
+            aria-expanded={panel}
+            className="flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-1.5 text-xs font-medium shadow-card hover:bg-surface-2"
+          >
             <Layers className="h-4 w-4" /> Layers
           </button>
-          {panel && <div className="mt-1 max-h-[340px] w-[230px] overflow-y-auto rounded-lg border border-line bg-surface p-3 shadow-pop">{layerControl}</div>}
+          {panel && (
+            <div className="mt-1 max-h-[340px] w-[230px] overflow-y-auto rounded-lg border border-line bg-surface p-3 shadow-pop">
+              {layerControl}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -577,7 +790,14 @@ export function MapPanel({
 }
 
 function OutlineLayerFill({ data, dark }: { data: GeoFC; dark: boolean }) {
-  useLeafletLayer(() => L.geoJSON(data, { pane: 'basefill', style: { stroke: false, fillColor: dark ? '#1b2a42' : '#f4f1e8', fillOpacity: 1 }, interactive: false }), [data, dark]);
+  useLeafletLayer(
+    () =>
+      L.geoJSON(data, {
+        pane: 'basefill',
+        style: { stroke: false, fillColor: dark ? '#1b2a42' : '#f4f1e8', fillOpacity: 1 },
+        interactive: false,
+      }),
+    [data, dark],
+  );
   return null;
 }
-

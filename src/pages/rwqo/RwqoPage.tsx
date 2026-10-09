@@ -31,18 +31,80 @@ export default function RwqoPage() {
           height={520}
         />
         <div className="grid content-start gap-3">
-          <SeriesPanel module="rwqo" metric="ecological" title="Ecological Indices (SASS5, ASPT, FIBI, IHI)" context={ctx} extra={p} height={220} />
-          <SeriesPanel module="rwqo" metric="params" title="Water Quality vs Objectives" context={ctx} extra={p} tabs={tabs([['do', 'DO'], ['ph', 'pH'], ['ec', 'EC'], ['turbidity', 'Turbidity']])} height={190} />
+          <SeriesPanel
+            module="rwqo"
+            metric="ecological"
+            title="Ecological Indices (SASS5, ASPT, FIBI, IHI)"
+            context={ctx}
+            extra={p}
+            height={220}
+          />
+          <SeriesPanel
+            module="rwqo"
+            metric="params"
+            title="Water Quality vs Objectives"
+            context={ctx}
+            extra={p}
+            tabs={tabs([
+              ['do', 'DO'],
+              ['ph', 'pH'],
+              ['ec', 'EC'],
+              ['turbidity', 'Turbidity'],
+            ])}
+            height={190}
+          />
         </div>
         <div className="grid content-start gap-3">
-          <SeriesPanel module="rwqo" metric="params" title="Nutrients vs Objectives" context={ctx} extra={p} tabs={tabs([['phosphate', 'Phosphate'], ['nitrate', 'Nitrogen'], ['ammonia', 'Ammonia']])} height={210} />
-          <SeriesPanel module="rwqo" metric="params" title="Toxicants vs Objectives" context={ctx} extra={p} tabs={tabs([['lead', 'Lead'], ['arsenic', 'Arsenic']])} height={190} />
+          <SeriesPanel
+            module="rwqo"
+            metric="params"
+            title="Nutrients vs Objectives"
+            context={ctx}
+            extra={p}
+            tabs={tabs([
+              ['phosphate', 'Phosphate'],
+              ['nitrate', 'Nitrogen'],
+              ['ammonia', 'Ammonia'],
+            ])}
+            height={210}
+          />
+          <SeriesPanel
+            module="rwqo"
+            metric="params"
+            title="Toxicants vs Objectives"
+            context={ctx}
+            extra={p}
+            tabs={tabs([
+              ['lead', 'Lead'],
+              ['arsenic', 'Arsenic'],
+            ])}
+            height={190}
+          />
         </div>
       </div>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel module="rwqo" metric="eflow" title="Hydrological Indicators (E-flow vs Observed)" context={ctx} extra={p} height={230} />
-        <CategoryPanel module="rwqo" metric="by-type" title="RWQO Compliance by Water Body Type" variant="stacked" height={230} />
-        <CategoryPanel module="rwqo" metric="pes" title="Present Ecological State Distribution" variant="donut" height={180} />
+        <SeriesPanel
+          module="rwqo"
+          metric="eflow"
+          title="Hydrological Indicators (E-flow vs Observed)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <CategoryPanel
+          module="rwqo"
+          metric="by-type"
+          title="RWQO Compliance by Water Body Type"
+          variant="stacked"
+          height={230}
+        />
+        <CategoryPanel
+          module="rwqo"
+          metric="pes"
+          title="Present Ecological State Distribution"
+          variant="donut"
+          height={180}
+        />
         <TablePanel module="rwqo" metric="results" title="Results vs RWQO Objectives (Selected Site)" extra={p} />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr]">

@@ -13,18 +13,32 @@ for (const m of MUNICIPALITIES) {
   const cs = ALL_CELLS.filter((i) => CELLS[i].municipality === m.id);
   muniCells.set(m.id, cs.length ? cs : [cellAt(m.lon, m.lat)]);
 }
-const provCells = new Map<string, number[]>(PROVINCES.map((p) => [p.id, ALL_CELLS.filter((i) => CELLS[i].province === p.id)]));
+const provCells = new Map<string, number[]>(
+  PROVINCES.map((p) => [p.id, ALL_CELLS.filter((i) => CELLS[i].province === p.id)]),
+);
 const wmaCells = new Map<string, number[]>(WMAS.map((w) => [w.id, ALL_CELLS.filter((i) => CELLS[i].wma === w.id)]));
-const catCells = new Map<string, number[]>(CATCHMENTS.map((c) => [c.id, cellsNear(c.lon, c.lat, Math.max(0.3, Math.sqrt(c.areaKm2) / 111 / 1.6))]));
+const catCells = new Map<string, number[]>(
+  CATCHMENTS.map((c) => [c.id, cellsNear(c.lon, c.lat, Math.max(0.3, Math.sqrt(c.areaKm2) / 111 / 1.6))]),
+);
 
 export type Level = 'province' | 'wma' | 'catchment' | 'municipality';
 
 export function cellsOf(level: Level, id: string): number[] {
-  return (level === 'province' ? provCells : level === 'wma' ? wmaCells : level === 'catchment' ? catCells : muniCells).get(id) ?? [];
+  return (
+    (level === 'province' ? provCells : level === 'wma' ? wmaCells : level === 'catchment' ? catCells : muniCells).get(
+      id,
+    ) ?? []
+  );
 }
 
 export function regionIds(level: Level): string[] {
-  return level === 'province' ? PROVINCES.map((p) => p.id) : level === 'wma' ? WMAS.map((w) => w.id) : level === 'catchment' ? CATCHMENTS.map((c) => c.id) : MUNICIPALITIES.map((m) => m.id);
+  return level === 'province'
+    ? PROVINCES.map((p) => p.id)
+    : level === 'wma'
+      ? WMAS.map((w) => w.id)
+      : level === 'catchment'
+        ? CATCHMENTS.map((c) => c.id)
+        : MUNICIPALITIES.map((m) => m.id);
 }
 
 /** Area-weighted mean of a per-cell value over a region (nulls skipped). */
@@ -42,7 +56,14 @@ export function regionMean(cells: number[], fn: (i: number) => number | null): n
 
 export const asOfDate = () => APP.asOf.toISOString().slice(0, 10);
 
-export function gridLayer(id: string, title: string, scale: string, unit: string, fn: (i: number) => number | null, decimals = 2): MapLayer {
+export function gridLayer(
+  id: string,
+  title: string,
+  scale: string,
+  unit: string,
+  fn: (i: number) => number | null,
+  decimals = 2,
+): MapLayer {
   return {
     id,
     title,
@@ -54,12 +75,24 @@ export function gridLayer(id: string, title: string, scale: string, unit: string
     cellSize: GRID_STEP_DEG,
     cells: ALL_CELLS.map((i) => {
       const v = fn(i);
-      return [CELLS[i].lon, CELLS[i].lat, v == null || Number.isNaN(v) ? null : round(v, decimals)] as [number, number, number | null];
+      return [CELLS[i].lon, CELLS[i].lat, v == null || Number.isNaN(v) ? null : round(v, decimals)] as [
+        number,
+        number,
+        number | null,
+      ];
     }),
   };
 }
 
-export function choropleth(id: string, title: string, level: Level, scale: string, unit: string, fn: (regionId: string, cells: number[]) => number | string | null, decimals = 2): MapLayer {
+export function choropleth(
+  id: string,
+  title: string,
+  level: Level,
+  scale: string,
+  unit: string,
+  fn: (regionId: string, cells: number[]) => number | string | null,
+  decimals = 2,
+): MapLayer {
   const values: Record<string, number | string | null> = {};
   for (const rid of regionIds(level)) {
     const v = fn(rid, cellsOf(level, rid));

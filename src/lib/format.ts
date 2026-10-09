@@ -61,7 +61,11 @@ export function formatSigned(value: number | null | undefined, decimals = 1, uni
 }
 
 /** Format using the metric registry (unit + decimals). */
-export function formatMetric(id: string, value: number | null | undefined, opts: { decimals?: number; unit?: boolean } = {}): string {
+export function formatMetric(
+  id: string,
+  value: number | null | undefined,
+  opts: { decimals?: number; unit?: boolean } = {},
+): string {
   const md = metric(id);
   const d = opts.decimals ?? md.decimals;
   if (opts.unit === false) return formatNumber(value, d);

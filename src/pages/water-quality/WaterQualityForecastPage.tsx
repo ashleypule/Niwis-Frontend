@@ -39,15 +39,47 @@ export default function WaterQualityForecastPage() {
           tabs={[3, 6, 12, 24].map((h) => ({ value: String(h), label: `${h} months`, params: { horizon: h } }))}
           height={300}
         />
-        <SeriesPanel module="water-quality" metric="params" forecast title="Key Water Quality Parameters Forecast" height={300} />
+        <SeriesPanel
+          module="water-quality"
+          metric="params"
+          forecast
+          title="Key Water Quality Parameters Forecast"
+          height={300}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <TablePanel module="water-quality" metric="forecast-indicators" title="Key Water Quality Indicators (National Average)" className="xl:col-span-1" />
-        <CategoryPanel module="water-quality" metric="risk-outlook" title="Water Quality Risk Outlook (Next 12 Months)" variant="stacked100" height={260} />
-        <SeriesPanel module="water-quality" metric="ecoli-catchment" forecast title="E. coli Forecast (Selected Station)" context={st.name} extra={{ entityId: st.id }} height={260} />
+        <TablePanel
+          module="water-quality"
+          metric="forecast-indicators"
+          title="Key Water Quality Indicators (National Average)"
+          className="xl:col-span-1"
+        />
+        <CategoryPanel
+          module="water-quality"
+          metric="risk-outlook"
+          title="Water Quality Risk Outlook (Next 12 Months)"
+          variant="stacked100"
+          height={260}
+        />
+        <SeriesPanel
+          module="water-quality"
+          metric="ecoli-catchment"
+          forecast
+          title="E. coli Forecast (Selected Station)"
+          context={st.name}
+          extra={{ entityId: st.id }}
+          height={260}
+        />
       </Row>
       <Row>
-        <SeriesPanel module="water-quality" metric="wqi" forecast title="Water Quality Forecast by Province (WQI)" tabs={PROVINCE_TABS} height={260} />
+        <SeriesPanel
+          module="water-quality"
+          metric="wqi"
+          forecast
+          title="Water Quality Forecast by Province (WQI)"
+          tabs={PROVINCE_TABS}
+          height={260}
+        />
       </Row>
     </div>
   );

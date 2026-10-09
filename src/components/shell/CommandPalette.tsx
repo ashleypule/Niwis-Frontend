@@ -35,9 +35,18 @@ export function CommandPalette() {
     const t = q.trim().toLowerCase();
     return MODULES.filter((m) => !t || m.label.toLowerCase().includes(t) || m.short.toLowerCase().includes(t))
       .slice(0, t ? 5 : 8)
-      .map((m) => ({ type: 'page', id: m.id, label: m.label, sublabel: m.keywords.slice(0, 3).join(' · '), path: m.path }));
+      .map((m) => ({
+        type: 'page',
+        id: m.id,
+        label: m.label,
+        sublabel: m.keywords.slice(0, 3).join(' · '),
+        path: m.path,
+      }));
   }, [q]);
-  const hits = useMemo(() => [...pageHits, ...(q.trim().length >= 2 ? (data?.hits ?? []) : [])].slice(0, 30), [pageHits, data, q]);
+  const hits = useMemo(
+    () => [...pageHits, ...(q.trim().length >= 2 ? (data?.hits ?? []) : [])].slice(0, 30),
+    [pageHits, data, q],
+  );
 
   useEffect(() => {
     if (open) {
@@ -56,7 +65,12 @@ export function CommandPalette() {
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center p-3 pt-[10vh]" role="dialog" aria-modal="true" aria-label="Search">
+    <div
+      className="fixed inset-0 z-[60] flex items-start justify-center p-3 pt-[10vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
+    >
       <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
       <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-line bg-surface shadow-pop">
         <div className="flex items-center gap-3 border-b border-line px-4">
@@ -97,9 +111,14 @@ export function CommandPalette() {
               aria-selected={i === active}
               onMouseEnter={() => setActive(i)}
               onClick={() => choose(h)}
-              className={clsx('flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2', i === active ? 'bg-primary-soft' : 'hover:bg-surface-2')}
+              className={clsx(
+                'flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2',
+                i === active ? 'bg-primary-soft' : 'hover:bg-surface-2',
+              )}
             >
-              <span className="w-28 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-muted">{TYPE_LABEL[h.type] ?? h.type}</span>
+              <span className="w-28 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                {TYPE_LABEL[h.type] ?? h.type}
+              </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium text-ink">{h.label}</span>
                 {h.sublabel && <span className="block truncate text-xs text-muted">{h.sublabel}</span>}

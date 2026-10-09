@@ -2,7 +2,21 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 /** WCAG 2.1 AA checks (axe) on representative pages, in both themes. */
-const ROUTES = ['/', '/drought', '/dams', '/dams/forecast', '/water-quality', '/green-drop', '/iwrm', '/settlements', '/ai', '/data-integration', '/governance', '/alerts', '/reports'];
+const ROUTES = [
+  '/',
+  '/drought',
+  '/dams',
+  '/dams/forecast',
+  '/water-quality',
+  '/green-drop',
+  '/iwrm',
+  '/settlements',
+  '/ai',
+  '/data-integration',
+  '/governance',
+  '/alerts',
+  '/reports',
+];
 
 for (const theme of ['light', 'dark'] as const) {
   test.describe(`a11y ${theme}`, () => {
@@ -18,7 +32,10 @@ for (const theme of ['light', 'dark'] as const) {
           // ECharts draws to <canvas> (described via aria-label); Leaflet tiles are decorative
           .exclude('.leaflet-tile-pane')
           .analyze();
-        const summary = results.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.length} × ${v.nodes[0]?.target.join(' ')} — ${v.nodes[0]?.failureSummary?.split('\n')[1] ?? ''}`);
+        const summary = results.violations.map(
+          (v) =>
+            `${v.id} (${v.impact}): ${v.nodes.length} × ${v.nodes[0]?.target.join(' ')} — ${v.nodes[0]?.failureSummary?.split('\n')[1] ?? ''}`,
+        );
         expect(summary).toEqual([]);
       });
     }

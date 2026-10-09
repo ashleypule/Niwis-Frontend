@@ -26,7 +26,9 @@ const PROV_META: Record<string, { population: number; households: number; capita
   WC: { population: 7_433_019, households: 2_264_000, capital: 'Cape Town' },
 };
 
-export const PROVINCES: Province[] = PROVINCE_GEO.map((p) => ({ ...p, ...PROV_META[p.id] })).sort((a, b) => a.name.localeCompare(b.name));
+export const PROVINCES: Province[] = PROVINCE_GEO.map((p) => ({ ...p, ...PROV_META[p.id] })).sort((a, b) =>
+  a.name.localeCompare(b.name),
+);
 /** Display order used across the dashboards (as in the mockups) */
 export const PROVINCE_ORDER = ['WC', 'EC', 'NC', 'FS', 'KZN', 'NW', 'GP', 'MP', 'LP'];
 
@@ -52,7 +54,9 @@ const WMA_CODES: Record<string, string> = {
   WMA8: 'BRGO',
   WMA9: 'BEOL',
 };
-export const WMAS: Wma[] = WMA_GEO.map((w) => ({ ...w, code: WMA_CODES[w.id] })).sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+export const WMAS: Wma[] = WMA_GEO.map((w) => ({ ...w, code: WMA_CODES[w.id] })).sort((a, b) =>
+  a.id.localeCompare(b.id, undefined, { numeric: true }),
+);
 export const wmaName = (id: string): string => WMAS.find((w) => w.id === id)?.name ?? id;
 
 export { CATCHMENTS, MUNICIPALITIES, GRID_CELLS };

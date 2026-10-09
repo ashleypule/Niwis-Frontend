@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { blueDropBand, droughtClassFromSpi, greenDropBand, sans241Pass, storageAlertLevel, wqiClass } from '@/config/thresholds';
+import {
+  blueDropBand,
+  droughtClassFromSpi,
+  greenDropBand,
+  sans241Pass,
+  storageAlertLevel,
+  wqiClass,
+} from '@/config/thresholds';
 
 describe('SPI → drought class (spec §3.4)', () => {
   it.each([

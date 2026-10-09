@@ -26,7 +26,12 @@ export function NotificationsDrawer() {
             <Button variant="ghost" size="sm" onClick={() => markRead(items.map((a) => a.id))}>
               <CheckCheck className="h-4 w-4" /> Mark all read
             </Button>
-            <button type="button" onClick={() => setOpen(false)} className="rounded p-1.5 hover:bg-surface-2" aria-label="Close notifications">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="rounded p-1.5 hover:bg-surface-2"
+              aria-label="Close notifications"
+            >
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -65,7 +70,11 @@ export function NotificationsDrawer() {
           })}
         </ul>
         <div className="border-t border-line p-3">
-          <Link to="/alerts" onClick={() => setOpen(false)} className="block rounded-lg bg-primary py-2 text-center text-sm font-medium text-primary-ink hover:bg-primary-hover">
+          <Link
+            to="/alerts"
+            onClick={() => setOpen(false)}
+            className="block rounded-lg bg-primary py-2 text-center text-sm font-medium text-primary-ink hover:bg-primary-hover"
+          >
             Open Alerts &amp; Early Warnings
           </Link>
         </div>

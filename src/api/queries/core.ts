@@ -56,7 +56,14 @@ export function useSummary(module: ModuleId, extra: QueryParams = {}) {
   });
 }
 
-function useDataset<T>(kind: 'timeseries' | 'forecast' | 'breakdown' | 'table' | 'matrix', schema: ZodType<T, ZodTypeDef, unknown>, module: ModuleId, metric: string, extra: QueryParams = {}, enabled = true) {
+function useDataset<T>(
+  kind: 'timeseries' | 'forecast' | 'breakdown' | 'table' | 'matrix',
+  schema: ZodType<T, ZodTypeDef, unknown>,
+  module: ModuleId,
+  metric: string,
+  extra: QueryParams = {},
+  enabled = true,
+) {
   const params = useFilterParams({ metric, ...extra });
   return useQuery({
     queryKey: [kind, module, params],
@@ -67,11 +74,16 @@ function useDataset<T>(kind: 'timeseries' | 'forecast' | 'breakdown' | 'table' |
   });
 }
 
-export const useSeries = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<SeriesSet>('timeseries', SeriesSetSchema, module, metric, extra, enabled);
-export const useForecast = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<SeriesSet>('forecast', SeriesSetSchema, module, metric, extra, enabled);
-export const useBreakdown = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<CategorySet>('breakdown', CategorySetSchema, module, metric, extra, enabled);
-export const useTable = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<TableSet>('table', TableSetSchema, module, metric, extra, enabled);
-export const useMatrix = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<MatrixSet>('matrix', MatrixSetSchema, module, metric, extra, enabled);
+export const useSeries = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) =>
+  useDataset<SeriesSet>('timeseries', SeriesSetSchema, module, metric, extra, enabled);
+export const useForecast = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) =>
+  useDataset<SeriesSet>('forecast', SeriesSetSchema, module, metric, extra, enabled);
+export const useBreakdown = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) =>
+  useDataset<CategorySet>('breakdown', CategorySetSchema, module, metric, extra, enabled);
+export const useTable = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) =>
+  useDataset<TableSet>('table', TableSetSchema, module, metric, extra, enabled);
+export const useMatrix = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) =>
+  useDataset<MatrixSet>('matrix', MatrixSetSchema, module, metric, extra, enabled);
 
 export function useMapLayer(module: ModuleId, layer: string, extra: QueryParams = {}, enabled = true) {
   const params = useFilterParams({ layer, ...extra }, { scoped: false });

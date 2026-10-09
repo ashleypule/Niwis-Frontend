@@ -33,7 +33,9 @@ describe('one source of truth per fact', () => {
   it('Overview dam-storage KPI equals the Dams page total-storage KPI', async () => {
     const overview = await apiGet(endpoints.summary('overview'), {}, KpiSetSchema);
     const damsPage = await apiGet(endpoints.summary('dams'), {}, KpiSetSchema);
-    expect(overview.kpis.find((k) => k.id === 'dams')!.value).toBe(damsPage.kpis.find((k) => k.id === 'storage')!.value);
+    expect(overview.kpis.find((k) => k.id === 'dams')!.value).toBe(
+      damsPage.kpis.find((k) => k.id === 'storage')!.value,
+    );
   });
 
   it('the Overview top-10 table (rendered) shows the same Gariep %FSC as the API', async () => {

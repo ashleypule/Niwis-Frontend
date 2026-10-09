@@ -31,19 +31,58 @@ export default function RunoffPage() {
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel module="runoff" title="Runoff Distribution Map – South Africa" layers={RUNOFF_LAYERS} height={520} />
         <div className="grid content-start gap-3">
-          <SeriesPanel module="runoff" metric="discharge" title="River Discharge (Selected Station)" context={ctx} extra={p} height={210} />
+          <SeriesPanel
+            module="runoff"
+            metric="discharge"
+            title="River Discharge (Selected Station)"
+            context={ctx}
+            extra={p}
+            height={210}
+          />
           <SeriesPanel module="runoff" metric="ssi" title="Standardized Streamflow Index (SSI)" height={200} />
         </div>
         <div className="grid content-start gap-3">
-          <SeriesPanel module="runoff" metric="runoff-anomaly" title="Runoff Anomaly (Selected Area)" context={undefined} height={210} />
+          <SeriesPanel
+            module="runoff"
+            metric="runoff-anomaly"
+            title="Runoff Anomaly (Selected Area)"
+            context={undefined}
+            height={210}
+          />
           <SeriesPanel module="runoff" metric="rainfall-runoff" title="Rainfall–Runoff Relationship" height={200} />
         </div>
       </div>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel module="runoff" metric="water-balance" title="Water Balance Components (Area Average)" height={230} />
-        <SeriesPanel module="runoff" metric="flood-frequency" title="Flood Frequency Analysis (Peak Flow)" context={ctx} extra={p} height={230} />
-        <SeriesPanel module="runoff" metric="fdc" title="Flow Duration Curve (Selected Station)" context={ctx} extra={p} height={230} />
-        <SeriesPanel module="runoff" metric="seasonal" title="Seasonal Runoff Pattern (Selected Station)" context={ctx} extra={p} height={230} />
+        <SeriesPanel
+          module="runoff"
+          metric="water-balance"
+          title="Water Balance Components (Area Average)"
+          height={230}
+        />
+        <SeriesPanel
+          module="runoff"
+          metric="flood-frequency"
+          title="Flood Frequency Analysis (Peak Flow)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <SeriesPanel
+          module="runoff"
+          metric="fdc"
+          title="Flow Duration Curve (Selected Station)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <SeriesPanel
+          module="runoff"
+          metric="seasonal"
+          title="Seasonal Runoff Pattern (Selected Station)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
         <SeriesPanel
@@ -58,11 +97,29 @@ export default function RunoffPage() {
           height={220}
         />
         <SeriesPanel module="runoff" metric="national-volume" title="Runoff Volume (Monthly)" height={220} />
-        <CategoryPanel module="runoff" metric="by-wma" title="Runoff by Water Management Area" variant="hbar" height={240} />
-        <CategoryPanel module="runoff" metric="by-province" title="Runoff Status by Province (Stations)" variant="stacked100" height={240} />
+        <CategoryPanel
+          module="runoff"
+          metric="by-wma"
+          title="Runoff by Water Management Area"
+          variant="hbar"
+          height={240}
+        />
+        <CategoryPanel
+          module="runoff"
+          metric="by-province"
+          title="Runoff Status by Province (Stations)"
+          variant="stacked100"
+          height={240}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <TablePanel module="runoff" metric="statistics" title="Runoff Statistics (Selected Area)" context={ctx} extra={p} />
+        <TablePanel
+          module="runoff"
+          metric="statistics"
+          title="Runoff Statistics (Selected Area)"
+          context={ctx}
+          extra={p}
+        />
         <TablePanel
           module="runoff"
           metric="top-stations"

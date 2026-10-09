@@ -47,7 +47,14 @@ export function TablePanel({
     <Card title={title} context={context} info={info} className={className}>
       {(tabs || controls) && (
         <div className="mb-2 flex flex-wrap items-center gap-2">
-          {tabs && <Tabs label="View" value={tab} onChange={setTab} options={tabs.map((t) => ({ value: t.value, label: t.label }))} />}
+          {tabs && (
+            <Tabs
+              label="View"
+              value={tab}
+              onChange={setTab}
+              options={tabs.map((t) => ({ value: t.value, label: t.label }))}
+            />
+          )}
           {controls}
         </div>
       )}
@@ -63,7 +70,9 @@ export function TablePanel({
           maxHeight={maxHeight}
           caption={title}
           selectedKey={selectEntity ? entity : undefined}
-          onRowClick={selectEntity && q.data.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined}
+          onRowClick={
+            selectEntity && q.data.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined
+          }
         />
       )}
     </Card>

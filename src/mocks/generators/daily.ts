@@ -20,7 +20,7 @@ export const cellDailyRain = memo((i: number, mi: number): number[] => {
   const amounts = days.map(() => r.gamma(0.75, 1));
   const s = amounts.reduce((a, b) => a + b, 0);
   const out = new Array(n).fill(0);
-  days.forEach((d, k) => (out[d] = Math.round(((amounts[k] / s) * total) * 10) / 10));
+  days.forEach((d, k) => (out[d] = Math.round((amounts[k] / s) * total * 10) / 10));
   return out;
 });
 
@@ -92,7 +92,11 @@ export const cellEtccdi = memo((i: number, year: number): Etccdi => {
     hw = Math.max(hw, hrun);
   });
   let rx5 = 0;
-  for (let d = 0; d + 5 <= rain.length; d++) rx5 = Math.max(rx5, rain.slice(d, d + 5).reduce((a, b) => a + b, 0));
+  for (let d = 0; d + 5 <= rain.length; d++)
+    rx5 = Math.max(
+      rx5,
+      rain.slice(d, d + 5).reduce((a, b) => a + b, 0),
+    );
   const wet = rain.filter((v) => v >= 1);
   return {
     year,

@@ -12,7 +12,8 @@ export const endpoints = {
   entities: (module: string) => `${API_PREFIX}/${module}/entities`,
   entity: (module: string, id: string) => `${API_PREFIX}/${module}/entities/${encodeURIComponent(id)}`,
   alerts: () => `${API_PREFIX}/alerts`,
-  reference: (type: 'provinces' | 'wmas' | 'catchments' | 'municipalities' | string) => `${API_PREFIX}/reference/${type}`,
+  reference: (type: 'provinces' | 'wmas' | 'catchments' | 'municipalities' | string) =>
+    `${API_PREFIX}/reference/${type}`,
   search: () => `${API_PREFIX}/search`,
 } as const;
 

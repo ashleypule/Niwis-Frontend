@@ -12,7 +12,14 @@ import { formatNumber } from '@/lib/format';
 export function ProgrammeCard() {
   const q = useTable('roadmap', 'spec-phases');
   return (
-    <Card title="Programme Implementation (36 Months)" actions={<Link to="/roadmap" className="text-xs font-semibold text-primary hover:underline">Roadmap →</Link>}>
+    <Card
+      title="Programme Implementation (36 Months)"
+      actions={
+        <Link to="/roadmap" className="text-xs font-semibold text-primary hover:underline">
+          Roadmap →
+        </Link>
+      }
+    >
       {!q.data ? (
         <Skeleton height={170} />
       ) : (
@@ -48,7 +55,14 @@ export function DataQualityCard() {
   const q = useTable('governance', 'quality');
   const get = (k: string) => Number(q.data?.rows.find((r) => r.dimension === k)?.value ?? 0);
   return (
-    <Card title="Data Quality & Integration Status" actions={<Link to="/governance" className="text-xs font-semibold text-primary hover:underline">Governance →</Link>}>
+    <Card
+      title="Data Quality & Integration Status"
+      actions={
+        <Link to="/governance" className="text-xs font-semibold text-primary hover:underline">
+          Governance →
+        </Link>
+      }
+    >
       {!q.data ? (
         <Skeleton height={170} />
       ) : (
@@ -83,8 +97,20 @@ export function BudgetCard() {
   const b = useBreakdown('roadmap', 'budget');
   return (
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-      <Card title="Human Resources (FTE)">{q.data ? <DataTable table={q.data} caption="Human resources" /> : <Skeleton height={170} />}</Card>
-      {b.data ? <CategoryPanel module="roadmap" metric="budget" title="Budget Allocation (R million)" variant="donut" height={190} /> : <Skeleton height={230} />}
+      <Card title="Human Resources (FTE)">
+        {q.data ? <DataTable table={q.data} caption="Human resources" /> : <Skeleton height={170} />}
+      </Card>
+      {b.data ? (
+        <CategoryPanel
+          module="roadmap"
+          metric="budget"
+          title="Budget Allocation (R million)"
+          variant="donut"
+          height={190}
+        />
+      ) : (
+        <Skeleton height={230} />
+      )}
     </div>
   );
 }

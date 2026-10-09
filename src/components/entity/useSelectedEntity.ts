@@ -3,7 +3,11 @@ import { useEntities } from '@/api/queries/core';
 import { useUi } from '@/store/filters';
 
 /** The page entity: the filter-bar / map selection, or the first (largest / most relevant) entity in scope. */
-export function useSelectedEntity(module: ModuleId): { id: string | undefined; name: string | undefined; explicit: boolean } {
+export function useSelectedEntity(module: ModuleId): {
+  id: string | undefined;
+  name: string | undefined;
+  explicit: boolean;
+} {
   const entity = useUi((s) => s.filters.entity);
   const list = useEntities(module, { limit: 500 });
   const items = list.data?.items ?? [];

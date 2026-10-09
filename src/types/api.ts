@@ -82,7 +82,9 @@ export const SeriesSetSchema = z.object({
   series: z.array(SeriesSchema),
   /** horizontal background bands, e.g. drought classes behind an SPI chart */
   bands: z.array(z.object({ from: z.number(), to: z.number(), color: z.string(), label: z.string() })).optional(),
-  refLines: z.array(z.object({ y: z.number(), label: z.string(), axis: z.number().optional(), color: z.string().optional() })).optional(),
+  refLines: z
+    .array(z.object({ y: z.number(), label: z.string(), axis: z.number().optional(), color: z.string().optional() }))
+    .optional(),
   /** "Historical | Forecast" divider */
   asOf: z.string().optional(),
   note: z.string().optional(),
@@ -201,8 +203,17 @@ export type EntityList = z.infer<typeof EntityListSchema>;
 export const EntityDetailSchema = EntitySchema.extend({
   title: z.string(),
   status: z.object({ scale: z.string(), id: z.string(), label: z.string() }).optional(),
-  fields: z.array(z.object({ label: z.string(), value: z.union([z.string(), z.number(), z.null()]), unit: z.string().optional(), scale: z.string().optional() })),
-  image: z.enum(['dam', 'river', 'borehole', 'wwtw', 'wtp', 'settlement', 'station', 'aquifer', 'municipality']).optional(),
+  fields: z.array(
+    z.object({
+      label: z.string(),
+      value: z.union([z.string(), z.number(), z.null()]),
+      unit: z.string().optional(),
+      scale: z.string().optional(),
+    }),
+  ),
+  image: z
+    .enum(['dam', 'river', 'borehole', 'wwtw', 'wtp', 'settlement', 'station', 'aquifer', 'municipality'])
+    .optional(),
 });
 export type EntityDetail = z.infer<typeof EntityDetailSchema>;
 
@@ -240,7 +251,13 @@ export type SearchHit = z.infer<typeof SearchHitSchema>;
 export const SearchResultSchema = z.object({ q: z.string(), hits: z.array(SearchHitSchema) });
 export type SearchResult = z.infer<typeof SearchResultSchema>;
 
-export const RefItemSchema = z.object({ id: z.string(), name: z.string(), parent: z.string().optional(), province: z.string().optional(), wma: z.string().optional() });
+export const RefItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  parent: z.string().optional(),
+  province: z.string().optional(),
+  wma: z.string().optional(),
+});
 export type RefItem = z.infer<typeof RefItemSchema>;
 export const RefListSchema = z.object({ type: z.string(), items: z.array(RefItemSchema) });
 export type RefList = z.infer<typeof RefListSchema>;

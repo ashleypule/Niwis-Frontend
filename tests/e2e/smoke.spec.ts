@@ -56,7 +56,8 @@ function watchErrors(page: Page) {
   });
   // ERR_ABORTED = TanStack Query cancelling a superseded request (query key changed) — expected
   page.on('requestfailed', (r) => {
-    if (!r.failure()?.errorText.includes('ERR_ABORTED')) errors.push(`requestfailed: ${r.url()} ${r.failure()?.errorText}`);
+    if (!r.failure()?.errorText.includes('ERR_ABORTED'))
+      errors.push(`requestfailed: ${r.url()} ${r.failure()?.errorText}`);
   });
   page.on('response', (r) => {
     if (r.status() >= 400 && !r.url().includes('tile.openstreetmap')) errors.push(`http ${r.status()}: ${r.url()}`);
@@ -98,7 +99,10 @@ test('Ctrl+K search navigates to a dam', async ({ page }) => {
   await page.keyboard.press('Control+k');
   const dialog = page.getByRole('dialog', { name: 'Search' });
   await dialog.locator('input').fill('Gariep');
-  await dialog.getByRole('option', { name: /Gariep/ }).first().click();
+  await dialog
+    .getByRole('option', { name: /Gariep/ })
+    .first()
+    .click();
   await expect(page).toHaveURL(/\/dams/);
 });
 

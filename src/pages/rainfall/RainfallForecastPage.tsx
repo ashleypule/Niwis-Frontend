@@ -20,7 +20,14 @@ export default function RainfallForecastPage() {
         <MiniMap module="rainfall" layer="forecast-3" title="Rainfall Outlook – Month 3" height={300} />
       </Row>
       <Row className="md:grid-cols-2">
-        <SeriesPanel module="rainfall" metric="rainfall" forecast title="Monthly Rainfall Forecast (Next 6 Months)" tabs={PROVINCE_TABS} height={280} />
+        <SeriesPanel
+          module="rainfall"
+          metric="rainfall"
+          forecast
+          title="Monthly Rainfall Forecast (Next 6 Months)"
+          tabs={PROVINCE_TABS}
+          height={280}
+        />
         <SeriesPanel module="rainfall" metric="spi" forecast title="SPI-6 Forecast" tabs={PROVINCE_TABS} height={280} />
       </Row>
       <Row className="md:grid-cols-2">

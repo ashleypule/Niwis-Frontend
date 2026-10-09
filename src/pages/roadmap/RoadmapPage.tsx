@@ -13,12 +13,30 @@ export default function RoadmapPage() {
         <PhaseTimeline />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr]">
-        <CategoryPanel module="roadmap" metric="workstreams" title="Progress by Workstream" variant="hbar" height={260} />
-        <MapPanel module="roadmap" title="Geographic Implementation Status" layers={[{ id: 'status', label: 'Implementation' }]} tabs={false} height={300} />
+        <CategoryPanel
+          module="roadmap"
+          metric="workstreams"
+          title="Progress by Workstream"
+          variant="hbar"
+          height={260}
+        />
+        <MapPanel
+          module="roadmap"
+          title="Geographic Implementation Status"
+          layers={[{ id: 'status', label: 'Implementation' }]}
+          tabs={false}
+          height={300}
+        />
         <CategoryPanel module="roadmap" metric="milestones" title="Milestones Status" variant="donut" height={180} />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <CategoryPanel module="roadmap" metric="budget-actual" title="Budget – Planned vs Actual (R million)" variant="bar" height={240} />
+        <CategoryPanel
+          module="roadmap"
+          metric="budget-actual"
+          title="Budget – Planned vs Actual (R million)"
+          variant="bar"
+          height={240}
+        />
         <TablePanel module="roadmap" metric="upcoming" title="Upcoming Milestones" />
         <TablePanel module="roadmap" metric="resources" title="Resource Requirements (spec §24.4)" />
       </Row>

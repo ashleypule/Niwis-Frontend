@@ -1,6 +1,15 @@
 /** Tree-shaken ECharts registration (only what NIWIS uses). */
 import * as echarts from 'echarts/core';
-import { BarChart, BoxplotChart, CustomChart, GaugeChart, HeatmapChart, LineChart, PieChart, ScatterChart } from 'echarts/charts';
+import {
+  BarChart,
+  BoxplotChart,
+  CustomChart,
+  GaugeChart,
+  HeatmapChart,
+  LineChart,
+  PieChart,
+  ScatterChart,
+} from 'echarts/charts';
 import {
   AriaComponent,
   DataZoomComponent,

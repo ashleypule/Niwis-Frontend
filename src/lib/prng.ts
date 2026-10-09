@@ -118,7 +118,10 @@ export class Rng {
 export const rng = (...parts: (string | number)[]) => new Rng(parts.join('|'));
 
 /** Simple keyed memoisation for lazy generators. */
-export function memo<A extends unknown[], R>(fn: (...args: A) => R, key: (...args: A) => string = (...a) => JSON.stringify(a)) {
+export function memo<A extends unknown[], R>(
+  fn: (...args: A) => R,
+  key: (...args: A) => string = (...a) => JSON.stringify(a),
+) {
   const cache = new Map<string, R>();
   const wrapped = (...args: A): R => {
     const k = key(...args);

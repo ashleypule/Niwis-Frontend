@@ -48,7 +48,11 @@ function DataTableView({ rows }: { rows: Row[] }) {
             <tr key={i} className="border-t border-line">
               {cols.map((c) => (
                 <td key={c} className="whitespace-nowrap px-2 py-1 text-ink">
-                  {r[c] == null ? '—' : typeof r[c] === 'number' ? Number(r[c]).toLocaleString('en-ZA', { maximumFractionDigits: 3 }).replace(/,/g, ' ') : String(r[c])}
+                  {r[c] == null
+                    ? '—'
+                    : typeof r[c] === 'number'
+                      ? Number(r[c]).toLocaleString('en-ZA', { maximumFractionDigits: 3 }).replace(/,/g, ' ')
+                      : String(r[c])}
                 </td>
               ))}
             </tr>
@@ -59,7 +63,24 @@ function DataTableView({ rows }: { rows: Row[] }) {
   );
 }
 
-export function ChartCard({ title, context, info, controls, height = 220, isLoading, isError, onRetry, empty, rows, option, children, className, band, footer, onChartClick }: ChartCardProps) {
+export function ChartCard({
+  title,
+  context,
+  info,
+  controls,
+  height = 220,
+  isLoading,
+  isError,
+  onRetry,
+  empty,
+  rows,
+  option,
+  children,
+  className,
+  band,
+  footer,
+  onChartClick,
+}: ChartCardProps) {
   const [menu, setMenu] = useState(false);
   const [showTable, setShowTable] = useState(false);
   const [full, setFull] = useState(false);
@@ -82,11 +103,21 @@ export function ChartCard({ title, context, info, controls, height = 220, isLoad
   const actions = useMemo(
     () => (
       <div className="relative" ref={menuRef}>
-        <button type="button" className="rounded-md p-1 text-muted hover:bg-surface-2 hover:text-ink" aria-label={`${title} options`} aria-haspopup="menu" aria-expanded={menu} onClick={() => setMenu((m) => !m)}>
+        <button
+          type="button"
+          className="rounded-md p-1 text-muted hover:bg-surface-2 hover:text-ink"
+          aria-label={`${title} options`}
+          aria-haspopup="menu"
+          aria-expanded={menu}
+          onClick={() => setMenu((m) => !m)}
+        >
           <MoreVertical className="h-4 w-4" />
         </button>
         {menu && (
-          <div role="menu" className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-line bg-surface p-1 text-sm shadow-pop">
+          <div
+            role="menu"
+            className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-line bg-surface p-1 text-sm shadow-pop"
+          >
             {option && (
               <button
                 role="menuitem"
@@ -107,17 +138,32 @@ export function ChartCard({ title, context, info, controls, height = 220, isLoad
               </button>
             )}
             {!!rows?.length && (
-              <button role="menuitem" type="button" className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2" onClick={() => (download(`${safeName(title)}.csv`, toCsv(rows)), setMenu(false))}>
+              <button
+                role="menuitem"
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2"
+                onClick={() => (download(`${safeName(title)}.csv`, toCsv(rows)), setMenu(false))}
+              >
                 <Download className="h-4 w-4" /> Download CSV
               </button>
             )}
             {!!rows?.length && (
-              <button role="menuitem" type="button" className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2" onClick={() => (setShowTable((s) => !s), setMenu(false))}>
+              <button
+                role="menuitem"
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2"
+                onClick={() => (setShowTable((s) => !s), setMenu(false))}
+              >
                 <Table2 className="h-4 w-4" /> {showTable ? 'Hide data table' : 'View data table'}
               </button>
             )}
             {option && (
-              <button role="menuitem" type="button" className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2" onClick={() => (setFull(true), setMenu(false))}>
+              <button
+                role="menuitem"
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-surface-2"
+                onClick={() => (setFull(true), setMenu(false))}
+              >
                 <Expand className="h-4 w-4" /> Full screen
               </button>
             )}
@@ -132,7 +178,8 @@ export function ChartCard({ title, context, info, controls, height = 220, isLoad
   if (isError) body = <ErrorState onRetry={onRetry} height={height} />;
   else if (isLoading) body = <Skeleton height={height} />;
   else if (empty) body = <EmptyState height={height} />;
-  else if (option) body = <EChart ref={chart} option={option} height={height} ariaLabel={`${title} chart`} onClick={onChartClick} />;
+  else if (option)
+    body = <EChart ref={chart} option={option} height={height} ariaLabel={`${title} chart`} onClick={onChartClick} />;
   else body = children;
 
   return (
@@ -147,11 +194,21 @@ export function ChartCard({ title, context, info, controls, height = 220, isLoad
       )}
       {footer}
       {full && option && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" aria-label={`${title} (full screen)`}>
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${title} (full screen)`}
+        >
           <div className="flex h-full max-h-[90vh] w-full max-w-[1400px] flex-col rounded-2xl bg-surface p-4 shadow-pop">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="text-lg font-semibold">{title}</h2>
-              <button type="button" onClick={() => setFull(false)} className="rounded p-1.5 hover:bg-surface-2" aria-label="Close full screen">
+              <button
+                type="button"
+                onClick={() => setFull(false)}
+                className="rounded p-1.5 hover:bg-surface-2"
+                aria-label="Close full screen"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>

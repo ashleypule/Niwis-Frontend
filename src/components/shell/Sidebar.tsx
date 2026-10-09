@@ -12,7 +12,11 @@ function NavBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
         const items = MODULES.filter((m) => m.group === g);
         return (
           <div key={g ?? 'home'} className="mb-1">
-            {g && !collapsed && <div className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7f95b3]">{g}</div>}
+            {g && !collapsed && (
+              <div className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7f95b3]">
+                {g}
+              </div>
+            )}
             {g && collapsed && <div className="mx-3 my-2 border-t border-white/10" aria-hidden="true" />}
             <ul className="space-y-0.5">
               {items.map((m) => {
@@ -29,7 +33,9 @@ function NavBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
                         clsx(
                           'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] leading-tight transition-colors',
                           collapsed && 'justify-center px-0',
-                          isActive ? 'bg-nav-active font-semibold text-white shadow-[inset_3px_0_0_#7fc4ff]' : 'text-nav-text hover:bg-white/8 hover:text-white',
+                          isActive
+                            ? 'bg-nav-active font-semibold text-white shadow-[inset_3px_0_0_#7fc4ff]'
+                            : 'text-nav-text hover:bg-white/8 hover:text-white',
                         )
                       }
                     >
@@ -62,15 +68,25 @@ export function Sidebar() {
     <>
       {/* desktop */}
       <aside
-        className={clsx('no-print sticky top-0 hidden h-screen shrink-0 flex-col bg-navy text-white transition-[width] duration-200 lg:flex', collapsed ? 'w-[72px]' : 'w-[264px]')}
+        className={clsx(
+          'no-print sticky top-0 hidden h-screen shrink-0 flex-col bg-navy text-white transition-[width] duration-200 lg:flex',
+          collapsed ? 'w-[72px]' : 'w-[264px]',
+        )}
         aria-label="Main navigation"
       >
-        <div className={clsx('flex flex-col gap-3 border-b border-white/10 px-4 pb-4 pt-4', collapsed && 'items-center px-2')}>
+        <div
+          className={clsx(
+            'flex flex-col gap-3 border-b border-white/10 px-4 pb-4 pt-4',
+            collapsed && 'items-center px-2',
+          )}
+        >
           <DwsLogo compact={collapsed} />
           {!collapsed && (
             <div>
               <div className="text-[28px] font-extrabold leading-none tracking-tight">NIWIS</div>
-              <div className="mt-1 text-[11px] font-medium uppercase leading-snug tracking-wide text-nav-text">National Integrated Water Information System</div>
+              <div className="mt-1 text-[11px] font-medium uppercase leading-snug tracking-wide text-nav-text">
+                National Integrated Water Information System
+              </div>
             </div>
           )}
         </div>
@@ -87,10 +103,19 @@ export function Sidebar() {
       </aside>
 
       {/* mobile / tablet drawer */}
-      <div className={clsx('fixed inset-0 z-40 lg:hidden', mobileOpen ? '' : 'pointer-events-none')} aria-hidden={!mobileOpen}>
-        <div className={clsx('absolute inset-0 bg-black/50 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobile(false)} />
+      <div
+        className={clsx('fixed inset-0 z-40 lg:hidden', mobileOpen ? '' : 'pointer-events-none')}
+        aria-hidden={!mobileOpen}
+      >
+        <div
+          className={clsx('absolute inset-0 bg-black/50 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')}
+          onClick={() => setMobile(false)}
+        />
         <aside
-          className={clsx('absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-navy text-white shadow-pop transition-transform', mobileOpen ? 'translate-x-0' : '-translate-x-full')}
+          className={clsx(
+            'absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-navy text-white shadow-pop transition-transform',
+            mobileOpen ? 'translate-x-0' : '-translate-x-full',
+          )}
           aria-label="Main navigation"
           role="dialog"
           aria-modal="true"
@@ -100,7 +125,12 @@ export function Sidebar() {
               <DwsLogo />
               <div className="mt-3 text-2xl font-extrabold">NIWIS</div>
             </div>
-            <button type="button" onClick={() => setMobile(false)} className="rounded p-1 text-nav-text hover:text-white" aria-label="Close navigation">
+            <button
+              type="button"
+              onClick={() => setMobile(false)}
+              className="rounded p-1 text-nav-text hover:text-white"
+              aria-label="Close navigation"
+            >
               <X className="h-5 w-5" />
             </button>
           </div>

@@ -20,11 +20,19 @@ export class PanelBoundary extends Component<{ children: ReactNode }, { error: E
 
 export function ErrorState({ message, onRetry, height }: { message?: string; onRetry?: () => void; height?: number }) {
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-2 rounded-lg bg-bad-soft/50 p-4 text-center" style={{ minHeight: height }}>
+    <div
+      role="alert"
+      className="flex flex-col items-center justify-center gap-2 rounded-lg bg-bad-soft/50 p-4 text-center"
+      style={{ minHeight: height }}
+    >
       <AlertTriangle className="h-5 w-5 text-bad" aria-hidden="true" />
       <p className="text-sm text-ink-2">{message ?? 'Data could not be loaded.'}</p>
       {onRetry && (
-        <button type="button" onClick={onRetry} className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium hover:bg-surface-2">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium hover:bg-surface-2"
+        >
           Try again
         </button>
       )}
@@ -32,9 +40,18 @@ export function ErrorState({ message, onRetry, height }: { message?: string; onR
   );
 }
 
-export function EmptyState({ message = 'No data for the selected filters.', height }: { message?: string; height?: number }) {
+export function EmptyState({
+  message = 'No data for the selected filters.',
+  height,
+}: {
+  message?: string;
+  height?: number;
+}) {
   return (
-    <div className="flex items-center justify-center rounded-lg border border-dashed border-line p-4 text-center text-sm text-muted" style={{ minHeight: height }}>
+    <div
+      className="flex items-center justify-center rounded-lg border border-dashed border-line p-4 text-center text-sm text-muted"
+      style={{ minHeight: height }}
+    >
       {message}
     </div>
   );

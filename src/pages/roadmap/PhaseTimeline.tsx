@@ -37,7 +37,11 @@ export function PhaseTimeline() {
           </div>
           <div className="grid grid-cols-[repeat(36,minmax(0,1fr))] gap-y-2">
             {spec.data.rows.map((p, k) => (
-              <div key={String(p.name)} className="rounded-lg px-3 py-2 text-white" style={{ gridColumn: `${phaseRanges[k][0]} / ${phaseRanges[k][1] + 1}`, background: PHASE_COLOR[k] }}>
+              <div
+                key={String(p.name)}
+                className="rounded-lg px-3 py-2 text-white"
+                style={{ gridColumn: `${phaseRanges[k][0]} / ${phaseRanges[k][1] + 1}`, background: PHASE_COLOR[k] }}
+              >
                 <p className="text-[13px] font-bold">{String(p.name)}</p>
                 <p className="text-[11px] text-white/85">
                   {String(p.months)} · {String(p.actual)}% complete
@@ -48,15 +52,25 @@ export function PhaseTimeline() {
               const [a, b] = String(s.months).replace(/M/g, '').split('–').map(Number);
               const phase = Number(s.phase) - 1;
               return (
-                <div key={String(s.id)} className="mx-0.5 rounded-lg border border-line bg-surface-2 p-2" style={{ gridColumn: `${a} / ${b + 1}`, borderTop: `3px solid ${PHASE_COLOR[phase]}` }}>
+                <div
+                  key={String(s.id)}
+                  className="mx-0.5 rounded-lg border border-line bg-surface-2 p-2"
+                  style={{ gridColumn: `${a} / ${b + 1}`, borderTop: `3px solid ${PHASE_COLOR[phase]}` }}
+                >
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-[12px] font-semibold leading-tight text-ink">
                       {String(s.id)} · {String(s.name)}
                     </p>
                     <Pill scale="progress" value={String(s.status)} size="sm" />
                   </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-3" aria-label={`${s.actual}% complete of ${s.planned}% planned`}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.max(2, Number(s.actual))}%`, background: PHASE_COLOR[phase] }} />
+                  <div
+                    className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-3"
+                    aria-label={`${s.actual}% complete of ${s.planned}% planned`}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${Math.max(2, Number(s.actual))}%`, background: PHASE_COLOR[phase] }}
+                    />
                   </div>
                   <p className="mt-1 text-[11px] text-muted">
                     {String(s.actual)}% done · planned {String(s.planned)}%

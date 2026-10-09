@@ -24,7 +24,8 @@ export const N_MONTHS = END_MI - START_MI + 1;
 export const CALIB = APP.baseline;
 
 const sig = (x: number) => 1 / (1 + Math.exp(-x));
-const gauss = (lon: number, lat: number, cx: number, cy: number, s: number) => Math.exp(-((lon - cx) ** 2 + (lat - cy) ** 2) / (2 * s * s));
+const gauss = (lon: number, lat: number, cx: number, cy: number, s: number) =>
+  Math.exp(-((lon - cx) ** 2 + (lat - cy) ** 2) / (2 * s * s));
 
 // ------------------------------------------------------------------ static fields
 function rawMap(lon: number, lat: number): number {
@@ -102,7 +103,12 @@ export const CELLS: CellClimate[] = (() => {
     const tot = sh.reduce((x, y) => x + y, 0);
     const elevation = rawElevation(lon, lat);
     const aridity = clamp(1 - map / 900, 0, 1);
-    const coast = Math.max(gauss(lon, lat, 18.5, -33.5, 1.2), gauss(lon, lat, 31.0, -29.8, 1.1), gauss(lon, lat, 25.5, -33.9, 1.2), gauss(lon, lat, 22.0, -34.0, 0.9));
+    const coast = Math.max(
+      gauss(lon, lat, 18.5, -33.5, 1.2),
+      gauss(lon, lat, 31.0, -29.8, 1.1),
+      gauss(lon, lat, 25.5, -33.9, 1.2),
+      gauss(lon, lat, 22.0, -34.0, 0.9),
+    );
     const tSea = 25.6 - 0.56 * (-lat - 22);
     const tMean = tSea - 0.0047 * elevation + 2.4 * aridity * (1 - coast);
     return {
@@ -272,7 +278,12 @@ function ra(latDeg: number, month0: number): number {
   const dr = 1 + 0.033 * Math.cos((2 * Math.PI * J) / 365);
   const delta = 0.409 * Math.sin((2 * Math.PI * J) / 365 - 1.39);
   const ws = Math.acos(clamp(-Math.tan(phi) * Math.tan(delta), -1, 1));
-  return ((24 * 60) / Math.PI) * 0.082 * dr * (ws * Math.sin(phi) * Math.sin(delta) + Math.cos(phi) * Math.cos(delta) * Math.sin(ws));
+  return (
+    ((24 * 60) / Math.PI) *
+    0.082 *
+    dr *
+    (ws * Math.sin(phi) * Math.sin(delta) + Math.cos(phi) * Math.cos(delta) * Math.sin(ws))
+  );
 }
 
 const DAYS = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -295,7 +306,10 @@ export function cellPet(i: number): Float64Array {
   return out;
 }
 
-const smCache = new Map<number, { surface: Float64Array; root: Float64Array; aet: Float64Array; runoff: Float64Array }>();
+const smCache = new Map<
+  number,
+  { surface: Float64Array; root: Float64Array; aet: Float64Array; runoff: Float64Array }
+>();
 /**
  * Monthly soil-water bucket (capacity 120 mm) → surface & root-zone volumetric soil moisture (m³/m³),
  * actual ET and runoff (mm). Runoff = quickflow (saturation excess, rainfall-intensity term) + baseflow.

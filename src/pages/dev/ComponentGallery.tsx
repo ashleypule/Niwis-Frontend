@@ -35,13 +35,53 @@ export default function ComponentGallery() {
   const t = useChartTheme();
   return (
     <div>
-      <p className="text-sm text-muted">Developer gallery of NIWIS building blocks (mock data). Not linked from the navigation.</p>
+      <p className="text-sm text-muted">
+        Developer gallery of NIWIS building blocks (mock data). Not linked from the navigation.
+      </p>
       <Section title="KpiCard — semantic deltas (goodDirection)">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <KpiCard kpi={{ id: 'a', metric: 'storagePct', label: 'Dam storage rising', value: 71.2, delta: 2.4, deltaLabel: 'up is good → green', spark: [60, 62, 65, 68, 70, 71] }} />
-          <KpiCard kpi={{ id: 'b', metric: 'ecoli', label: 'E. coli rising', value: 1240, delta: 310, deltaLabel: 'up is bad → red', spark: [400, 520, 800, 950, 1100, 1240] }} />
-          <KpiCard kpi={{ id: 'c', metric: 'droughtClass', label: 'Drought class', value: null, text: 'D2', status: { scale: 'drought', id: 'D2', label: 'Severe Drought' } }} />
-          <KpiCard kpi={{ id: 'd', metric: 'tmean', label: 'Neutral metric', value: 18.4, delta: 0.3, deltaLabel: 'neutral → grey' }} />
+          <KpiCard
+            kpi={{
+              id: 'a',
+              metric: 'storagePct',
+              label: 'Dam storage rising',
+              value: 71.2,
+              delta: 2.4,
+              deltaLabel: 'up is good → green',
+              spark: [60, 62, 65, 68, 70, 71],
+            }}
+          />
+          <KpiCard
+            kpi={{
+              id: 'b',
+              metric: 'ecoli',
+              label: 'E. coli rising',
+              value: 1240,
+              delta: 310,
+              deltaLabel: 'up is bad → red',
+              spark: [400, 520, 800, 950, 1100, 1240],
+            }}
+          />
+          <KpiCard
+            kpi={{
+              id: 'c',
+              metric: 'droughtClass',
+              label: 'Drought class',
+              value: null,
+              text: 'D2',
+              status: { scale: 'drought', id: 'D2', label: 'Severe Drought' },
+            }}
+          />
+          <KpiCard
+            kpi={{
+              id: 'd',
+              metric: 'tmean',
+              label: 'Neutral metric',
+              value: 18.4,
+              delta: 0.3,
+              deltaLabel: 'neutral → grey',
+            }}
+          />
         </div>
       </Section>
       <Section title="KpiStrip">
@@ -70,11 +110,21 @@ export default function ComponentGallery() {
           <CategoryPanel module="iwrm" metric="waterfall" title="Waterfall" variant="waterfall" />
           <CategoryPanel module="dams" metric="distribution" title="Donut" variant="donut" height={180} />
           <Card title="Gauge">
-            <EChart option={gaugeOption(0.48, t, { min: 0, max: 1.2, scale: 'exploitation', label: 'Exploitation index' })} height={220} ariaLabel="Gauge" />
+            <EChart
+              option={gaugeOption(0.48, t, { min: 0, max: 1.2, scale: 'exploitation', label: 'Exploitation index' })}
+              height={220}
+              ariaLabel="Gauge"
+            />
           </Card>
           <SeriesPanel module="runoff" metric="fdc" title="Flow duration curve (log scale)" />
           <SeriesPanel module="drought" metric="storage-vs-spi" title="Scatter" />
-          <CategoryPanel module="water-quality" metric="param-range" title="Range / box (log scale)" variant="range" log />
+          <CategoryPanel
+            module="water-quality"
+            metric="param-range"
+            title="Range / box (log scale)"
+            variant="range"
+            log
+          />
         </Row>
       </Section>
       <Section title="DataTable, EntityInfoCard, AlertsList">
@@ -97,7 +147,15 @@ export default function ComponentGallery() {
             </div>
           </Card>
           <Card title="HBarList">
-            <HBarList items={[{ label: 'Vaal', value: 82 }, { label: 'Orange', value: 64 }, { label: 'Berg-Olifants', value: 38 }, { label: 'Breede-Gouritz', value: 21 }]} scale="storage" />
+            <HBarList
+              items={[
+                { label: 'Vaal', value: 82 },
+                { label: 'Orange', value: 64 },
+                { label: 'Berg-Olifants', value: 38 },
+                { label: 'Breede-Gouritz', value: 21 },
+              ]}
+              scale="storage"
+            />
           </Card>
           <Card title="Pills & buttons">
             <div className="flex flex-wrap gap-1.5">

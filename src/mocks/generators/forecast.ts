@@ -15,7 +15,21 @@ export interface ForecastPoint {
   p90: number;
 }
 
-export function dampedForecast(key: string, x0: number, opts: { mu: number; phi: number; sigma: number; horizon: number; startMi: number; outlook?: number; min?: number; max?: number; seasonal?: (mi: number) => number }): ForecastPoint[] {
+export function dampedForecast(
+  key: string,
+  x0: number,
+  opts: {
+    mu: number;
+    phi: number;
+    sigma: number;
+    horizon: number;
+    startMi: number;
+    outlook?: number;
+    min?: number;
+    max?: number;
+    seasonal?: (mi: number) => number;
+  },
+): ForecastPoint[] {
   const r = new Rng(`fc-${key}`);
   const out: ForecastPoint[] = [];
   const drift = opts.outlook ?? r.normal(0, 0.15) * opts.sigma;
@@ -40,12 +54,22 @@ export function dampedForecast(key: string, x0: number, opts: { mu: number; phi:
 }
 
 /** History + forecast series in the SeriesSet shape: [observed, median, band]. */
-export function forecastSeries(history: [number, number | null][], fc: ForecastPoint[], names = { obs: 'Observed', median: 'Forecast (median)', band: 'Uncertainty (10th–90th pct)' }) {
+export function forecastSeries(
+  history: [number, number | null][],
+  fc: ForecastPoint[],
+  names = { obs: 'Observed', median: 'Forecast (median)', band: 'Uncertainty (10th–90th pct)' },
+) {
   const lastObs = history[history.length - 1];
   return {
     observed: history.map(([mi, v]) => [miToIso(mi), v] as [string, number | null]),
-    median: [[miToIso(lastObs[0]), lastObs[1]] as [string, number | null], ...fc.map((p) => [miToIso(p.mi), p.median] as [string, number | null])],
-    band: [[miToIso(lastObs[0]), lastObs[1], lastObs[1]] as [string, number | null, number | null], ...fc.map((p) => [miToIso(p.mi), p.p10, p.p90] as [string, number | null, number | null])],
+    median: [
+      [miToIso(lastObs[0]), lastObs[1]] as [string, number | null],
+      ...fc.map((p) => [miToIso(p.mi), p.median] as [string, number | null]),
+    ],
+    band: [
+      [miToIso(lastObs[0]), lastObs[1], lastObs[1]] as [string, number | null, number | null],
+      ...fc.map((p) => [miToIso(p.mi), p.p10, p.p90] as [string, number | null, number | null]),
+    ],
     names,
   };
 }

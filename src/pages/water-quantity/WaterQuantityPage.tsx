@@ -28,18 +28,57 @@ export default function WaterQuantityPage() {
           height={520}
         />
         <div className="grid content-start gap-3">
-          <CategoryPanel module="water-quantity" metric="waterfall" title="National Water Balance incl. Transfers and System Losses (Mm³/yr)" variant="waterfall" height={300} />
+          <CategoryPanel
+            module="water-quantity"
+            metric="waterfall"
+            title="National Water Balance incl. Transfers and System Losses (Mm³/yr)"
+            variant="waterfall"
+            height={300}
+          />
           <div className="grid gap-3 md:grid-cols-2">
-            <SeriesPanel module="water-quantity" metric="surface" title="Surface Water Quantity (Selected Area)" height={200} />
-            <SeriesPanel module="water-quantity" metric="groundwater" title="Groundwater Quantity (Selected Area)" height={200} />
+            <SeriesPanel
+              module="water-quantity"
+              metric="surface"
+              title="Surface Water Quantity (Selected Area)"
+              height={200}
+            />
+            <SeriesPanel
+              module="water-quantity"
+              metric="groundwater"
+              title="Groundwater Quantity (Selected Area)"
+              height={200}
+            />
           </div>
         </div>
       </div>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel module="water-quantity" metric="storage" title="Storage Levels of Major Dams (Selected Area)" height={230} />
-        <CategoryPanel module="water-quantity" metric="sector" title="Sectoral Water Demand" variant="stacked" height={230} />
-        <CategoryPanel module="water-quantity" metric="allocation" title="Allocation Utilisation" variant="mixed" height={230} />
-        <CategoryPanel module="water-quantity" metric="transfers" title="Inter-Basin Transfers" variant="hbar" height={230} />
+        <SeriesPanel
+          module="water-quantity"
+          metric="storage"
+          title="Storage Levels of Major Dams (Selected Area)"
+          height={230}
+        />
+        <CategoryPanel
+          module="water-quantity"
+          metric="sector"
+          title="Sectoral Water Demand"
+          variant="stacked"
+          height={230}
+        />
+        <CategoryPanel
+          module="water-quantity"
+          metric="allocation"
+          title="Allocation Utilisation"
+          variant="mixed"
+          height={230}
+        />
+        <CategoryPanel
+          module="water-quantity"
+          metric="transfers"
+          title="Inter-Basin Transfers"
+          variant="hbar"
+          height={230}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1fr_1.4fr_1fr]">
         <TablePanel module="water-quantity" metric="summary" title="Area Information (Selected Scope)" />

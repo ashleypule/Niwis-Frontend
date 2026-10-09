@@ -6,12 +6,54 @@
 // ---------------------------------------------------------------- Drought (spec §3.4)
 export type DroughtClass = 'None' | 'D0' | 'D1' | 'D2' | 'D3' | 'D4';
 
-export const DROUGHT_CLASSES: { id: DroughtClass; label: string; spiMax: number; spiMin: number; probability: string; impact: string }[] = [
-  { id: 'D0', label: 'Abnormally Dry', spiMax: -0.5, spiMin: -0.79, probability: '20–30%', impact: 'Pasture/crop stress starting' },
-  { id: 'D1', label: 'Moderate Drought', spiMax: -0.8, spiMin: -1.29, probability: '10–20%', impact: 'Streams/dams low' },
-  { id: 'D2', label: 'Severe Drought', spiMax: -1.3, spiMin: -1.59, probability: '5–10%', impact: 'Water shortages common' },
-  { id: 'D3', label: 'Extreme Drought', spiMax: -1.6, spiMin: -1.99, probability: '2–5%', impact: 'Major water restrictions' },
-  { id: 'D4', label: 'Exceptional Drought', spiMax: -2.0, spiMin: -Infinity, probability: '< 2%', impact: 'Water emergency declared' },
+export const DROUGHT_CLASSES: {
+  id: DroughtClass;
+  label: string;
+  spiMax: number;
+  spiMin: number;
+  probability: string;
+  impact: string;
+}[] = [
+  {
+    id: 'D0',
+    label: 'Abnormally Dry',
+    spiMax: -0.5,
+    spiMin: -0.79,
+    probability: '20–30%',
+    impact: 'Pasture/crop stress starting',
+  },
+  {
+    id: 'D1',
+    label: 'Moderate Drought',
+    spiMax: -0.8,
+    spiMin: -1.29,
+    probability: '10–20%',
+    impact: 'Streams/dams low',
+  },
+  {
+    id: 'D2',
+    label: 'Severe Drought',
+    spiMax: -1.3,
+    spiMin: -1.59,
+    probability: '5–10%',
+    impact: 'Water shortages common',
+  },
+  {
+    id: 'D3',
+    label: 'Extreme Drought',
+    spiMax: -1.6,
+    spiMin: -1.99,
+    probability: '2–5%',
+    impact: 'Major water restrictions',
+  },
+  {
+    id: 'D4',
+    label: 'Exceptional Drought',
+    spiMax: -2.0,
+    spiMin: -Infinity,
+    probability: '< 2%',
+    impact: 'Water emergency declared',
+  },
 ];
 
 /** SPI (or SPEI / SSI / SGI) → drought class, spec §3.4. Values are rounded to 2 dp first, as published. */
@@ -188,7 +230,9 @@ export function vegClass(vci: number): VegClass {
 
 // ---------------------------------------------------------------- Groundwater
 /** Exploitation index = abstraction / recharge (spec §11.3). */
-export function exploitationClass(ei: number): 'Very Low' | 'Low' | 'Moderate' | 'High' | 'Very High' | 'Over-exploited' {
+export function exploitationClass(
+  ei: number,
+): 'Very Low' | 'Low' | 'Moderate' | 'High' | 'Very High' | 'Over-exploited' {
   if (ei < 0.1) return 'Very Low';
   if (ei < 0.3) return 'Low';
   if (ei < 0.5) return 'Moderate';

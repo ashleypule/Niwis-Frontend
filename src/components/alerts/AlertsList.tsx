@@ -6,14 +6,29 @@ import { Pill, SeverityIcon } from '@/components/ui/Pill';
 import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
 import { formatDate } from '@/lib/format';
 
-export function AlertsList({ module, limit = 6, title = 'Alerts & Early Warnings', className, scoped = true }: { module?: ModuleId; limit?: number; title?: string; className?: string; scoped?: boolean }) {
+export function AlertsList({
+  module,
+  limit = 6,
+  title = 'Alerts & Early Warnings',
+  className,
+  scoped = true,
+}: {
+  module?: ModuleId;
+  limit?: number;
+  title?: string;
+  className?: string;
+  scoped?: boolean;
+}) {
   const q = useAlerts({ module, limit, scoped: scoped ? '1' : undefined });
   return (
     <Card
       title={title}
       className={className}
       actions={
-        <Link to={module ? `/alerts?module=${module}` : '/alerts'} className="text-xs font-semibold text-primary hover:underline">
+        <Link
+          to={module ? `/alerts?module=${module}` : '/alerts'}
+          className="text-xs font-semibold text-primary hover:underline"
+        >
           View all →
         </Link>
       }

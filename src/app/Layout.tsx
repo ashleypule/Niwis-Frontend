@@ -51,7 +51,10 @@ export function Layout() {
 
   return (
     <div className="flex min-h-screen bg-canvas text-ink">
-      <a href="#main" className="sr-only z-50 rounded bg-primary px-3 py-2 text-primary-ink focus:not-sr-only focus:fixed focus:left-2 focus:top-2">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded bg-primary px-3 py-2 text-primary-ink focus:not-sr-only focus:fixed focus:left-2 focus:top-2"
+      >
         Skip to content
       </a>
       <Sidebar />

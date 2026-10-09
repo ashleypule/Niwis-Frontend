@@ -14,7 +14,13 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom', 'react-router'],
-          echarts: ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers', 'echarts-for-react/lib/core'],
+          echarts: [
+            'echarts/core',
+            'echarts/charts',
+            'echarts/components',
+            'echarts/renderers',
+            'echarts-for-react/lib/core',
+          ],
           leaflet: ['leaflet', 'react-leaflet'],
         },
       },

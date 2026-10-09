@@ -17,11 +17,15 @@ export function ClimateInsights() {
     );
   const warmest = [...p.data.rows].sort((a, b) => Number(b.trend) - Number(a.trend))[0];
   const driest = [...p.data.rows].sort((a, b) => Number(a.r) - Number(b.r))[0];
-  const toSev = (c: unknown): Sev => (c === 'Very High' ? 'critical' : c === 'High' ? 'high' : c === 'Moderate' ? 'moderate' : 'low');
+  const toSev = (c: unknown): Sev =>
+    c === 'Very High' ? 'critical' : c === 'High' ? 'high' : c === 'Moderate' ? 'moderate' : 'low';
   const items: { sev: Sev; text: string }[] = [
     ...q.data.rows.map((r) => ({ sev: toSev(r.cls), text: `${String(r.stage)}: ${String(r.value)}` })),
     { sev: 'high', text: `Fastest warming: ${String(warmest.name)} (${Number(warmest.trend).toFixed(2)} °C/decade)` },
-    { sev: 'moderate', text: `Largest rainfall decline: ${String(driest.name)} (${Number(driest.r).toFixed(0)}% vs 1981–2010)` },
+    {
+      sev: 'moderate',
+      text: `Largest rainfall decline: ${String(driest.name)} (${Number(driest.r).toFixed(0)}% vs 1981–2010)`,
+    },
   ];
   return (
     <Card title="Trend & Alert Insights">

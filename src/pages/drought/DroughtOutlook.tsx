@@ -18,12 +18,24 @@ export function DroughtOutlook() {
   const worst = affected.data?.rows.slice(0, 2).map((r) => String(r.name)) ?? [];
   const spiRow = ew.data?.rows.find((r) => String(r.indicator).startsWith('Drought index'));
   return (
-    <Card title="Drought Outlook (Next 3 Months)" info="Damped-persistence SPI-3 outlook with a seasonal signal. See the Predictions & Forecasting tab for uncertainty bands.">
+    <Card
+      title="Drought Outlook (Next 3 Months)"
+      info="Damped-persistence SPI-3 outlook with a seasonal signal. See the Predictions & Forecasting tab for uncertainty bands."
+    >
       <div className="grid grid-cols-3 gap-2">
         {[1, 2, 3].map((h) => (
           <figure key={h} className="min-w-0">
-            <figcaption className="mb-1 truncate text-center text-xs font-semibold text-ink-2">{outlookMonth(h)}</figcaption>
-            <MapPanel module="drought" title={`SPI-3 outlook +${h}`} layers={[]} fixedLayer={{ id: `outlook-${h}`, label: `+${h}` }} mini height={150} />
+            <figcaption className="mb-1 truncate text-center text-xs font-semibold text-ink-2">
+              {outlookMonth(h)}
+            </figcaption>
+            <MapPanel
+              module="drought"
+              title={`SPI-3 outlook +${h}`}
+              layers={[]}
+              fixedLayer={{ id: `outlook-${h}`, label: `+${h}` }}
+              mini
+              height={150}
+            />
           </figure>
         ))}
       </div>

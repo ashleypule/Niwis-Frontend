@@ -20,8 +20,12 @@ function useScopeOptions() {
   return useMemo(() => {
     const p = prov.data?.items ?? [];
     const w = (wma.data?.items ?? []).filter((x) => !f.province || x.parent?.split(',').includes(f.province));
-    const c = (catchments.data?.items ?? []).filter((x) => (!f.wma || x.wma === f.wma) && (!f.province || x.province === f.province));
-    const m = (munis.data?.items ?? []).filter((x) => (!f.province || x.province === f.province) && (!f.wma || x.wma === f.wma));
+    const c = (catchments.data?.items ?? []).filter(
+      (x) => (!f.wma || x.wma === f.wma) && (!f.province || x.province === f.province),
+    );
+    const m = (munis.data?.items ?? []).filter(
+      (x) => (!f.province || x.province === f.province) && (!f.wma || x.wma === f.wma),
+    );
     const opt = (xs: { id: string; name: string }[]) => xs.map((x) => ({ value: x.id, label: x.name }));
     return { provinces: opt(p), wmas: opt(w), catchments: opt(c), municipalities: opt(m) };
   }, [prov.data, wma.data, catchments.data, munis.data, f.province, f.wma]);
@@ -33,7 +37,10 @@ function ScopeSelects({ mod, stacked = false }: { mod: ModuleDef; stacked?: bool
   const o = useScopeOptions();
   const showSelector = !!mod.selector;
   const ents = useEntities(mod.id, { limit: 500 }, showSelector);
-  const entityOpts = useMemo(() => (ents.data?.items ?? []).map((e) => ({ value: e.id, label: e.sub ? `${e.name} (${e.sub})` : e.name })), [ents.data]);
+  const entityOpts = useMemo(
+    () => (ents.data?.items ?? []).map((e) => ({ value: e.id, label: e.sub ? `${e.name} (${e.sub})` : e.name })),
+    [ents.data],
+  );
   const cls = stacked ? 'w-full' : 'w-[170px] xl:w-[180px]';
   return (
     <>
@@ -46,9 +53,30 @@ function ScopeSelects({ mod, stacked = false }: { mod: ModuleDef; stacked?: bool
         icon={<MapPin className="h-4 w-4" />}
         className={stacked ? 'w-full' : 'w-[200px]'}
       />
-      <Select label="Water Management Area" value={f.wma} onChange={(v) => setFilter('wma', v)} options={o.wmas} placeholder="All WMAs" className={cls} />
-      <Select label="Catchment" value={f.catchment} onChange={(v) => setFilter('catchment', v)} options={o.catchments} placeholder="All catchments" className={cls} />
-      <Select label="Municipality" value={f.municipality} onChange={(v) => setFilter('municipality', v)} options={o.municipalities} placeholder="All municipalities" className={cls} />
+      <Select
+        label="Water Management Area"
+        value={f.wma}
+        onChange={(v) => setFilter('wma', v)}
+        options={o.wmas}
+        placeholder="All WMAs"
+        className={cls}
+      />
+      <Select
+        label="Catchment"
+        value={f.catchment}
+        onChange={(v) => setFilter('catchment', v)}
+        options={o.catchments}
+        placeholder="All catchments"
+        className={cls}
+      />
+      <Select
+        label="Municipality"
+        value={f.municipality}
+        onChange={(v) => setFilter('municipality', v)}
+        options={o.municipalities}
+        placeholder="All municipalities"
+        className={cls}
+      />
       {showSelector && (
         <Select
           label={mod.selector!.label}
@@ -73,13 +101,18 @@ function DateRange({ stacked = false }: { stacked?: boolean }) {
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, []);
-  const label = f.from || f.to ? `${f.from ? formatDate(f.from) : '…'} – ${f.to ? formatDate(f.to) : 'Latest'}` : 'Custom range';
+  const label =
+    f.from || f.to ? `${f.from ? formatDate(f.from) : '…'} – ${f.to ? formatDate(f.to) : 'Latest'}` : 'Custom range';
   return (
     <div className={clsx('relative', stacked && 'w-full')} ref={ref}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={clsx('flex h-9 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-[13px] hover:border-line-strong', stacked && 'w-full', (f.from || f.to) && 'border-primary text-primary')}
+        className={clsx(
+          'flex h-9 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-[13px] hover:border-line-strong',
+          stacked && 'w-full',
+          (f.from || f.to) && 'border-primary text-primary',
+        )}
         aria-haspopup="dialog"
         aria-expanded={open}
       >
@@ -87,15 +120,30 @@ function DateRange({ stacked = false }: { stacked?: boolean }) {
         <span className="whitespace-nowrap">{label}</span>
       </button>
       {open && (
-        <div role="dialog" aria-label="Date range" className="absolute left-0 z-50 mt-2 w-72 rounded-xl border border-line bg-surface p-3 shadow-pop">
+        <div
+          role="dialog"
+          aria-label="Date range"
+          className="absolute left-0 z-50 mt-2 w-72 rounded-xl border border-line bg-surface p-3 shadow-pop"
+        >
           <div className="grid grid-cols-2 gap-2">
             <label className="text-xs text-muted">
               From
-              <input type="date" min="1960-01-01" className="mt-1 h-9 w-full rounded-lg border border-line bg-surface px-2 text-sm text-ink" value={f.from ?? ''} onChange={(e) => setFilters({ from: e.target.value || undefined })} />
+              <input
+                type="date"
+                min="1960-01-01"
+                className="mt-1 h-9 w-full rounded-lg border border-line bg-surface px-2 text-sm text-ink"
+                value={f.from ?? ''}
+                onChange={(e) => setFilters({ from: e.target.value || undefined })}
+              />
             </label>
             <label className="text-xs text-muted">
               To
-              <input type="date" className="mt-1 h-9 w-full rounded-lg border border-line bg-surface px-2 text-sm text-ink" value={f.to ?? ''} onChange={(e) => setFilters({ to: e.target.value || undefined })} />
+              <input
+                type="date"
+                className="mt-1 h-9 w-full rounded-lg border border-line bg-surface px-2 text-sm text-ink"
+                value={f.to ?? ''}
+                onChange={(e) => setFilters({ to: e.target.value || undefined })}
+              />
             </label>
           </div>
           <div className="mt-3 flex justify-between">
@@ -116,7 +164,11 @@ function Presets({ mod }: { mod: ModuleDef }) {
   const f = useUi((s) => s.filters);
   const setFilter = useUi((s) => s.setFilter);
   return (
-    <div role="radiogroup" aria-label="Period" className="flex overflow-hidden rounded-lg border border-line bg-surface">
+    <div
+      role="radiogroup"
+      aria-label="Period"
+      className="flex overflow-hidden rounded-lg border border-line bg-surface"
+    >
       {mod.presets.map((p) => {
         const active = f.period === p && !f.from && !f.to;
         return (
@@ -126,7 +178,10 @@ function Presets({ mod }: { mod: ModuleDef }) {
             role="radio"
             aria-checked={active}
             onClick={() => setFilter('period', p)}
-            className={clsx('h-9 whitespace-nowrap px-2.5 text-[13px] transition-colors', active ? 'bg-primary font-semibold text-primary-ink' : 'text-ink-2 hover:bg-surface-2')}
+            className={clsx(
+              'h-9 whitespace-nowrap px-2.5 text-[13px] transition-colors',
+              active ? 'bg-primary font-semibold text-primary-ink' : 'text-ink-2 hover:bg-surface-2',
+            )}
           >
             {PRESET_LABEL[p]}
           </button>
@@ -152,13 +207,21 @@ function Actions({ mod }: { mod: ModuleDef }) {
   };
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button variant={f.compare ? 'primary' : 'outline'} onClick={() => setFilter('compare', !f.compare)} aria-pressed={f.compare} title="Overlay the same period one year earlier">
+      <Button
+        variant={f.compare ? 'primary' : 'outline'}
+        onClick={() => setFilter('compare', !f.compare)}
+        aria-pressed={f.compare}
+        title="Overlay the same period one year earlier"
+      >
         <GitCompareArrows className="h-4 w-4" /> Compare
       </Button>
       <Button variant="action" onClick={onDownload} disabled={busy}>
         <Download className="h-4 w-4" /> {busy ? 'Preparing…' : 'Download Data'}
       </Button>
-      <Button variant="primary" onClick={() => navigate(`/reports/print?page=${encodeURIComponent(pathname)}&${search.replace(/^\?/, '')}`)}>
+      <Button
+        variant="primary"
+        onClick={() => navigate(`/reports/print?page=${encodeURIComponent(pathname)}&${search.replace(/^\?/, '')}`)}
+      >
         <FileText className="h-4 w-4" /> Generate Report
       </Button>
       <span role="status" aria-live="polite" className="text-xs text-good">

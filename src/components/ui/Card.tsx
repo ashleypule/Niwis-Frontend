@@ -19,11 +19,25 @@ interface CardProps {
 
 export function Card({ title, context, info, actions, children, className, bodyClassName, band, id }: CardProps) {
   return (
-    <section id={id} className={clsx('card anim-in flex min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-card', className)} aria-label={typeof title === 'string' ? title : undefined}>
+    <section
+      id={id}
+      className={clsx(
+        'card anim-in flex min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-card',
+        className,
+      )}
+      aria-label={typeof title === 'string' ? title : undefined}
+    >
       {(title || actions) && (
-        <header className={clsx('flex min-h-[44px] items-center gap-2 px-4 pt-2.5', band ? 'bg-navy-2 pb-2.5 text-white' : 'pb-1')}>
+        <header
+          className={clsx(
+            'flex min-h-[44px] items-center gap-2 px-4 pt-2.5',
+            band ? 'bg-navy-2 pb-2.5 text-white' : 'pb-1',
+          )}
+        >
           <div className="min-w-0 flex-1">
-            <h2 className={clsx('line-clamp-2 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}>
+            <h2
+              className={clsx('line-clamp-2 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
+            >
               {title}
               {info && (
                 <span title={info} className="ml-1 inline-block cursor-help align-[-2px] text-muted">
@@ -31,7 +45,9 @@ export function Card({ title, context, info, actions, children, className, bodyC
                 </span>
               )}
             </h2>
-            {context && <div className={clsx('truncate text-xs', band ? 'text-white/75' : 'text-muted')}>{context}</div>}
+            {context && (
+              <div className={clsx('truncate text-xs', band ? 'text-white/75' : 'text-muted')}>{context}</div>
+            )}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
         </header>
@@ -43,7 +59,19 @@ export function Card({ title, context, info, actions, children, className, bodyC
   );
 }
 
-export function Tabs<T extends string>({ value, onChange, options, size = 'sm', label }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[]; size?: 'sm' | 'md'; label: string }) {
+export function Tabs<T extends string>({
+  value,
+  onChange,
+  options,
+  size = 'sm',
+  label,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: { value: T; label: string }[];
+  size?: 'sm' | 'md';
+  label: string;
+}) {
   return (
     <div role="tablist" aria-label={label} className="flex max-w-full overflow-x-auto rounded-lg bg-surface-2 p-0.5">
       {options.map((o) => (

@@ -28,13 +28,38 @@ export default function DamsPage() {
       <KpiStrip module="dams" count={8} />
 
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-        <MapPanel module="dams" title="Dam Storage Status Map (Major Dams)" layers={DAM_LAYERS} height={500} baseLayers={['provinces', 'wmas', 'catchments', 'rivers', 'towns', 'basemap']} defaultBase={['provinces', 'rivers']} />
-        <TablePanel module="dams" metric="top10" title="Major Dam Storage (Top 10 by Capacity)" selectEntity maxHeight={480} />
+        <MapPanel
+          module="dams"
+          title="Dam Storage Status Map (Major Dams)"
+          layers={DAM_LAYERS}
+          height={500}
+          baseLayers={['provinces', 'wmas', 'catchments', 'rivers', 'towns', 'basemap']}
+          defaultBase={['provinces', 'rivers']}
+        />
+        <TablePanel
+          module="dams"
+          metric="top10"
+          title="Major Dam Storage (Top 10 by Capacity)"
+          selectEntity
+          maxHeight={480}
+        />
       </div>
 
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <CategoryPanel module="dams" metric="by-wma" title="Storage by Water Management Area" variant="hbar" height={240} />
-        <CategoryPanel module="dams" metric="distribution" title="Storage Level Distribution" variant="donut" height={190} />
+        <CategoryPanel
+          module="dams"
+          metric="by-wma"
+          title="Storage by Water Management Area"
+          variant="hbar"
+          height={240}
+        />
+        <CategoryPanel
+          module="dams"
+          metric="distribution"
+          title="Storage Level Distribution"
+          variant="donut"
+          height={190}
+        />
         <SeriesPanel module="dams" metric="storage-trend" title="Storage Levels Trend (All Major Dams)" height={240} />
         <SeriesPanel module="dams" metric="flows" title="Inflow and Outflow (Monthly)" height={240} />
       </Row>
@@ -46,14 +71,49 @@ export default function DamsPage() {
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <SeriesPanel module="dams" metric="dam-storage" title="Storage Level Trend (Selected Dam)" context={ctx} extra={p} height={240} />
-        <SeriesPanel module="dams" metric="dam-flows" title="Inflow and Outflow (Selected Dam)" context={ctx} extra={p} height={240} />
-        <SeriesPanel module="dams" metric="dam-monthly" title="Monthly Storage Comparison (Selected Dam)" context={ctx} extra={p} height={240} />
+        <SeriesPanel
+          module="dams"
+          metric="dam-storage"
+          title="Storage Level Trend (Selected Dam)"
+          context={ctx}
+          extra={p}
+          height={240}
+        />
+        <SeriesPanel
+          module="dams"
+          metric="dam-flows"
+          title="Inflow and Outflow (Selected Dam)"
+          context={ctx}
+          extra={p}
+          height={240}
+        />
+        <SeriesPanel
+          module="dams"
+          metric="dam-monthly"
+          title="Monthly Storage Comparison (Selected Dam)"
+          context={ctx}
+          extra={p}
+          height={240}
+        />
       </Row>
 
       <Row className="md:grid-cols-3">
-        <SeriesPanel module="dams" metric="rule-curve" title="Operational Rule Curve (Selected Dam)" context={ctx} extra={p} height={230} />
-        <SeriesPanel module="dams" metric="dam-anomaly" title="Storage Anomaly (Selected Dam)" context={ctx} extra={p} height={230} />
+        <SeriesPanel
+          module="dams"
+          metric="rule-curve"
+          title="Operational Rule Curve (Selected Dam)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <SeriesPanel
+          module="dams"
+          metric="dam-anomaly"
+          title="Storage Anomaly (Selected Dam)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
         <TablePanel
           module="dams"
           metric="lowest"
@@ -68,8 +128,20 @@ export default function DamsPage() {
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <CategoryPanel module="dams" metric="wma-volume" title="National Storage by Water Management Area" variant="mixed" height={230} />
-        <CategoryPanel module="dams" metric="by-province" title="Storage Level by Province" variant="bar" height={230} />
+        <CategoryPanel
+          module="dams"
+          metric="wma-volume"
+          title="National Storage by Water Management Area"
+          variant="mixed"
+          height={230}
+        />
+        <CategoryPanel
+          module="dams"
+          metric="by-province"
+          title="Storage Level by Province"
+          variant="bar"
+          height={230}
+        />
         <SeriesPanel module="dams" metric="cumulative-inflow" title="Cumulative Inflow (Year to Date)" height={230} />
       </Row>
     </div>

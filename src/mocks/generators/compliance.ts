@@ -54,7 +54,10 @@ function buildPlants(kind: 'wwtw' | 'wss', total: number): Plant[] {
   for (const m of MUNICIPALITIES) {
     const pop = municipalPopulation.get(m.id) ?? 30000;
     const metro = m.name in METROS;
-    const n = Math.max(1, Math.round((total * (0.45 * (pop / totalPop) + 0.55 / MUNICIPALITIES.length)) * (metro ? 1.1 : 1)));
+    const n = Math.max(
+      1,
+      Math.round(total * (0.45 * (pop / totalPop) + 0.55 / MUNICIPALITIES.length) * (metro ? 1.1 : 1)),
+    );
     const svc = MUNI_SERVICES.find((s) => s.id === m.id)!;
     const base = (kind === 'wwtw' ? PROV_GD : PROV_BD)[m.province] + (metro ? 12 : 0) - (svc.distressed ? 10 : 0);
     for (let k = 0; k < n; k++) {
@@ -80,9 +83,30 @@ function buildPlants(kind: 'wwtw' | 'wss', total: number): Plant[] {
         flowMld: round(cap * util, 1),
         score: round(score, 0),
         scorePrev: round(clamp(score + r.normal(-3, 7), 0, 100), 0),
-        process: kind === 'wwtw' ? r.weighted(['Activated sludge (BNR)', 'Biofilter', 'Oxidation ponds', 'Activated sludge', 'Package plant'], [0.3, 0.2, 0.25, 0.15, 0.1]) : r.weighted(['Conventional (coag-floc-sed-filt-dis)', 'Direct filtration', 'Borehole + chlorination', 'Package plant', 'Membrane'], [0.5, 0.15, 0.2, 0.12, 0.03]),
+        process:
+          kind === 'wwtw'
+            ? r.weighted(
+                ['Activated sludge (BNR)', 'Biofilter', 'Oxidation ponds', 'Activated sludge', 'Package plant'],
+                [0.3, 0.2, 0.25, 0.15, 0.1],
+              )
+            : r.weighted(
+                [
+                  'Conventional (coag-floc-sed-filt-dis)',
+                  'Direct filtration',
+                  'Borehole + chlorination',
+                  'Package plant',
+                  'Membrane',
+                ],
+                [0.5, 0.15, 0.2, 0.12, 0.03],
+              ),
         populationServed: Math.round(share * r.range(0.7, 1.0)),
-        source: kind === 'wss' ? r.weighted(['Dam abstraction', 'River abstraction', 'Groundwater', 'Bulk purchase (water board)'], [0.35, 0.2, 0.25, 0.2]) : undefined,
+        source:
+          kind === 'wss'
+            ? r.weighted(
+                ['Dam abstraction', 'River abstraction', 'Groundwater', 'Bulk purchase (water board)'],
+                [0.35, 0.2, 0.25, 0.2],
+              )
+            : undefined,
         samplesPerMonth: Math.max(4, Math.round((share / (kind === 'wss' ? 8000 : 15000)) * r.range(0.8, 1.3))),
       });
     }
@@ -95,7 +119,9 @@ export const WSSS: Plant[] = buildPlants('wss', 1150);
 export const plantById = new Map([...WWTWS, ...WSSS].map((p) => [p.id, p]));
 
 for (const w of WWTWS) {
-  const near = [...WQ_STATIONS].filter((s) => s.type === 'River').sort((a, b) => (a.lat - w.lat) ** 2 + (a.lon - w.lon) ** 2 - ((b.lat - w.lat) ** 2 + (b.lon - w.lon) ** 2))[0];
+  const near = [...WQ_STATIONS]
+    .filter((s) => s.type === 'River')
+    .sort((a, b) => (a.lat - w.lat) ** 2 + (a.lon - w.lon) ** 2 - ((b.lat - w.lat) ** 2 + (b.lon - w.lon) ** 2))[0];
   w.receiving = near ? `${near.river} River` : 'Local stream';
 }
 
@@ -131,7 +157,19 @@ export function effluentCompliance(id: string, t = END_MI - 1 - C_START): number
   return (ok / EFFLUENT_PARAMS.length) * 100;
 }
 
-export const DW_PARAMS = ['ph', 'turbidity', 'freeChlorine', 'ecoli', 'totalColiforms', 'ec', 'nitrate', 'fluoride', 'arsenic', 'lead', 'thm'] as const;
+export const DW_PARAMS = [
+  'ph',
+  'turbidity',
+  'freeChlorine',
+  'ecoli',
+  'totalColiforms',
+  'ec',
+  'nitrate',
+  'fluoride',
+  'arsenic',
+  'lead',
+  'thm',
+] as const;
 
 /** Monthly drinking-water results (one representative sample per month per parameter). Units as SANS 241 (mg/L). */
 export const drinking = memo((id: string): Record<string, Float64Array> => {
@@ -197,13 +235,21 @@ export const RWQO_SITES: RwqoSite[] = (() => {
     const health = clamp(1 - st.pressure + r.normal(0, 0.12), 0.05, 1);
     const sass5 = Math.round(40 + 190 * health);
     const aspt = round(3.5 + 4.5 * health, 1);
-    const ec = health > 0.85 ? 'A' : health > 0.7 ? 'B' : health > 0.5 ? 'C' : health > 0.3 ? 'D' : health > 0.15 ? 'E' : 'F';
+    const ec =
+      health > 0.85 ? 'A' : health > 0.7 ? 'B' : health > 0.5 ? 'C' : health > 0.3 ? 'D' : health > 0.15 ? 'E' : 'F';
     const eflowReq = round(r.range(0.2, 6), 2);
     out.push({
       id: `rwqo-${k + 1}`,
       name: st.name.replace(/ \(.*\)$/, ''),
       station: st,
-      waterBody: st.type === 'Dam / reservoir' ? 'Dam' : st.type === 'Wetland' ? 'Wetland' : st.type === 'Estuary' ? 'Estuary' : 'River',
+      waterBody:
+        st.type === 'Dam / reservoir'
+          ? 'Dam'
+          : st.type === 'Wetland'
+            ? 'Wetland'
+            : st.type === 'Estuary'
+              ? 'Estuary'
+              : 'River',
       sass5,
       aspt,
       fibi: Math.round(25 + 70 * health),

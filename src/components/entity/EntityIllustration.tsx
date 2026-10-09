@@ -8,7 +8,13 @@ type Kind = NonNullable<EntityDetail['image']>;
  */
 export function EntityIllustration({ kind, name }: { kind: Kind; name: string }) {
   return (
-    <svg viewBox="0 0 320 200" className="h-full w-full rounded-lg" role="img" aria-label={`Illustration: ${name}`} preserveAspectRatio="xMidYMid slice">
+    <svg
+      viewBox="0 0 320 200"
+      className="h-full w-full rounded-lg"
+      role="img"
+      aria-label={`Illustration: ${name}`}
+      preserveAspectRatio="xMidYMid slice"
+    >
       <defs>
         <linearGradient id={`sky-${kind}`} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#9fd0f5" />
@@ -29,7 +35,13 @@ export function EntityIllustration({ kind, name }: { kind: Kind; name: string })
           {[0, 1, 2, 3, 4].map((i) => (
             <rect key={i} x={198 + i * 20} y={132} width="10" height="30" fill="#9e978a" />
           ))}
-          <path d="M205 162 Q215 185 205 200 M245 162 Q255 185 245 200" stroke="#e8f4ff" strokeWidth="5" fill="none" opacity="0.8" />
+          <path
+            d="M205 162 Q215 185 205 200 M245 162 Q255 185 245 200"
+            stroke="#e8f4ff"
+            strokeWidth="5"
+            fill="none"
+            opacity="0.8"
+          />
         </>
       )}
       {(kind === 'river' || kind === 'station') && (
@@ -65,8 +77,17 @@ export function EntityIllustration({ kind, name }: { kind: Kind; name: string })
         <>
           {[30, 80, 130, 180, 230, 275].map((x, i) => (
             <g key={x}>
-              <rect x={x} y={136 - (i % 2) * 6} width="34" height="26" fill={['#e8d5b5', '#d9c3a0', '#c9d6e3'][i % 3]} />
-              <path d={`M${x - 3} ${136 - (i % 2) * 6} L${x + 17} ${122 - (i % 2) * 6} L${x + 37} ${136 - (i % 2) * 6} Z`} fill="#8d6e63" />
+              <rect
+                x={x}
+                y={136 - (i % 2) * 6}
+                width="34"
+                height="26"
+                fill={['#e8d5b5', '#d9c3a0', '#c9d6e3'][i % 3]}
+              />
+              <path
+                d={`M${x - 3} ${136 - (i % 2) * 6} L${x + 17} ${122 - (i % 2) * 6} L${x + 37} ${136 - (i % 2) * 6} Z`}
+                fill="#8d6e63"
+              />
             </g>
           ))}
           <rect x="0" y="162" width="320" height="38" fill="#c8a879" />
@@ -78,7 +99,13 @@ export function EntityIllustration({ kind, name }: { kind: Kind; name: string })
           <rect x="0" y="130" width="320" height="22" fill="#d7b98e" />
           <rect x="0" y="152" width="320" height="22" fill="#b98f5f" />
           <rect x="0" y="174" width="320" height="26" fill="#6f88a8" />
-          <path d="M0 176 Q80 170 160 178 T320 174" stroke="#2b7bc4" strokeWidth="3" strokeDasharray="6 4" fill="none" />
+          <path
+            d="M0 176 Q80 170 160 178 T320 174"
+            stroke="#2b7bc4"
+            strokeWidth="3"
+            strokeDasharray="6 4"
+            fill="none"
+          />
         </>
       )}
     </svg>

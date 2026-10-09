@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import type { FeatureCollection, Geometry } from 'geojson';
 
-export type GeoName = 'provinces' | 'south-africa' | 'municipalities' | 'wmas' | 'catchments' | 'neighbours' | 'rivers' | 'towns';
+export type GeoName =
+  'provinces' | 'south-africa' | 'municipalities' | 'wmas' | 'catchments' | 'neighbours' | 'rivers' | 'towns';
 export type GeoProps = { id?: string; name?: string; province?: string; pop?: number; scalerank?: number };
 export type GeoFC = FeatureCollection<Geometry, GeoProps>;
 
@@ -27,14 +28,20 @@ export const SA_BOUNDS: [[number, number], [number, number]] = [
 
 /** Interior label point: centre of the largest ring's bounding box nudged inside (cheap and good enough). */
 export function labelPoint(geom: Geometry): [number, number] | null {
-  const polys: number[][][][] = geom.type === 'Polygon' ? [geom.coordinates as number[][][]] : geom.type === 'MultiPolygon' ? (geom.coordinates as number[][][][]) : [];
+  const polys: number[][][][] =
+    geom.type === 'Polygon'
+      ? [geom.coordinates as number[][][]]
+      : geom.type === 'MultiPolygon'
+        ? (geom.coordinates as number[][][][])
+        : [];
   if (!polys.length) return null;
   let best = polys[0];
   let bestArea = 0;
   for (const p of polys) {
     const ring = p[0];
     let a = 0;
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++)
+      a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
     if (Math.abs(a) > bestArea) {
       bestArea = Math.abs(a);
       best = p;

@@ -87,8 +87,9 @@ export const simulateDam = memo((id: string): DamSim => {
   const petCell = cellPet(cells[0]);
   for (let t = 0; t < n; t++) evapMm[t] = petCell[DAM_START - START_MI + t] * 0.8;
   // size catchment so mean inflow ≈ turnover × capacity
-  const turnover = d.priority && d.capacity > 2000 ? r.range(0.75, 1.05) : d.capacity < 100 ? r.range(0.9, 2.0) : r.range(0.6, 1.35);
-  const meanRunoffYr = (mean(Array.from(runoff.slice(12, 12 * 31))) * 12) || 1;
+  const turnover =
+    d.priority && d.capacity > 2000 ? r.range(0.75, 1.05) : d.capacity < 100 ? r.range(0.9, 2.0) : r.range(0.6, 1.35);
+  const meanRunoffYr = mean(Array.from(runoff.slice(12, 12 * 31))) * 12 || 1;
   const area = (d.capacity * turnover * 1000) / meanRunoffYr;
   d.catchmentKm2 = Math.round(area);
   const yieldFrac = r.range(0.44, 0.68);
@@ -187,7 +188,8 @@ export const damNow = memo((id: string): DamNow => {
   const outDay = (s.release[tD(cm)] + s.spill[tD(cm)]) / dim;
   const evDay = s.evap[tD(cm)] / dim;
   const net = outDay + evDay - inflowDay;
-  const lt = mean(Array.from({ length: 30 }, (_, k) => s.storage[tD(monthIndex(1991 + k, miMonth(cm)))] / d.capacity)) * 100;
+  const lt =
+    mean(Array.from({ length: 30 }, (_, k) => s.storage[tD(monthIndex(1991 + k, miMonth(cm)))] / d.capacity)) * 100;
   return {
     id,
     volume: Math.round(vol * 10) / 10,

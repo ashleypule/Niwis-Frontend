@@ -75,14 +75,17 @@ export const MUNI_SERVICES: MuniServices[] = MUNICIPALITIES.map((m) => {
   onSite = (onSite / tot) * 100;
   communal = (communal / tot) * 100;
   below = (below / tot) * 100;
-  const distressed = !metro && r.bool(0.35 + (m.province === 'NW' || m.province === 'FS' || m.province === 'EC' ? 0.2 : 0));
+  const distressed =
+    !metro && r.bool(0.35 + (m.province === 'NW' || m.province === 'FS' || m.province === 'EC' ? 0.2 : 0));
   const nrw = metro ? r.range(24, 42) : distressed ? r.range(34, 62) : r.range(15, 33);
   const lpcd = metro ? r.range(190, 260) : inD > 50 ? r.range(130, 190) : r.range(55, 120);
   const productionMld = (pop * lpcd) / 1e6 / (1 - nrw / 100);
   const reliability = clamp(98 - (distressed ? r.range(8, 25) : r.range(1, 9)) - below * 0.2, 55, 99.5);
   const pipelineKm = Math.round((pop / (metro ? 380 : 220)) * r.range(0.8, 1.3));
   const blocksBase = metro ? r.range(16, 24) : r.range(9, 18);
-  const blocks = [0, blocksBase, blocksBase * 1.45, blocksBase * 2.0, blocksBase * 2.6, blocksBase * 3.1].map((v) => round(v, 2));
+  const blocks = [0, blocksBase, blocksBase * 1.45, blocksBase * 2.0, blocksBase * 2.6, blocksBase * 3.1].map((v) =>
+    round(v, 2),
+  );
   const avgTariff = round(blocksBase * r.range(1.35, 1.75), 2);
   const costOfSupply = round(avgTariff * r.range(0.9, 1.45) * (distressed ? 1.15 : 1), 2);
   return {
@@ -116,7 +119,7 @@ export const MUNI_SERVICES: MuniServices[] = MUNICIPALITIES.map((m) => {
     avgTariff,
     costOfSupply,
     costRecovery: round(clamp((avgTariff / costOfSupply) * 100 * (1 - nrw / 200), 35, 115), 0),
-    affordability: round(clamp((avgTariff * 15) / (metro ? 21000 : 9500) * 100 * r.range(0.8, 1.2), 0.8, 9), 1),
+    affordability: round(clamp(((avgTariff * 15) / (metro ? 21000 : 9500)) * 100 * r.range(0.8, 1.2), 0.8, 9), 1),
     tariffIncrease: round(r.range(5.5, 14.5), 1),
     energyKwhPerMl: Math.round(r.range(280, 720)),
   };
@@ -125,7 +128,11 @@ export const MUNI_SERVICES: MuniServices[] = MUNICIPALITIES.map((m) => {
 export const muniServiceById = new Map(MUNI_SERVICES.map((s) => [s.id, s]));
 
 /** Household-weighted aggregate of a services field. */
-export function svcWeighted(list: MuniServices[], f: (s: MuniServices) => number, weight: (s: MuniServices) => number = (s) => s.households): number {
+export function svcWeighted(
+  list: MuniServices[],
+  f: (s: MuniServices) => number,
+  weight: (s: MuniServices) => number = (s) => s.households,
+): number {
   const w = list.reduce((a, s) => a + weight(s), 0);
   return w ? list.reduce((a, s) => a + f(s) * weight(s), 0) / w : 0;
 }
@@ -134,7 +141,26 @@ export function svcWeighted(list: MuniServices[], f: (s: MuniServices) => number
 export function accessSummary(list: MuniServices[]) {
   const piped = svcWeighted(list, (s) => s.inDwelling + s.onSite);
   const rdp = svcWeighted(list, (s) => s.inDwelling + s.onSite + s.communal);
-  return { piped: round(piped, 1), rdp: round(rdp, 1), sanitation: round(svcWeighted(list, (s) => s.sanitation), 1), nrw: round(svcWeighted(list, (s) => s.nrw, (s) => s.productionMld), 1), reliability: round(svcWeighted(list, (s) => s.reliability), 1) };
+  return {
+    piped: round(piped, 1),
+    rdp: round(rdp, 1),
+    sanitation: round(
+      svcWeighted(list, (s) => s.sanitation),
+      1,
+    ),
+    nrw: round(
+      svcWeighted(
+        list,
+        (s) => s.nrw,
+        (s) => s.productionMld,
+      ),
+      1,
+    ),
+    reliability: round(
+      svcWeighted(list, (s) => s.reliability),
+      1,
+    ),
+  };
 }
 
 /** NRW time series for a municipality set (slow improvement trend + noise), % of production. */
@@ -144,7 +170,14 @@ export const nrwHistory = memo((key: string, current: number, months: number) =>
 });
 
 /** Water demand (Mm³/yr) by sector anchored to spec §17.2. */
-export const DEMAND_ANCHORS = { municipal: 4200, agricultural: 11000, industrial: 1800, mining: 600, power: 350, environment: 2800 } as const;
+export const DEMAND_ANCHORS = {
+  municipal: 4200,
+  agricultural: 11000,
+  industrial: 1800,
+  mining: 600,
+  power: 350,
+  environment: 2800,
+} as const;
 
 /** Provincial municipal demand share ∝ production. */
 export function municipalDemandShare(provinceId: string): number {

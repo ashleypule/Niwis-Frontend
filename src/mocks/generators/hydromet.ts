@@ -6,7 +6,19 @@ import { droughtClassFromSpi, type DroughtClass } from '@/config/thresholds';
 import { memo } from '@/lib/prng';
 import { mean, spei, spi, standardisedIndex, sum } from '@/lib/stats';
 import { miMonth, miYear } from '@/lib/time';
-import { CALIB, CELLS, END_MI, N_MONTHS, START_MI, aggregate, cellNdvi, cellPet, cellRain, cellTemp, cellWaterBalance } from './climate';
+import {
+  CALIB,
+  CELLS,
+  END_MI,
+  N_MONTHS,
+  START_MI,
+  aggregate,
+  cellNdvi,
+  cellPet,
+  cellRain,
+  cellTemp,
+  cellWaterBalance,
+} from './climate';
 import type { ResolvedScope } from './scope';
 
 export type Var = 'rain' | 'tmean' | 'tmax' | 'tmin' | 'pet' | 'sm' | 'smRoot' | 'aet' | 'runoff' | 'ndvi';
@@ -39,7 +51,8 @@ export const LAST = END_MI - 1;
 export const tOf = (mi: number) => mi - START_MI;
 
 export const regionSpi = memo(
-  (scope: ResolvedScope, k: number): (number | null)[] => spi({ start: START_MI, values: Array.from(regionSeries(scope, 'rain')) }, k, CALIB),
+  (scope: ResolvedScope, k: number): (number | null)[] =>
+    spi({ start: START_MI, values: Array.from(regionSeries(scope, 'rain')) }, k, CALIB),
   (scope, k) => `${scope.key}|spi${k}`,
 );
 
@@ -111,7 +124,12 @@ export const regionEnvelope = memo(
       const x = [...a].sort((m, n) => m - n);
       return x[Math.floor((x.length - 1) * p)];
     };
-    return { min: acc.map((a) => Math.min(...a)), max: acc.map((a) => Math.max(...a)), p10: acc.map((a) => q(a, 0.1)), p90: acc.map((a) => q(a, 0.9)) };
+    return {
+      min: acc.map((a) => Math.min(...a)),
+      max: acc.map((a) => Math.max(...a)),
+      p10: acc.map((a) => q(a, 0.1)),
+      p90: acc.map((a) => q(a, 0.9)),
+    };
   },
   (scope, v) => `${scope.key}|env|${v}`,
 );
@@ -130,7 +148,11 @@ export function normalMonths(clim: number[], endMi: number, n: number): number {
   return tot;
 }
 
-export function annualTotals(s: ArrayLike<number>, fromYear: number, toYear: number): { year: number; value: number }[] {
+export function annualTotals(
+  s: ArrayLike<number>,
+  fromYear: number,
+  toYear: number,
+): { year: number; value: number }[] {
   const out: { year: number; value: number }[] = [];
   for (let y = fromYear; y <= toYear; y++) {
     let tot = 0;
@@ -208,8 +230,14 @@ export function tciFromTemp(tmax: ArrayLike<number>): Float64Array {
   return out;
 }
 
-export const regionVci = memo((scope: ResolvedScope) => vciFromNdvi(regionSeries(scope, 'ndvi')), (s) => `${s.key}|vci`);
-export const regionTci = memo((scope: ResolvedScope) => tciFromTemp(regionSeries(scope, 'tmax')), (s) => `${s.key}|tci`);
+export const regionVci = memo(
+  (scope: ResolvedScope) => vciFromNdvi(regionSeries(scope, 'ndvi')),
+  (s) => `${s.key}|vci`,
+);
+export const regionTci = memo(
+  (scope: ResolvedScope) => tciFromTemp(regionSeries(scope, 'tmax')),
+  (s) => `${s.key}|tci`,
+);
 export const regionVhi = memo(
   (scope: ResolvedScope) => {
     const v = regionVci(scope);

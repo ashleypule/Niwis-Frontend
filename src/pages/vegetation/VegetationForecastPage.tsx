@@ -27,13 +27,41 @@ export default function VegetationForecastPage() {
           ]}
           height={460}
         />
-        <SeriesPanel module="vegetation" metric="ndvi" forecast title="NDVI Forecast (Next 12 Months)" tabs={PROVINCE_TABS} height={300} />
-        <SeriesPanel module="vegetation" metric="recovery-probability" forecast title="Vegetation Recovery Probability (Next 12 Months)" height={300} />
+        <SeriesPanel
+          module="vegetation"
+          metric="ndvi"
+          forecast
+          title="NDVI Forecast (Next 12 Months)"
+          tabs={PROVINCE_TABS}
+          height={300}
+        />
+        <SeriesPanel
+          module="vegetation"
+          metric="recovery-probability"
+          forecast
+          title="Vegetation Recovery Probability (Next 12 Months)"
+          height={300}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <MiniMap module="vegetation" layer="forecast-anomaly" title="Vegetation Anomaly Forecast (Next 12 Months)" height={300} />
-        <TablePanel module="vegetation" metric="forecast-indicators" title="Key Vegetation Forecast Indicators (Next 12 Months)" />
-        <SeriesPanel module="vegetation" metric="index-trend" title="Vegetation Trend (Current vs Normal Range)" tabs={['ndvi', 'evi', 'vci'].map((v) => ({ value: v, label: v.toUpperCase(), params: { index: v } }))} height={260} />
+        <MiniMap
+          module="vegetation"
+          layer="forecast-anomaly"
+          title="Vegetation Anomaly Forecast (Next 12 Months)"
+          height={300}
+        />
+        <TablePanel
+          module="vegetation"
+          metric="forecast-indicators"
+          title="Key Vegetation Forecast Indicators (Next 12 Months)"
+        />
+        <SeriesPanel
+          module="vegetation"
+          metric="index-trend"
+          title="Vegetation Trend (Current vs Normal Range)"
+          tabs={['ndvi', 'evi', 'vci'].map((v) => ({ value: v, label: v.toUpperCase(), params: { index: v } }))}
+          height={260}
+        />
       </Row>
     </div>
   );

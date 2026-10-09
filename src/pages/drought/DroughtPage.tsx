@@ -18,8 +18,20 @@ export default function DroughtPage() {
       <KpiStrip module="drought" count={10} />
 
       <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] desk:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)_minmax(0,1.25fr)]">
-        <MapPanel module="drought" title="Drought Status Map – South Africa" layers={DROUGHT_LAYERS} pointLayers={DROUGHT_POINTS} tabs={false} height={540} />
-        <CascadeFlow module="drought" metric="cascade" title="Drought Cascade (Current Status)" orientation="vertical" />
+        <MapPanel
+          module="drought"
+          title="Drought Status Map – South Africa"
+          layers={DROUGHT_LAYERS}
+          pointLayers={DROUGHT_POINTS}
+          tabs={false}
+          height={540}
+        />
+        <CascadeFlow
+          module="drought"
+          metric="cascade"
+          title="Drought Cascade (Current Status)"
+          orientation="vertical"
+        />
         <TablePanel
           module="drought"
           metric="affected"
@@ -46,8 +58,19 @@ export default function DroughtPage() {
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-3">
-        <SeriesPanel module="drought" metric="gw-sgi" title="Groundwater Levels & SGI" info="Depth axis is inverted: deeper water levels plot lower." height={240} />
-        <MatrixPanel module="drought" metric="veg-heatmap" title="Vegetation Condition (VCI) by Province" height={250} />
+        <SeriesPanel
+          module="drought"
+          metric="gw-sgi"
+          title="Groundwater Levels & SGI"
+          info="Depth axis is inverted: deeper water levels plot lower."
+          height={240}
+        />
+        <MatrixPanel
+          module="drought"
+          metric="veg-heatmap"
+          title="Vegetation Condition (VCI) by Province"
+          height={250}
+        />
         <SeriesPanel module="drought" metric="soil-moisture" title="Soil Moisture (Surface & Root-zone)" height={240} />
       </Row>
 
@@ -64,20 +87,53 @@ export default function DroughtPage() {
           height={230}
         />
         <SeriesPanel module="drought" metric="storage-vs-spi" title="Reservoir Storage vs Drought Index" height={250} />
-        <CategoryPanel module="drought" metric="severity" title="Drought Severity Distribution" variant="donut" height={250} />
-        <CategoryPanel module="drought" metric="province-area" title="Drought-affected Area by Province" variant="hbar" height={250} />
+        <CategoryPanel
+          module="drought"
+          metric="severity"
+          title="Drought Severity Distribution"
+          variant="donut"
+          height={250}
+        />
+        <CategoryPanel
+          module="drought"
+          metric="province-area"
+          title="Drought-affected Area by Province"
+          variant="hbar"
+          height={250}
+        />
       </Row>
 
       <Row className="xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <DroughtOutlook />
         <TablePanel module="drought" metric="early-warning" title="Drought Early Warning (Next 3 Months)" />
-        <TablePanel module="drought" metric="municipalities" title="Top 10 Most Affected Municipalities" selectEntity={false} />
+        <TablePanel
+          module="drought"
+          metric="municipalities"
+          title="Top 10 Most Affected Municipalities"
+          selectEntity={false}
+        />
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel module="drought" metric="vegetation" title="Vegetation Condition (NDVI / VCI / VHI)" height={230} />
-        <SeriesPanel module="drought" metric="population-at-risk" title="Population in Drought-affected Municipalities" height={230} />
-        <CategoryPanel module="drought" metric="restrictions" title="Water Restrictions by Province" variant="stacked100" height={230} />
+        <SeriesPanel
+          module="drought"
+          metric="vegetation"
+          title="Vegetation Condition (NDVI / VCI / VHI)"
+          height={230}
+        />
+        <SeriesPanel
+          module="drought"
+          metric="population-at-risk"
+          title="Population in Drought-affected Municipalities"
+          height={230}
+        />
+        <CategoryPanel
+          module="drought"
+          metric="restrictions"
+          title="Water Restrictions by Province"
+          variant="stacked100"
+          height={230}
+        />
         <TablePanel module="drought" metric="sources" title="Data Source Status" />
       </Row>
     </div>

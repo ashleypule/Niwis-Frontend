@@ -1,7 +1,8 @@
 /** Application-level configuration. */
 
 // import.meta.env is undefined when generators run under node (scripts, tests)
-const env: Record<string, string | undefined> = (import.meta.env as Record<string, string | undefined> | undefined) ?? {};
+const env: Record<string, string | undefined> =
+  (import.meta.env as Record<string, string | undefined> | undefined) ?? {};
 
 export type DataSource = 'mock' | 'api';
 

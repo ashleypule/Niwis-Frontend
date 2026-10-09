@@ -31,11 +31,32 @@ export default function GroundwaterPage() {
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel module="groundwater" title="Groundwater Level Map – South Africa" layers={LAYERS} height={520} />
         <div className="grid content-start gap-3">
-          <SeriesPanel module="groundwater" metric="level" title="Groundwater Level Trend (Selected Borehole)" info="Depth axis is inverted: deeper water levels plot lower." context={ctx} extra={p} height={210} />
-          <SeriesPanel module="groundwater" metric="sgi" title="Groundwater Level Anomaly (SGI)" context={ctx} extra={p} height={200} />
+          <SeriesPanel
+            module="groundwater"
+            metric="level"
+            title="Groundwater Level Trend (Selected Borehole)"
+            info="Depth axis is inverted: deeper water levels plot lower."
+            context={ctx}
+            extra={p}
+            height={210}
+          />
+          <SeriesPanel
+            module="groundwater"
+            metric="sgi"
+            title="Groundwater Level Anomaly (SGI)"
+            context={ctx}
+            extra={p}
+            height={200}
+          />
         </div>
         <div className="grid content-start gap-3">
-          <CategoryPanel module="groundwater" metric="by-aquifer" title="Groundwater Level by Aquifer" variant="hbar" height={230} />
+          <CategoryPanel
+            module="groundwater"
+            metric="by-aquifer"
+            title="Groundwater Level by Aquifer"
+            variant="hbar"
+            height={230}
+          />
           <TablePanel
             module="groundwater"
             metric="lowest"
@@ -49,10 +70,35 @@ export default function GroundwaterPage() {
         </div>
       </div>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel module="groundwater" metric="level-long" title="Long-term Level Record (Selected Borehole)" context={ctx} extra={p} height={230} />
-        <SeriesPanel module="groundwater" metric="seasonal" title="Seasonal Groundwater Level (Last 5 Years)" context={ctx} extra={p} height={230} />
-        <SeriesPanel module="groundwater" metric="anomaly" title="Groundwater Level Anomaly (vs Long-term)" height={230} />
-        <CategoryPanel module="groundwater" metric="status" title="Borehole Status Distribution" variant="donut" height={180} />
+        <SeriesPanel
+          module="groundwater"
+          metric="level-long"
+          title="Long-term Level Record (Selected Borehole)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <SeriesPanel
+          module="groundwater"
+          metric="seasonal"
+          title="Seasonal Groundwater Level (Last 5 Years)"
+          context={ctx}
+          extra={p}
+          height={230}
+        />
+        <SeriesPanel
+          module="groundwater"
+          metric="anomaly"
+          title="Groundwater Level Anomaly (vs Long-term)"
+          height={230}
+        />
+        <CategoryPanel
+          module="groundwater"
+          metric="status"
+          title="Borehole Status Distribution"
+          variant="donut"
+          height={180}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
         <SeriesPanel
@@ -61,18 +107,39 @@ export default function GroundwaterPage() {
           title="Groundwater Quality (Selected Borehole)"
           context={ctx}
           extra={p}
-          tabs={['ec', 'ph', 'nitrate', 'fluoride', 'tds'].map((v) => ({ value: v, label: v === 'ec' ? 'EC' : v === 'ph' ? 'pH' : v === 'tds' ? 'TDS' : v[0].toUpperCase() + v.slice(1), params: { param: v } }))}
+          tabs={['ec', 'ph', 'nitrate', 'fluoride', 'tds'].map((v) => ({
+            value: v,
+            label: v === 'ec' ? 'EC' : v === 'ph' ? 'pH' : v === 'tds' ? 'TDS' : v[0].toUpperCase() + v.slice(1),
+            params: { param: v },
+          }))}
           height={210}
         />
         <SeriesPanel module="groundwater" metric="recharge-abstraction" title="Recharge and Abstraction" height={230} />
-        <CategoryPanel module="groundwater" metric="sector" title="Groundwater Abstraction by Sector" variant="donut" height={180} />
-        <CategoryPanel module="groundwater" metric="distribution" title="Groundwater Level Distribution" variant="bar" height={230} />
+        <CategoryPanel
+          module="groundwater"
+          metric="sector"
+          title="Groundwater Abstraction by Sector"
+          variant="donut"
+          height={180}
+        />
+        <CategoryPanel
+          module="groundwater"
+          metric="distribution"
+          title="Groundwater Level Distribution"
+          variant="bar"
+          height={230}
+        />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr]">
         <EntityInfoCard module="groundwater" id={bh.id} title="Borehole Information (Selected Borehole)" />
         <TablePanel module="groundwater" metric="aquifers" title="Aquifer Status (Selected Region)" />
         <div className="grid content-start gap-3">
-          <TablePanel module="groundwater" metric="declining" title="Top Boreholes with Declining Levels" selectEntity />
+          <TablePanel
+            module="groundwater"
+            metric="declining"
+            title="Top Boreholes with Declining Levels"
+            selectEntity
+          />
           <AlertsList module="groundwater" limit={4} />
         </div>
       </Row>

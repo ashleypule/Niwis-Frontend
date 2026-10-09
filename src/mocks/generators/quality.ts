@@ -133,14 +133,44 @@ export const WQ_STATIONS: WqStation[] = (() => {
       const loc = locate(lon, lat);
       const muni = municipalityById.get(loc.municipality);
       const metro = !!muni && muni.name in METROS;
-      const mining = (lon > 28.6 && lon < 30.2 && lat > -26.4 && lat < -25.4) || (lon > 26.6 && lon < 28.2 && lat > -26.8 && lat < -25.9);
-      const source = metro ? 'Urban / WWTW' : mining ? 'Mining' : r.weighted(['Agriculture', 'Natural', 'Urban / WWTW', 'Industrial'] as const, [0.45, 0.3, 0.18, 0.07]);
-      const pressure = clamp((source === 'Natural' ? 0.15 : source === 'Agriculture' ? 0.4 : 0.62) + r.normal(0, 0.15), 0.02, 0.98);
+      const mining =
+        (lon > 28.6 && lon < 30.2 && lat > -26.4 && lat < -25.4) ||
+        (lon > 26.6 && lon < 28.2 && lat > -26.8 && lat < -25.9);
+      const source = metro
+        ? 'Urban / WWTW'
+        : mining
+          ? 'Mining'
+          : r.weighted(['Agriculture', 'Natural', 'Urban / WWTW', 'Industrial'] as const, [0.45, 0.3, 0.18, 0.07]);
+      const pressure = clamp(
+        (source === 'Natural' ? 0.15 : source === 'Agriculture' ? 0.4 : 0.62) + r.normal(0, 0.15),
+        0.02,
+        0.98,
+      );
       const river = r.pick(RIVERS[loc.wma] ?? ['Unnamed']);
       n++;
       const code = `${String.fromCharCode(65 + ((CELLS[ci].wma.charCodeAt(3) || 49) - 49) * 2)}${r.int(1, 9)}${type === 'Dam / reservoir' ? 'R' : type === 'Groundwater' ? 'G' : 'H'}${String(r.int(1, 999)).padStart(3, '0')}`;
-      const name = type === 'River' ? `${river} at ${muni?.name ?? 'site'} (${code})` : type === 'Dam / reservoir' ? `${DAMS[k % DAMS.length].name} Dam (${code})` : type === 'Groundwater' ? `GW monitoring ${code}` : type === 'Estuary' ? `${river} estuary (${code})` : `${muni?.name ?? 'Wetland'} wetland (${code})`;
-      out.push({ id: `wq-${n}`, name, type, river, lat: round(lat, 3), lon: round(lon, 3), ...loc, cell: ci, pressure, source });
+      const name =
+        type === 'River'
+          ? `${river} at ${muni?.name ?? 'site'} (${code})`
+          : type === 'Dam / reservoir'
+            ? `${DAMS[k % DAMS.length].name} Dam (${code})`
+            : type === 'Groundwater'
+              ? `GW monitoring ${code}`
+              : type === 'Estuary'
+                ? `${river} estuary (${code})`
+                : `${muni?.name ?? 'Wetland'} wetland (${code})`;
+      out.push({
+        id: `wq-${n}`,
+        name,
+        type,
+        river,
+        lat: round(lat, 3),
+        lon: round(lon, 3),
+        ...loc,
+        cell: ci,
+        pressure,
+        source,
+      });
     }
   }
   return out;
@@ -171,8 +201,19 @@ export const wqSamples = memo((id: string): Record<string, Float64Array> => {
     const ra = clamp((rain[mi - START_MI] + 1) / (expRain + 1), 0, 4);
     const year = (mi - WQ_START) / 12;
     const flush = gw ? 1 : 0.6 + 0.5 * ra;
-    out.ph[t] = clamp(7.6 + (s.source === 'Mining' ? -0.6 : 0) + (lake ? 0.4 : 0) + r.normal(0, 0.35) + (s.source === 'Mining' && r.bool(0.08) ? -2.2 : 0), 3.5, 10);
-    out.ec[t] = Math.max(5, baseEc * (gw ? 1 : 1.25 - 0.3 * Math.min(1.5, ra)) * (1 + trend * year * 0.05) + r.normal(0, 8));
+    out.ph[t] = clamp(
+      7.6 +
+        (s.source === 'Mining' ? -0.6 : 0) +
+        (lake ? 0.4 : 0) +
+        r.normal(0, 0.35) +
+        (s.source === 'Mining' && r.bool(0.08) ? -2.2 : 0),
+      3.5,
+      10,
+    );
+    out.ec[t] = Math.max(
+      5,
+      baseEc * (gw ? 1 : 1.25 - 0.3 * Math.min(1.5, ra)) * (1 + trend * year * 0.05) + r.normal(0, 8),
+    );
     out.turbidity[t] = gw ? r.lognormal(0.6, 0.6) : r.lognormal((lake ? 6 : 18) * (0.6 + p) * flush, 0.6);
     out.do[t] = clamp(8.6 - 3.4 * p - (m >= 10 || m <= 2 ? 0.8 : 0) + r.normal(0, 0.6), 1.5, 11);
     out.bod[t] = Math.max(0.3, r.lognormal(1.6 + 9 * p * p, 0.45));
@@ -180,8 +221,12 @@ export const wqSamples = memo((id: string): Record<string, Float64Array> => {
     out.nitrate[t] = Math.max(0.02, r.lognormal(0.4 + 4.5 * p * (s.source === 'Agriculture' || gw ? 1.4 : 1), 0.55));
     out.ammonia[t] = Math.max(0.01, r.lognormal(0.05 + 1.2 * p * p, 0.7));
     out.phosphate[t] = Math.max(0.003, r.lognormal(0.02 + 0.22 * p * p * (s.source === 'Urban / WWTW' ? 1.8 : 1), 0.6));
-    out.ecoli[t] = gw ? r.lognormal(2 + 30 * p, 1.2) : r.lognormal((50 + 1800 * p * p * (s.source === 'Urban / WWTW' ? 2.2 : 1)) * flush, 1.1);
-    out.chla[t] = lake ? r.lognormal(3 + 45 * out.phosphate[t] * (m >= 9 || m <= 3 ? 1.5 : 0.7), 0.5) : r.lognormal(1.5 + 8 * p, 0.6);
+    out.ecoli[t] = gw
+      ? r.lognormal(2 + 30 * p, 1.2)
+      : r.lognormal((50 + 1800 * p * p * (s.source === 'Urban / WWTW' ? 2.2 : 1)) * flush, 1.1);
+    out.chla[t] = lake
+      ? r.lognormal(3 + 45 * out.phosphate[t] * (m >= 9 || m <= 3 ? 1.5 : 0.7), 0.5)
+      : r.lognormal(1.5 + 8 * p, 0.6);
     out.tds[t] = out.ec[t] * 6.5;
     out.sulphate[t] = Math.max(2, (s.source === 'Mining' ? 420 : 25 + 60 * c.aridity) * r.range(0.7, 1.3));
     out.fluoride[t] = Math.max(0.05, r.lognormal(gw ? 0.6 + 1.1 * c.aridity : 0.25, 0.4));
@@ -193,7 +238,17 @@ export const wqSamples = memo((id: string): Record<string, Float64Array> => {
   return out;
 });
 
-const SUB_W: Record<string, number> = { do: 0.17, ecoli: 0.16, ph: 0.11, bod: 0.11, nitrate: 0.1, phosphate: 0.1, turbidity: 0.08, ec: 0.1, ammonia: 0.07 };
+const SUB_W: Record<string, number> = {
+  do: 0.17,
+  ecoli: 0.16,
+  ph: 0.11,
+  bod: 0.11,
+  nitrate: 0.1,
+  phosphate: 0.1,
+  turbidity: 0.08,
+  ec: 0.1,
+  ammonia: 0.07,
+};
 
 /** Sub-index 0–100 (100 = pristine) for a parameter value. */
 function subIndex(id: string, v: number): number {
@@ -248,7 +303,15 @@ export const wqNow = memo((id: string): WqNow => {
   const wqi = wqiAt(id, t);
   const core = ['ph', 'ec', 'do', 'nitrate', 'ammonia', 'phosphate', 'ecoli', 'cod'];
   const met = core.filter((k) => passes(k, s[k][t])).length;
-  return { wqi, wqiPrev: wqiAt(id, t - 12), cls: wqiClass(wqi), compliance: round((met / core.length) * 100, 0), compliant: met >= core.length - 1, exceedances: exceed, latest };
+  return {
+    wqi,
+    wqiPrev: wqiAt(id, t - 12),
+    cls: wqiClass(wqi),
+    compliance: round((met / core.length) * 100, 0),
+    compliant: met >= core.length - 1,
+    exceedances: exceed,
+    latest,
+  };
 });
 
 export function wqT(mi: number) {

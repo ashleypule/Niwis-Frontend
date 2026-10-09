@@ -17,7 +17,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "docs": "tsx scripts/generate-docs.ts",
+    "docs": "vite-node scripts/generate-docs.ts",
     "geo": "node scripts/build-geo.mjs"
   },
   "dependencies": {

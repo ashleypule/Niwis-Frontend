@@ -36,7 +36,12 @@ export default function VegetationPage() {
       <PageTabs mod={mod} />
       <KpiStrip module="vegetation" count={8} />
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <MapPanel module="vegetation" title="Vegetation Condition Map – South Africa" layers={VEG_LAYERS} height={520} />
+        <MapPanel
+          module="vegetation"
+          title="Vegetation Condition Map – South Africa"
+          layers={VEG_LAYERS}
+          height={520}
+        />
         <div className="grid content-start gap-3">
           <SeriesPanel
             module="vegetation"
@@ -56,10 +61,20 @@ export default function VegetationPage() {
             module="vegetation"
             metric="index-trend"
             title="Indices Trend with Normal Range"
-            tabs={['ndvi', 'vci', 'vhi', 'evi', 'savi'].map((v) => ({ value: v, label: v.toUpperCase(), params: { index: v } }))}
+            tabs={['ndvi', 'vci', 'vhi', 'evi', 'savi'].map((v) => ({
+              value: v,
+              label: v.toUpperCase(),
+              params: { index: v },
+            }))}
             height={210}
           />
-          <CategoryPanel module="vegetation" metric="classification" title="Vegetation Condition Classification" variant="donut" height={180} />
+          <CategoryPanel
+            module="vegetation"
+            metric="classification"
+            title="Vegetation Condition Classification"
+            variant="donut"
+            height={180}
+          />
         </div>
       </div>
 
@@ -67,7 +82,13 @@ export default function VegetationPage() {
         <MiniMap module="vegetation" layer="vci" title="VCI – Vegetation Condition Index" />
         <MiniMap module="vegetation" layer="vhi" title="VHI – Vegetation Health Index" />
         <MiniMap module="vegetation" layer="ndvi-trend" title="Vegetation Trends (Sen's Slope)" />
-        <CategoryPanel module="vegetation" metric="drivers" title="Key Drivers of Vegetation Condition" variant="hbar" height={230} />
+        <CategoryPanel
+          module="vegetation"
+          metric="drivers"
+          title="Key Drivers of Vegetation Condition"
+          variant="hbar"
+          height={230}
+        />
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-4">
@@ -83,8 +104,20 @@ export default function VegetationPage() {
           height={230}
         />
         <TablePanel module="vegetation" metric="provinces" title="Top Provinces by Vegetation Health" />
-        <CategoryPanel module="vegetation" metric="by-province" title="Vegetation Condition by Province" variant="stacked100" height={230} />
-        <CategoryPanel module="vegetation" metric="seasonal" title="Seasonal Vegetation Condition" variant="bar" height={230} />
+        <CategoryPanel
+          module="vegetation"
+          metric="by-province"
+          title="Vegetation Condition by Province"
+          variant="stacked100"
+          height={230}
+        />
+        <CategoryPanel
+          module="vegetation"
+          metric="seasonal"
+          title="Seasonal Vegetation Condition"
+          variant="bar"
+          height={230}
+        />
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-4">
@@ -100,7 +133,12 @@ export default function VegetationPage() {
           ]}
           height={220}
         />
-        <TablePanel module="vegetation" metric="hotspots" title="Vegetation Condition Hotspots (Top 10)" className="xl:col-span-2" />
+        <TablePanel
+          module="vegetation"
+          metric="hotspots"
+          title="Vegetation Condition Hotspots (Top 10)"
+          className="xl:col-span-2"
+        />
         <AlertsList module="drought" limit={5} title="Alerts & Early Warnings" />
       </Row>
     </div>

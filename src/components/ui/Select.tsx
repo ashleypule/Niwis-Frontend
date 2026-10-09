@@ -19,7 +19,18 @@ interface Props extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'
 }
 
 /** Native select (fully keyboard / screen-reader accessible) styled to match the mockups. */
-export function Select({ label, value, options, placeholder, onChange, icon, hideLabel = true, className, size = 'md', ...rest }: Props) {
+export function Select({
+  label,
+  value,
+  options,
+  placeholder,
+  onChange,
+  icon,
+  hideLabel = true,
+  className,
+  size = 'md',
+  ...rest
+}: Props) {
   return (
     <label className={clsx('relative flex min-w-0 items-center', className)}>
       <span className={hideLabel ? 'sr-only' : 'mr-2 text-xs font-medium text-muted'}>{label}</span>
