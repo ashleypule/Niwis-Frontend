@@ -1,5 +1,5 @@
-import { ModuleStub } from '@/pages/_shared/ModuleStub';
+import { StreamflowForecast } from '@/pages/runoff/RunoffForecastPage';
 
-export default function Page() {
-  return <ModuleStub />;
+export default function SurfaceWaterForecastPage() {
+  return <StreamflowForecast module="surface-water" />;
 }

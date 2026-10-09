@@ -119,13 +119,20 @@ function bandSeries(s: Series, t: ChartTheme, axisIndex: number, color: string):
 export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}): EChartsOption {
   const axes = set.axes;
   const time = set.xType === 'time';
-  const xFormat = o.xFormat ?? 'month';
+  const annual = time && set.series.length > 0 && set.series.every((ser) => ser.data.every((p) => typeof p[0] === 'string' && (p[0] as string).endsWith('-07-01')));
+  const xFormat = o.xFormat ?? (annual ? 'year' : 'month');
   const colorOf = (s: Series, i: number) => o.colors?.[s.key] ?? s.color ?? t.series[i % t.series.length];
   const out: Obj[] = [];
   set.series.forEach((s, i) => {
     const color = colorOf(s, i);
     const yAxisIndex = s.axis ?? 0;
     if (s.kind === 'band') {
+      if (axes[yAxisIndex]?.log || set.xLog) {
+        // stacked areas are undefined on log axes: draw the bounds as dashed lines
+        out.push({ id: `${s.key}-lo`, name: s.name, type: 'line', data: s.data.map((p) => [p[0], p[1]]), yAxisIndex, symbol: 'none', lineStyle: { type: 'dashed', width: 1, color }, itemStyle: { color }, tooltip: { show: false } });
+        out.push({ id: `${s.key}-hi`, name: s.name, type: 'line', data: s.data.map((p) => [p[0], p[2]]), yAxisIndex, symbol: 'none', lineStyle: { type: 'dashed', width: 1, color }, itemStyle: { color }, tooltip: { show: false } });
+        return;
+      }
       out.push(...bandSeries(s, t, yAxisIndex, color));
       return;
     }
@@ -250,7 +257,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         const ps = (Array.isArray(params) ? params : [params]) as { seriesName: string; seriesId: string; value: unknown; color: string; axisValue?: unknown; marker: string; dataIndex: number }[];
         if (!ps.length) return '';
         const x0 = ps[0].axisValue ?? (Array.isArray(ps[0].value) ? (ps[0].value as unknown[])[0] : '');
-        const head = time ? formatDate(x0 as string, xFormat === 'year' ? 'month' : xFormat === 'day' ? 'day' : 'month') : String(x0 ?? '');
+        const head = time ? (xFormat === 'year' ? String(new Date(x0 as string).getUTCFullYear()) : formatDate(x0 as string, xFormat === 'day' ? 'day' : 'month')) : String(x0 ?? '');
         const rows: string[] = [];
         for (const p of ps) {
           if (p.seriesName.startsWith('__')) continue;
@@ -431,7 +438,7 @@ export function categoryOption(set: CategorySet, t: ChartTheme, variant: Categor
       showSymbol: kind === 'line',
       symbolSize: 5,
       label:
-        o.labels || variant === 'hbar'
+        o.labels || (variant === 'hbar' && set.series.length === 1)
           ? { show: true, position: horizontal ? 'right' : 'top', color: t.text2, fontSize: 11, formatter: (p: { value: number }) => fmt(p.value, is100 ? '%' : unit) }
           : undefined,
     };

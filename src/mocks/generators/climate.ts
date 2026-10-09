@@ -217,7 +217,12 @@ export function cellRain(i: number): Float64Array {
     reg /= tw;
     local = 0.3 * local + 0.954 * r.normal();
     const z = 0.5 * NATIONAL[t] + 0.75 * reg + 0.45 * local + droughtBias(c.lon, c.lat, mi) * 1.0;
-    const meanMonth = c.map * c.shares[miMonth(mi)];
+    // secular trend (spec §25.1: shifting precipitation patterns): drying in the west / south-west,
+    // slight wetting in the north-east; ≈ −3%/decade in the Western Cape since the 1980s
+    const yrs = (miYear(mi) - 1985) / 10;
+    const westness = sig((24.5 - c.lon) / 1.6);
+    const trend = 1 + yrs * (-0.03 * westness + 0.006 * (1 - westness));
+    const meanMonth = c.map * c.shares[miMonth(mi)] * trend;
     let v = meanMonth * Math.exp(sigma * z - (sigma * sigma) / 2);
     // dry months in arid places are frequently zero
     if (meanMonth < 8 && z < -0.4 + c.aridity * 0.3) v = 0;

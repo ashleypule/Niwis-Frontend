@@ -158,7 +158,7 @@ export function DataTable({ table, limit, viewAllHref, onRowClick, selectedKey, 
                   aria-selected={onRowClick ? selected : undefined}
                 >
                   {table.columns.map((c) => (
-                    <td key={c.key} className={clsx('px-2.5', dense ? 'py-1.5' : 'py-2.5', c.align === 'right' ? 'text-right' : c.align === 'center' ? 'text-center' : 'text-left', c.type === 'text' && 'max-w-[220px] truncate')}>
+                    <td key={c.key} className={clsx('px-2.5', dense ? 'py-1.5' : 'py-2.5', c.align === 'right' ? 'text-right' : c.align === 'center' ? 'text-center' : 'text-left', c.type === 'text' && 'min-w-[5rem] max-w-[260px] whitespace-normal leading-snug')}>
                       {renderCell(c, r[c.key], start + i)}
                     </td>
                   ))}

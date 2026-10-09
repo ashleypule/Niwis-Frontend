@@ -10,6 +10,7 @@ import { BOREHOLES, boreholeNow } from '../../generators/groundwater';
 import { SETTLEMENTS, settlementNow } from '../../generators/settlements';
 import { WQ_STATIONS, wqNow } from '../../generators/quality';
 import { LAST } from '../../generators/hydromet';
+import { STATIONS } from '../../generators/stations';
 import { drought, muniSpi } from './drought';
 import { dams } from './dams';
 import { overview } from './overview';
@@ -117,4 +118,6 @@ registerAlertProvider(() =>
 // ------------------------------------------------------------------ search sources
 registerSearchSource(() => DAMS.map((d) => ({ type: 'dam', id: d.id, label: `${d.name} Dam`, sublabel: `${d.river} River · ${d.province === 'LS' ? 'Lesotho' : provinceName(d.province)}`, path: '/dams', params: { entity: d.id } })));
 registerSearchSource(() => BOREHOLES.map((b) => ({ type: 'borehole', id: b.id, label: b.id, sublabel: `${b.aquifer.name} · ${provinceName(b.province)}`, path: '/groundwater', params: { entity: b.id } })));
+registerSearchSource(() => STATIONS.map((s) => ({ type: 'station', id: s.id, label: `${s.name} (${s.id})`, sublabel: `${s.river} River · ${provinceName(s.province)}`, path: '/surface-water', params: { entity: s.id } })));
+registerSearchSource(() => WQ_STATIONS.map((s) => ({ type: 'station', id: s.id, label: s.name, sublabel: `Water quality · ${provinceName(s.province)}`, path: '/water-quality', params: { entity: s.id } })));
 registerSearchSource(() => SETTLEMENTS.map((s) => ({ type: 'settlement', id: s.id, label: s.name, sublabel: provinceName(s.province), path: '/settlements', params: { entity: s.id } })));

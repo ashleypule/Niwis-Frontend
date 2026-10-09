@@ -189,7 +189,11 @@ function loglogisticParams(xs: number[]): { alpha: number; beta: number; gamma: 
   return { alpha, beta, gamma };
 }
 
-/** SPEI at timescale k from a monthly climatic water balance D = P − PET. */
+/**
+ * SPEI at timescale k from a monthly climatic water balance D = P − PET. The accumulated balance is standardised
+ * per calendar month against the calibration window with a moment-fitted distribution (normal; robust for the
+ * short 30-year SA calibration samples where the 3-parameter log-logistic fit can be unstable).
+ */
 export function spei(balance: MonthlySeries, k: number, calib: { from: number; to: number }): (number | null)[] {
   const acc = rollingSum(balance.values, k);
   const out: (number | null)[] = new Array(acc.length).fill(null);
@@ -205,15 +209,15 @@ export function spei(balance: MonthlySeries, k: number, calib: { from: number; t
     }
     const fit = cal.length >= 10 ? cal : idx.map((i) => acc[i]!);
     if (fit.length < 5) continue;
-    const { alpha, beta, gamma } = loglogisticParams(fit);
-    for (const i of idx) {
-      const x = acc[i]!;
-      const F = x <= gamma ? 1e-6 : 1 / (1 + Math.pow(alpha / (x - gamma), beta));
-      out[i] = clamp(normInv(F), -3.5, 3.5);
-    }
+    const mu = mean(fit);
+    const s = sd(fit) || 1;
+    for (const i of idx) out[i] = clamp((acc[i]! - mu) / s, -3.5, 3.5);
   }
   return out;
 }
+
+/** Log-logistic parameters by probability-weighted moments (Vicente-Serrano et al. 2010) — kept for reference/tests. */
+export { loglogisticParams };
 
 /**
  * Generic standardised index (SSI / SGI / RSI): per calendar month, empirical (Gringorten) plotting position of

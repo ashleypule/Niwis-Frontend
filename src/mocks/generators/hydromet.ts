@@ -191,12 +191,12 @@ export function vciFromNdvi(ndvi: ArrayLike<number>): Float64Array {
   return out;
 }
 
-/** TCI from temperature (inverted: hotter than usual → lower condition). */
+/** TCI from temperature (inverted: hotter than usual → lower condition); extremes from the last 20 years. */
 export function tciFromTemp(tmax: ArrayLike<number>): Float64Array {
   const out = new Float64Array(tmax.length);
   const mins = new Array(12).fill(Infinity);
   const maxs = new Array(12).fill(-Infinity);
-  for (let t = 0; t < tmax.length; t++) {
+  for (let t = Math.max(0, tmax.length - 240); t < tmax.length; t++) {
     const m = miMonth(START_MI + t);
     mins[m] = Math.min(mins[m], tmax[t]);
     maxs[m] = Math.max(maxs[m], tmax[t]);
