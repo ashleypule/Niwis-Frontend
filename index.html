@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="NIWIS — National Integrated Water Information System, Department of Water and Sanitation, Republic of South Africa." />
+    <meta name="theme-color" content="#0B1F3A" />
+    <title>NIWIS — National Integrated Water Information System</title>
+    <script>
+      // apply the saved theme before first paint (avoids a light flash in dark mode)
+      try {
+        var t = localStorage.getItem('niwis-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>NIWIS requires JavaScript.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

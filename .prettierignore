@@ -1,0 +1,5 @@
+dist
+public/geo
+public/mockServiceWorker.js
+docs/reference
+src/mocks/reference/generated.ts

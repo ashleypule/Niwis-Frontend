@@ -1,0 +1,134 @@
+/**
+ * Generic TanStack Query hooks. Module files (drought.ts, dams.ts …) wrap these with typed metric ids.
+ * All hooks include the global filter params, keep previous data while refetching (no layout jumps) and
+ * share cache entries across pages (same params → same key → same numbers everywhere).
+ */
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import type { ZodType, ZodTypeDef } from 'zod';
+import { apiGet, type QueryParams } from '../client';
+import { endpoints } from '../endpoints';
+import {
+  AlertListSchema,
+  CategorySetSchema,
+  EntityDetailSchema,
+  EntityListSchema,
+  KpiSetSchema,
+  MapLayerSchema,
+  MatrixSetSchema,
+  RefListSchema,
+  SearchResultSchema,
+  SeriesSetSchema,
+  TableSetSchema,
+  type CategorySet,
+  type MatrixSet,
+  type SeriesSet,
+  type TableSet,
+} from '@/types/api';
+import { toParams, useFilters } from '@/store/filters';
+import type { ModuleId } from '@/config/modules';
+
+const STALE = 5 * 60_000;
+
+/** Global filter params, memoised. Pass `scoped: false` for datasets that ignore the location scope. */
+export function useFilterParams(extra: QueryParams = {}, opts: { scoped?: boolean } = {}): QueryParams {
+  const f = useFilters();
+  const key = JSON.stringify(extra);
+  return useMemo(() => {
+    const p: QueryParams = { ...toParams(f) };
+    if (opts.scoped === false) {
+      delete p.province;
+      delete p.wma;
+      delete p.catchment;
+      delete p.municipality;
+    }
+    return { ...p, ...(JSON.parse(key) as QueryParams) };
+  }, [f, key, opts.scoped]);
+}
+
+export function useSummary(module: ModuleId, extra: QueryParams = {}) {
+  const params = useFilterParams(extra);
+  return useQuery({
+    queryKey: ['summary', module, params],
+    queryFn: ({ signal }) => apiGet(endpoints.summary(module), params, KpiSetSchema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+  });
+}
+
+function useDataset<T>(kind: 'timeseries' | 'forecast' | 'breakdown' | 'table' | 'matrix', schema: ZodType<T, ZodTypeDef, unknown>, module: ModuleId, metric: string, extra: QueryParams = {}, enabled = true) {
+  const params = useFilterParams({ metric, ...extra });
+  return useQuery({
+    queryKey: [kind, module, params],
+    queryFn: ({ signal }) => apiGet(endpoints[kind](module), params, schema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+    enabled,
+  });
+}
+
+export const useSeries = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<SeriesSet>('timeseries', SeriesSetSchema, module, metric, extra, enabled);
+export const useForecast = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<SeriesSet>('forecast', SeriesSetSchema, module, metric, extra, enabled);
+export const useBreakdown = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<CategorySet>('breakdown', CategorySetSchema, module, metric, extra, enabled);
+export const useTable = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<TableSet>('table', TableSetSchema, module, metric, extra, enabled);
+export const useMatrix = (module: ModuleId, metric: string, extra?: QueryParams, enabled?: boolean) => useDataset<MatrixSet>('matrix', MatrixSetSchema, module, metric, extra, enabled);
+
+export function useMapLayer(module: ModuleId, layer: string, extra: QueryParams = {}, enabled = true) {
+  const params = useFilterParams({ layer, ...extra }, { scoped: false });
+  return useQuery({
+    queryKey: ['map', module, params],
+    queryFn: ({ signal }) => apiGet(endpoints.map(module), params, MapLayerSchema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+    enabled: enabled && !!layer,
+  });
+}
+
+export function useEntities(module: ModuleId, extra: QueryParams = {}, enabled = true) {
+  const params = useFilterParams(extra);
+  return useQuery({
+    queryKey: ['entities', module, params],
+    queryFn: ({ signal }) => apiGet(endpoints.entities(module), params, EntityListSchema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+    enabled,
+  });
+}
+
+export function useEntity(module: ModuleId, id: string | undefined) {
+  return useQuery({
+    queryKey: ['entity', module, id],
+    queryFn: ({ signal }) => apiGet(endpoints.entity(module, id!), {}, EntityDetailSchema, signal),
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+  });
+}
+
+export function useAlerts(extra: QueryParams = {}) {
+  const params = useFilterParams(extra, { scoped: false });
+  return useQuery({
+    queryKey: ['alerts', params],
+    queryFn: ({ signal }) => apiGet(endpoints.alerts(), params, AlertListSchema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+  });
+}
+
+export function useReference(type: string, extra: QueryParams = {}) {
+  return useQuery({
+    queryKey: ['reference', type, extra],
+    queryFn: ({ signal }) => apiGet(endpoints.reference(type), extra, RefListSchema, signal),
+    staleTime: Infinity,
+  });
+}
+
+export function useSearch(q: string) {
+  return useQuery({
+    queryKey: ['search', q],
+    queryFn: ({ signal }) => apiGet(endpoints.search(), { q }, SearchResultSchema, signal),
+    enabled: q.trim().length >= 2,
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+  });
+}
