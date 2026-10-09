@@ -148,7 +148,8 @@ export const boreholeLevels = memo((id: string): Float64Array => {
   return out;
 });
 
-export const boreholeSgi = memo((id: string) => standardisedIndex({ start: GW_START, values: Array.from(boreholeLevels(id)) }, { from: 1995, to: 2020 }, true));
+/** SGI calibrated on 2001–2025 (the NGA record is short and non-stationary under abstraction). */
+export const boreholeSgi = memo((id: string) => standardisedIndex({ start: GW_START, values: Array.from(boreholeLevels(id)) }, { from: 2001, to: 2025 }, true));
 
 export interface BoreholeNow {
   level: number;
@@ -167,7 +168,7 @@ export const boreholeNow = memo((id: string): BoreholeNow => {
   const t = LAST - GW_START;
   const level = L[t];
   const m = miMonth(LAST);
-  const lt = mean(Array.from({ length: 20 }, (_, k) => L[monthIndex(2000 + k, m) - GW_START]));
+  const lt = mean(Array.from({ length: 20 }, (_, k) => L[monthIndex(2006 + k, m) - GW_START]));
   const sgi = boreholeSgi(id)[t] ?? 0;
   const last36 = Array.from(L.slice(t - 35, t + 1));
   const slope = sensSlope(last36) * 12;
@@ -225,7 +226,7 @@ export const AQUIFER_UNITS: AquiferUnit[] = (() => {
     const map = mean([...cells].map((i) => CELLS[i].map));
     const rechargeMm = Math.round(map * (0.012 + 0.05 * Math.min(1, map / 900)) * (aq.type === 'Dolomite' ? 1.8 : aq.type === 'Kalahari' ? 0.4 : 1) * 10) / 10;
     const recharge = Math.round((rechargeMm * areaKm2) / 1000);
-    const abstraction = Math.round(recharge * r.range(0.12, 1.1) * (CELLS[bhs[0].cell].aridity + 0.5));
+    const abstraction = Math.round(recharge * r.range(0.04, 0.42) * (CELLS[bhs[0].cell].aridity + 0.5) ** 2);
     const eco = Math.round(recharge * r.range(0.1, 0.22));
     const dynamicReserve = Math.max(0, recharge - eco);
     const thickness = r.range(aq.thickness[0], aq.thickness[1]);

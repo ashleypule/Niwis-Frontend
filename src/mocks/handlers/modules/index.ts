@@ -11,6 +11,7 @@ import { SETTLEMENTS, settlementNow } from '../../generators/settlements';
 import { WQ_STATIONS, wqNow } from '../../generators/quality';
 import { LAST } from '../../generators/hydromet';
 import { STATIONS } from '../../generators/stations';
+import { WSSS, WWTWS } from '../../generators/compliance';
 import { drought, muniSpi } from './drought';
 import { dams } from './dams';
 import { overview } from './overview';
@@ -121,3 +122,21 @@ registerSearchSource(() => BOREHOLES.map((b) => ({ type: 'borehole', id: b.id, l
 registerSearchSource(() => STATIONS.map((s) => ({ type: 'station', id: s.id, label: `${s.name} (${s.id})`, sublabel: `${s.river} River · ${provinceName(s.province)}`, path: '/surface-water', params: { entity: s.id } })));
 registerSearchSource(() => WQ_STATIONS.map((s) => ({ type: 'station', id: s.id, label: s.name, sublabel: `Water quality · ${provinceName(s.province)}`, path: '/water-quality', params: { entity: s.id } })));
 registerSearchSource(() => SETTLEMENTS.map((s) => ({ type: 'settlement', id: s.id, label: s.name, sublabel: provinceName(s.province), path: '/settlements', params: { entity: s.id } })));
+
+registerSearchSource(() => WWTWS.map((p) => ({ type: 'wwtw', id: p.id, label: p.name, sublabel: `${p.municipalityName} · Green Drop ${p.score}%`, path: '/green-drop', params: { entity: p.id } })));
+registerSearchSource(() => WSSS.map((p) => ({ type: 'wss', id: p.id, label: p.name, sublabel: `${p.municipalityName} · Blue Drop ${p.score}%`, path: '/blue-drop', params: { entity: p.id } })));
+
+registerAlertProvider(() =>
+  [...WWTWS]
+    .filter((p) => p.score < 30)
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 8)
+    .map((p) => ({ id: `gd-${p.id}`, module: 'green-drop', severity: 'high' as const, title: `Critical Green Drop score ${p.score}% – ${p.name}`, message: `Effluent non-compliance risk to the receiving water (${p.receiving ?? 'local stream'}).`, location: `${p.municipalityName}, ${provinceName(p.province)}`, province: p.province, entityId: p.id, lat: p.lat, lon: p.lon })),
+);
+registerAlertProvider(() =>
+  [...WSSS]
+    .filter((p) => p.score < 40)
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 8)
+    .map((p) => ({ id: `bd-${p.id}`, module: 'blue-drop', severity: 'critical' as const, title: `Drinking-water risk – ${p.name} (Blue Drop ${p.score}%)`, message: `SANS 241 compliance at risk; ${p.populationServed.toLocaleString('en-ZA').replace(/,/g, ' ')} people served.`, location: `${p.municipalityName}, ${provinceName(p.province)}`, province: p.province, entityId: p.id, lat: p.lat, lon: p.lon })),
+);

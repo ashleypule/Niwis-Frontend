@@ -1,5 +1,5 @@
-import { ModuleStub } from '@/pages/_shared/ModuleStub';
+import { CompliancePage } from '@/pages/green-drop/CompliancePage';
 
-export default function Page() {
-  return <ModuleStub />;
+export default function BlueDropPage() {
+  return <CompliancePage module="blue-drop" />;
 }

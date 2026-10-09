@@ -296,6 +296,12 @@ export const SCALES = {
     { id: 'High', label: '0.6–0.8 High', color: '#F28C28', min: 0.6, max: 0.8 },
     { id: 'Extreme', label: '≥ 0.8 Extremely high', color: '#B2182B', min: 0.8, ink: '#fff' },
   ]),
+  ratio: s('ratio', 'Value relative to guideline', '× guideline', [
+    { label: '< 0.5 × guideline', color: '#1F6FD1', max: 0.5 },
+    { label: '0.5–1 × (within guideline)', color: '#4CAF50', min: 0.5, max: 1.0 },
+    { label: '1–2 × (exceeds)', color: '#F28C28', min: 1.0, max: 2.0 },
+    { label: '> 2 × (severe exceedance)', color: '#B2182B', min: 2.0 },
+  ]),
   index01: s('index01', 'Index (0–1)', undefined, [
     { id: 'Very Low', label: '< 0.2 Very low', color: '#1A9850', max: 0.2, ink: '#fff' },
     { id: 'Low', label: '0.2–0.4 Low', color: '#A6D96A', min: 0.2, max: 0.4 },

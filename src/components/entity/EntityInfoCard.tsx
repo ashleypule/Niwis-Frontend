@@ -29,9 +29,10 @@ export function EntityInfoCard({ module, id, title, controls, className, compact
 
 export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean }) {
   return (
-    <div className={compact ? 'flex flex-col gap-3' : 'flex flex-col gap-3 sm:flex-row'}>
+    <div className="@container">
+     <div className={compact ? 'flex flex-col gap-3' : 'flex flex-col gap-3 @[34rem]:flex-row'}>
       {e.image && (
-        <div className={compact ? 'h-28 w-full' : 'h-40 w-full shrink-0 sm:h-auto sm:w-[42%]'}>
+        <div className={compact ? 'h-28 w-full' : 'h-36 w-full shrink-0 @[34rem]:h-auto @[34rem]:w-[40%]'}>
           <EntityIllustration kind={e.image} name={e.name} />
         </div>
       )}
@@ -46,15 +47,16 @@ export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean 
         )}
         {e.fields.map((f) => (
           <div key={f.label} className="contents">
-            <dt className="truncate border-b border-line py-1 text-muted" title={f.label}>
+            <dt className="border-b border-line py-1 leading-snug text-muted" title={f.label}>
               {f.label}
             </dt>
-            <dd className="num truncate border-b border-line py-1 font-medium text-ink" title={String(f.value ?? '')}>
+            <dd className="num break-words border-b border-line py-1 font-medium leading-snug text-ink" title={String(f.value ?? '')}>
               {f.scale && f.value != null ? <Pill scale={f.scale} value={f.value} size="sm" /> : typeof f.value === 'number' ? withUnit(formatNumber(f.value, Math.abs(f.value) < 10 && !Number.isInteger(f.value) ? 2 : Number.isInteger(f.value) ? 0 : 1), f.unit) : f.value ?? '—'}
             </dd>
           </div>
         ))}
       </dl>
+     </div>
     </div>
   );
 }
