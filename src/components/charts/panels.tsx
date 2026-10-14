@@ -273,7 +273,7 @@ export function MatrixPanel({
   );
 }
 
-function DonutBody({
+export function DonutBody({
   set,
   option,
   height,

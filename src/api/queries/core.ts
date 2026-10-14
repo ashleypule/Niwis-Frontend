@@ -52,11 +52,12 @@ export function useFilterParams(extra: QueryParams = {}, opts: { scoped?: boolea
   }, [f, key, opts.scoped]);
 }
 
-export function useSummary(module: ModuleId, extra: QueryParams = {}) {
+export function useSummary(module: ModuleId, extra: QueryParams = {}, enabled = true) {
   const params = useFilterParams(extra);
   return useQuery({
     queryKey: ['summary', module, params],
     queryFn: ({ signal }) => apiGet(endpoints.summary(module), params, KpiSetSchema, signal),
+    enabled,
     placeholderData: keepPreviousData,
     staleTime: STALE,
   });

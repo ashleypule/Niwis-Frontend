@@ -1,4 +1,5 @@
-import { KpiStrip } from '@/components/kpi/KpiStrip';
+import { OverviewKpis } from './OverviewKpis';
+import { isLive } from '@/config/app';
 import { MapPanel, type PointLayerDef, type ThematicLayer } from '@/components/map/MapPanel';
 import { TablePanel } from '@/components/table/TablePanel';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
@@ -30,7 +31,7 @@ const POINTS: PointLayerDef[] = [
 export default function OverviewPage() {
   return (
     <div>
-      <KpiStrip module="overview" count={8} />
+      <OverviewKpis />
 
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.6fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
         <MapPanel
@@ -64,6 +65,8 @@ export default function OverviewPage() {
             value: t,
             label: t === 'quality' ? 'Water Quality' : t[0].toUpperCase() + t.slice(1),
             params: { tab: t },
+            // the rainfall tab comes from the live Rainfall module, so it matches the Rainfall page
+            ...(t === 'rainfall' && isLive('rainfall') ? { module: 'rainfall' as const, metric: 'monthly' } : {}),
           }))}
           height={210}
         />

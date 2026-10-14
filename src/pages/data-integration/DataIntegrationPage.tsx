@@ -11,6 +11,11 @@ import { Row } from '@/components/layout/Grid';
 import { FlowDiagram } from '@/components/viz/FlowDiagram';
 import { QualityRings } from '@/pages/governance/QualityRings';
 import { LAYERS8, PIPELINE } from './architecture';
+import { MetaCoverageTable, MetaPipelineTable, MetaSourceStatus } from './MetaPanels';
+import { APP, showProvenance } from '@/config/app';
+
+/** Hybrid / api mode: panels the backend's /meta endpoints can fill truthfully. */
+const META = showProvenance && APP.liveMeta;
 
 export function LayeredArchitecture() {
   return (
@@ -49,6 +54,7 @@ export default function DataIntegrationPage() {
       <Row className="desk:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Card
           title="Data Integration Architecture"
+          provenance={null}
           actions={
             <Tabs
               label="Architecture view"
@@ -64,13 +70,17 @@ export default function DataIntegrationPage() {
           {view === 'pipeline' ? <FlowDiagram columns={PIPELINE} compact /> : <LayeredArchitecture />}
         </Card>
         <div className="grid content-start gap-3">
-          <CategoryPanel
-            module="data-integration"
-            metric="source-status"
-            title="Data Source Status"
-            variant="donut"
-            height={170}
-          />
+          {META ? (
+            <MetaSourceStatus />
+          ) : (
+            <CategoryPanel
+              module="data-integration"
+              metric="source-status"
+              title="Data Source Status"
+              variant="donut"
+              height={170}
+            />
+          )}
           <CategoryPanel
             module="data-integration"
             metric="by-type"
@@ -96,9 +106,17 @@ export default function DataIntegrationPage() {
         />
         <div className="grid content-start gap-3">
           <QualityRings />
-          <TablePanel module="data-integration" metric="pipelines" title="Data Integration Pipeline Status" />
+          {!META && (
+            <TablePanel module="data-integration" metric="pipelines" title="Data Integration Pipeline Status" />
+          )}
         </div>
       </Row>
+      {META && (
+        <Row className="xl:grid-cols-2">
+          <MetaPipelineTable title="Data Integration Pipeline Status (National Database)" />
+          <MetaCoverageTable />
+        </Row>
+      )}
       <Row>
         <TablePanel module="data-integration" metric="providers" title="Data Providers and Interfaces" />
       </Row>

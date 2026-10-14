@@ -7,6 +7,10 @@ import { Card } from '@/components/ui/Card';
 import { Row } from '@/components/layout/Grid';
 import { FlowDiagram, type FlowColumn } from '@/components/viz/FlowDiagram';
 import { QualityRings } from './QualityRings';
+import { MetaIssuesTable, MetaVariablesTable } from '@/pages/data-integration/MetaPanels';
+import { APP, showProvenance } from '@/config/app';
+
+const META = showProvenance && APP.liveMeta;
 
 const FLOW: FlowColumn[] = [
   { title: 'Data sources', color: '#1565C0', items: [{ title: 'SAWS, SANSA, DWS, municipalities, labs, Stats SA' }] },
@@ -70,7 +74,7 @@ export default function GovernancePage() {
           height={420}
         />
         <div className="grid content-start gap-3">
-          <Card title="Data Flow Overview (Real-time, Near Real-time & Batch)">
+          <Card title="Data Flow Overview (Real-time, Near Real-time & Batch)" provenance={null}>
             <FlowDiagram columns={FLOW} compact />
           </Card>
           <div className="grid gap-3 md:grid-cols-2">
@@ -111,16 +115,20 @@ export default function GovernancePage() {
         <CategoryPanel module="governance" metric="access" title="Data Access Overview" variant="donut" height={180} />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.3fr_1fr_1.2fr]">
-        <TablePanel module="governance" metric="issues" title="Recent Data Quality Issues" />
+        {META ? (
+          <MetaIssuesTable />
+        ) : (
+          <TablePanel module="governance" metric="issues" title="Recent Data Quality Issues" />
+        )}
         <TablePanel module="governance" metric="usage" title="Data Access and Usage (Top 5)" />
         <div className="grid content-start gap-3">
-          <Card title="Data Lineage (Example: Dam Storage)">
+          <Card title="Data Lineage (Example: Dam Storage)" provenance={null}>
             <FlowDiagram columns={LINEAGE} compact />
           </Card>
         </div>
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.4fr_1fr]">
-        <Card title="Standards and Policies">
+        <Card title="Standards and Policies" provenance={null}>
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {POLICIES.map((p) => {
               const Icon = p.icon;
@@ -138,6 +146,11 @@ export default function GovernancePage() {
         </Card>
         <TablePanel module="governance" metric="retention" title="Data Retention and Archiving Policy" />
       </Row>
+      {META && (
+        <Row>
+          <MetaVariablesTable />
+        </Row>
+      )}
       <Row>
         <TablePanel module="governance" metric="providers" title="Data Ownership and Access Framework – Providers" />
       </Row>
