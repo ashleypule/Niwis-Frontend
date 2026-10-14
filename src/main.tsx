@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from 'react-router';
 import { router } from './app/router';
-import { isMock } from './config/app';
+import { usesMsw } from './config/app';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -17,7 +17,8 @@ const queryClient = new QueryClient({
 });
 
 async function boot() {
-  if (isMock) {
+  // mock and hybrid: MSW answers the sample endpoints and passes live ones through to the backend
+  if (usesMsw) {
     const { startMockWorker } = await import('./mocks/browser');
     await startMockWorker();
   }

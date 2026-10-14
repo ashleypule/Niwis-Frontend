@@ -118,3 +118,46 @@ Classification is never sent as colour: rows/points carry the value (and optiona
 ## 6. Entities
 
 Province (9) · WMA (9, 2012 delineation) · Catchment (80 secondary drainage regions) · Municipality (213) · Dam (~148) · Gauging station · Borehole · Aquifer (8 types) · WQ station · WWTW (~900) · Water supply system (~1 100) / WTP · Settlement · SWSA (5) · Inter-basin transfer · Alert.
+
+## 7. Backend integration (October 2026)
+
+The backend (`../Niwis Backend`, FastAPI on the DWS Supabase database) serves **rainfall, drought, climate, vegetation and runoff**
+plus `/health`, `/meta/*` and `/reference/{provinces,wmas,municipalities}`. Every other module stays on MSW sample data.
+Backend docs copied to `docs/backend/`; problems found go to `docs/backend/BACKEND_ISSUES.md` (the backend repo is not modified).
+
+**Data source switch.** `VITE_DATA_SOURCE=mock|api|hybrid` (hybrid is the default when `VITE_LIVE_MODULES` is set) +
+`VITE_LIVE_MODULES` + `VITE_LIVE_META`. One helper, `isLive(module)` / `isLivePath(path)` in `src/config/app.ts`, is used by the
+client (base URL, param translation, provenance) and by MSW (passthrough). In hybrid mode MSW still starts; for live paths it calls
+`passthrough()` and the request goes through the Vite dev proxy (`/api → VITE_API_PROXY_TARGET`, default `http://localhost:8000`).
+`npm run dev:live` = hybrid against localhost:8000.
+
+**Provenance travels with the data.** `apiGet` stamps every parsed response with `_provenance` (`live` | `sample` | `mock`, plus 501
+`detail`/`missing`). Panels read it with `provenanceOf(data)`; the backend's own `asOf`, `source`, `isStale`, `components`,
+`baseline`, `aggregation`, `unavailable` fields are added to the zod schemas as `.optional()`.
+
+**501 `DATA_UNAVAILABLE`.** `VITE_UNAVAILABLE_MODE=sample` (dev default): the client re-requests the same URL with
+`X-Niwis-Sample: 1`, which MSW answers from the mock handlers, and marks the result `sample` with the backend's `detail`.
+`empty` (production default, and always when MSW is not running): the query fails with a typed `DataUnavailable` error and the
+panel shows "Not yet available". Network / 5xx / 4xx on a live module are errors with Retry and the `X-Request-Id`; **never** a
+silent fallback to sample data.
+
+**Markers.** In hybrid mode every `Card` shows a marker. The default is **Sample** (hatched, badge, tooltip); data-bound panels
+override it from their query: **Live · as of Sep 2026** (sources in the tooltip), **Data to Dec 2025** (stale), **Approximate
+(district-based)** (WMA filter), **Modelled** (runoff). Mock mode keeps the single header badge, unchanged. The header shows
+"5 of 24 modules live" (from `/health`).
+
+**Districts.** `public/geo/districts.json` (52 MDB codes) draws `geometry: "districts"` layers. Filters gain a **District** level
+(Province → District → Local municipality); `src/mocks/reference/lm-to-district.json` (built by `scripts/build-lm-to-district.mjs`,
+point-in-polygon of LM centroids) rolls a local municipality up to its district for live requests; mock modules understand
+`district` too. Live pages say "Select district".
+
+**Composite pages.** Overview panels that belong to a live module call that module's endpoint (rainfall / drought KPIs, drought
+trend, map layers, rainfall tab). Data Integration and Governance use `/meta/sources|coverage|variables` for sources, coverage,
+completeness and pipeline status. Alerts, search, forecasts and AI stay sample.
+
+**Verification.** `npm run contract:check` (zod + structural diff vs the mock for every request in `src/api/liveManifest.ts`),
+`npm run fixtures:record` (→ `tests/fixtures/backend/`, served by MSW when `VITE_FIXTURES=1`), Playwright `hybrid` project (five
+pages × 1440/390, markers, no console errors, backend-down scenario), opt-in `npm run test:live`.
+
+Build order: (1) switch + proxy + `isLive` → (2) client states + schemas + `contract:check` → (3) provenance UI → (4) districts →
+(5) wire the five pages → (6) Overview / Data Integration / Governance → (7) fixtures, e2e, live smoke, docs.

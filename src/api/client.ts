@@ -5,7 +5,7 @@
  * - Every response is validated with zod; failures surface as ApiError('schema').
  */
 import type { ZodType, ZodTypeDef } from 'zod';
-import { APP } from '@/config/app';
+import { APP, isLivePath } from '@/config/app';
 
 export type ApiErrorKind = 'network' | 'http' | 'schema' | 'auth' | 'not-found';
 
@@ -29,7 +29,8 @@ export function setAuthTokenProvider(fn: typeof tokenProvider) {
 export type QueryParams = Record<string, string | number | boolean | undefined | null>;
 
 export function buildUrl(path: string, params: QueryParams = {}): string {
-  const base = APP.dataSource === 'api' ? APP.apiBaseUrl.replace(/\/$/, '') : '';
+  // live paths go to the backend origin (empty in dev: the Vite proxy forwards /api); sample paths stay same-origin for MSW
+  const base = isLivePath(path) ? APP.apiBaseUrl.replace(/\/$/, '') : '';
   const qs = new URLSearchParams();
   Object.entries(params)
     .filter(([, v]) => v !== undefined && v !== null && v !== '')

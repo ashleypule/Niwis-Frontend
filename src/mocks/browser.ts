@@ -1,7 +1,20 @@
 import { setupWorker } from 'msw/browser';
+import { http, passthrough } from 'msw';
+import { isLivePath } from '@/config/app';
 import { handlers } from './handlers/router';
 
-export const worker = setupWorker(...handlers);
+/** Header the API client sets to ask for the sample version of a live endpoint (501 → "Sample" panels). */
+export const SAMPLE_HEADER = 'x-niwis-sample';
+
+/**
+ * Hybrid mode: live paths go to the network (→ Vite proxy → backend) unless the client explicitly asks for the sample
+ * version. Returning nothing falls through to the mock handlers.
+ */
+const live = http.all('*/api/v1/*', ({ request }) => {
+  if (isLivePath(new URL(request.url).pathname) && !request.headers.get(SAMPLE_HEADER)) return passthrough();
+});
+
+export const worker = setupWorker(live, ...handlers);
 
 export async function startMockWorker() {
   await worker.start({
