@@ -2,6 +2,7 @@
 import type { Scope } from '@/types/api';
 import { CATCHMENTS, MUNICIPALITIES, PROVINCES, WMAS, municipalityById } from '../reference/regions';
 import { ALL_CELLS, CELLS, cellsNear } from './climate';
+import { districtById, lmsInDistrict } from '@/config/districts';
 
 export interface ResolvedScope extends Scope {
   cells: number[];
@@ -17,6 +18,7 @@ export function resolveScope(params: URLSearchParams | Record<string, string | u
   const get = (k: string) =>
     (params instanceof URLSearchParams ? (params.get(k) ?? undefined) : params[k]) || undefined;
   const municipality = get('municipality');
+  const district = get('district');
   const catchment = get('catchment');
   const wma = get('wma');
   const province = get('province');
@@ -32,6 +34,18 @@ export function resolveScope(params: URLSearchParams | Record<string, string | u
       cells,
       key: `m:${m.id}`,
       includes: (e) => e.municipality === m.id,
+    };
+  }
+  const d = districtById(district);
+  if (d) {
+    const lms = new Set(lmsInDistrict(d.id));
+    return {
+      level: 'municipality',
+      id: d.id,
+      name: d.name,
+      cells: ALL_CELLS.filter((i) => lms.has(CELLS[i].municipality)),
+      key: `d:${d.id}`,
+      includes: (e) => !!e.municipality && lms.has(e.municipality),
     };
   }
   if (catchment) {

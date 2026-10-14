@@ -2,7 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import type { FeatureCollection, Geometry } from 'geojson';
 
 export type GeoName =
-  'provinces' | 'south-africa' | 'municipalities' | 'wmas' | 'catchments' | 'neighbours' | 'rivers' | 'towns';
+  | 'provinces'
+  | 'south-africa'
+  | 'municipalities'
+  | 'districts'
+  | 'wmas'
+  | 'catchments'
+  | 'neighbours'
+  | 'rivers'
+  | 'towns';
 export type GeoProps = { id?: string; name?: string; province?: string; pop?: number; scalerank?: number };
 export type GeoFC = FeatureCollection<Geometry, GeoProps>;
 

@@ -34,9 +34,10 @@ export interface PointLayerDef {
   defaultOn?: boolean;
   shape?: 'circle' | 'triangle' | 'square';
 }
-type BaseId = 'provinces' | 'wmas' | 'catchments' | 'municipalities' | 'rivers' | 'towns' | 'basemap';
+type BaseId = 'provinces' | 'wmas' | 'catchments' | 'districts' | 'municipalities' | 'rivers' | 'towns' | 'basemap';
 const BASE_LABEL: Record<BaseId, string> = {
   provinces: 'Provincial boundaries',
+  districts: 'District boundaries',
   wmas: 'Water Management Areas',
   catchments: 'Catchment boundaries',
   municipalities: 'Municipal boundaries',
@@ -544,7 +545,7 @@ export function MapPanel({
   title,
   layers,
   pointLayers = [],
-  baseLayers = ['provinces', 'wmas', 'catchments', 'municipalities', 'rivers', 'towns', 'basemap'],
+  baseLayers = ['provinces', 'wmas', 'catchments', 'districts', 'municipalities', 'rivers', 'towns', 'basemap'],
   defaultBase = ['provinces'],
   height = 460,
   tabs = true,
@@ -569,20 +570,24 @@ export function MapPanel({
   const layer = q.data;
   const neighbours = useGeo('neighbours');
   const level = layer?.kind === 'choropleth' ? layer.level : undefined;
+  // backend layers name their boundary set: "districts" = 52 MDB-coded districts (public/geo/districts.json)
   const levelGeo = useGeo(
-    level === 'province'
-      ? 'provinces'
-      : level === 'wma'
-        ? 'wmas'
-        : level === 'catchment'
-          ? 'catchments'
-          : 'municipalities',
+    layer?.geometry === 'districts'
+      ? 'districts'
+      : level === 'province'
+        ? 'provinces'
+        : level === 'wma'
+          ? 'wmas'
+          : level === 'catchment'
+            ? 'catchments'
+            : 'municipalities',
     !!level,
   );
   const provinces = useGeo('provinces', base.has('provinces') || mini);
   const wmas = useGeo('wmas', base.has('wmas'));
   const catchments = useGeo('catchments', base.has('catchments'));
   const munis = useGeo('municipalities', base.has('municipalities'));
+  const districtLines = useGeo('districts', base.has('districts'));
   const rivers = useGeo('rivers', base.has('rivers'));
   const towns = useGeo('towns', base.has('towns'));
   const sa = useGeo('south-africa');
@@ -734,6 +739,9 @@ export function MapPanel({
           ))}
         {base.has('municipalities') && (
           <OutlineLayer data={munis.data} color={dark ? '#8aa0bd' : '#ffffff'} weight={0.5} />
+        )}
+        {base.has('districts') && (
+          <OutlineLayer data={districtLines.data} color={dark ? '#a9bbd3' : '#5b6b80'} weight={0.8} />
         )}
         {base.has('catchments') && <OutlineLayer data={catchments.data} color="#3b6ea5" weight={0.7} dash="3 3" />}
         {base.has('wmas') && <OutlineLayer data={wmas.data} color="#0f4c81" weight={1.4} dash="6 3" />}

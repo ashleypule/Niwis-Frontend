@@ -5,6 +5,7 @@
 import { create } from 'zustand';
 import type { PeriodPreset } from '@/config/modules';
 import type { FilterParams } from '@/types/api';
+import { districtOf } from '@/config/districts';
 
 export type Theme = 'light' | 'dark';
 
@@ -12,6 +13,9 @@ export interface Filters {
   province?: string;
   wma?: string;
   catchment?: string;
+  /** district / metro MDB code (DC44, CPT …) */
+  district?: string;
+  /** local municipality (LM001 …) */
   municipality?: string;
   /** page-specific selected entity (dam, station, borehole …) */
   entity?: string;
@@ -25,6 +29,7 @@ export const FILTER_KEYS = [
   'province',
   'wma',
   'catchment',
+  'district',
   'municipality',
   'entity',
   'from',
@@ -68,6 +73,8 @@ export function filtersFromParams(sp: URLSearchParams): Partial<Filters> {
     else if (k === 'period') f.period = PERIOD_PRESETS.includes(v as PeriodPreset) ? (v as PeriodPreset) : '12M';
     else (f as Record<string, string>)[k] = v;
   }
+  // shared links may name only the local municipality: its district follows
+  if (f.municipality && !f.district) f.district = districtOf(f.municipality);
   return f;
 }
 
@@ -130,8 +137,12 @@ export const useUi = create<UiState>((set) => ({
       if (k === 'province') {
         f.wma = undefined;
         f.catchment = undefined;
+        f.district = undefined;
         f.municipality = undefined;
       }
+      if (k === 'district') f.municipality = undefined;
+      // a local municipality always sits in its district (live pages are served per district)
+      if (k === 'municipality' && v) f.district = districtOf(v as string) ?? f.district;
       if (k === 'wma') {
         f.catchment = undefined;
         f.municipality = undefined;
@@ -175,6 +186,7 @@ export function toParams(f: Filters): FilterParams {
     province: f.province,
     wma: f.wma,
     catchment: f.catchment,
+    district: f.district,
     municipality: f.municipality,
     from: f.from,
     to: f.to,

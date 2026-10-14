@@ -2,6 +2,7 @@
 import type { RefList, SearchHit, SearchResult } from '@/types/api';
 import { CATCHMENTS, MUNICIPALITIES, PROVINCES, WMAS, provinceName, wmaName } from '../reference/regions';
 import type { Ctx } from './build';
+import { DISTRICTS, districtOf } from '@/config/districts';
 
 export type SearchSource = () => SearchHit[];
 const SOURCES: SearchSource[] = [];
@@ -37,12 +38,24 @@ export function referenceHandler(type: string, _ctx: Ctx): RefList | null {
           wma: c.wma ?? undefined,
         })).sort((a, b) => a.id.localeCompare(b.id)),
       };
+    // hybrid mode: /reference/municipalities is the backend's 52 districts, so local municipalities have their own path
     case 'municipalities':
+    case 'local-municipalities':
       return {
         type,
-        items: MUNICIPALITIES.map((m) => ({ id: m.id, name: m.name, province: m.province, wma: m.wma })).sort((a, b) =>
-          a.name.localeCompare(b.name),
-        ),
+        items: MUNICIPALITIES.map((m) => ({
+          id: m.id,
+          name: m.name,
+          province: m.province,
+          wma: m.wma,
+          parent: districtOf(m.id),
+        })).sort((a, b) => a.name.localeCompare(b.name)),
+      };
+    // the backend's /reference/municipalities shape (districts, parent = province), for mock mode
+    case 'districts':
+      return {
+        type,
+        items: DISTRICTS.map((d) => ({ id: d.id, name: d.name, parent: d.province, province: d.province })),
       };
     default:
       return null;
@@ -82,7 +95,7 @@ function buildIndex(): SearchHit[] {
       label: m.name,
       sublabel: provinceName(m.province),
       path: '/',
-      params: { province: m.province, municipality: m.id },
+      params: { province: m.province, district: districtOf(m.id) ?? '', municipality: m.id },
     })),
   ];
   for (const s of SOURCES) base.push(...s());

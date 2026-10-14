@@ -1,9 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import clsx from 'clsx';
-import { CalendarDays, Clock3, Download, FileText, GitCompareArrows, MapPin, SlidersHorizontal, X } from 'lucide-react';
+import {
+  CalendarDays,
+  Clock3,
+  Download,
+  FileText,
+  GitCompareArrows,
+  Info,
+  MapPin,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react';
 import { moduleForPath, PRESET_LABEL, type ModuleDef } from '@/config/modules';
-import { APP } from '@/config/app';
+import { APP, isLive, isLivePath } from '@/config/app';
+import { districtById, districtLabel, districtOf } from '@/config/districts';
 import { useUi } from '@/store/filters';
 import { useEntities, useReference } from '@/api/queries/core';
 import { formatDate } from '@/lib/format';
@@ -11,24 +22,42 @@ import { downloadAll } from '@/lib/exporter';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 
+/**
+ * Province → District → Local municipality. With the backend, /reference/municipalities is its 52 districts, so the
+ * local municipalities come from the sample list (/reference/local-municipalities); in mock mode the districts do.
+ */
+const LIVE_DISTRICTS = isLivePath('/api/v1/reference/municipalities');
+
 function useScopeOptions() {
   const f = useUi((s) => s.filters);
   const prov = useReference('provinces');
   const wma = useReference('wmas');
   const catchments = useReference('catchments');
-  const munis = useReference('municipalities');
+  const districts = useReference(LIVE_DISTRICTS ? 'municipalities' : 'districts');
+  const munis = useReference(LIVE_DISTRICTS ? 'local-municipalities' : 'municipalities');
   return useMemo(() => {
     const p = prov.data?.items ?? [];
     const w = (wma.data?.items ?? []).filter((x) => !f.province || x.parent?.split(',').includes(f.province));
     const c = (catchments.data?.items ?? []).filter(
       (x) => (!f.wma || x.wma === f.wma) && (!f.province || x.province === f.province),
     );
+    const d = (districts.data?.items ?? []).filter((x) => !f.province || (x.province ?? x.parent) === f.province);
     const m = (munis.data?.items ?? []).filter(
-      (x) => (!f.province || x.province === f.province) && (!f.wma || x.wma === f.wma),
+      (x) =>
+        (!f.province || x.province === f.province) &&
+        (!f.wma || x.wma === f.wma) &&
+        (!f.district || districtOf(x.id) === f.district),
     );
     const opt = (xs: { id: string; name: string }[]) => xs.map((x) => ({ value: x.id, label: x.name }));
-    return { provinces: opt(p), wmas: opt(w), catchments: opt(c), municipalities: opt(m) };
-  }, [prov.data, wma.data, catchments.data, munis.data, f.province, f.wma]);
+    return {
+      provinces: opt(p),
+      wmas: opt(w),
+      catchments: opt(c),
+      districts: opt(d),
+      municipalities: opt(m),
+      hasLocal: !munis.isError,
+    };
+  }, [prov.data, wma.data, catchments.data, districts.data, munis.data, munis.isError, f.province, f.wma, f.district]);
 }
 
 function ScopeSelects({ mod, stacked = false }: { mod: ModuleDef; stacked?: boolean }) {
@@ -70,20 +99,31 @@ function ScopeSelects({ mod, stacked = false }: { mod: ModuleDef; stacked?: bool
         className={cls}
       />
       <Select
-        label="Municipality"
-        value={f.municipality}
-        onChange={(v) => setFilter('municipality', v)}
-        options={o.municipalities}
-        placeholder="All municipalities"
+        label="District"
+        value={f.district}
+        onChange={(v) => setFilter('district', v)}
+        options={o.districts}
+        placeholder="All districts"
         className={cls}
       />
+      {o.hasLocal && (
+        <Select
+          label="Local municipality"
+          value={f.municipality}
+          onChange={(v) => setFilter('municipality', v)}
+          options={o.municipalities}
+          placeholder="All local municipalities"
+          className={cls}
+        />
+      )}
       {showSelector && (
         <Select
-          label={mod.selector!.label}
+          // live modules serve districts, not stations
+          label={isLive(mod.id) ? 'Select district' : mod.selector!.label}
           value={f.entity}
           onChange={(v) => setFilter('entity', v)}
           options={entityOpts}
-          placeholder={mod.selector!.label}
+          placeholder={isLive(mod.id) ? 'Select district' : mod.selector!.label}
           className={stacked ? 'w-full' : 'w-[210px]'}
         />
       )}
@@ -237,7 +277,7 @@ export function FilterBar() {
   const [sheet, setSheet] = useState(false);
   const f = useUi((s) => s.filters);
   const reset = useUi((s) => s.resetFilters);
-  const active = [f.province, f.wma, f.catchment, f.municipality, f.entity, f.from].filter(Boolean).length;
+  const active = [f.province, f.wma, f.catchment, f.district, f.municipality, f.entity, f.from].filter(Boolean).length;
   const latest = (
     <span className="flex items-center gap-1.5 whitespace-nowrap text-xs text-muted">
       <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -257,6 +297,7 @@ export function FilterBar() {
           <Actions mod={mod} />
         </div>
       </div>
+      <RollUpNotice mod={mod} />
       {/* phone */}
       <div className="flex items-center gap-2 px-3 py-2 md:hidden">
         <Button variant="outline" onClick={() => setSheet(true)} aria-expanded={sheet}>
@@ -294,5 +335,23 @@ export function FilterBar() {
         </div>
       )}
     </div>
+  );
+}
+
+/** On a live page a local municipality is shown as its district: say so. */
+function RollUpNotice({ mod }: { mod: ModuleDef }) {
+  const f = useUi((s) => s.filters);
+  if (!f.municipality || !isLive(mod.id)) return null;
+  const d = districtById(districtOf(f.municipality));
+  if (!d) return null;
+  return (
+    <p
+      role="status"
+      className="mx-auto flex max-w-[1920px] items-center gap-1.5 px-3 pb-2 text-xs text-ink-2 sm:px-4 lg:px-5"
+      data-testid="rollup-notice"
+    >
+      <Info className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+      Showing <b>{districtLabel(d)}</b> — data is available at district level.
+    </p>
   );
 }

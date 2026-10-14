@@ -36,6 +36,7 @@ export function useUrlSync() {
       province: undefined,
       wma: undefined,
       catchment: undefined,
+      district: undefined,
       municipality: undefined,
       entity: undefined,
       from: undefined,

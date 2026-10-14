@@ -45,6 +45,7 @@ export function useFilterParams(extra: QueryParams = {}, opts: { scoped?: boolea
       delete p.province;
       delete p.wma;
       delete p.catchment;
+      delete p.district;
       delete p.municipality;
     }
     return { ...p, ...(JSON.parse(key) as QueryParams) };
