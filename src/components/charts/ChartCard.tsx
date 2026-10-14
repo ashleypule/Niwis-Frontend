@@ -5,6 +5,7 @@ import { EmptyState, ErrorState, LoadingState, UnavailableState } from '@/compon
 import { isUnavailable } from '@/api/client';
 import type { MissingItem } from '@/lib/provenance';
 import { MissingNote } from '@/components/provenance/MissingNote';
+import type { PanelProvenance } from '@/components/provenance/provenance';
 import { download, registerExport, safeName, toCsv, type Row } from '@/lib/exporter';
 import { EChart, type EChartHandle } from './EChart';
 import type { EChartsOption } from './echarts';
@@ -34,6 +35,8 @@ export interface ChartCardProps {
   band?: boolean;
   footer?: ReactNode;
   onChartClick?: (p: unknown) => void;
+  /** see Card: data panels pass their query's provenance */
+  provenance?: PanelProvenance | null;
 }
 
 function DataTableView({ rows }: { rows: Row[] }) {
@@ -89,6 +92,7 @@ export function ChartCard({
   band,
   footer,
   onChartClick,
+  provenance,
 }: ChartCardProps) {
   const [menu, setMenu] = useState(false);
   const [showTable, setShowTable] = useState(false);
@@ -193,7 +197,15 @@ export function ChartCard({
   else body = children;
 
   return (
-    <Card title={title} context={context} info={info} actions={actions} className={className} band={band}>
+    <Card
+      title={title}
+      context={context}
+      info={info}
+      actions={actions}
+      className={className}
+      band={band}
+      provenance={provenance}
+    >
       {controls && <div className="mb-1.5 flex flex-wrap items-center gap-2">{controls}</div>}
       {body}
       {option && children}

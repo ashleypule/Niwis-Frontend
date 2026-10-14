@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import clsx from 'clsx';
 import { MapContainer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Crosshair, Home, Layers, Minus, Plus, X } from 'lucide-react';
@@ -10,7 +11,9 @@ import { classify, colorFor, getScale } from '@/config/palettes';
 import { formatNumber, withUnit } from '@/lib/format';
 import { Card, Tabs } from '@/components/ui/Card';
 import { ErrorState, UnavailableState, useElapsed } from '@/components/feedback/PanelBoundary';
-import { isUnavailable } from '@/api/client';
+import { isUnavailable, provenanceOf } from '@/api/client';
+import { isLive } from '@/config/app';
+import { combineProvenance, panelProvenance, type PanelProvenance } from '@/components/provenance/provenance';
 import { useUi } from '@/store/filters';
 import { labelPoint, SA_BOUNDS, useGeo, type GeoFC } from './geo';
 
@@ -511,17 +514,20 @@ function PointLayerLoader({
   def,
   selected,
   onSelect,
-  onLoaded,
+  onProvenance,
 }: {
   def: PointLayerDef;
   selected?: string;
   onSelect?: (id: string, layer: MapLayer) => void;
-  onLoaded?: (l: MapLayer) => void;
+  onProvenance?: (id: string, p: PanelProvenance | undefined) => void;
 }) {
   const q = useMapLayer(def.module, def.layer);
+  const prov = panelProvenance(q, def.module);
   useEffect(() => {
-    if (q.data) onLoaded?.(q.data);
-  }, [q.data, onLoaded]);
+    onProvenance?.(def.id, prov);
+    return () => onProvenance?.(def.id, undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [def.id, prov.kind, prov.detail, onProvenance]);
   if (!q.data) return null;
   return (
     <PointsView
@@ -582,6 +588,23 @@ export function MapPanel({
   const sa = useGeo('south-africa');
   const sel = selected ?? entity;
   const dark = theme === 'dark';
+  // availability of every layer on a live module (501 → greyed in the layer list, with the backend's reason)
+  const [layerStatus, setLayerStatus] = useState<Record<string, string | null>>({});
+  const onStatus = useCallback(
+    (id: string, reason: string | null) => setLayerStatus((s) => (s[id] === reason ? s : { ...s, [id]: reason })),
+    [],
+  );
+  const [pointProv, setPointProv] = useState<Record<string, PanelProvenance | undefined>>({});
+  const onPointProv = useCallback(
+    (id: string, p: PanelProvenance | undefined) =>
+      setPointProv((s) => (s[id]?.kind === p?.kind && s[id]?.detail === p?.detail ? s : { ...s, [id]: p })),
+    [],
+  );
+  const prov = combineProvenance(
+    panelProvenance(q, def?.module ?? module),
+    ...pointLayers.filter((p) => points.has(p.id)).map((p) => pointProv[p.id] ?? { kind: 'none' as const }),
+  );
+  const probes = mini || fixedLayer ? [] : layerProbes(module, layers, pointLayers);
   const mapRef = useRef<L.Map | null>(null);
   const tabOptions = useMemo(() => layers.map((l) => ({ value: l.id, label: l.label })), [layers]);
 
@@ -602,34 +625,56 @@ export function MapPanel({
       {!fixedLayer && (
         <fieldset>
           <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Map layers</legend>
-          {layers.map((l) => (
-            <label key={l.id} className="flex cursor-pointer items-center gap-2 py-0.5">
-              <input
-                type="radio"
-                name={`layer-${title}`}
-                checked={active === l.id}
-                onChange={() => setActive(l.id)}
-                className="accent-[var(--c-primary)]"
-              />
-              <span className="leading-tight">{l.label}</span>
-            </label>
-          ))}
+          {layers.map((l) => {
+            const reason = layerStatus[`t:${l.id}`];
+            return (
+              <label
+                key={l.id}
+                className={clsx('flex cursor-pointer items-center gap-2 py-0.5', reason && 'text-muted')}
+                title={reason ? `Not available: ${reason}` : undefined}
+                data-unavailable={reason ? 'true' : undefined}
+              >
+                <input
+                  type="radio"
+                  name={`layer-${title}`}
+                  checked={active === l.id}
+                  onChange={() => setActive(l.id)}
+                  className="accent-[var(--c-primary)]"
+                />
+                <span className="leading-tight">
+                  {l.label}
+                  {reason && <span className="block text-[10px] font-medium">Not available</span>}
+                </span>
+              </label>
+            );
+          })}
         </fieldset>
       )}
       {pointLayers.length > 0 && (
         <fieldset>
           <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Point layers</legend>
-          {pointLayers.map((p) => (
-            <label key={p.id} className="flex cursor-pointer items-center gap-2 py-0.5">
-              <input
-                type="checkbox"
-                checked={points.has(p.id)}
-                onChange={() => setPoints((s) => toggle(s, p.id))}
-                className="accent-[var(--c-primary)]"
-              />
-              {p.label}
-            </label>
-          ))}
+          {pointLayers.map((p) => {
+            const reason = layerStatus[`p:${p.id}`];
+            return (
+              <label
+                key={p.id}
+                className={clsx('flex cursor-pointer items-center gap-2 py-0.5', reason && 'text-muted')}
+                title={reason ? `Not available: ${reason}` : undefined}
+                data-unavailable={reason ? 'true' : undefined}
+              >
+                <input
+                  type="checkbox"
+                  checked={points.has(p.id)}
+                  onChange={() => setPoints((s) => toggle(s, p.id))}
+                  className="accent-[var(--c-primary)]"
+                />
+                <span className="leading-tight">
+                  {p.label}
+                  {reason && <span className="block text-[10px] font-medium">Not available</span>}
+                </span>
+              </label>
+            );
+          })}
         </fieldset>
       )}
       <fieldset>
@@ -706,7 +751,13 @@ export function MapPanel({
         {pointLayers
           .filter((p) => points.has(p.id))
           .map((p) => (
-            <PointLayerLoader key={p.id} def={p} selected={sel} onSelect={(id, l) => handleSelect(id, 'point', l)} />
+            <PointLayerLoader
+              key={p.id}
+              def={p}
+              selected={sel}
+              onSelect={(id, l) => handleSelect(id, 'point', l)}
+              onProvenance={onPointProv}
+            />
           ))}
         {!mini && <Controls />}
         {!mini && <ScaleAndNorth />}
@@ -755,10 +806,15 @@ export function MapPanel({
     </div>
   );
 
+  const probeViews = probes.map((p, i) => (
+    <LayerProbe key={p.id} {...p} delay={p.layerId === def?.id ? 0 : 4000 + i * 1500} onStatus={onStatus} />
+  ));
+
   if (mini) return map;
 
   return (
-    <Card title={title} context={context} className={className}>
+    <Card title={title} context={context} className={className} provenance={prov}>
+      {probeViews}
       {tabs && layers.length > 1 && (
         <div className="mb-2">
           <Tabs label="Map layer" value={active} onChange={setActive} options={tabOptions} />
@@ -813,4 +869,55 @@ function LayerLoading() {
       {slow ? 'Loading data from the national database…' : 'Loading layer…'}
     </div>
   );
+}
+
+interface Probe {
+  id: string;
+  layerId: string;
+  module: ModuleId;
+  layer: string;
+  params?: QueryParams;
+}
+
+/** Layers of live modules whose availability the layer list should show. */
+function layerProbes(module: ModuleId, layers: ThematicLayer[], points: PointLayerDef[]): Probe[] {
+  return [
+    ...layers.map((l) => ({
+      id: `t:${l.id}`,
+      layerId: l.id,
+      module: l.module ?? module,
+      layer: l.layer ?? l.id,
+      params: l.params,
+    })),
+    ...points.map((p) => ({ id: `p:${p.id}`, layerId: p.id, module: p.module, layer: p.layer })),
+  ].filter((p) => isLive(p.module));
+}
+
+/**
+ * Fetches one layer in the background (staggered, to stay well under the backend's rate limit) and reports whether it
+ * is available. Same query key as the map itself, so the probe also warms the cache for when the user picks it.
+ */
+function LayerProbe({
+  id,
+  module,
+  layer,
+  params,
+  delay,
+  onStatus,
+}: Probe & { delay: number; onStatus: (id: string, reason: string | null) => void }) {
+  const ready = useElapsed(delay);
+  const q = useMapLayer(module, layer, params, ready);
+  const p = provenanceOf(q.data);
+  const reason =
+    q.isError && isUnavailable(q.error)
+      ? q.error.detail
+      : p?.kind === 'sample' && p.detail
+        ? p.detail
+        : q.data
+          ? null
+          : undefined;
+  useEffect(() => {
+    if (reason !== undefined) onStatus(id, reason);
+  }, [id, reason, onStatus]);
+  return null;
 }

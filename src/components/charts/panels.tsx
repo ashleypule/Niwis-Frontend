@@ -15,6 +15,10 @@ import { formatNumber } from '@/lib/format';
 import { useChartTheme } from './theme';
 import { MatrixLegend } from './MatrixLegend';
 import { splitNullCategories, splitNullSeries } from '@/lib/provenance';
+import { panelProvenance, type PanelProvenance } from '@/components/provenance/provenance';
+import { provenanceOf } from '@/api/client';
+import type { SeriesSet } from '@/types/api';
+import { UnavailableState } from '@/components/feedback/PanelBoundary';
 
 export interface PanelTab {
   value: string;
@@ -22,6 +26,10 @@ export interface PanelTab {
   /** extra query params for this tab (default: { metric: value }) */
   params?: QueryParams;
   metric?: string;
+  /** module serving this tab (defaults to the panel's), e.g. an Overview tab backed by a live module */
+  module?: ModuleId;
+  /** series keys this tab must return; if a live response returns none of them the tab shows "Not yet available" */
+  expect?: string[];
 }
 
 interface PanelBase {
@@ -69,27 +77,52 @@ export function SeriesPanel({
   band,
   forecast,
   opts,
-}: PanelBase & { forecast?: boolean; opts?: SeriesOpts }) {
+  enabled = true,
+}: PanelBase & {
+  forecast?: boolean;
+  opts?: SeriesOpts;
+  /** false until the request can be made (e.g. waiting for the selected entity) */
+  enabled?: boolean;
+}) {
   const { active, tabRow } = useTabs(tabs);
   const params = { ...extra, ...active?.params };
   const m = active?.metric ?? metric;
-  const series = useSeries(module, m, params, !forecast);
-  const fc = useForecast(module, m, params, !!forecast);
+  const mod = active?.module ?? module;
+  const series = useSeries(mod, m, params, !forecast && enabled);
+  const fc = useForecast(mod, m, params, !!forecast && enabled);
   const q = forecast ? fc : series;
   const t = useChartTheme();
+  const wrongSet = q.data && active?.expect ? wrongSeries(q.data, active.expect) : undefined;
   // entirely-null series (withheld by the backend) are hidden and listed under the chart
-  const split = useMemo(() => (q.data ? splitNullSeries(q.data) : undefined), [q.data]);
+  const split = useMemo(() => (q.data && !wrongSet ? splitNullSeries(q.data) : undefined), [q.data, wrongSet]);
+  const prov: PanelProvenance = wrongSet ? { kind: 'unavailable', detail: wrongSet } : panelProvenance(q, mod);
   const option = useMemo(() => (split ? seriesOption(split.set, t, opts) : undefined), [split, t, opts]);
   const rows = useMemo(() => (q.data ? seriesRows(q.data) : undefined), [q.data]);
+  if (wrongSet)
+    return (
+      <ChartCard
+        title={title}
+        context={context}
+        info={info}
+        height={height}
+        className={className}
+        band={band}
+        provenance={prov}
+        controls={tabRow ?? controls}
+      >
+        <UnavailableState detail={wrongSet} height={height} />
+      </ChartCard>
+    );
   return (
     <ChartCard
-      title={title}
+      title={split ? recordTitle(title, split.set) : title}
       context={context ?? q.data?.note}
       info={info}
       height={height}
       className={className}
       band={band}
-      isLoading={q.isLoading}
+      provenance={prov}
+      isLoading={q.isLoading || (!enabled && !q.data)}
       isError={q.isError}
       error={q.error}
       missing={split?.missing}
@@ -129,9 +162,11 @@ export function CategoryPanel({
   legend,
 }: PanelBase & { variant?: CategoryVariant; labels?: boolean; log?: boolean; legend?: boolean }) {
   const { active, tabRow } = useTabs(tabs);
-  const q = useBreakdown(module, active?.metric ?? metric, { ...extra, ...active?.params });
+  const mod = active?.module ?? module;
+  const q = useBreakdown(mod, active?.metric ?? metric, { ...extra, ...active?.params });
   const t = useChartTheme();
   const split = useMemo(() => (q.data ? splitNullCategories(q.data) : undefined), [q.data]);
+  const prov = panelProvenance(q, mod);
   const option = useMemo(
     () => (split ? categoryOption(split.set, t, variant, { labels, log, legend }) : undefined),
     [split, t, variant, labels, log, legend],
@@ -149,6 +184,7 @@ export function CategoryPanel({
         isError={q.isError}
         error={q.error}
         missing={split?.missing}
+        provenance={prov}
         onRetry={() => q.refetch()}
         rows={rows}
         footer={footer}
@@ -172,6 +208,7 @@ export function CategoryPanel({
       isError={q.isError}
       error={q.error}
       missing={split?.missing}
+      provenance={prov}
       onRetry={() => q.refetch()}
       empty={!!split && (!split.set.categories.length || !split.set.series.length)}
       option={option}
@@ -203,7 +240,8 @@ export function MatrixPanel({
   band,
 }: PanelBase) {
   const { active, tabRow } = useTabs(tabs);
-  const q = useMatrix(module, active?.metric ?? metric, { ...extra, ...active?.params });
+  const mod = active?.module ?? module;
+  const q = useMatrix(mod, active?.metric ?? metric, { ...extra, ...active?.params });
   const t = useChartTheme();
   const option = useMemo(() => (q.data ? matrixOption(q.data, t) : undefined), [q.data, t]);
   const rows = useMemo(() => (q.data ? matrixRows(q.data) : undefined), [q.data]);
@@ -218,6 +256,7 @@ export function MatrixPanel({
       isLoading={q.isLoading}
       isError={q.isError}
       error={q.error}
+      provenance={panelProvenance(q, mod)}
       onRetry={() => q.refetch()}
       option={option}
       rows={rows}
@@ -278,4 +317,21 @@ function DonutBody({
       </div>
     </div>
   );
+}
+
+/** Live response that contains none of the series a tab asked for: the reason, else undefined. */
+function wrongSeries(set: SeriesSet, expect: string[]): string | undefined {
+  if (provenanceOf(set)?.kind !== 'live') return undefined;
+  const got = set.series.map((s) => s.key.toLowerCase());
+  if (got.some((k) => expect.includes(k))) return undefined;
+  const names = set.series.map((s) => s.name).join(', ');
+  return `The national database does not serve ${expect.map((e) => e.toUpperCase()).join(', ')} for this chart yet (it returned ${names}).`;
+}
+
+/** "(1960 – Present)" over a live record that starts later: show the year the data actually start. */
+function recordTitle(title: string, set: SeriesSet): string {
+  if (provenanceOf(set)?.kind !== 'live' || !/1960\s*–\s*Present/.test(title)) return title;
+  const years = set.series.flatMap((s) => s.data.map((p) => Number(String(p[0]).slice(0, 4)))).filter(Number.isFinite);
+  const first = years.length ? Math.min(...years) : undefined;
+  return first && first > 1960 ? title.replace(/1960(\s*–\s*Present)/, `${first}$1`) : title;
 }

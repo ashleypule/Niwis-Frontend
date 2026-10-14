@@ -6,6 +6,7 @@ import { Card, Tabs } from '@/components/ui/Card';
 import { queryStatus } from '@/components/feedback/PanelBoundary';
 import { MissingNote } from '@/components/provenance/MissingNote';
 import { tableMissing } from '@/lib/provenance';
+import { panelProvenance } from '@/components/provenance/provenance';
 import { useUi } from '@/store/filters';
 import { DataTable } from './DataTable';
 import type { PanelTab } from '@/components/charts/panels';
@@ -46,7 +47,7 @@ export function TablePanel({
   const entity = useUi((s) => s.filters.entity);
   const setFilter = useUi((s) => s.setFilter);
   return (
-    <Card title={title} context={context} info={info} className={className}>
+    <Card title={title} context={context} info={info} className={className} provenance={panelProvenance(q, module)}>
       {(tabs || controls) && (
         <div className="mb-2 flex flex-wrap items-center gap-2">
           {tabs && (

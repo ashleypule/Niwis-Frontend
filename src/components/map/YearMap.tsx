@@ -5,6 +5,7 @@ import { Card, Tabs } from '@/components/ui/Card';
 import { MatrixLegend } from '@/components/charts/MatrixLegend';
 import { useMapLayer } from '@/api/queries/core';
 import { MapPanel } from './MapPanel';
+import { panelProvenance } from '@/components/provenance/provenance';
 
 /** Compact map with horizon / year tabs (projection and forecast maps). */
 export function YearMap({
@@ -30,7 +31,7 @@ export function YearMap({
   const all = { ...params, [paramKey]: v };
   const q = useMapLayer(module, layer, all);
   return (
-    <Card title={title} context={q.data?.title}>
+    <Card title={title} context={q.data?.title} provenance={panelProvenance(q, module)}>
       <div className="mb-2">
         <Tabs
           label={`${title} horizon`}

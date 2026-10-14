@@ -4,6 +4,7 @@ import { useEntity } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Pill } from '@/components/ui/Pill';
 import { queryStatus } from '@/components/feedback/PanelBoundary';
+import { panelProvenance } from '@/components/provenance/provenance';
 import { formatNumber, withUnit } from '@/lib/format';
 import type { EntityDetail } from '@/types/api';
 import { EntityIllustration } from './EntityIllustration';
@@ -26,7 +27,7 @@ export function EntityInfoCard({
 }) {
   const q = useEntity(module, id);
   return (
-    <Card title={title} className={className} context={q.data?.title}>
+    <Card title={title} className={className} context={q.data?.title} provenance={panelProvenance(q, module)}>
       {controls && <div className="mb-2">{controls}</div>}
       {!id ? (
         <p className="py-8 text-center text-sm text-muted">Select an item on the map or in a table.</p>

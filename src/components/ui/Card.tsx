@@ -2,6 +2,15 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { Info } from 'lucide-react';
 import { PanelBoundary } from '@/components/feedback/PanelBoundary';
+import { ProvenanceChips } from '@/components/provenance/Markers';
+import {
+  NO_MARKER,
+  baselineInfo,
+  useDefaultProvenance,
+  withBaseline,
+  type PanelProvenance,
+} from '@/components/provenance/provenance';
+import { showProvenance } from '@/config/app';
 
 interface CardProps {
   title?: ReactNode;
@@ -15,17 +24,42 @@ interface CardProps {
   /** dark header band (the "-b" mockup style) */
   band?: boolean;
   id?: string;
+  /**
+   * Where the numbers come from (hybrid / api mode). Data panels pass their query's provenance; `null` = static content
+   * (no marker); omitted = the page default, which is Sample: only a backend response can make a panel Live.
+   */
+  provenance?: PanelProvenance | null;
 }
 
-export function Card({ title, context, info, actions, children, className, bodyClassName, band, id }: CardProps) {
+export function Card({
+  title,
+  context,
+  info,
+  actions,
+  children,
+  className,
+  bodyClassName,
+  band,
+  id,
+  provenance,
+}: CardProps) {
+  const fallback = useDefaultProvenance();
+  const prov = !showProvenance || provenance === null ? NO_MARKER : (provenance ?? fallback);
+  // never show "1981–2010" over live data (the backend's baseline is shorter)
+  const shownTitle = typeof title === 'string' ? withBaseline(title, prov) : title;
+  const shownContext = typeof context === 'string' ? withBaseline(context, prov) : context;
+  const shownInfo = baselineInfo(info, prov);
+  const chips = <ProvenanceChips p={prov} className="mt-1" />;
   return (
     <section
       id={id}
       className={clsx(
         'card anim-in flex min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-card',
+        prov.kind === 'sample' && 'prov-sample',
         className,
       )}
-      aria-label={typeof title === 'string' ? title : undefined}
+      aria-label={typeof shownTitle === 'string' ? shownTitle : undefined}
+      data-provenance={prov.kind}
     >
       {(title || actions) && (
         <header
@@ -38,21 +72,23 @@ export function Card({ title, context, info, actions, children, className, bodyC
             <h2
               className={clsx('line-clamp-2 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
             >
-              {title}
-              {info && (
-                <span title={info} className="ml-1 inline-block cursor-help align-[-2px] text-muted">
-                  <Info className="h-3.5 w-3.5" aria-label={info} />
+              {shownTitle}
+              {shownInfo && (
+                <span title={shownInfo} className="ml-1 inline-block cursor-help align-[-2px] text-muted">
+                  <Info className="h-3.5 w-3.5" aria-label={shownInfo} />
                 </span>
               )}
             </h2>
-            {context && (
-              <div className={clsx('truncate text-xs', band ? 'text-white/75' : 'text-muted')}>{context}</div>
+            {shownContext && (
+              <div className={clsx('truncate text-xs', band ? 'text-white/75' : 'text-muted')}>{shownContext}</div>
             )}
+            {chips}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
         </header>
       )}
       <div className={clsx('min-h-0 flex-1 px-4 pb-3', !title && 'pt-3', bodyClassName)}>
+        {!title && !actions && <ProvenanceChips p={prov} className="mb-2" />}
         <PanelBoundary>{children}</PanelBoundary>
       </div>
     </section>

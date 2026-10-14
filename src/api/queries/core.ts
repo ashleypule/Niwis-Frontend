@@ -7,15 +7,19 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import type { ZodType, ZodTypeDef } from 'zod';
 import { apiGet, type QueryParams } from '../client';
-import { endpoints } from '../endpoints';
+import { API_PREFIX, endpoints } from '../endpoints';
 import {
   AlertListSchema,
   CategorySetSchema,
   EntityDetailSchema,
   EntityListSchema,
+  HealthSchema,
   KpiSetSchema,
   MapLayerSchema,
   MatrixSetSchema,
+  MetaCoverageSchema,
+  MetaSourcesSchema,
+  MetaVariablesSchema,
   RefListSchema,
   SearchResultSchema,
   SeriesSetSchema,
@@ -27,6 +31,7 @@ import {
 } from '@/types/api';
 import { toParams, useFilters } from '@/store/filters';
 import type { ModuleId } from '@/config/modules';
+import { APP, showProvenance } from '@/config/app';
 
 const STALE = 5 * 60_000;
 
@@ -141,6 +146,47 @@ export function useSearch(q: string) {
     queryFn: ({ signal }) => apiGet(endpoints.search(), { q }, SearchResultSchema, signal),
     enabled: q.trim().length >= 2,
     placeholderData: keepPreviousData,
+    staleTime: STALE,
+  });
+}
+
+// ------------------------------------------------------------------ backend meta (hybrid / api mode)
+const META_ON = showProvenance && APP.liveMeta;
+
+/** /health: database reachability and which modules are live. Polled every 5 minutes. */
+export function useHealth() {
+  return useQuery({
+    queryKey: ['health'],
+    queryFn: ({ signal }) => apiGet(`${API_PREFIX}/health`, {}, HealthSchema, signal),
+    enabled: META_ON,
+    staleTime: 60_000,
+    refetchInterval: 5 * 60_000,
+  });
+}
+
+const META_SCHEMAS = { sources: MetaSourcesSchema, coverage: MetaCoverageSchema, variables: MetaVariablesSchema };
+
+export function useMetaSources() {
+  return useQuery({
+    queryKey: ['meta', 'sources'],
+    queryFn: ({ signal }) => apiGet(`${API_PREFIX}/meta/sources`, {}, META_SCHEMAS.sources, signal),
+    enabled: META_ON,
+    staleTime: STALE,
+  });
+}
+export function useMetaCoverage() {
+  return useQuery({
+    queryKey: ['meta', 'coverage'],
+    queryFn: ({ signal }) => apiGet(`${API_PREFIX}/meta/coverage`, {}, META_SCHEMAS.coverage, signal),
+    enabled: META_ON,
+    staleTime: STALE,
+  });
+}
+export function useMetaVariables() {
+  return useQuery({
+    queryKey: ['meta', 'variables'],
+    queryFn: ({ signal }) => apiGet(`${API_PREFIX}/meta/variables`, {}, META_SCHEMAS.variables, signal),
+    enabled: META_ON,
     staleTime: STALE,
   });
 }

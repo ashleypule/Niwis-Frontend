@@ -5,6 +5,9 @@ import { metricIcon } from '@/config/icons';
 import { formatNumber, withUnit } from '@/lib/format';
 import type { Kpi } from '@/types/api';
 import { Pill } from '@/components/ui/Pill';
+import { SampleChip, StaleChip } from '@/components/provenance/Markers';
+import { monthYear, type PanelProvenance } from '@/components/provenance/provenance';
+import { APP } from '@/config/app';
 
 /** Semantic delta tone: depends on the metric's goodDirection, not on the sign. */
 export function deltaTone(delta: number | null | undefined, good: GoodDirection): 'good' | 'bad' | 'neutral' {
@@ -44,7 +47,30 @@ export function Sparkline({
   );
 }
 
-export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean }) {
+/** SPI / SPEI / anomaly KPIs refer to the latest complete month: show it if the backend's sub-label doesn't. */
+export function kpiSublabel(kpi: Kpi): string | undefined {
+  const monthly = !!kpi.asOf && /-01$/.test(kpi.asOf) && /spi|spei|anomaly/i.test(kpi.metric);
+  if (!monthly) return kpi.sublabel;
+  const month = monthYear(kpi.asOf);
+  if (kpi.sublabel?.includes(month)) return kpi.sublabel;
+  return kpi.sublabel ? `${kpi.sublabel} · ${month}` : month;
+}
+
+export function KpiCard({
+  kpi,
+  compact = false,
+  provenance,
+  marker = false,
+}: {
+  kpi: Kpi;
+  compact?: boolean;
+  /** strip provenance: Sample cards are hatched and say so */
+  provenance?: PanelProvenance;
+  /** show a Live chip on the card itself (strips that mix live and sample KPIs) */
+  marker?: boolean;
+}) {
+  const sample = provenance?.kind === 'sample';
+  const sublabel = kpiSublabel(kpi);
   const md = metric(kpi.metric);
   const good = kpi.goodDirection ?? md.goodDirection;
   const { icon: Icon, tint } = metricIcon(kpi.metric);
@@ -60,7 +86,11 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
 
   return (
     <article
-      className="anim-in flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface px-3 pb-2 pt-3 shadow-card"
+      className={clsx(
+        'anim-in flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface px-3 pb-2 pt-3 shadow-card',
+        sample && 'prov-sample',
+      )}
+      data-provenance={provenance?.kind}
       aria-label={`${kpi.label}: ${missing ? `not available${kpi.unavailableReason ? ` (${kpi.unavailableReason})` : ''}` : (kpi.text ?? withUnit(valueText, unit))}`}
     >
       <div className="flex items-start gap-2.5">
@@ -75,9 +105,9 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
           <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-ink" title={kpi.label}>
             {kpi.label}
           </h3>
-          {kpi.sublabel && (
-            <p className="truncate text-[11px] leading-tight text-muted" title={kpi.sublabel}>
-              {kpi.sublabel}
+          {sublabel && (
+            <p className="truncate text-[11px] leading-tight text-muted" title={sublabel}>
+              {sublabel}
             </p>
           )}
         </div>
@@ -131,6 +161,23 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
           {missing ? (kpi.unavailableReason ?? 'Not available') : kpi.deltaLabel}
         </span>
       </div>
+      {(sample || kpi.isStale || (marker && provenance?.kind === 'live')) && (
+        <div className="mt-1 flex flex-wrap gap-1">
+          {sample && <SampleChip detail={provenance?.detail} />}
+          {marker && provenance?.kind === 'live' && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full bg-live-soft px-2 py-px text-[11px] font-semibold text-live"
+              data-marker="live"
+              title={kpi.source?.length ? `Source tables: ${kpi.source.join(', ')}` : undefined}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+              {APP.liveLabel}
+              {kpi.asOf && <span className="font-medium"> · {monthYear(kpi.asOf)}</span>}
+            </span>
+          )}
+          {kpi.isStale && <StaleChip asOf={kpi.asOf} />}
+        </div>
+      )}
       {kpi.spark && kpi.spark.length > 1 && (
         <div className="-mx-1 mt-auto pt-1">
           <Sparkline data={kpi.spark} tone={sparkTone} />

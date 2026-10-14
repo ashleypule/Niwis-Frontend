@@ -4,6 +4,7 @@ import { useMapLayer } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { MatrixLegend } from '@/components/charts/MatrixLegend';
 import { MapPanel } from './MapPanel';
+import { panelProvenance } from '@/components/provenance/provenance';
 
 /** Small single-layer map card (small multiples). */
 export function MiniMap({
@@ -21,7 +22,7 @@ export function MiniMap({
 }) {
   const q = useMapLayer(module, layer, params);
   return (
-    <Card title={title} context={q.data?.title}>
+    <Card title={title} context={q.data?.title} provenance={panelProvenance(q, module)}>
       <MapPanel
         module={module}
         title={title}

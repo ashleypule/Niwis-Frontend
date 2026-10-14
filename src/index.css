@@ -39,6 +39,14 @@
   --c-land-other: #d9dee4;
   --c-chart-grid: #e6ecf2;
   --c-chart-axis: #5b6b80;
+  /* provenance markers: live (green), sample (violet + hatching), stale (amber) */
+  --c-live: #17663a;
+  --c-live-soft: #e3f4e8;
+  --c-sample: #5b2a9a;
+  --c-sample-soft: #efe7fb;
+  --c-sample-hatch: rgb(91 42 154 / 0.07);
+  --c-stale: #7f4b00;
+  --c-stale-soft: #fff1d6;
   color-scheme: light;
 }
 
@@ -75,6 +83,13 @@
   --c-land-other: #26354a;
   --c-chart-grid: #22334e;
   --c-chart-axis: #93a6bf;
+  --c-live: #7ad9a0;
+  --c-live-soft: #143a27;
+  --c-sample: #d6c0ff;
+  --c-sample-soft: #2e2049;
+  --c-sample-hatch: rgb(214 192 255 / 0.08);
+  --c-stale: #f6c06a;
+  --c-stale-soft: #3b2c0f;
   color-scheme: dark;
 }
 
@@ -113,6 +128,12 @@
   --color-warn-soft: var(--c-warn-soft);
   --color-info-soft: var(--c-info-soft);
   --color-ocean: var(--c-ocean);
+  --color-live: var(--c-live);
+  --color-live-soft: var(--c-live-soft);
+  --color-sample: var(--c-sample);
+  --color-sample-soft: var(--c-sample-soft);
+  --color-stale: var(--c-stale);
+  --color-stale-soft: var(--c-stale-soft);
   --shadow-card: var(--c-shadow);
   --shadow-pop: var(--c-shadow-lg);
   --radius-card: 12px;
@@ -283,4 +304,12 @@ table,
     box-shadow: none !important;
     break-inside: avoid;
   }
+}
+
+/* ------------------------------------------------------------------ provenance */
+/* Sample panels are hatched so they can never be mistaken for live ones, even in a screenshot or a printout. */
+.prov-sample {
+  background-image: repeating-linear-gradient(135deg, var(--c-sample-hatch) 0 2px, transparent 2px 9px);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }

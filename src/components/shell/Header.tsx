@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { Bell, ChevronDown, LogOut, Menu, Moon, Search, Sun, UserCircle2 } from 'lucide-react';
-import { moduleForPath } from '@/config/modules';
-import { isMock } from '@/config/app';
+import { MODULES, moduleForPath } from '@/config/modules';
+import { APP, isLive, isMock, showProvenance } from '@/config/app';
 import { useUi } from '@/store/filters';
-import { useAlerts } from '@/api/queries/core';
+import { useAlerts, useHealth } from '@/api/queries/core';
 
 export function SampleDataBadge() {
   if (!isMock) return null;
@@ -17,6 +17,45 @@ export function SampleDataBadge() {
       <span className="h-1.5 w-1.5 rounded-full bg-amber-300" aria-hidden="true" />
       Sample data<span className="hidden md:inline">&nbsp;— not for operational decisions</span>
     </span>
+  );
+}
+
+/** Modules with their own data (everything except the report builder). */
+const DATA_MODULES = MODULES.filter((m) => m.id !== 'reports');
+
+/** Hybrid / api mode: "5 of 24 modules live" from /health, linking to the Data Integration page. */
+export function LiveSummaryBadge() {
+  const health = useHealth();
+  if (!showProvenance || !APP.liveMeta) return null;
+  const base =
+    'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold hover:bg-white/10';
+  if (health.isError || (health.data && health.data.database?.reachable === false))
+    return (
+      <Link
+        to="/data-integration"
+        className={`${base} border-red-300/60 bg-red-500/20 text-red-50`}
+        title="The national database could not be reached. Live panels show an error until it is back."
+        data-testid="live-summary"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-red-300" aria-hidden="true" />
+        National database unreachable
+      </Link>
+    );
+  const live = (health.data?.modules ?? []).filter((m) => m.status === 'live' && isLive(m.module));
+  return (
+    <Link
+      to="/data-integration"
+      className={`${base} border-emerald-300/50 bg-emerald-400/15 text-emerald-50`}
+      title={
+        health.data
+          ? `Live from the national database: ${live.map((m) => m.module).join(', ')}. Panels marked Sample show generated data.`
+          : 'Checking the national database…'
+      }
+      data-testid="live-summary"
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" aria-hidden="true" />
+      {health.data ? `${live.length} of ${DATA_MODULES.length} modules live` : 'Connecting…'}
+    </Link>
   );
 }
 
@@ -109,6 +148,7 @@ export function Header() {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">{title}</h1>
             <SampleDataBadge />
+            <LiveSummaryBadge />
           </div>
           <p className="mt-0.5 hidden text-sm text-white/80 sm:block">{mod.keywords.join(' · ')}</p>
         </div>
