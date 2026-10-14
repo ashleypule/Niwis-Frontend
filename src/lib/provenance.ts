@@ -29,8 +29,13 @@ export function splitNullSeries(set: SeriesSet): { set: SeriesSet; missing: Miss
   const missing: MissingItem[] = [];
   const hasData = (s: SeriesSet['series'][number]) => s.data.length > 0 && !allNull(s.data, 1);
   const series = set.series.filter((s) => {
-    if (s.data.length === 0 || !allNull(s.data, 1)) return true;
     const reason = reasonFor(set.unavailable, s.key, s.name);
+    // the backend says this series is unavailable: never plot it, even if values came back (BACKEND_ISSUES #6)
+    if (reason) {
+      missing.push({ name: s.name, reason });
+      return false;
+    }
+    if (s.data.length === 0 || !allNull(s.data, 1)) return true;
     // the empty half of a split bar (e.g. "Negative anomaly" when every month was positive) is not missing data
     if (!reason && s.stack && set.series.some((o) => o !== s && o.stack === s.stack && hasData(o))) return true;
     missing.push({ name: s.name, reason: reason ?? fallback(set.unavailable) });
@@ -42,10 +47,10 @@ export function splitNullSeries(set: SeriesSet): { set: SeriesSet; missing: Miss
 export function splitNullCategories(set: CategorySet): { set: CategorySet; missing: MissingItem[] } {
   const missing: MissingItem[] = [];
   const series = set.series.filter((s) => {
+    const reason = reasonFor(set.unavailable, s.key, s.name);
     const empty = s.values.length > 0 && s.values.every((v) => v == null);
-    if (empty)
-      missing.push({ name: s.name, reason: reasonFor(set.unavailable, s.key, s.name) ?? fallback(set.unavailable) });
-    return !empty;
+    if (reason || empty) missing.push({ name: s.name, reason: reason ?? fallback(set.unavailable) });
+    return !reason && !empty;
   });
   return missing.length ? { set: { ...set, series }, missing } : { set, missing };
 }

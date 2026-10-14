@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { APP } from '@/config/app';
-import { AGGREGATION, monthYear, sourceTooltip, staleDate, type PanelProvenance } from './provenance';
+import { AGGREGATION, monthYear, partlyStale, sourceTooltip, staleDate, type PanelProvenance } from './provenance';
 
 const chip =
   'inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 py-px text-[11px] font-semibold';
@@ -39,6 +39,15 @@ export function ProvenanceChips({ p, className }: { p: PanelProvenance; classNam
           data-marker="stale"
         >
           Data to {monthYear(stale)}
+        </span>
+      )}
+      {partlyStale(p) && (
+        <span
+          className={clsx(chip, 'cursor-help bg-stale-soft text-stale')}
+          title="Some of the sources behind this panel have not been updated for more than 90 days (see the dates in the panel)."
+          data-marker="stale"
+        >
+          Some sources stale
         </span>
       )}
       {p.modelled && (

@@ -5,7 +5,7 @@ import { SeriesPanel } from '@/components/charts/panels';
 import { MiniMap } from '@/components/map/MiniMap';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 import { PROVINCE_TABS } from '@/pages/_shared/tabs';
 
 /** Forecast view shared by Runoff and Surface Water (same streamflow forecast engine). */
@@ -29,9 +29,10 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
           module={module}
           metric="flow"
           forecast
-          title="Streamflow Forecast (Selected Station)"
+          title={`Streamflow Forecast (Selected ${entityNoun(module)})`}
           context={st.name}
           extra={{ entityId: st.id }}
+          enabled={!!st.id}
           height={280}
         />
         <SeriesPanel

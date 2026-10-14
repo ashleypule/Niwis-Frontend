@@ -5,7 +5,9 @@ import { MapPanel } from '@/components/map/MapPanel';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { isLive } from '@/config/app';
+import { MODELLED } from '@/components/provenance/provenance';
 
 const mod = moduleById('runoff');
 
@@ -23,10 +25,17 @@ export const RUNOFF_LAYERS = [
 export default function RunoffPage() {
   const st = useSelectedEntity('runoff');
   const p = { entityId: st.id };
-  const ctx = st.name ? `[Station: ${st.name}]` : undefined;
+  const noun = entityNoun('runoff');
+  const ctx = st.name ? `[${noun}: ${st.name}]` : undefined;
+  const ready = !!st.id;
   return (
     <div>
       <PageTabs mod={mod} />
+      {isLive('runoff') && (
+        <p className="mb-2 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink-2" role="note">
+          <b>Modelled values.</b> {MODELLED.runoff}
+        </p>
+      )}
       <KpiStrip module="runoff" count={8} />
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel module="runoff" title="Runoff Distribution Map – South Africa" layers={RUNOFF_LAYERS} height={520} />
@@ -34,9 +43,10 @@ export default function RunoffPage() {
           <SeriesPanel
             module="runoff"
             metric="discharge"
-            title="River Discharge (Selected Station)"
+            title={`River Discharge (Selected ${noun})`}
             context={ctx}
             extra={p}
+            enabled={ready}
             height={210}
           />
           <SeriesPanel module="runoff" metric="ssi" title="Standardized Streamflow Index (SSI)" height={200} />
@@ -65,22 +75,25 @@ export default function RunoffPage() {
           title="Flood Frequency Analysis (Peak Flow)"
           context={ctx}
           extra={p}
+          enabled={ready}
           height={230}
         />
         <SeriesPanel
           module="runoff"
           metric="fdc"
-          title="Flow Duration Curve (Selected Station)"
+          title={`Flow Duration Curve (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={ready}
           height={230}
         />
         <SeriesPanel
           module="runoff"
           metric="seasonal"
-          title="Seasonal Runoff Pattern (Selected Station)"
+          title={`Seasonal Runoff Pattern (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={ready}
           height={230}
         />
       </Row>
@@ -123,7 +136,7 @@ export default function RunoffPage() {
         <TablePanel
           module="runoff"
           metric="top-stations"
-          title="Top 10 Stations by Current Flow"
+          title={`Top 10 ${noun === 'District' ? 'Districts' : 'Stations'} by Current Flow`}
           selectEntity
           tabs={[
             { value: 'h', label: 'Highest flow', params: { order: 'highest' } },

@@ -28,7 +28,9 @@ export const VEG_LAYERS = [
   { id: 'ndvi-anomaly', label: 'NDVI anomaly' },
 ];
 
-const idxTabs = (sets: [string, string][]) => sets.map(([v, l]) => ({ value: v, label: l, params: { set: v } }));
+// `expect`: a live response must contain one of the requested indices (BACKEND_ISSUES #1)
+const idxTabs = (sets: [string, string][]) =>
+  sets.map(([v, l]) => ({ value: v, label: l, params: { set: v }, expect: v.split(',') }));
 
 export default function VegetationPage() {
   return (

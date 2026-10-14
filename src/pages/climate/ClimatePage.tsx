@@ -7,6 +7,7 @@ import { TablePanel } from '@/components/table/TablePanel';
 import { CascadeFlow } from '@/components/viz/CascadeFlow';
 import { Row } from '@/components/layout/Grid';
 import { ClimateInsights } from './ClimateInsights';
+import { isLive } from '@/config/app';
 
 const mod = moduleById('climate');
 
@@ -71,7 +72,8 @@ export default function ClimatePage() {
         <CategoryPanel
           module="climate"
           metric="seasonal-change"
-          title="Seasonal Changes (vs 1961–1990)"
+          // the backend compares periods of its own record (2000 onwards), not a 1961–1990 normal
+          title={isLive('climate') ? 'Seasonal Changes by Period' : 'Seasonal Changes (vs 1961–1990)'}
           tabs={twoTabs(['t', 'Temperature', { var: 'temperature' }], ['r', 'Rainfall', { var: 'rainfall' }])}
           variant="bar"
           height={220}

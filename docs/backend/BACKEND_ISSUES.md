@@ -55,6 +55,25 @@ ones with `npm run contract:check` in the frontend repo (report: `docs/backend/C
 - **Expected:** per `CONTRACT_CHANGES.md` §3, a null field comes with `unavailable: [{field: "series.drought", reason}]`.
 - **Frontend:** hides the series and lists it under the chart as "no values in the database for this selection".
 
+## 6. Seasonal change: values for a period the database does not cover
+
+- **Request:** `GET /api/v1/climate/breakdown?metric=seasonal-change&var=temperature` (and `var=rainfall`)
+- **Actual:** series `p0` "1981–2000" has values (`[21.58, 16.81, 12.66, 17.88]` °C), while the same response says
+  `unavailable: [{"field": "series.p0", "reason": "No data before 2000 in the database"}]`. `FRONTEND_INTEGRATION.md`
+  also lists this series as null.
+- **Expected:** `values: [null, null, null, null]` for `p0` (the contract: a field listed in `unavailable` is null).
+- **Risk:** the numbers cannot come from the database (it starts in 2000). Shown as-is they would be read as a measured
+  1981–2000 climatology.
+- **Frontend:** any series listed in `unavailable` is hidden and listed under the chart, whatever its values.
+
+## 7. `isStale` on annual data
+
+- **Requests:** e.g. `climate/timeseries?metric=extremes`, `climate/table?metric=statistics`, `rainfall/breakdown?metric=seasonal`
+- **Actual:** annual values for 2025 are stamped `asOf: "2025-01-01"` and come with `isStale: true` (more than 90 days
+  before the newest record, 2026-09-06), although 2025 is the last complete year and nothing newer can exist.
+- **Expected:** staleness for annual series measured from the end of the period (`2025-12-31`), or annual series exempt.
+- **Frontend:** shows what the backend says ("Data to Jan 2025" marker). Users may read it as a late feed.
+
 ## Not backend bugs (fixed in the frontend)
 
 - `rainfall/timeseries?metric=station` without `entityId` → 400. The frontend sent it before the district list had

@@ -7,7 +7,7 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 
 const mod = moduleById('rainfall');
 
@@ -95,9 +95,10 @@ export default function RainfallPage() {
         <SeriesPanel
           module="rainfall"
           metric="station"
-          title="Rainfall Indices Time Series (Selected Station)"
+          title={`Rainfall Indices Time Series (Selected ${entityNoun('rainfall')})`}
           context={station.name}
           extra={{ entityId: station.id }}
+          enabled={!!station.id}
           height={230}
         />
       </Row>

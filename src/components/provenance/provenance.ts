@@ -5,7 +5,7 @@
  */
 import { createContext, useContext } from 'react';
 import { isUnavailable, provenanceOf } from '@/api/client';
-import { showProvenance } from '@/config/app';
+import { APP, showProvenance } from '@/config/app';
 import { MONTH_NAMES } from '@/lib/format';
 import type { Component } from '@/types/api';
 
@@ -96,7 +96,17 @@ export function monthYear(iso: string | null | undefined): string {
 export function staleDate(p: PanelProvenance): string | undefined {
   const stale = (p.components ?? []).filter((c) => c.isStale && c.asOf).map((c) => c.asOf!);
   if (stale.length) return stale.sort()[0];
-  return p.isStale ? p.asOf : undefined;
+  if (!p.isStale || !p.asOf) return undefined;
+  // stale, but its own as-of is recent: it mixes sources (e.g. a table of tables), so no single date applies
+  return isRecent(p.asOf) ? undefined : p.asOf;
+}
+
+/** Stale without a date to show: some of the panel's sources are stale. */
+export const partlyStale = (p: PanelProvenance): boolean => !!p.isStale && !staleDate(p);
+
+function isRecent(iso: string): boolean {
+  const t = Date.parse(iso.slice(0, 10));
+  return Number.isFinite(t) && APP.asOf.getTime() - t < 90 * 86_400_000;
 }
 
 export function sourceTooltip(p: PanelProvenance): string {

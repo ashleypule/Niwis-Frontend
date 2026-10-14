@@ -39,6 +39,19 @@ describe('null values with reasons', () => {
     expect(missing).toEqual([{ name: 'Pan evaporation', reason: 'withheld: implausible values' }]);
   });
 
+  it('a series listed in `unavailable` is hidden even when values came back', () => {
+    const { set, missing } = splitNullSeries({
+      ...base,
+      series: [
+        { key: 'p0', name: '1981–2000', kind: 'bar', data: [['DJF', 21.6]] },
+        { key: 'p1', name: '2001–2020', kind: 'bar', data: [['DJF', 22.9]] },
+      ],
+      unavailable: [{ field: 'series.p0', reason: 'No data before 2000 in the database' }],
+    });
+    expect(set.series.map((s) => s.key)).toEqual(['p1']);
+    expect(missing[0].name).toBe('1981–2000');
+  });
+
   it('the empty half of a positive / negative split bar is kept (it is not missing data)', () => {
     const { set, missing } = splitNullSeries({
       ...base,

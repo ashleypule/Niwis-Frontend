@@ -8,6 +8,11 @@ import { CategoryPanel, MatrixPanel, SeriesPanel } from '@/components/charts/pan
 import { Row } from '@/components/layout/Grid';
 import { DroughtOutlook } from './DroughtOutlook';
 import { DROUGHT_LAYERS, DROUGHT_POINTS } from './layers';
+import { isLive } from '@/config/app';
+
+const SPI_INFO = isLive('drought')
+  ? 'SPI from the national database (area-weighted district means; the calibration period is not documented yet). Background bands show drought classes D0–D4 (spec §3.4).'
+  : 'Gamma-fitted SPI (McKee 1993), 1981–2010 calibration. Background bands show drought classes D0–D4 (spec §3.4).';
 
 const mod = moduleById('drought');
 
@@ -49,7 +54,7 @@ export default function DroughtPage() {
           module="drought"
           metric="spi"
           title="SPI – Standardised Precipitation Index"
-          info="Gamma-fitted SPI (McKee 1993), 1981–2010 calibration. Background bands show drought classes D0–D4 (spec §3.4)."
+          info={SPI_INFO}
           tabs={[3, 1, 6, 12, 24].map((k) => ({ value: String(k), label: `${k}-Month`, params: { scale: k } }))}
           height={230}
         />
