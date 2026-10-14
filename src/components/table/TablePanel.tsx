@@ -3,7 +3,9 @@ import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useTable } from '@/api/queries/core';
 import { Card, Tabs } from '@/components/ui/Card';
-import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { queryStatus } from '@/components/feedback/PanelBoundary';
+import { MissingNote } from '@/components/provenance/MissingNote';
+import { tableMissing } from '@/lib/provenance';
 import { useUi } from '@/store/filters';
 import { DataTable } from './DataTable';
 import type { PanelTab } from '@/components/charts/panels';
@@ -58,22 +60,21 @@ export function TablePanel({
           {controls}
         </div>
       )}
-      {q.isError ? (
-        <ErrorState onRetry={() => q.refetch()} height={160} />
-      ) : q.isLoading || !q.data ? (
-        <Skeleton height={Math.min(maxHeight ?? 260, 260)} />
-      ) : (
-        <DataTable
-          table={q.data}
-          limit={limit}
-          viewAllHref={viewAllHref}
-          maxHeight={maxHeight}
-          caption={title}
-          selectedKey={selectEntity ? entity : undefined}
-          onRowClick={
-            selectEntity && q.data.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined
-          }
-        />
+      {queryStatus(q, Math.min(maxHeight ?? 260, 260)) ?? (
+        <>
+          <DataTable
+            table={q.data!}
+            limit={limit}
+            viewAllHref={viewAllHref}
+            maxHeight={maxHeight}
+            caption={title}
+            selectedKey={selectEntity ? entity : undefined}
+            onRowClick={
+              selectEntity && q.data!.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined
+            }
+          />
+          <MissingNote items={tableMissing(q.data!)} />
+        </>
       )}
     </Card>
   );

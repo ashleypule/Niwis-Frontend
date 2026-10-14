@@ -54,12 +54,14 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
   const deltaUnit = kpi.deltaUnit ?? (unit === '%' || unit === '% FSC' ? ' pp' : unit ? ` ${unit}` : '');
   const Arrow = kpi.delta == null || kpi.delta === 0 ? ArrowRight : kpi.delta > 0 ? ArrowUpRight : ArrowDownRight;
   const valueText = kpi.text ?? formatNumber(kpi.value, decimals);
+  // value null + reason: "—" with the reason as tooltip (docs/backend/CONTRACT_CHANGES.md §3)
+  const missing = kpi.value == null && !kpi.text && !kpi.status;
   const sparkTone = good === 'neutral' ? 'neutral' : tone;
 
   return (
     <article
       className="anim-in flex min-w-0 flex-col rounded-[var(--radius-card)] border border-line bg-surface px-3 pb-2 pt-3 shadow-card"
-      aria-label={`${kpi.label}: ${kpi.text ?? withUnit(valueText, unit)}`}
+      aria-label={`${kpi.label}: ${missing ? `not available${kpi.unavailableReason ? ` (${kpi.unavailableReason})` : ''}` : (kpi.text ?? withUnit(valueText, unit))}`}
     >
       <div className="flex items-start gap-2.5">
         <span
@@ -81,7 +83,15 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
         </div>
       </div>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-x-2 gap-y-1">
-        {kpi.status && !kpi.text ? (
+        {missing ? (
+          <p
+            className="num cursor-help font-bold leading-none text-muted"
+            title={kpi.unavailableReason ?? 'Not available'}
+            data-testid="kpi-missing"
+          >
+            <span className={compact ? 'text-xl' : 'text-[26px]'}>—</span>
+          </p>
+        ) : kpi.status && !kpi.text ? (
           <Pill scale={kpi.status.scale} value={kpi.status.id} label={kpi.status.label} className="text-sm" />
         ) : (
           <p className="num min-w-0 whitespace-nowrap font-bold leading-none tracking-tight text-ink">
@@ -117,7 +127,9 @@ export function KpiCard({ kpi, compact = false }: { kpi: Kpi; compact?: boolean 
         </div>
       )}
       <div className="mt-0.5 flex items-center justify-between gap-2 text-[11px] text-muted">
-        <span className="truncate">{kpi.deltaLabel}</span>
+        <span className="truncate" title={missing ? kpi.unavailableReason : undefined}>
+          {missing ? (kpi.unavailableReason ?? 'Not available') : kpi.deltaLabel}
+        </span>
       </div>
       {kpi.spark && kpi.spark.length > 1 && (
         <div className="-mx-1 mt-auto pt-1">

@@ -4,7 +4,7 @@ import type { ModuleId } from '@/config/modules';
 import { useTable } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Pill } from '@/components/ui/Pill';
-import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { queryStatus } from '@/components/feedback/PanelBoundary';
 import { metricIcon } from '@/config/icons';
 import { classify } from '@/config/palettes';
 
@@ -31,11 +31,7 @@ export function CascadeFlow({
   const vertical = orientation === 'vertical';
   return (
     <Card title={title} className={className}>
-      {q.isError ? (
-        <ErrorState onRetry={() => q.refetch()} />
-      ) : !q.data ? (
-        <Skeleton height={vertical ? 360 : 150} />
-      ) : (
+      {queryStatus(q, vertical ? 360 : 150) ?? (
         <ol
           className={clsx(
             vertical

@@ -14,6 +14,7 @@ import { EChart } from './EChart';
 import { formatNumber } from '@/lib/format';
 import { useChartTheme } from './theme';
 import { MatrixLegend } from './MatrixLegend';
+import { splitNullCategories, splitNullSeries } from '@/lib/provenance';
 
 export interface PanelTab {
   value: string;
@@ -76,7 +77,9 @@ export function SeriesPanel({
   const fc = useForecast(module, m, params, !!forecast);
   const q = forecast ? fc : series;
   const t = useChartTheme();
-  const option = useMemo(() => (q.data ? seriesOption(q.data, t, opts) : undefined), [q.data, t, opts]);
+  // entirely-null series (withheld by the backend) are hidden and listed under the chart
+  const split = useMemo(() => (q.data ? splitNullSeries(q.data) : undefined), [q.data]);
+  const option = useMemo(() => (split ? seriesOption(split.set, t, opts) : undefined), [split, t, opts]);
   const rows = useMemo(() => (q.data ? seriesRows(q.data) : undefined), [q.data]);
   return (
     <ChartCard
@@ -88,8 +91,10 @@ export function SeriesPanel({
       band={band}
       isLoading={q.isLoading}
       isError={q.isError}
+      error={q.error}
+      missing={split?.missing}
       onRetry={() => q.refetch()}
-      empty={!!q.data && q.data.series.every((s) => !s.data.length)}
+      empty={!!split && split.set.series.every((s) => !s.data.length)}
       option={option}
       rows={rows}
       footer={footer}
@@ -126,9 +131,10 @@ export function CategoryPanel({
   const { active, tabRow } = useTabs(tabs);
   const q = useBreakdown(module, active?.metric ?? metric, { ...extra, ...active?.params });
   const t = useChartTheme();
+  const split = useMemo(() => (q.data ? splitNullCategories(q.data) : undefined), [q.data]);
   const option = useMemo(
-    () => (q.data ? categoryOption(q.data, t, variant, { labels, log, legend }) : undefined),
-    [q.data, t, variant, labels, log, legend],
+    () => (split ? categoryOption(split.set, t, variant, { labels, log, legend }) : undefined),
+    [split, t, variant, labels, log, legend],
   );
   const rows = useMemo(() => (q.data ? categoryRows(q.data) : undefined), [q.data]);
   if (variant === 'donut') {
@@ -141,12 +147,16 @@ export function CategoryPanel({
         band={band}
         isLoading={q.isLoading}
         isError={q.isError}
+        error={q.error}
+        missing={split?.missing}
         onRetry={() => q.refetch()}
         rows={rows}
         footer={footer}
         controls={tabRow ?? controls}
       >
-        {q.data && option && <DonutBody set={q.data} option={option} height={height} title={title} />}
+        {split && option && split.set.series.length > 0 && (
+          <DonutBody set={split.set} option={option} height={height} title={title} />
+        )}
       </ChartCard>
     );
   }
@@ -160,8 +170,10 @@ export function CategoryPanel({
       band={band}
       isLoading={q.isLoading}
       isError={q.isError}
+      error={q.error}
+      missing={split?.missing}
       onRetry={() => q.refetch()}
-      empty={!!q.data && !q.data.categories.length}
+      empty={!!split && (!split.set.categories.length || !split.set.series.length)}
       option={option}
       rows={rows}
       footer={footer}
@@ -205,6 +217,7 @@ export function MatrixPanel({
       band={band}
       isLoading={q.isLoading}
       isError={q.isError}
+      error={q.error}
       onRetry={() => q.refetch()}
       option={option}
       rows={rows}

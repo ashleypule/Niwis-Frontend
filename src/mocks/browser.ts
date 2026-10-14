@@ -1,10 +1,8 @@
 import { setupWorker } from 'msw/browser';
 import { http, passthrough } from 'msw';
 import { isLivePath } from '@/config/app';
+import { SAMPLE_HEADER } from '@/api/client';
 import { handlers } from './handlers/router';
-
-/** Header the API client sets to ask for the sample version of a live endpoint (501 → "Sample" panels). */
-export const SAMPLE_HEADER = 'x-niwis-sample';
 
 /**
  * Hybrid mode: live paths go to the network (→ Vite proxy → backend) unless the client explicitly asks for the sample

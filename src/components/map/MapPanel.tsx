@@ -9,7 +9,8 @@ import type { MapLayer } from '@/types/api';
 import { classify, colorFor, getScale } from '@/config/palettes';
 import { formatNumber, withUnit } from '@/lib/format';
 import { Card, Tabs } from '@/components/ui/Card';
-import { ErrorState } from '@/components/feedback/PanelBoundary';
+import { ErrorState, UnavailableState, useElapsed } from '@/components/feedback/PanelBoundary';
+import { isUnavailable } from '@/api/client';
 import { useUi } from '@/store/filters';
 import { labelPoint, SA_BOUNDS, useGeo, type GeoFC } from './geo';
 
@@ -712,14 +713,14 @@ export function MapPanel({
       </MapContainer>
       {q.isError && (
         <div className="absolute inset-x-4 top-4 z-[600]">
-          <ErrorState message="Map layer could not be loaded." onRetry={() => q.refetch()} />
+          {isUnavailable(q.error) ? (
+            <UnavailableState detail={q.error.detail} compact={mini} />
+          ) : (
+            <ErrorState message="Map layer could not be loaded." error={q.error} onRetry={() => q.refetch()} />
+          )}
         </div>
       )}
-      {q.isFetching && (
-        <div className="absolute left-2 top-2 z-[600] rounded-md bg-surface/90 px-2 py-1 text-[11px] text-muted shadow-card">
-          Loading layer…
-        </div>
-      )}
+      {q.isFetching && <LayerLoading />}
       {!mini && (
         <div className="pointer-events-auto absolute bottom-8 left-2 z-[500] hidden max-w-[210px] md:block">
           <Legend layer={layer} collapsible />
@@ -800,4 +801,16 @@ function OutlineLayerFill({ data, dark }: { data: GeoFC; dark: boolean }) {
     [data, dark],
   );
   return null;
+}
+
+function LayerLoading() {
+  const slow = useElapsed(3000);
+  return (
+    <div
+      role="status"
+      className="absolute left-2 top-2 z-[600] rounded-md bg-surface/90 px-2 py-1 text-[11px] text-muted shadow-card"
+    >
+      {slow ? 'Loading data from the national database…' : 'Loading layer…'}
+    </div>
+  );
 }

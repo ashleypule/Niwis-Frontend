@@ -3,7 +3,7 @@ import type { ModuleId } from '@/config/modules';
 import { useEntity } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Pill } from '@/components/ui/Pill';
-import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { queryStatus } from '@/components/feedback/PanelBoundary';
 import { formatNumber, withUnit } from '@/lib/format';
 import type { EntityDetail } from '@/types/api';
 import { EntityIllustration } from './EntityIllustration';
@@ -30,12 +30,8 @@ export function EntityInfoCard({
       {controls && <div className="mb-2">{controls}</div>}
       {!id ? (
         <p className="py-8 text-center text-sm text-muted">Select an item on the map or in a table.</p>
-      ) : q.isError ? (
-        <ErrorState onRetry={() => q.refetch()} />
-      ) : !q.data ? (
-        <Skeleton height={200} />
       ) : (
-        <EntityBody e={q.data} compact={compact} />
+        (queryStatus(q, 200) ?? <EntityBody e={q.data!} compact={compact} />)
       )}
     </Card>
   );

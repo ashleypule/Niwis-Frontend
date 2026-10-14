@@ -7,6 +7,37 @@ import { z } from 'zod';
 
 export const Num = z.number().nullable();
 
+// ------------------------------------------------------------------ Provenance (backend additions, all optional)
+// docs/backend/CONTRACT_CHANGES.md §3–4. Mock responses omit them, so mock mode keeps validating unchanged.
+export const ComponentSchema = z.object({
+  key: z.string(),
+  asOf: z.string().nullable().optional(),
+  source: z.array(z.string()).optional(),
+  isStale: z.boolean().optional(),
+});
+export type Component = z.infer<typeof ComponentSchema>;
+
+export const UnavailableSchema = z.object({ field: z.string(), reason: z.string() });
+export type Unavailable = z.infer<typeof UnavailableSchema>;
+
+export const ProvenanceFields = {
+  /** date of the newest record used (monthly data are stamped YYYY-MM-01) */
+  asOf: z.string().optional(),
+  /** database tables the values came from */
+  source: z.array(z.string()).optional(),
+  /** asOf is more than STALE_AFTER_DAYS older than the newest date in the database */
+  isStale: z.boolean().optional(),
+  /** per-source dates for panels that combine sources */
+  components: z.array(ComponentSchema).optional(),
+  /** reference period of anomalies / normals, e.g. "2000–2026 monthly mean" */
+  baseline: z.string().optional(),
+  baselineNote: z.string().optional(),
+  /** "district" | "district-area-weighted" | "district-overlap"; a string so a new value never breaks a panel */
+  aggregation: z.string().optional(),
+  /** fields that are null in this response, with the reason */
+  unavailable: z.array(UnavailableSchema).optional(),
+};
+
 export const ScopeSchema = z.object({
   level: z.enum(['national', 'province', 'wma', 'catchment', 'municipality', 'entity']),
   id: z.string(),
@@ -34,10 +65,16 @@ export const KpiSchema = z.object({
   /** overrides the metric registry's goodDirection */
   goodDirection: z.enum(['up', 'down', 'neutral']).optional(),
   spark: z.array(z.number()).optional(),
+  /** why `value` is null */
+  unavailableReason: z.string().optional(),
+  asOf: z.string().optional(),
+  source: z.array(z.string()).optional(),
+  isStale: z.boolean().optional(),
 });
 export type Kpi = z.infer<typeof KpiSchema>;
 
 export const KpiSetSchema = z.object({
+  ...ProvenanceFields,
   module: z.string(),
   asOf: z.string(),
   scope: ScopeSchema,
@@ -73,6 +110,7 @@ export const AxisSchema = z.object({
 export type Axis = z.infer<typeof AxisSchema>;
 
 export const SeriesSetSchema = z.object({
+  ...ProvenanceFields,
   id: z.string(),
   title: z.string().optional(),
   xType: z.enum(['time', 'category', 'value']),
@@ -93,6 +131,7 @@ export type SeriesSet = z.infer<typeof SeriesSetSchema>;
 
 // ------------------------------------------------------------------ Categories (bars, donuts, stacks, waterfalls)
 export const CategorySetSchema = z.object({
+  ...ProvenanceFields,
   id: z.string(),
   title: z.string().optional(),
   unit: z.string(),
@@ -131,6 +170,7 @@ export const ColumnSchema = z.object({
 export type Column = z.infer<typeof ColumnSchema>;
 
 export const TableSetSchema = z.object({
+  ...ProvenanceFields,
   id: z.string(),
   title: z.string().optional(),
   columns: z.array(ColumnSchema),
@@ -144,6 +184,7 @@ export type TableSet = z.infer<typeof TableSetSchema>;
 
 // ------------------------------------------------------------------ Matrix (heatmap)
 export const MatrixSetSchema = z.object({
+  ...ProvenanceFields,
   id: z.string(),
   title: z.string().optional(),
   rows: z.array(z.string()),
@@ -169,6 +210,9 @@ export const MapPointSchema = z.object({
 export type MapPoint = z.infer<typeof MapPointSchema>;
 
 export const MapLayerSchema = z.object({
+  ...ProvenanceFields,
+  /** boundary set a choropleth is keyed to ("districts" → public/geo/districts.json, MDB codes) */
+  geometry: z.string().optional(),
   id: z.string(),
   title: z.string(),
   kind: z.enum(['choropleth', 'grid', 'points']),
@@ -197,10 +241,16 @@ export const EntitySchema = z.object({
 });
 export type Entity = z.infer<typeof EntitySchema>;
 
-export const EntityListSchema = z.object({ type: z.string(), total: z.number(), items: z.array(EntitySchema) });
+export const EntityListSchema = z.object({
+  ...ProvenanceFields,
+  type: z.string(),
+  total: z.number(),
+  items: z.array(EntitySchema),
+});
 export type EntityList = z.infer<typeof EntityListSchema>;
 
 export const EntityDetailSchema = EntitySchema.extend({
+  ...ProvenanceFields,
   title: z.string(),
   status: z.object({ scale: z.string(), id: z.string(), label: z.string() }).optional(),
   fields: z.array(
@@ -209,6 +259,8 @@ export const EntityDetailSchema = EntitySchema.extend({
       value: z.union([z.string(), z.number(), z.null()]),
       unit: z.string().optional(),
       scale: z.string().optional(),
+      asOf: z.string().nullable().optional(),
+      isStale: z.boolean().optional(),
     }),
   ),
   image: z
@@ -262,12 +314,118 @@ export type RefItem = z.infer<typeof RefItemSchema>;
 export const RefListSchema = z.object({ type: z.string(), items: z.array(RefItemSchema) });
 export type RefList = z.infer<typeof RefListSchema>;
 
+// ------------------------------------------------------------------ Errors
+/** Error body: `{error, issues?}` from the contract, plus the backend's optional `code` and 501 / 500 fields. */
+export const ApiErrorBodySchema = z.object({
+  error: z.string(),
+  /** BAD_REQUEST | NOT_FOUND | RATE_LIMITED | DATA_UNAVAILABLE */
+  code: z.string().optional(),
+  issues: z.array(z.unknown()).optional(),
+  /** 501 DATA_UNAVAILABLE */
+  detail: z.string().optional(),
+  missing: z.array(z.string()).optional(),
+  /** 500 */
+  requestId: z.string().optional(),
+});
+export type ApiErrorBody = z.infer<typeof ApiErrorBodySchema>;
+
+// ------------------------------------------------------------------ Meta (backend /health, /meta/*)
+export const HealthSchema = z.object({
+  status: z.string(),
+  version: z.string().optional(),
+  time: z.string().optional(),
+  database: z.object({ reachable: z.boolean(), latencyMs: z.number().nullable().optional() }).passthrough().optional(),
+  staleAfterDays: z.number().optional(),
+  modules: z.array(
+    z.object({
+      module: z.string(),
+      status: z.string(),
+      reason: z.string().nullable().optional(),
+      tables: z.array(z.string()).optional(),
+    }),
+  ),
+});
+export type Health = z.infer<typeof HealthSchema>;
+
+export const MetaSourceSchema = z.object({
+  table: z.string(),
+  module: z.string().nullable().optional(),
+  resolution: z.string().nullable().optional(),
+  exists: z.boolean().optional(),
+  rows: z.number().nullable().optional(),
+  districts: z.number().nullable().optional(),
+  firstDate: z.string().nullable().optional(),
+  asOf: z.string().nullable().optional(),
+  coveredTo: z.string().nullable().optional(),
+  isStale: z.boolean().nullable().optional(),
+  completenessPct: z.number().nullable().optional(),
+  sizeBytes: z.number().nullable().optional(),
+  statsUpdatedAt: z.string().nullable().optional(),
+  variables: z
+    .object({
+      canonical: z.array(z.string()).optional(),
+      duplicate: z.array(z.string()).optional(),
+      withheld: z.array(z.object({ column: z.string(), reason: z.string() })).optional(),
+      unused: z.array(z.string()).optional(),
+    })
+    .optional(),
+  knownIssues: z.array(z.string()).optional(),
+  error: z.string().nullable().optional(),
+});
+export type MetaSource = z.infer<typeof MetaSourceSchema>;
+export const MetaSourcesSchema = z.object({
+  newestDataDate: z.string().optional(),
+  staleAfterDays: z.number().optional(),
+  note: z.string().optional(),
+  items: z.array(MetaSourceSchema),
+});
+export type MetaSources = z.infer<typeof MetaSourcesSchema>;
+
+export const MetaCoverageSchema = z.object({
+  newestDataDate: z.string().optional(),
+  staleAfterDays: z.number().optional(),
+  modules: z.array(
+    z.object({
+      module: z.string(),
+      tables: z.array(z.string()),
+      rows: z.number().nullable().optional(),
+      firstDate: z.string().nullable().optional(),
+      asOf: z.string().nullable().optional(),
+      oldestCoveredTo: z.string().nullable().optional(),
+      isStale: z.boolean().nullable().optional(),
+      completenessPct: z.number().nullable().optional(),
+      variables: z.object({ live: z.number(), withheld: z.number() }).optional(),
+    }),
+  ),
+});
+export type MetaCoverage = z.infer<typeof MetaCoverageSchema>;
+
+export const MetaVariablesSchema = z.object({
+  items: z.array(
+    z
+      .object({
+        id: z.string(),
+        label: z.string(),
+        unit: z.string().nullable().optional(),
+        metric: z.string().nullable().optional(),
+        status: z.string(),
+        source: z.string().nullable().optional(),
+        duplicates: z.array(z.string()).optional(),
+        reason: z.string().nullable().optional(),
+      })
+      .passthrough(),
+  ),
+});
+export type MetaVariables = z.infer<typeof MetaVariablesSchema>;
+
 // ------------------------------------------------------------------ Filters (query params)
 export interface FilterParams {
   province?: string;
   wma?: string;
   catchment?: string;
   municipality?: string;
+  /** district / metro MDB code (mock modules; live requests send it as `municipality`) */
+  district?: string;
   entityId?: string;
   from?: string;
   to?: string;

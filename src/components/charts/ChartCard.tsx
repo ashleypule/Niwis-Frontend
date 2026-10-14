@@ -1,7 +1,10 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Download, Expand, ImageDown, MoreVertical, Table2, X } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
-import { EmptyState, ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { EmptyState, ErrorState, LoadingState, UnavailableState } from '@/components/feedback/PanelBoundary';
+import { isUnavailable } from '@/api/client';
+import type { MissingItem } from '@/lib/provenance';
+import { MissingNote } from '@/components/provenance/MissingNote';
 import { download, registerExport, safeName, toCsv, type Row } from '@/lib/exporter';
 import { EChart, type EChartHandle } from './EChart';
 import type { EChartsOption } from './echarts';
@@ -16,7 +19,11 @@ export interface ChartCardProps {
   height?: number;
   isLoading?: boolean;
   isError?: boolean;
+  /** the query error (501 → Unavailable state; others show the message and request id) */
+  error?: unknown;
   onRetry?: () => void;
+  /** series hidden because they are entirely null, listed under the chart */
+  missing?: MissingItem[];
   empty?: boolean;
   /** rows for CSV export / data-table view */
   rows?: Row[];
@@ -71,7 +78,9 @@ export function ChartCard({
   height = 220,
   isLoading,
   isError,
+  error,
   onRetry,
+  missing,
   empty,
   rows,
   option,
@@ -175,8 +184,9 @@ export function ChartCard({
   );
 
   let body: ReactNode;
-  if (isError) body = <ErrorState onRetry={onRetry} height={height} />;
-  else if (isLoading) body = <Skeleton height={height} />;
+  if (isError && isUnavailable(error)) body = <UnavailableState detail={error.detail} height={height} />;
+  else if (isError) body = <ErrorState error={error} onRetry={onRetry} height={height} />;
+  else if (isLoading) body = <LoadingState height={height} />;
   else if (empty) body = <EmptyState height={height} />;
   else if (option)
     body = <EChart ref={chart} option={option} height={height} ariaLabel={`${title} chart`} onClick={onChartClick} />;
@@ -187,6 +197,7 @@ export function ChartCard({
       {controls && <div className="mb-1.5 flex flex-wrap items-center gap-2">{controls}</div>}
       {body}
       {option && children}
+      {!isError && !isLoading && missing && <MissingNote items={missing} />}
       {showTable && rows && (
         <div className="mt-2">
           <DataTableView rows={rows} />
