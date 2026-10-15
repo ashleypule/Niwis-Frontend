@@ -9,7 +9,7 @@ import { tableMissing } from '@/lib/provenance';
 import { panelProvenance } from '@/components/provenance/provenance';
 import { useUi } from '@/store/filters';
 import { DataTable } from './DataTable';
-import type { PanelTab } from '@/components/charts/panels';
+import type { Blocker, PanelTab } from '@/components/charts/panels';
 
 export function TablePanel({
   module,
@@ -25,6 +25,8 @@ export function TablePanel({
   className,
   selectEntity,
   controls,
+  enabled = true,
+  blockedBy,
 }: {
   module: ModuleId;
   metric: string;
@@ -40,10 +42,13 @@ export function TablePanel({
   /** clicking a row selects it as the page entity (uses table.rowKey) */
   selectEntity?: boolean;
   controls?: ReactNode;
+  /** false until the request can be made (e.g. waiting for the selected entity) */
+  enabled?: boolean;
+  blockedBy?: Blocker;
 }) {
   const [tab, setTab] = useState(tabs?.[0]?.value ?? '');
   const active = tabs?.find((t) => t.value === tab);
-  const q = useTable(module, active?.metric ?? metric, { ...extra, ...active?.params });
+  const q = useTable(module, active?.metric ?? metric, { ...extra, ...active?.params }, enabled);
   const entity = useUi((s) => s.filters.entity);
   const setFilter = useUi((s) => s.setFilter);
   return (
@@ -61,22 +66,23 @@ export function TablePanel({
           {controls}
         </div>
       )}
-      {queryStatus(q, Math.min(maxHeight ?? 260, 260)) ?? (
-        <>
-          <DataTable
-            table={q.data!}
-            limit={limit}
-            viewAllHref={viewAllHref}
-            maxHeight={maxHeight}
-            caption={title}
-            selectedKey={selectEntity ? entity : undefined}
-            onRowClick={
-              selectEntity && q.data!.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined
-            }
-          />
-          <MissingNote items={tableMissing(q.data!)} />
-        </>
-      )}
+      {(!enabled && blockedBy?.isError ? queryStatus(blockedBy as Parameters<typeof queryStatus>[0], 160) : null) ??
+        queryStatus(q, Math.min(maxHeight ?? 260, 260)) ?? (
+          <>
+            <DataTable
+              table={q.data!}
+              limit={limit}
+              viewAllHref={viewAllHref}
+              maxHeight={maxHeight}
+              caption={title}
+              selectedKey={selectEntity ? entity : undefined}
+              onRowClick={
+                selectEntity && q.data!.rowKey ? (r) => setFilter('entity', String(r[q.data!.rowKey!])) : undefined
+              }
+            />
+            <MissingNote items={tableMissing(q.data!)} />
+          </>
+        )}
     </Card>
   );
 }

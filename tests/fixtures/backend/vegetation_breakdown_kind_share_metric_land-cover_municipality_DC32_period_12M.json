@@ -1,0 +1,1 @@
+{"status":501,"requestId":"525fd3d9bd494063","body":{"error":"No land-cover data per district in the database","code":"DATA_UNAVAILABLE","detail":"No land-cover data per district in the database","missing":["land_cover"]}}

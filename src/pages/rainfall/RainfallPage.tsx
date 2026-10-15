@@ -99,6 +99,7 @@ export default function RainfallPage() {
           context={station.name}
           extra={{ entityId: station.id }}
           enabled={!!station.id}
+          blockedBy={station.list}
           height={230}
         />
       </Row>

@@ -47,6 +47,7 @@ export default function RunoffPage() {
             context={ctx}
             extra={p}
             enabled={ready}
+            blockedBy={st.list}
             height={210}
           />
           <SeriesPanel module="runoff" metric="ssi" title="Standardized Streamflow Index (SSI)" height={200} />
@@ -76,6 +77,7 @@ export default function RunoffPage() {
           context={ctx}
           extra={p}
           enabled={ready}
+          blockedBy={st.list}
           height={230}
         />
         <SeriesPanel
@@ -85,6 +87,7 @@ export default function RunoffPage() {
           context={ctx}
           extra={p}
           enabled={ready}
+          blockedBy={st.list}
           height={230}
         />
         <SeriesPanel
@@ -94,6 +97,7 @@ export default function RunoffPage() {
           context={ctx}
           extra={p}
           enabled={ready}
+          blockedBy={st.list}
           height={230}
         />
       </Row>
@@ -132,6 +136,8 @@ export default function RunoffPage() {
           title="Runoff Statistics (Selected Area)"
           context={ctx}
           extra={p}
+          enabled={ready}
+          blockedBy={st.list}
         />
         <TablePanel
           module="runoff"

@@ -1,0 +1,1 @@
+{"status":501,"requestId":"dcaa67a23c194056","body":{"error":"No borehole locations in the database","code":"DATA_UNAVAILABLE","detail":"No borehole locations in the database","missing":["borehole coordinates"]}}

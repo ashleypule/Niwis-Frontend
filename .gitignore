@@ -6,3 +6,5 @@ test-results
 playwright-report
 tests/screenshots/**/*.png
 !tests/screenshots/.gitkeep
+dist-fixtures
+dist-live

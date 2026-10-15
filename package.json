@@ -16,7 +16,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --project=mock --project=hybrid --project=backend-down",
     "docs": "vite-node scripts/generate-docs.ts",
     "geo": "node scripts/build-geo.mjs",
     "dev:live": "vite --mode live",
@@ -24,7 +24,11 @@
     "preview:live": "vite preview --mode live",
     "contract:check": "vite-node scripts/contract-check.ts",
     "verify": "npm run typecheck && npm run lint && prettier --check . && npm test && npm run build && npm run build:live && npm run docs",
-    "geo:districts": "node scripts/build-lm-to-district.mjs"
+    "geo:districts": "node scripts/build-lm-to-district.mjs",
+    "fixtures:record": "vite-node scripts/record-fixtures.ts",
+    "build:fixtures": "vite build --mode fixtures --outDir dist-fixtures",
+    "test:hybrid": "playwright test --project=hybrid --project=backend-down",
+    "test:live": "playwright test --project=live"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",

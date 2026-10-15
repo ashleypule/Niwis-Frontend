@@ -1,0 +1,1 @@
+{"status":501,"requestId":"37d5de97e242476d","body":{"error":"Irrigation demand is withheld: table 4_5 is built on implausible ET₀ values (4_4)","code":"DATA_UNAVAILABLE","detail":"Irrigation demand is withheld: table 4_5 is built on implausible ET₀ values (4_4)","missing":["irrigation_demand"]}}

@@ -1,0 +1,1 @@
+{"status":501,"requestId":"1df66f3d2aa04eeb","body":{"error":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","code":"DATA_UNAVAILABLE","detail":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","missing":["forecast:drought:outlook-1"]}}

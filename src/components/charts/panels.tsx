@@ -15,10 +15,18 @@ import { formatNumber } from '@/lib/format';
 import { useChartTheme } from './theme';
 import { MatrixLegend } from './MatrixLegend';
 import { splitNullCategories, splitNullSeries } from '@/lib/provenance';
-import { panelProvenance, type PanelProvenance } from '@/components/provenance/provenance';
+import { panelProvenance, withBaseline, type PanelProvenance } from '@/components/provenance/provenance';
+import { isLive } from '@/config/app';
 import { provenanceOf } from '@/api/client';
 import type { SeriesSet } from '@/types/api';
 import { UnavailableState } from '@/components/feedback/PanelBoundary';
+
+/** A query another panel waits for (see SeriesPanel `blockedBy`). */
+export interface Blocker {
+  isError: boolean;
+  error: unknown;
+  refetch: () => unknown;
+}
 
 export interface PanelTab {
   value: string;
@@ -78,11 +86,14 @@ export function SeriesPanel({
   forecast,
   opts,
   enabled = true,
+  blockedBy,
 }: PanelBase & {
   forecast?: boolean;
   opts?: SeriesOpts;
   /** false until the request can be made (e.g. waiting for the selected entity) */
   enabled?: boolean;
+  /** the query `enabled` waits for: its failure is this panel's failure */
+  blockedBy?: Blocker;
 }) {
   const { active, tabRow } = useTabs(tabs);
   const params = { ...extra, ...active?.params };
@@ -115,18 +126,18 @@ export function SeriesPanel({
     );
   return (
     <ChartCard
-      title={split ? recordTitle(title, split.set) : title}
+      title={split ? recordTitle(title, split.set) : liveTitle(title, mod)}
       context={context ?? q.data?.note}
       info={info}
       height={height}
       className={className}
       band={band}
       provenance={prov}
-      isLoading={q.isLoading || (!enabled && !q.data)}
-      isError={q.isError}
-      error={q.error}
+      isLoading={q.isLoading || (!enabled && !q.data && !blockedBy?.isError)}
+      isError={q.isError || (!enabled && !!blockedBy?.isError)}
+      error={q.error ?? blockedBy?.error}
       missing={split?.missing}
-      onRetry={() => q.refetch()}
+      onRetry={() => (q.isError ? q.refetch() : blockedBy?.refetch())}
       empty={!!split && split.set.series.every((s) => !s.data.length)}
       option={option}
       rows={rows}
@@ -334,4 +345,9 @@ function recordTitle(title: string, set: SeriesSet): string {
   const years = set.series.flatMap((s) => s.data.map((p) => Number(String(p[0]).slice(0, 4)))).filter(Number.isFinite);
   const first = years.length ? Math.min(...years) : undefined;
   return first && first > 1960 ? title.replace(/1960(\s*–\s*Present)/, `${first}$1`) : title;
+}
+
+/** Before a live module's data arrives (or when it fails), its titles still never claim the 1981–2010 baseline. */
+function liveTitle(title: string, module: ModuleId): string {
+  return isLive(module) ? withBaseline(title, { kind: 'live' }) : title;
 }

@@ -6,3 +6,6 @@ src/mocks/reference/generated.ts
 docs/API_CONTRACT.md
 docs/DATA_DICTIONARY.md
 src/mocks/reference/lm-to-district.json
+dist-fixtures
+dist-live
+tests/fixtures/backend

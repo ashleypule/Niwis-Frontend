@@ -11,11 +11,13 @@ export function useSelectedEntity(module: ModuleId): {
   id: string | undefined;
   name: string | undefined;
   explicit: boolean;
+  /** the entity list: panels that need an entity show its error instead of waiting forever */
+  list: ReturnType<typeof useEntities>;
 } {
   const entity = useUi((s) => s.filters.entity);
   const list = useEntities(module, { limit: 500 });
   const items = list.data?.items ?? [];
   const found = entity ? items.find((e) => e.id === entity) : undefined;
-  if (entity) return { id: entity, name: found?.name, explicit: true };
-  return { id: items[0]?.id, name: items[0]?.name, explicit: false };
+  if (entity) return { id: entity, name: found?.name, explicit: true, list };
+  return { id: items[0]?.id, name: items[0]?.name, explicit: false, list };
 }

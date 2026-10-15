@@ -45,6 +45,8 @@ export const APP = {
         : 'sample') as UnavailableMode,
   /** Marker text for backend data ("Live"; "Database" if the data team says the data are not measured). */
   liveLabel: env.VITE_LIVE_LABEL || 'Live',
+  /** Serve live paths from recorded fixtures instead of the backend (Playwright hybrid project). */
+  fixtures: env.VITE_FIXTURES === 'true',
   /** Timeout for one backend request (first requests after a backend restart can take ~20 s). */
   requestTimeoutMs: Number(env.VITE_REQUEST_TIMEOUT_MS ?? 30_000),
   mockLatencyMs: Number(env.VITE_MOCK_LATENCY_MS ?? 300),

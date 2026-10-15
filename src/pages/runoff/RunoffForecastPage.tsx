@@ -33,6 +33,7 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
           context={st.name}
           extra={{ entityId: st.id }}
           enabled={!!st.id}
+          blockedBy={st.list}
           height={280}
         />
         <SeriesPanel
@@ -62,6 +63,8 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
           metric="statistics"
           title="Current Runoff Statistics (Forecast Baseline)"
           extra={{ entityId: st.id }}
+          enabled={!!st.id}
+          blockedBy={st.list}
         />
       </Row>
     </div>

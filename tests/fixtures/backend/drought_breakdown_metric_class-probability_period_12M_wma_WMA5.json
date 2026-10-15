@@ -1,0 +1,1 @@
+{"status":501,"requestId":"0ab1dbf0e12d4ce8","body":{"error":"Class probabilities need a forecast model","code":"DATA_UNAVAILABLE","detail":"Class probabilities need a forecast model","missing":["class-probability"]}}

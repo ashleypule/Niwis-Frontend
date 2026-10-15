@@ -30,8 +30,57 @@
 
 ## Known limitations / backend hand-off
 
-- All data is generated sample data (badge shown) until `VITE_DATA_SOURCE=api` is set against a backend that implements `docs/API_CONTRACT.md`.
+- Mock mode (`npm run dev`): all data is generated sample data (badge shown). Hybrid mode (`npm run dev:live`): five modules are live; see "Backend integration" below.
 - Alert acknowledge / assign actions and the downloads history are stored in the browser (localStorage) until the alert-workflow API exists.
 - The Excel export is tab-separated values with an `.xls` extension, which avoids a heavy xlsx dependency. Swap in a server-side export if true `.xlsx` is required.
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
+
+## Backend integration (October 2026)
+
+Plan: `PLAN.md` §7. Backend docs, findings and reports: `docs/backend/`.
+
+| Step | Scope                                                                                                                                                                        | Commit        |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| 1    | Per-module data source (`hybrid`, `isLive`), MSW passthrough, Vite proxy, `npm run dev:live`                                                                                 | `e8a34a2`     |
+| 2    | Client: 501 → `DataUnavailable` / Sample, nulls with reasons, errors with request id, 429 back-off, 30 s timeout, slow-load hint; provenance fields in zod; `contract:check` | `2c02f9a`     |
+| 3    | Provenance UI: Live / Sample / stale / Modelled / Approximate markers, header live summary, baselines                                                                        | `dccb691`     |
+| 4    | Districts: boundaries, Province → District → Local municipality, LM → district roll-up                                                                                       | `3614412`     |
+| 5    | The five live pages wired and checked by eye                                                                                                                                 | `323c956`     |
+| 6    | Overview, Data Integration and Governance wiring                                                                                                                             | `b4ddbb1`     |
+| 7    | Fixtures, Playwright hybrid / backend-down / live projects, UI verification, docs                                                                                            | see `git log` |
+
+### What is live, sample, and waiting
+
+- **Live (backend):** Rainfall, Drought, Climate, Vegetation and Runoff pages (KPIs, maps by district / province, charts,
+  tables); on the Overview the rainfall and drought-class KPIs, the drought trend, the drought / rainfall / vegetation map
+  layers and the rainfall indicator tab; on Data Integration the source status, pipeline status and module coverage; on
+  Governance the data-quality issues and the variable register; province, WMA and district lists; `/health` (header).
+- **Sample (marked, hatched):** the other 19 modules; alerts and search; every forecast and outlook (the database has no
+  forecast models); the Overview's other KPIs and panels; on live pages, the panels the database cannot serve (501):
+  stations, dam / borehole / settlement points, catchment layers, EVI / SAVI / MSAVI2 / VPI / ASI / SVI / NDII, land cover,
+  restrictions, population at risk, climate projections, irrigation, risk index, vulnerability. Production builds show these
+  as "Not yet available" instead (`VITE_UNAVAILABLE_MODE=empty`).
+- **Waiting on the data team** (`../Niwis Backend/docs/DATA_GAPS.md`): station / gauge / point data with coordinates
+  (station maps, entity cards), a 1981–2010 baseline or a confirmed one, SPI calibration documentation, `satellite_remote_sensing`
+  and `hydrological_drought_master` beyond Dec 2025 (shown stale), a fixed `5.1` vegetation table (EVI, SAVI …), settlement
+  and population data, forecasts. Confirmation whether the database holds measured or test data (`VITE_LIVE_LABEL`).
+- **Waiting on the backend team** (`docs/backend/BACKEND_ISSUES.md`): #6 values for 1981–2000 the database cannot hold
+  (hidden by the frontend), #1 vegetation `set` ignored, #2–3 cascade row shapes (adapted), #4 per-IP rate limit, #5 null
+  series without reason, #7 annual data flagged stale.
+
+### Verification (backend integration)
+
+- `npm run verify` ✔ (typecheck, lint, Prettier, unit tests, `build` and `build:live`, docs).
+- Unit tests: 501 → `DataUnavailable` (empty / sample mode), no sample fallback on 5xx / network errors, 400, 429 back-off,
+  `isLive` routing, provenance stamping, null KPI rendering, all-null and withheld series, baseline replacement, stale logic
+  for `components`, mixed live / sample panels, LM → district roll-up.
+- `npm run contract:check`: 223 requests, 0 schema failures, 0 errors, 63 unavailable (501), 12 structural differences (all
+  explained in `BACKEND_ISSUES.md` or handled: null series, cascade shapes). Report: `docs/backend/CONTRACT_CHECK.md`.
+- Playwright hybrid (recorded fixtures, 627 responses): five live pages at 1440 and 390 px with Live markers, visibly marked
+  Sample / Not-yet-available panels, no sample panel without a Sample marker, no console errors, no horizontal scroll;
+  Overview rainfall = Rainfall page KPI; LM → district roll-up; WMA → Approximate; no 1981–2010 over live data; runoff
+  Modelled. Backend-down: live panels show errors with Retry, never sample data.
+- `npm run test:live`: 15 / 15 KPI values on the dashboard equal the API (`docs/backend/UI_VERIFICATION.md`); screenshots in
+  `tests/screenshots/live/` checked by eye (production `empty` mode: calm "Not yet available" cards, stale markers on the
+  Dec 2025 satellite / hydrology values, "Some sources stale" on the source table).

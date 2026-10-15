@@ -1,6 +1,7 @@
 import { setupWorker } from 'msw/browser';
 import { http, passthrough } from 'msw';
-import { isLivePath } from '@/config/app';
+import { APP, isLivePath } from '@/config/app';
+import { fixtureResponse } from './fixtures';
 import { SAMPLE_HEADER } from '@/api/client';
 import { handlers } from './handlers/router';
 
@@ -9,7 +10,9 @@ import { handlers } from './handlers/router';
  * version. Returning nothing falls through to the mock handlers.
  */
 const live = http.all('*/api/v1/*', ({ request }) => {
-  if (isLivePath(new URL(request.url).pathname) && !request.headers.get(SAMPLE_HEADER)) return passthrough();
+  const url = new URL(request.url);
+  if (!isLivePath(url.pathname) || request.headers.get(SAMPLE_HEADER)) return;
+  return APP.fixtures ? fixtureResponse(url) : passthrough();
 });
 
 export const worker = setupWorker(live, ...handlers);

@@ -29,6 +29,7 @@ import { LIVE_REQUESTS, manifestParams, manifestPath, type ManifestEntry } from 
 import { MODULE_HANDLERS } from '@/mocks/handlers/modules';
 import { ctxFromParams } from '@/mocks/handlers/router';
 import { referenceHandler } from '@/mocks/handlers/reference';
+import { getPaced } from './lib/paced';
 
 const BASE = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 const filter = process.argv.find((a) => a.startsWith('--filter='))?.slice(9);
@@ -143,25 +144,6 @@ function compare(e: ManifestEntry, live: Any, mock: Any | undefined): string[] {
   const text = `${String(live.title ?? '')} ${String(live.note ?? '')}`;
   if (/1981–2010/.test(text) && !live.baseline) out.push('response mentions 1981–2010 but has no `baseline`');
   return out;
-}
-
-// pace requests under the backend's per-IP limit (120 / minute) and honour Retry-After on 429
-const GAP_MS = Number(process.env.CONTRACT_GAP_MS ?? 650);
-let nextSlot = 0;
-async function slot() {
-  const now = Date.now();
-  const at = Math.max(now, nextSlot);
-  nextSlot = at + GAP_MS;
-  if (at > now) await new Promise((r) => setTimeout(r, at - now));
-}
-export async function getPaced(url: string): Promise<Response> {
-  for (let i = 0; ; i++) {
-    await slot();
-    const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(60_000) });
-    if (res.status !== 429 || i >= 3) return res;
-    const wait = Math.min(Number(res.headers.get('retry-after') ?? 10), 60) * 1000;
-    nextSlot = Date.now() + wait;
-  }
 }
 
 async function run(e: ManifestEntry): Promise<Result> {

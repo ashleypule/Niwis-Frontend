@@ -1,0 +1,1 @@
+{"status":501,"requestId":"909e0d7b5c174c9b","body":{"error":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","code":"DATA_UNAVAILABLE","detail":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","missing":["forecast:drought:settlements"]}}
