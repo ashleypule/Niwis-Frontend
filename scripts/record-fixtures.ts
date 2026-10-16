@@ -55,7 +55,8 @@ async function main() {
             requestId: res.headers.get('x-request-id') ?? undefined,
             body: await res.json(),
           };
-          if (res.status >= 500 && res.status !== 501) failed.push(`${res.status} ${key}`);
+          // 429: the backend was busy (another client shares the per-IP limit): a recorded 429 would fail a test later
+          if ((res.status >= 500 && res.status !== 501) || res.status === 429) failed.push(`${res.status} ${key}`);
           const file = fixtureFile(key);
           writeFileSync(resolve(DIR, file), JSON.stringify(f));
           index[key] = file;

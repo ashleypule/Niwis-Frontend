@@ -12,7 +12,15 @@ async function slot() {
 export async function getPaced(url: string): Promise<Response> {
   for (let i = 0; ; i++) {
     await slot();
-    const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(60_000) });
+    let res: Response;
+    try {
+      res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(60_000) });
+    } catch (e) {
+      // a busy backend sometimes drops a connection (slow daily aggregates): one retry before reporting it
+      if (i >= 1) throw e;
+      await new Promise((r) => setTimeout(r, 2000));
+      continue;
+    }
     if (res.status !== 429 || i >= 3) return res;
     const wait = Math.min(Number(res.headers.get('retry-after') ?? 10), 60) * 1000;
     nextSlot = Date.now() + wait;

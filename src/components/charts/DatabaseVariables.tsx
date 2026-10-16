@@ -135,7 +135,7 @@ function TableBlock({ module, table }: { module: ModuleId; table: CategoryTable 
             {table.label}
             {table.specTag && <span className="ml-1.5 font-medium text-muted">{table.specTag}</span>}
           </span>
-          <span className="font-mono text-[11px] text-muted">{table.table}</span>
+          <span className="font-mono text-[11px] text-muted [overflow-wrap:anywhere]">{table.table}</span>
           {n && (
             <span className="num text-xs text-ink-2">
               {n.live} live · {n.withheld} withheld · {plural(n.duplicate, 'duplicate')}
@@ -144,7 +144,11 @@ function TableBlock({ module, table }: { module: ModuleId; table: CategoryTable 
           {table.isStale && table.asOf ? (
             <StaleChip asOf={table.asOf} />
           ) : (
-            table.asOf && <span className="text-xs text-muted">data to {monthYear(table.asOf)}</span>
+            table.asOf && (
+              <span className="text-xs text-muted">
+                data to {table.resolution === 'annual' ? table.asOf.slice(0, 4) : monthYear(table.asOf)}
+              </span>
+            )
           )}
         </button>
       </h3>
@@ -156,7 +160,10 @@ function TableBlock({ module, table }: { module: ModuleId; table: CategoryTable 
             ))}
           </div>
           {dups.length > 0 && (
-            <p className="mt-2 px-1 text-[11px] leading-snug text-muted" data-testid="duplicates-note">
+            <p
+              className="mt-2 px-1 text-[11px] leading-snug text-muted [overflow-wrap:anywhere]"
+              data-testid="duplicates-note"
+            >
               <span className="font-semibold text-ink-2">Also in the database:</span>{' '}
               {dups.map((d, i) => (
                 <span key={d.column} title={d.source}>

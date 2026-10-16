@@ -129,8 +129,8 @@ export function CategoryChart({
         aria-label={`${group.label}: variables`}
       >
         {vars.map((v, i) => {
-          const on = visible.includes(v.column) && isAvailable(v);
           const blocked = plan.blocked.get(v.column);
+          const on = visible.includes(v.column) && isAvailable(v) && !blocked;
           const disabled = !isAvailable(v) || !!blocked;
           return (
             <button
@@ -194,7 +194,7 @@ export function CategoryChart({
 
   const footer =
     dups.length > 0 ? (
-      <p className="mt-1.5 text-[11px] leading-snug text-muted" data-testid="duplicates-note">
+      <p className="mt-1.5 text-[11px] leading-snug text-muted [overflow-wrap:anywhere]" data-testid="duplicates-note">
         <span className="font-semibold text-ink-2">Also in the database:</span>{' '}
         {dups.map((d, i) => (
           <span key={d.column} title={d.source}>

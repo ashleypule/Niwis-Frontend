@@ -90,8 +90,9 @@ export function axisPlan(vars: CategoryVariable[], visible: string[], group?: Ca
     if (!units.includes(u) && units.length < 2) units.push(u);
   }
   const blocked = new Map<string, string>();
+  // selected or not: a column on a third unit is not drawn (a hand-edited link can select one)
   for (const v of vars) {
-    if (!isAvailable(v) || visible.includes(v.column)) continue;
+    if (!isAvailable(v)) continue;
     const u = unitOf(v, group);
     if (units.length >= 2 && !units.includes(u)) {
       const onLast = vars

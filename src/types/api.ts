@@ -134,8 +134,11 @@ export const SeriesSetSchema = z.object({
   refLines: z
     .array(z.object({ y: z.number(), label: z.string(), axis: z.number().optional(), color: z.string().optional() }))
     .optional(),
-  /** "Historical | Forecast" divider */
-  asOf: z.string().optional(),
+  /**
+   * Newest date in the set ("Historical | Forecast" divider when forecast values follow it). Null on category groups
+   * whose columns are all withheld (BACKEND_ISSUES #10; the contract says omitted, never null).
+   */
+  asOf: z.string().nullable().optional(),
   note: z.string().optional(),
 });
 export type SeriesSet = z.infer<typeof SeriesSetSchema>;

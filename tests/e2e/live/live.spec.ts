@@ -26,6 +26,37 @@ interface Row {
   ok: boolean;
 }
 const rows: Row[] = [];
+interface CatRow {
+  module: string;
+  chart: string;
+  column: string;
+  date: string;
+  api: string;
+  ui: string;
+  ok: boolean;
+}
+const catRows: CatRow[] = [];
+
+interface CatVar {
+  column: string;
+  label: string;
+  unit?: string;
+  status: string;
+}
+interface CatGroup {
+  id: string;
+  label: string;
+  unit?: string;
+  columns: string[];
+  defaultVisible: string[];
+}
+interface CatTable {
+  id: string;
+  label: string;
+  specTag?: string;
+  groups: CatGroup[];
+  variables: CatVar[];
+}
 
 /** "1 175 mm" / "−0.83" / "No drought" → number or text, as the UI formats it (NBSP groups, U+2212 minus). */
 const parseUi = (s: string) => {
@@ -69,8 +100,50 @@ for (const module of MODULES) {
   });
 }
 
+// one database category chart per module: the newest value in the chart's data table equals the API's
+for (const module of MODULES) {
+  test(`${module}: a database category chart equals the API`, async ({ page, request }) => {
+    const cat = (await (await request.get(`${BACKEND}/api/v1/${module}/categories`, { timeout: 60_000 })).json()) as {
+      tables: CatTable[];
+    };
+    // the first group with a live column switched on by default
+    const pick = cat.tables
+      .flatMap((t) => t.groups.map((g) => ({ t, g })))
+      .find(({ t, g }) => g.defaultVisible.some((c) => t.variables.find((v) => v.column === c)?.status === 'live'))!;
+    const col = pick.g.defaultVisible.find((c) => pick.t.variables.find((v) => v.column === c)?.status === 'live')!;
+    const v = pick.t.variables.find((x) => x.column === col)!;
+    const api = (await (
+      await request.get(`${BACKEND}/api/v1/${module}/category/${pick.t.id}/${pick.g.id}?vars=all&period=12M`, {
+        timeout: 60_000,
+      })
+    ).json()) as { series: { key: string; data: [string, number | null][] }[] };
+    const points = api.series.find((s) => s.key === col)!.data.filter((p) => p[1] != null);
+    const [date, value] = points[points.length - 1];
+
+    await page.goto(`/${module}`, { waitUntil: 'load' });
+    const chart = page.locator(`[data-category-chart="${pick.t.id}/${pick.g.id}"]`);
+    await expect(chart.locator('[data-chart]')).toBeVisible({ timeout: 180_000 });
+    const title = `${pick.t.label} · ${pick.g.label}${pick.t.specTag ? ` · ${pick.t.specTag}` : ''}`;
+    await chart.getByRole('button', { name: `${title} options` }).click();
+    await chart.getByRole('menuitem', { name: 'View data table' }).click();
+    const table = chart.locator('table');
+    const headers = await table.locator('th').allInnerTexts();
+    const unit = v.unit ?? (pick.g.unit && pick.g.unit !== '—' ? pick.g.unit : '');
+    const head = !unit || v.label.endsWith(`(${unit})`) ? v.label : `${v.label} (${unit})`;
+    const ci = headers.indexOf(head);
+    expect(ci, `column "${head}" in ${headers.join(' | ')}`).toBeGreaterThan(0);
+    const row = table.locator('tbody tr').filter({ has: page.locator('td', { hasText: new RegExp(`^${date}$`) }) });
+    const shown = (await row.locator('td').nth(ci).innerText()).trim();
+    // the table view groups thousands with spaces and may print U+2212 for minus
+    const ui = Number(shown.replace(/[\s\u00a0\u202f]/g, '').replace('\u2212', '-'));
+    const ok = Math.abs(ui - value!) <= 0.0005 + 1e-9;
+    catRows.push({ module, chart: title, column: col, date, api: String(value), ui: shown, ok });
+    expect(ok, `${module} ${title} ${col} ${date}: UI ${shown} vs API ${value}`).toBe(true);
+  });
+}
+
 test.afterAll(() => {
-  if (!rows.length) return;
+  if (!rows.length && !catRows.length) return;
   const md = [
     '# UI verification against the live backend',
     '',
@@ -82,6 +155,19 @@ test.afterAll(() => {
     '| Module | KPI | API | Dashboard | Match |',
     '| --- | --- | --- | --- | --- |',
     ...rows.map((r) => `| ${r.module} | ${r.kpi} | ${r.api} | ${r.ui} | ${r.ok ? '✔' : '✘'} |`),
+    '',
+    '## Database category charts',
+    '',
+    'For each live module, the first catalogue chart group with a live column switched on by default: the newest value',
+    "in the chart's data table (⋮ → View data table, as rendered) is compared with",
+    '`/api/v1/{module}/category/{table}/{group}?vars=all&period=12M`. Values match to 3 decimals (the table view rounds',
+    'to 3).',
+    '',
+    '| Module | Chart | Column | Date | API | Dashboard | Match |',
+    '| --- | --- | --- | --- | --- | --- | --- |',
+    ...catRows.map(
+      (r) => `| ${r.module} | ${r.chart} | \`${r.column}\` | ${r.date} | ${r.api} | ${r.ui} | ${r.ok ? '✔' : '✘'} |`,
+    ),
     '',
   ].join('\n');
   writeFileSync(resolve(import.meta.dirname, '../../../docs/backend/UI_VERIFICATION.md'), md);
