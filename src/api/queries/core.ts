@@ -150,13 +150,14 @@ export function useCategorySeries(module: ModuleId, tableId: string, groupId: st
   });
 }
 
-export function useAlerts(extra: QueryParams = {}) {
+export function useAlerts(extra: QueryParams = {}, enabled = true) {
   const params = useFilterParams(extra, { scoped: false });
   return useQuery({
     queryKey: ['alerts', params],
     queryFn: ({ signal }) => apiGet(endpoints.alerts(), params, AlertListSchema, signal),
     placeholderData: keepPreviousData,
     staleTime: STALE,
+    enabled,
   });
 }
 

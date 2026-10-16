@@ -5,7 +5,9 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
-import { useBreakdown, useForecast, useMatrix, useSeries } from '@/api/queries/core';
+import { useBreakdown, useCategories, useForecast, useMatrix, useSeries } from '@/api/queries/core';
+import { SERIES_COLUMNS, LABEL_CATALOGUES } from '@/config/seriesColumns';
+import { applyColumnLabels, variablesBySource } from '@/lib/categories';
 import { categoryRows, matrixRows, seriesRows } from '@/lib/exporter';
 import { Tabs } from '@/components/ui/Card';
 import { ChartCard } from './ChartCard';
@@ -105,7 +107,14 @@ export function SeriesPanel({
   const t = useChartTheme();
   const wrongSet = q.data && active?.expect ? wrongSeries(q.data, active.expect) : undefined;
   // entirely-null series (withheld by the backend) are hidden and listed under the chart
-  const split = useMemo(() => (q.data && !wrongSet ? splitNullSeries(q.data) : undefined), [q.data, wrongSet]);
+  // series that are a database column as stored are labelled with the column's catalogue label and unit
+  const columns = isLive(mod) ? SERIES_COLUMNS[`${mod}/${m}`] : undefined;
+  const cat = useCategories(LABEL_CATALOGUES[0], !!columns && isLive(LABEL_CATALOGUES[0]));
+  const lookup = useMemo(() => variablesBySource(cat.data?.tables), [cat.data]);
+  const split = useMemo(
+    () => (q.data && !wrongSet ? splitNullSeries(applyColumnLabels(q.data, columns, lookup)) : undefined),
+    [q.data, wrongSet, columns, lookup],
+  );
   const prov: PanelProvenance = wrongSet ? { kind: 'unavailable', detail: wrongSet } : panelProvenance(q, mod);
   const option = useMemo(() => (split ? seriesOption(split.set, t, opts) : undefined), [split, t, opts]);
   const rows = useMemo(() => (q.data ? seriesRows(q.data) : undefined), [q.data]);

@@ -5,6 +5,7 @@ import { MapPanel } from '@/components/map/MapPanel';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Row } from '@/components/layout/Grid';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 import { isLive } from '@/config/app';
 import { MODELLED } from '@/components/provenance/provenance';
@@ -151,6 +152,7 @@ export default function RunoffPage() {
         />
         <TablePanel module="runoff" metric="events" title="Extreme Events (Current Month)" />
       </Row>
+      <DatabaseVariables module="runoff" />
     </div>
   );
 }

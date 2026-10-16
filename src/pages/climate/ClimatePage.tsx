@@ -6,6 +6,7 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { CascadeFlow } from '@/components/viz/CascadeFlow';
 import { Row } from '@/components/layout/Grid';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 import { ClimateInsights } from './ClimateInsights';
 import { isLive } from '@/config/app';
 
@@ -143,6 +144,7 @@ export default function ClimatePage() {
         />
         <TablePanel module="drought" metric="sources" title="Data Source Status" />
       </Row>
+      <DatabaseVariables module="climate" />
     </div>
   );
 }

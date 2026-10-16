@@ -5,6 +5,9 @@ import { Card } from '@/components/ui/Card';
 import { Pill, SeverityIcon } from '@/components/ui/Pill';
 import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
 import { formatDate } from '@/lib/format';
+import { isLive, isLivePath } from '@/config/app';
+import { endpoints } from '@/api/endpoints';
+import { BellOff } from 'lucide-react';
 
 export function AlertsList({
   module,
@@ -19,7 +22,21 @@ export function AlertsList({
   className?: string;
   scoped?: boolean;
 }) {
-  const q = useAlerts({ module, limit, scoped: scoped ? '1' : undefined });
+  // on a live module, sample alerts would contradict the live data next to them (e.g. "D4 drought" beside SPI 0.4)
+  const waiting = !!module && isLive(module) && !isLivePath(endpoints.alerts());
+  const q = useAlerts({ module, limit, scoped: scoped ? '1' : undefined }, !waiting);
+  if (waiting)
+    return (
+      <Card title={title} className={className} provenance={null}>
+        <div
+          className="flex min-h-[140px] flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-line bg-surface-2/50 p-4 text-center"
+          data-state="alerts-pending"
+        >
+          <BellOff className="h-5 w-5 text-muted" aria-hidden="true" />
+          <p className="text-sm text-ink-2">Alerts will appear when the alert service is connected.</p>
+        </div>
+      </Card>
+    );
   return (
     <Card
       title={title}

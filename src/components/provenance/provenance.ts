@@ -36,6 +36,7 @@ export const MODELLED: Record<string, string> = {
 
 type Body = {
   asOf?: string;
+  periodEnd?: string;
   source?: string[];
   isStale?: boolean;
   components?: Component[];
@@ -58,7 +59,8 @@ export function panelProvenance(
   const b = q.data as Body;
   return {
     kind: 'live',
-    asOf: b.asOf,
+    // the end of the period for monthly / annual values ("as of Dec 2025" for the year 2025, stamped 2025-01-01)
+    asOf: b.periodEnd ?? b.asOf,
     source: b.source,
     isStale: b.isStale || b.components?.some((c) => c.isStale),
     components: b.components,

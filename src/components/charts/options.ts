@@ -24,6 +24,8 @@ function decimalsFor(unit: string | undefined, v: number): number {
 export function fmt(v: unknown, unit?: string): string {
   if (v == null || v === '' || (typeof v === 'number' && Number.isNaN(v))) return '—';
   if (typeof v !== 'number') return String(v);
+  // axis-only units: "index" / "no unit" name the axis, they are not printed after a value
+  if (unit === 'index' || unit === 'no unit') unit = undefined;
   return withUnit(formatNumber(v, Number.isInteger(v) ? 0 : decimalsFor(unit, v)), unit);
 }
 
@@ -35,10 +37,13 @@ function axisLabelFmt(unit?: string) {
   };
 }
 
-/** Approximate legend height (legends wrap instead of paging), assuming a ~380 px wide card. */
-export function legendTop(names: string[]): number {
+/**
+ * Approximate legend height (legends wrap instead of paging) for a chart `width` px wide. Options assume a ~380 px card;
+ * EChart corrects grid.top for the real width (adjustLegend).
+ */
+export function legendTop(names: string[], width = 380): number {
   const total = names.reduce((s, n) => s + n.length * 6.1 + 32, 0);
-  const rows = Math.max(1, Math.ceil(total / 290));
+  const rows = Math.max(1, Math.ceil(total / Math.max(120, width - 90)));
   return 12 + rows * 18;
 }
 
@@ -69,6 +74,15 @@ function base(t: ChartTheme, ariaDesc: string): Obj {
   };
 }
 
+/** Log axes: the data range padded out to whole decades (an axis of 1–10 under values of 400–5 400 shows nothing). */
+export function logRange(values: unknown[]): { min: number; max: number } | undefined {
+  const pos = values.filter((v): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0);
+  if (!pos.length) return undefined;
+  const min = 10 ** Math.floor(Math.log10(Math.min(...pos)));
+  const max = 10 ** Math.ceil(Math.log10(Math.max(...pos)));
+  return { min, max: max === min ? min * 10 : max };
+}
+
 function valueAxis(
   t: ChartTheme,
   unit: string,
@@ -80,24 +94,74 @@ function valueAxis(
     log?: boolean;
     position?: 'left' | 'right';
     showGrid?: boolean;
+    /** the axis carries bars: it always includes 0, whatever min / max a dataset sets */
+    bars?: boolean;
+    /** values plotted on a log axis (sets the range to whole decades) */
+    logValues?: unknown[];
   } = {},
 ): Obj {
   const name = o.label ? `${o.label}${unit ? ` (${unit})` : ''}` : unit;
+  const range = o.log ? logRange(o.logValues ?? []) : undefined;
+  const bars = !!o.bars && !o.log;
+  let min = o.min;
+  let max = o.max;
+  if (o.log) {
+    min = o.min != null && o.min > 0 ? o.min : range?.min;
+    max = o.max ?? range?.max;
+  } else if (bars) {
+    min = o.min != null ? Math.min(o.min, 0) : undefined;
+    max = o.max != null ? Math.max(o.max, 0) : undefined;
+  }
   return {
     type: o.log ? 'log' : 'value',
+    logBase: o.log ? 10 : undefined,
     name,
-    nameLocation: 'middle',
-    nameGap: 42,
-    nameTextStyle: { color: t.axis, fontSize: 11 },
+    // the unit sits above the axis: a rotated name beside it is not counted by containLabel and gets clipped
+    nameLocation: 'end',
+    nameGap: 10,
+    nameTextStyle: {
+      color: t.axis,
+      fontSize: 11,
+      align: o.position === 'right' ? 'right' : 'left',
+      padding: o.position === 'right' ? [0, -4, 0, 0] : [0, 0, 0, -4],
+    },
     position: o.position,
-    min: o.min,
-    max: o.max,
+    min,
+    max,
     inverse: o.inverse,
-    scale: o.min == null,
-    axisLabel: { color: t.axis, fontSize: 11, formatter: axisLabelFmt(unit) },
+    // bars start at 0 (a bar's length is its value); lines may zoom to their range
+    scale: !o.log && !bars && o.min == null,
+    axisLabel: { color: t.axis, fontSize: 11, hideOverlap: true, formatter: axisLabelFmt(unit) },
     axisLine: { show: false },
     splitLine: { show: o.showGrid !== false, lineStyle: { color: t.grid } },
   };
+}
+
+/** Room above the plot for the value axis's unit title. */
+const AXIS_NAME_H = 18;
+
+const DAY = 86_400_000;
+/** Shortest tick spacing per label format, so a short series never repeats a label ("Nov 2025 Nov 2025"). */
+const MIN_TICK: Record<string, number> = { year: 365 * DAY, month: 28 * DAY, day: DAY };
+
+/** The chart holds values after `asOf` (a forecast or projection): only then is the "Historical | Forecast" divider drawn. */
+export function hasForecast(set: SeriesSet): boolean {
+  if (!set.asOf || set.xType !== 'time') return false;
+  const cut = Date.parse(set.asOf.slice(0, 10));
+  if (!Number.isFinite(cut)) return false;
+  return set.series.some((s) =>
+    s.data.some((p) => Date.parse(String(p[0]).slice(0, 10)) > cut && p.slice(1).some((v) => v != null)),
+  );
+}
+
+/** Annual series: one value per year, stamped mid-year (mock) or on 1 January (backend). */
+function isAnnual(set: SeriesSet): boolean {
+  const xs = set.series.flatMap((s) => s.data.map((p) => p[0]));
+  if (!xs.length || !xs.every((x) => typeof x === 'string')) return false;
+  const strs = xs as string[];
+  if (strs.every((x) => x.endsWith('-07-01'))) return true;
+  if (!strs.every((x) => /^\d{4}-01-01/.test(x))) return false;
+  return new Set(strs.map((x) => x.slice(0, 4))).size > 1;
 }
 
 // ------------------------------------------------------------------ time / xy series
@@ -110,6 +174,8 @@ export interface SeriesOpts {
   legend?: boolean;
   /** x axis label format */
   xFormat?: 'month' | 'year' | 'day' | 'raw';
+  /** tooltip date format (defaults to the axis format), e.g. daily values on a monthly axis */
+  tooltipFormat?: 'month' | 'year' | 'day';
   /** override colours by series key */
   colors?: Record<string, string>;
 }
@@ -154,11 +220,12 @@ function bandSeries(s: Series, t: ChartTheme, axisIndex: number, color: string):
 export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}): EChartsOption {
   const axes = set.axes;
   const time = set.xType === 'time';
-  const annual =
-    time &&
-    set.series.length > 0 &&
-    set.series.every((ser) => ser.data.every((p) => typeof p[0] === 'string' && (p[0] as string).endsWith('-07-01')));
+  const annual = time && set.series.length > 0 && isAnnual(set);
   const xFormat = o.xFormat ?? (annual ? 'year' : 'month');
+  const forecast = hasForecast(set);
+  // log axes cannot show 0 or negative values: those points are left out (the FDC ends at zero flow)
+  const plotY = (s: Series, v: unknown) => (axes[s.axis ?? 0]?.log ? (typeof v === 'number' && v > 0 ? v : null) : v);
+  const keepX = (p: unknown[]) => !set.xLog || (typeof p[0] === 'number' && p[0] > 0);
   const colorOf = (s: Series, i: number) => o.colors?.[s.key] ?? s.color ?? t.series[i % t.series.length];
   const out: Obj[] = [];
   set.series.forEach((s, i) => {
@@ -171,7 +238,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
           id: `${s.key}-lo`,
           name: s.name,
           type: 'line',
-          data: s.data.map((p) => [p[0], p[1]]),
+          data: s.data.filter(keepX).map((p) => [p[0], plotY(s, p[1])]),
           yAxisIndex,
           symbol: 'none',
           lineStyle: { type: 'dashed', width: 1, color },
@@ -182,7 +249,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
           id: `${s.key}-hi`,
           name: s.name,
           type: 'line',
-          data: s.data.map((p) => [p[0], p[2]]),
+          data: s.data.filter(keepX).map((p) => [p[0], plotY(s, p[2])]),
           yAxisIndex,
           symbol: 'none',
           lineStyle: { type: 'dashed', width: 1, color },
@@ -199,7 +266,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
       id: s.key,
       name: s.name,
       yAxisIndex,
-      data: s.data.map((p) => [p[0], p[1]]),
+      data: s.data.filter(keepX).map((p) => [p[0], plotY(s, p[1])]),
       itemStyle: { color },
       emphasis: { focus: 'series' },
       z: isBar ? 2 : 3,
@@ -256,15 +323,15 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
     lineStyle: { color: r.color ?? t.bad, type: 'dashed', width: 1.5 },
     label: { formatter: r.label, position: 'insideEndTop', color: r.color ?? t.bad, fontSize: 11 },
   }));
-  // historical | forecast divider
-  if (set.asOf) {
+  // historical | forecast divider: only on charts with forecast values (asOf on its own is provenance)
+  if (forecast) {
     markLines.push({
       xAxis: set.asOf,
       lineStyle: { color: t.axis, type: 'dashed', width: 1.5 },
       label: { formatter: 'Historical  |  Forecast', position: 'end', color: t.text2, fontSize: 11, fontWeight: 600 },
     });
   }
-  if (markLines.length || set.asOf) {
+  if (markLines.length || forecast) {
     out.push({
       type: 'line',
       name: '__marks',
@@ -272,7 +339,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
       silent: true,
       tooltip: { show: false },
       markLine: { symbol: 'none', silent: true, data: markLines },
-      markArea: set.asOf
+      markArea: forecast
         ? {
             silent: true,
             itemStyle: { color: t.dark ? 'rgba(255,255,255,0.03)' : 'rgba(21,101,192,0.04)' },
@@ -286,25 +353,32 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
   const nameUnit = new Map(set.series.map((s) => [s.name, unitOfAxis(s.axis ?? 0)]));
   const bandByName = new Map(set.series.filter((s) => s.kind === 'band').map((s) => [s.name, s]));
 
+  const xRange = set.xLog ? logRange(set.series.flatMap((s) => s.data.map((p) => p[0]))) : undefined;
   const xAxis: Obj = time
     ? {
         type: 'time',
+        minInterval: MIN_TICK[xFormat] ?? MIN_TICK.month,
         axisLabel: {
           color: t.axis,
           fontSize: 11,
           hideOverlap: true,
-          formatter: (v: number) =>
-            xFormat === 'year'
-              ? String(new Date(v).getUTCFullYear())
-              : xFormat === 'day'
-                ? formatDate(v, 'short')
-                : formatDate(v, 'month'),
+          // a label only where its period starts: mid-period ticks would repeat it
+          // ECharts places time ticks in local time (SAST), so period starts are checked in local time
+          formatter: (v: number) => {
+            const d = new Date(v);
+            if (xFormat === 'year') return d.getMonth() === 0 && d.getDate() === 1 ? String(d.getFullYear()) : '';
+            if (xFormat === 'day') return formatDate(v, 'short');
+            return d.getDate() === 1 ? formatDate(v, 'month') : '';
+          },
         },
         axisLine: { lineStyle: { color: t.border } },
         splitLine: { show: false },
       }
     : {
         type: set.xType === 'value' ? (set.xLog ? 'log' : 'value') : 'category',
+        logBase: set.xLog ? 10 : undefined,
+        min: xRange?.min,
+        max: xRange?.max,
         name: set.xUnit,
         nameLocation: 'middle',
         nameGap: 26,
@@ -312,7 +386,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         axisLabel: { color: t.axis, fontSize: 11, hideOverlap: true },
         axisLine: { lineStyle: { color: t.border } },
         splitLine: { show: set.xType === 'value', lineStyle: { color: t.grid } },
-        scale: set.xType === 'value',
+        scale: set.xType === 'value' && !set.xLog,
       };
 
   const ariaDesc = `${set.title ?? 'Chart'}: ${set.series
@@ -328,16 +402,20 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         : { ...(b.legend as Obj), data: set.series.filter((s) => !s.name.startsWith('__')).map((s) => s.name) },
     grid: {
       left: 8,
-      right: axes.length > 1 ? 8 : 14,
+      // room for the last date label, which is centred on its tick
+      right: axes.length > 1 ? 8 : time ? 24 : 14,
       top:
         (o.legend === false ? 12 : legendTop(set.series.filter((s) => !s.name.startsWith('__')).map((s) => s.name))) +
-        (set.asOf ? 16 : 0),
-      bottom: o.dataZoom ? 46 : 8,
+        (forecast ? 16 : 0) +
+        AXIS_NAME_H,
+      // an x-axis name (e.g. "% of time exceeded") sits under the labels
+      bottom: o.dataZoom ? 46 : !time && set.xUnit ? 26 : 8,
       containLabel: true,
     },
     xAxis,
-    yAxis: axes.map((a, i) =>
-      valueAxis(t, a.unit, {
+    yAxis: axes.map((a, i) => {
+      const onAxis = set.series.filter((s) => (s.axis ?? 0) === i);
+      return valueAxis(t, a.unit, {
         label: a.label,
         min: a.min,
         max: a.max,
@@ -345,8 +423,10 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         log: a.log,
         position: i === 0 ? 'left' : 'right',
         showGrid: i === 0,
-      }),
-    ),
+        bars: onAxis.some((s) => s.kind === 'bar'),
+        logValues: a.log ? onAxis.flatMap((s) => s.data.flatMap((p) => p.slice(1))) : undefined,
+      });
+    }),
     dataZoom: o.dataZoom
       ? [
           { type: 'inside' },
@@ -369,10 +449,11 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         }[];
         if (!ps.length) return '';
         const x0 = ps[0].axisValue ?? (Array.isArray(ps[0].value) ? (ps[0].value as unknown[])[0] : '');
+        const tf = o.tooltipFormat ?? xFormat;
         const head = time
-          ? xFormat === 'year'
+          ? tf === 'year'
             ? String(new Date(x0 as string).getUTCFullYear())
-            : formatDate(x0 as string, xFormat === 'day' ? 'day' : 'month')
+            : formatDate(x0 as string, tf === 'day' ? 'day' : 'month')
           : String(x0 ?? '');
         const rows: string[] = [];
         for (const p of ps) {
@@ -478,10 +559,14 @@ export function categoryOption(
     axisTick: { show: false },
   };
   const is100 = variant === 'stacked100' || variant === 'hstacked100';
+  const allValues = set.series.flatMap((s) => s.values);
   const valAxis = valueAxis(t, is100 ? '%' : unit, {
     min: is100 ? 0 : undefined,
     max: is100 ? 100 : undefined,
     log: o.log,
+    // every bar variant starts at 0 (only 'line' may zoom)
+    bars: variant !== 'line',
+    logValues: o.log ? allValues : undefined,
   });
 
   let series: Obj[];
@@ -571,7 +656,7 @@ export function categoryOption(
     return {
       ...b,
       legend: { ...(b.legend as Obj), data: ['Total', 'Increase', 'Decrease'] },
-      grid: { left: 8, right: 12, top: 32, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 12, top: 32 + AXIS_NAME_H, bottom: 8, containLabel: true },
       xAxis: {
         ...catAxis,
         axisLabel: { ...(catAxis.axisLabel as Obj), interval: 0, rotate: set.categories.length > 7 ? 30 : 0 },
@@ -633,9 +718,9 @@ export function categoryOption(
     return {
       ...b,
       legend: { ...(b.legend as Obj), data: ['Range (min–max)', 'Mean', ...(lim.length ? ['Limit'] : [])] },
-      grid: { left: 8, right: 12, top: 34, bottom: 8, containLabel: true },
+      grid: { left: 8, right: 12, top: 34 + AXIS_NAME_H, bottom: 8, containLabel: true },
       xAxis: catAxis,
-      yAxis: valueAxis(t, unit, { log: o.log }),
+      yAxis: valueAxis(t, unit, { log: o.log, bars: true, logValues: o.log ? allValues : undefined }),
       tooltip: {
         ...tooltip,
         formatter: (ps: { dataIndex: number; name: string }[]) => {
@@ -685,7 +770,14 @@ export function categoryOption(
   const yAxes = horizontal
     ? undefined
     : set.axis2Unit
-      ? [valAxis, valueAxis(t, set.axis2Unit, { position: 'right', showGrid: false })]
+      ? [
+          valAxis,
+          valueAxis(t, set.axis2Unit, {
+            position: 'right',
+            showGrid: false,
+            bars: set.series.some((s) => s.axis === 1 && (s.kind ?? 'bar') === 'bar'),
+          }),
+        ]
       : valAxis;
   return {
     ...b,
@@ -694,16 +786,18 @@ export function categoryOption(
       left: 8,
       right: horizontal ? 52 : 12,
       top:
-        o.legend === false || (set.series.length === 1 && variant !== 'line')
+        (o.legend === false || (set.series.length === 1 && variant !== 'line')
           ? 14
-          : legendTop(set.series.map((s) => s.name)),
-      bottom: 8,
+          : legendTop(set.series.map((s) => s.name))) + (horizontal ? 0 : AXIS_NAME_H),
+      bottom: horizontal && variant !== 'hbar' ? 28 : 8,
       containLabel: true,
     },
     xAxis: horizontal
       ? {
           ...valAxis,
+          nameLocation: 'middle',
           nameGap: 24,
+          nameTextStyle: { color: t.axis, fontSize: 11 },
           axisLabel: { show: variant !== 'hbar', color: t.axis, fontSize: 11, hideOverlap: true },
           splitLine: { show: variant !== 'hbar', lineStyle: { color: t.grid } },
         }

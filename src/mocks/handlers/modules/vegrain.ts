@@ -1,5 +1,5 @@
 /** Vegetation Condition (spec §5) and Rainfall Status (spec §6). */
-import { vegClass } from '@/config/thresholds';
+import { VEG_CLASSES, vegClass } from '@/config/thresholds';
 import { SCALES } from '@/config/palettes';
 import { MONTH_NAMES } from '@/lib/format';
 import { Rng } from '@/lib/prng';
@@ -364,9 +364,9 @@ export const vegetation: ModuleHandlers = {
         const c = vegClass(cellVci(i)[tOf(ctx.last)]);
         counts[c] = (counts[c] ?? 0) + CELLS[i].areaKm2;
       });
-      const cats = ['Very Healthy', 'Healthy', 'Moderate', 'Stressed', 'Very Stressed'];
+      const cats = VEG_CLASSES;
       const tot = Object.values(counts).reduce((a, b) => a + b, 0);
-      const healthy = ((counts['Very Healthy'] ?? 0) + (counts.Healthy ?? 0)) / tot;
+      const healthy = ((counts.Excellent ?? 0) + (counts.Good ?? 0)) / tot;
       return categories(
         'classification',
         '%',
@@ -374,12 +374,12 @@ export const vegetation: ModuleHandlers = {
         [{ key: 'a', name: 'Area', values: cats.map((c) => ((counts[c] ?? 0) / tot) * 100) }],
         {
           colors: cats.map((c) => SCALES.vci.bins.find((b) => b.id === c)!.color),
-          center: { value: `${round(healthy * 100, 0)}%`, label: 'Healthy' },
+          center: { value: `${round(healthy * 100, 0)}%`, label: 'Excellent or Good' },
         },
       );
     },
     'by-province': (ctx) => {
-      const cats = ['Very Healthy', 'Healthy', 'Moderate', 'Stressed', 'Very Stressed'];
+      const cats = VEG_CLASSES;
       const rows = PROVINCE_ORDER.map((p) => {
         const cs = cellsOf('province', p);
         return cats.map((c) => (cs.filter((i) => vegClass(cellVci(i)[tOf(ctx.last)]) === c).length / cs.length) * 100);

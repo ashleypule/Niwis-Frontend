@@ -6,6 +6,7 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 import { MiniMap } from '@/components/map/MiniMap';
 
 const mod = moduleById('vegetation');
@@ -143,6 +144,7 @@ export default function VegetationPage() {
         />
         <AlertsList module="drought" limit={5} title="Alerts & Early Warnings" />
       </Row>
+      <DatabaseVariables module="vegetation" />
     </div>
   );
 }

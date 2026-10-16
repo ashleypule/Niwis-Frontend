@@ -118,11 +118,12 @@ export const SCALES = {
     { label: '≥ 0.7 Dense', color: '#01665E', min: 0.7, ink: '#fff' },
   ]),
   vci: s('vci', 'Condition index (%)', '%', [
-    { id: 'Very Stressed', label: '0–20 Very stressed', color: '#A50026', max: 20, ink: '#fff' },
-    { id: 'Stressed', label: '20–40 Stressed', color: '#F46D43', min: 20, max: 40 },
-    { id: 'Moderate', label: '40–60 Moderate', color: '#FEE08B', min: 40, max: 60 },
-    { id: 'Healthy', label: '60–80 Healthy', color: '#A6D96A', min: 60, max: 80 },
-    { id: 'Very Healthy', label: '80–100 Very healthy', color: '#1A9850', min: 80, ink: '#fff' },
+    // class names: spec §5.3 (vegetation health classification); thresholds.ts vegClass()
+    { id: 'Very Poor', label: '0–20 Very Poor', color: '#A50026', max: 20, ink: '#fff' },
+    { id: 'Poor', label: '20–40 Poor', color: '#F46D43', min: 20, max: 40 },
+    { id: 'Fair', label: '40–60 Fair', color: '#FEE08B', min: 40, max: 60 },
+    { id: 'Good', label: '60–80 Good', color: '#A6D96A', min: 60, max: 80 },
+    { id: 'Excellent', label: '80–100 Excellent', color: '#1A9850', min: 80, ink: '#fff' },
   ]),
   ndviAnomaly: s('ndviAnomaly', 'NDVI anomaly', undefined, [
     { label: '< −0.3 Much lower', color: '#A50026', max: -0.3, ink: '#fff' },
@@ -338,6 +339,12 @@ export const SCALES = {
     { id: 'Warning', label: 'Warning', color: '#F28C28' },
     { id: 'Critical', label: 'Critical', color: '#D7301F', ink: '#fff' },
     { id: 'Under Maintenance', label: 'Under maintenance', color: '#1F6FD1', ink: '#fff' },
+  ]),
+  /** status of a database column in the backend catalogue */
+  columnStatus: c('columnStatus', 'Column status', [
+    { id: 'live', label: 'Live', color: '#2E9E5B', ink: '#fff' },
+    { id: 'withheld', label: 'Withheld', color: '#F2A900' },
+    { id: 'duplicate', label: 'Duplicate', color: '#94A3B8', ink: '#fff' },
   ]),
   feed: c('feed', 'Feed status', [
     { id: 'Online', label: 'Online', color: '#2E9E5B', ink: '#fff' },

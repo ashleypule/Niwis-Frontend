@@ -6,6 +6,7 @@ import { CascadeFlow } from '@/components/viz/CascadeFlow';
 import { TablePanel } from '@/components/table/TablePanel';
 import { CategoryPanel, MatrixPanel, SeriesPanel } from '@/components/charts/panels';
 import { Row } from '@/components/layout/Grid';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 import { DroughtOutlook } from './DroughtOutlook';
 import { DROUGHT_LAYERS, DROUGHT_POINTS } from './layers';
 import { isLive } from '@/config/app';
@@ -141,6 +142,7 @@ export default function DroughtPage() {
         />
         <TablePanel module="drought" metric="sources" title="Data Source Status" />
       </Row>
+      <DatabaseVariables module="drought" />
     </div>
   );
 }

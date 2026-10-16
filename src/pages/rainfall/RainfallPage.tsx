@@ -7,6 +7,7 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 
 const mod = moduleById('rainfall');
@@ -113,6 +114,7 @@ export default function RainfallPage() {
         <MiniMap module="rainfall" layer="forecast-2" title="Rainfall Outlook – Month 2" />
         <MiniMap module="rainfall" layer="forecast-3" title="Rainfall Outlook – Month 3" />
       </Row>
+      <DatabaseVariables module="rainfall" />
     </div>
   );
 }
