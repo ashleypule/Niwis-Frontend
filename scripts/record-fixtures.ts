@@ -8,10 +8,10 @@
  */
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { LIVE_REQUESTS, manifestParams, manifestPath } from '@/api/liveManifest';
+import { LIVE_REQUESTS, expandCategories, manifestParams, manifestPath } from '@/api/liveManifest';
 import { liveParams } from '@/api/scope';
 import { fixtureFile, fixtureKey, type Fixture } from '@/mocks/fixtures';
-import { getPaced } from './lib/paced';
+import { getPaced, withCategoryGroups } from './lib/paced';
 
 const BASE = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 const DIR = resolve(import.meta.dirname, '../tests/fixtures/backend');
@@ -21,10 +21,11 @@ const SCOPES: Record<string, string>[] = [{}, { province: 'WC' }, { district: 'D
 
 async function main() {
   const urls = new Set<string>();
-  for (const e of LIVE_REQUESTS) {
+  const requests = await withCategoryGroups(BASE, LIVE_REQUESTS, manifestPath, expandCategories);
+  for (const e of requests) {
     const base: Record<string, string> = {};
     // the pages send the period on every module request (useFilterParams); not on reference / meta / entity cards
-    if (!['entity', 'reference', 'health', 'meta'].includes(e.kind)) base.period = '12M';
+    if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind)) base.period = '12M';
     for (const scope of e.scoped === false ? [{}] : SCOPES) {
       const p = liveParams({ ...base, ...scope, ...manifestParams(e) }) as Record<string, string>;
       const sp = new URLSearchParams(

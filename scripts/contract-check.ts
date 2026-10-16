@@ -11,6 +11,7 @@ import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { ZodTypeAny } from 'zod';
 import {
+  CategoryListSchema,
   CategorySetSchema,
   EntityDetailSchema,
   EntityListSchema,
@@ -25,11 +26,11 @@ import {
   SeriesSetSchema,
   TableSetSchema,
 } from '@/types/api';
-import { LIVE_REQUESTS, manifestParams, manifestPath, type ManifestEntry } from '@/api/liveManifest';
+import { LIVE_REQUESTS, expandCategories, manifestParams, manifestPath, type ManifestEntry } from '@/api/liveManifest';
 import { MODULE_HANDLERS } from '@/mocks/handlers/modules';
 import { ctxFromParams } from '@/mocks/handlers/router';
 import { referenceHandler } from '@/mocks/handlers/reference';
-import { getPaced } from './lib/paced';
+import { getPaced, withCategoryGroups } from './lib/paced';
 
 const BASE = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 const filter = process.argv.find((a) => a.startsWith('--filter='))?.slice(9);
@@ -47,6 +48,8 @@ const SCHEMA: Record<ManifestEntry['kind'], ZodTypeAny | ((e: ManifestEntry) => 
   entity: EntityDetailSchema,
   reference: RefListSchema,
   health: HealthSchema,
+  categories: CategoryListSchema,
+  category: SeriesSetSchema,
   meta: (e) =>
     e.key === 'sources' ? MetaSourcesSchema : e.key === 'coverage' ? MetaCoverageSchema : MetaVariablesSchema,
 };
@@ -93,7 +96,7 @@ const CUSTOM_TABLES = [
 /** Structural differences that would make a panel render wrongly even though the schema validates. */
 function compare(e: ManifestEntry, live: Any, mock: Any | undefined): string[] {
   const out: string[] = [];
-  if (!mock) return out;
+  if (!mock) return [...out, ...categoryRules(e, live)];
   switch (e.kind) {
     case 'summary': {
       // the strip renders whatever KPIs arrive; null values must carry a reason
@@ -140,15 +143,51 @@ function compare(e: ManifestEntry, live: Any, mock: Any | undefined): string[] {
       break;
     }
   }
+  out.push(...categoryRules(e, live));
   // provenance rules from docs/backend/CONTRACT_CHANGES.md
   const text = `${String(live.title ?? '')} ${String(live.note ?? '')}`;
   if (/1981–2010/.test(text) && !live.baseline) out.push('response mentions 1981–2010 but has no `baseline`');
   return out;
 }
 
+/** What the database charts rely on (docs/backend/FRONTEND_INTEGRATION.md §8): one axis, one unit, reasons for nulls. */
+function categoryRules(e: ManifestEntry, live: Any): string[] {
+  const out: string[] = [];
+  if (e.kind === 'categories') {
+    for (const t of (live.tables as Any[]) ?? []) {
+      const vars = (t.variables as Any[]) ?? [];
+      for (const g of (t.groups as Any[]) ?? []) {
+        const cols = g.columns as string[];
+        const units = new Set(cols.map((c) => String(vars.find((v) => v.column === c)?.unit ?? '')));
+        if (units.size > 1) out.push(`${String(t.id)}/${String(g.id)} mixes units: ${[...units].join(', ')}`);
+        const unknown = cols.filter((c) => !vars.some((v) => v.column === c));
+        if (unknown.length)
+          out.push(`${String(t.id)}/${String(g.id)}: columns not in variables: ${unknown.join(', ')}`);
+        const badDefault = (g.defaultVisible as string[]).filter((c) => !cols.includes(c));
+        if (badDefault.length) out.push(`${String(t.id)}/${String(g.id)}: defaultVisible not in columns`);
+      }
+      const noReason = vars.filter((v) => v.status === 'withheld' && !v.reason).map((v) => v.column);
+      if (noReason.length) out.push(`${String(t.id)}: withheld without reason: ${noReason.join(', ')}`);
+    }
+  }
+  if (e.kind === 'category') {
+    const axes = (live.axes as Any[]) ?? [];
+    if (axes.length !== 1) out.push(`${axes.length} axes (one expected)`);
+    const units = new Set(((live.series as Any[]) ?? []).map((s) => String(s.unit ?? '')));
+    if (units.size > 1) out.push(`series mix units: ${[...units].join(', ')}`);
+    const unavailable = ((live.unavailable as Any[]) ?? []).map((u) => String(u.field));
+    const allNull = ((live.series as Any[]) ?? []).filter(
+      (s) => (s.data as unknown[][]).length && (s.data as unknown[][]).every((p) => p.slice(1).every((v) => v == null)),
+    );
+    const silent = allNull.filter((s) => !unavailable.includes(`series.${String(s.key)}`));
+    if (silent.length) out.push(`all-null without an unavailable entry: ${silent.map((s) => s.key).join(', ')}`);
+  }
+  return out;
+}
+
 async function run(e: ManifestEntry): Promise<Result> {
   const params = new URLSearchParams();
-  if (!['entity', 'reference', 'health', 'meta'].includes(e.kind)) params.set('period', '12M');
+  if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind)) params.set('period', '12M');
   for (const [k, v] of Object.entries(manifestParams(e))) if (v !== '') params.set(k, String(v));
   params.sort();
   const url = `${BASE}${manifestPath(e)}${params.size ? `?${params}` : ''}`;
@@ -183,11 +222,12 @@ async function run(e: ManifestEntry): Promise<Result> {
 }
 
 async function main() {
-  const reqs = LIVE_REQUESTS.filter((e) => !filter || `${e.module}/${e.kind}/${e.key}`.includes(filter));
+  const all = await withCategoryGroups(BASE, LIVE_REQUESTS, manifestPath, expandCategories);
+  const reqs = all.filter((e) => !filter || `${e.module}/${e.kind}/${e.key}`.includes(filter));
   console.log(`contract:check — ${reqs.length} requests against ${BASE}`);
   const results: Result[] = [];
   const queue = [...reqs];
-  // 3 at a time keeps well under the backend's 120 requests / minute limit on a warm cache
+  // 3 at a time, paced under the backend's 600 requests / minute limit
   await Promise.all(
     Array.from({ length: 3 }, async () => {
       while (queue.length) {
@@ -201,7 +241,7 @@ async function main() {
       }
     }),
   );
-  results.sort((a, b) => LIVE_REQUESTS.indexOf(a.e) - LIVE_REQUESTS.indexOf(b.e));
+  results.sort((a, b) => all.indexOf(a.e) - all.indexOf(b.e));
   const count = (s: Status) => results.filter((r) => r.status === s).length;
   const summary = `${count('ok')} ok · ${count('diff')} structural differences · ${count('unavailable')} unavailable (501) · ${count('schema')} schema failures · ${count('error')} errors`;
   console.log(`\n${summary}`);

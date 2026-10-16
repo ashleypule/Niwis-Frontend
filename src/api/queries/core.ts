@@ -10,6 +10,7 @@ import { apiGet, type QueryParams } from '../client';
 import { API_PREFIX, endpoints } from '../endpoints';
 import {
   AlertListSchema,
+  CategoryListSchema,
   CategorySetSchema,
   EntityDetailSchema,
   EntityListSchema,
@@ -121,6 +122,31 @@ export function useEntity(module: ModuleId, id: string | undefined) {
     enabled: !!id,
     placeholderData: keepPreviousData,
     staleTime: STALE,
+  });
+}
+
+/** The module's database catalogue (live modules only: the mock has no database tables). */
+export function useCategories(module: ModuleId, enabled = true) {
+  return useQuery({
+    queryKey: ['categories', module],
+    queryFn: ({ signal }) => apiGet(endpoints.categories(module), {}, CategoryListSchema, signal),
+    enabled,
+    staleTime: STALE,
+  });
+}
+
+/**
+ * Every column of one chart group (`vars=all`, withheld columns as null series), with the global filters. The chart
+ * toggles columns on the client, so switching a chip never refetches.
+ */
+export function useCategorySeries(module: ModuleId, tableId: string, groupId: string, enabled = true) {
+  const params = useFilterParams({ vars: 'all' });
+  return useQuery({
+    queryKey: ['category', module, tableId, groupId, params],
+    queryFn: ({ signal }) => apiGet(endpoints.category(module, tableId, groupId), params, SeriesSetSchema, signal),
+    placeholderData: keepPreviousData,
+    staleTime: STALE,
+    enabled,
   });
 }
 

@@ -36,6 +36,8 @@ export const ProvenanceFields = {
   aggregation: z.string().optional(),
   /** fields that are null in this response, with the reason */
   unavailable: z.array(UnavailableSchema).optional(),
+  /** last day of the asOf period (monthly / annual values) */
+  periodEnd: z.string().optional(),
 };
 
 export const ScopeSchema = z.object({
@@ -70,6 +72,7 @@ export const KpiSchema = z.object({
   asOf: z.string().optional(),
   source: z.array(z.string()).optional(),
   isStale: z.boolean().optional(),
+  periodEnd: z.string().optional(),
 });
 export type Kpi = z.infer<typeof KpiSchema>;
 
@@ -96,6 +99,14 @@ export const SeriesSchema = z.object({
   symbol: z.boolean().optional(),
   /** [x, y] or, for kind 'band', [x, low, high] */
   data: z.array(z.array(z.union([XVal, z.null()]))),
+  // category series (docs/backend/CONTRACT_CHANGES.md §11): the column's own unit and provenance
+  unit: z.string().optional(),
+  asOf: z.string().optional(),
+  isStale: z.boolean().optional(),
+  periodEnd: z.string().optional(),
+  source: z.array(z.string()).optional(),
+  resolution: z.string().optional(),
+  status: z.string().optional(),
 });
 export type Series = z.infer<typeof SeriesSchema>;
 
@@ -129,6 +140,73 @@ export const SeriesSetSchema = z.object({
 });
 export type SeriesSet = z.infer<typeof SeriesSetSchema>;
 
+// ------------------------------------------------------------------ Database categories (table → groups → columns)
+// GET /{module}/categories (docs/backend/CONTRACT_CHANGES.md §11). Labels and units come from the column names; the
+// frontend shows them as sent.
+export const CategoryVariableSchema = z.object({
+  /** exact database column name */
+  column: z.string(),
+  /** label with unit, e.g. "Daily Rainfall (mm/day)" */
+  label: z.string(),
+  /** label without unit */
+  name: z.string().optional(),
+  unit: z.string().optional(),
+  /** numeric | categorical */
+  kind: z.string().optional(),
+  resolution: z.string().optional(),
+  /** live | withheld | duplicate */
+  status: z.string(),
+  reason: z.string().optional(),
+  duplicateOf: z.string().optional(),
+  group: z.string().optional(),
+  defaultVisible: z.boolean().optional(),
+  asOf: z.string().optional(),
+  isStale: z.boolean().optional(),
+  periodEnd: z.string().optional(),
+  /** "table.column" */
+  source: z.string().optional(),
+  note: z.string().optional(),
+  unitOverride: z.string().optional(),
+});
+export type CategoryVariable = z.infer<typeof CategoryVariableSchema>;
+
+export const CategoryGroupSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  unit: z.string().optional(),
+  resolution: z.string().optional(),
+  columns: z.array(z.string()),
+  defaultVisible: z.array(z.string()),
+  path: z.string().optional(),
+  /** recommended chart type, if the backend gives one */
+  chart: z.string().optional(),
+});
+export type CategoryGroup = z.infer<typeof CategoryGroupSchema>;
+
+export const CategoryTableSchema = z.object({
+  id: z.string(),
+  /** exact database table name */
+  table: z.string(),
+  label: z.string(),
+  spec: z.string().optional(),
+  specTag: z.string().optional(),
+  modules: z.array(z.string()).optional(),
+  resolution: z.string().optional(),
+  asOf: z.string().nullable().optional(),
+  isStale: z.boolean().optional(),
+  counts: z.object({ live: z.number(), withheld: z.number(), duplicate: z.number() }).optional(),
+  groups: z.array(CategoryGroupSchema),
+  variables: z.array(CategoryVariableSchema),
+});
+export type CategoryTable = z.infer<typeof CategoryTableSchema>;
+
+export const CategoryListSchema = z.object({
+  ...ProvenanceFields,
+  module: z.string(),
+  tables: z.array(CategoryTableSchema),
+});
+export type CategoryList = z.infer<typeof CategoryListSchema>;
+
 // ------------------------------------------------------------------ Categories (bars, donuts, stacks, waterfalls)
 export const CategorySetSchema = z.object({
   ...ProvenanceFields,
@@ -149,6 +227,8 @@ export const CategorySetSchema = z.object({
       axis: z.number().optional(),
     }),
   ),
+  /** one unit per category when `unit` is "mixed" (vegetation drivers) */
+  units: z.array(z.string()).optional(),
   /** headline shown inside donuts */
   center: z.object({ value: z.string(), label: z.string() }).optional(),
   axis2Unit: z.string().optional(),
@@ -224,6 +304,17 @@ export const MapLayerSchema = z.object({
   cellSize: z.number().optional(),
   cells: z.array(z.tuple([z.number(), z.number(), z.union([z.number(), z.null()])])).optional(),
   points: z.array(MapPointSchema).optional(),
+  /** data-derived classes that replace the palette's (ndvi-trend) */
+  legend: z
+    .array(
+      z.object({
+        from: z.number().nullable(),
+        to: z.number().nullable(),
+        color: z.string(),
+        label: z.string(),
+      }),
+    )
+    .optional(),
 });
 export type MapLayer = z.infer<typeof MapLayerSchema>;
 

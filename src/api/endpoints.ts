@@ -11,6 +11,11 @@ export const endpoints = {
   map: (module: string) => `${API_PREFIX}/${module}/map`,
   entities: (module: string) => `${API_PREFIX}/${module}/entities`,
   entity: (module: string, id: string) => `${API_PREFIX}/${module}/entities/${encodeURIComponent(id)}`,
+  /** database catalogue: tables → chart groups → columns */
+  categories: (module: string) => `${API_PREFIX}/${module}/categories`,
+  /** one chart group's series (`vars` = column names, `all`, or absent = the group's defaultVisible) */
+  category: (module: string, tableId: string, groupId: string) =>
+    `${API_PREFIX}/${module}/category/${encodeURIComponent(tableId)}/${encodeURIComponent(groupId)}`,
   alerts: () => `${API_PREFIX}/alerts`,
   reference: (type: 'provinces' | 'wmas' | 'catchments' | 'municipalities' | string) =>
     `${API_PREFIX}/reference/${type}`,

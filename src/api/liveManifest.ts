@@ -16,7 +16,11 @@ export type ManifestKind =
   | 'entity'
   | 'reference'
   | 'meta'
-  | 'health';
+  | 'health'
+  /** the module's database catalogue */
+  | 'categories'
+  /** one catalogue chart group (key = "tableId/groupId"); expanded from the catalogue by expandCategories() */
+  | 'category';
 
 export interface ManifestEntry {
   page: string;
@@ -286,6 +290,19 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   fc(ROF, 'runoff', 'flow', { entityId: SAMPLE_DISTRICT }),
   fc(ROF, 'runoff', 'flood-probability'),
 
+  // ---------------------------------------------------------------- database variables (every live page)
+  // the chart groups are not listed here: scripts expand them from each catalogue (expandCategories), so a table or
+  // column the data team adds is recorded and checked without editing this file
+  ...(
+    [
+      [R, 'rainfall'],
+      [D, 'drought'],
+      [C, 'climate'],
+      [V, 'vegetation'],
+      [RO, 'runoff'],
+    ] as const
+  ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
+
   // ---------------------------------------------------------------- overview (live panels)
   ts('/', 'drought', 'drought-area', { period: '24M' }),
   ...many((k) => mp('/', 'drought', k), ['municipal-class', 'rain-anomaly', 'vci']),
@@ -311,6 +328,10 @@ export function manifestPath(e: ManifestEntry): string {
       return '/api/v1/health';
     case 'entity':
       return `/api/v1/${e.module}/entities/${e.key}`;
+    case 'categories':
+      return `/api/v1/${e.module}/categories`;
+    case 'category':
+      return `/api/v1/${e.module}/category/${e.key}`;
     case 'entities':
     case 'summary':
       return `/api/v1/${e.module}/${e.kind}`;
@@ -328,4 +349,20 @@ export function manifestParams(e: ManifestEntry): Record<string, string | number
         ? 'metric'
         : undefined;
   return { ...(keyParam && e.key ? { [keyParam]: e.key } : {}), ...e.params };
+}
+
+/** One manifest entry per chart group of a `/categories` response (the pages request every column: `vars=all`). */
+export function expandCategories(
+  e: ManifestEntry,
+  catalogue: { tables: { id: string; groups: { id: string }[] }[] },
+): ManifestEntry[] {
+  return catalogue.tables.flatMap((t) =>
+    t.groups.map((g): ManifestEntry => ({
+      page: e.page,
+      kind: 'category',
+      module: e.module,
+      key: `${t.id}/${g.id}`,
+      params: { vars: 'all' },
+    })),
+  );
 }
