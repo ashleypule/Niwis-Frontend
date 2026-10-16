@@ -16,6 +16,7 @@ import { normalizeVegClasses } from '@/lib/vegClasses';
 import { hasForecast, logRange, seriesOption } from '@/components/charts/options';
 import { chartThemes } from '@/components/charts/theme';
 import { cellFormat } from '@/components/table/DataTable';
+import { tableNumber } from '@/components/charts/ChartCard';
 import { vegClass } from '@/config/thresholds';
 
 const T = 'meteorological_drought_master';
@@ -229,6 +230,16 @@ describe('chart presets (audit fixes)', () => {
     expect(cellFormat(value, { unit: 'mm', decimals: 0 })).toMatchObject({ unit: 'mm', decimals: 0 });
     expect(cellFormat(trend, { unit: 'mm', decimals: 0 })).toMatchObject({ unit: '/decade', decimals: 2 });
     expect(cellFormat(trend, { trendDecimals: 4 })).toMatchObject({ decimals: 4 });
+  });
+});
+
+describe('chart data table', () => {
+  it('prints numbers with a decimal point and grouped thousands (not the en-ZA decimal comma)', () => {
+    expect(tableNumber(9.43)).toBe('9.43');
+    expect(tableNumber(0.1234)).toBe('0.123');
+    expect(tableNumber(2)).toBe('2');
+    expect(tableNumber(1234.5)).toBe('1 234.5');
+    expect(tableNumber(-0.5)).toBe('−0.5');
   });
 });
 

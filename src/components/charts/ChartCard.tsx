@@ -7,6 +7,7 @@ import type { MissingItem } from '@/lib/provenance';
 import { MissingNote } from '@/components/provenance/MissingNote';
 import type { PanelProvenance } from '@/components/provenance/provenance';
 import { download, registerExport, safeName, toCsv, type Row } from '@/lib/exporter';
+import { formatNumber } from '@/lib/format';
 import { EChart, type EChartHandle } from './EChart';
 import type { EChartsOption } from './echarts';
 import { useChartTheme } from './theme';
@@ -39,6 +40,15 @@ export interface ChartCardProps {
   provenance?: PanelProvenance | null;
 }
 
+/**
+ * Up to 3 decimals, trailing zeros dropped, "." decimal and space-grouped thousands (lib/format). The en-ZA locale's
+ * decimal comma, turned into a space, used to show 9.43 as "9 43".
+ */
+export function tableNumber(n: number): string {
+  const s = formatNumber(n, Number.isInteger(n) ? 0 : 3);
+  return s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+}
+
 function DataTableView({ rows }: { rows: Row[] }) {
   const cols = rows.length ? Object.keys(rows[0]) : [];
   return (
@@ -58,11 +68,7 @@ function DataTableView({ rows }: { rows: Row[] }) {
             <tr key={i} className="border-t border-line">
               {cols.map((c) => (
                 <td key={c} className="whitespace-nowrap px-2 py-1 text-ink">
-                  {r[c] == null
-                    ? '—'
-                    : typeof r[c] === 'number'
-                      ? Number(r[c]).toLocaleString('en-ZA', { maximumFractionDigits: 3 }).replace(/,/g, ' ')
-                      : String(r[c])}
+                  {r[c] == null ? '—' : typeof r[c] === 'number' ? tableNumber(r[c] as number) : String(r[c])}
                 </td>
               ))}
             </tr>

@@ -95,8 +95,6 @@ for (const module of MODULES) {
       rows.push({ module, kpi: k.label, api: k.text ?? `${k.value} ${k.unit ?? ''}`.trim(), ui: shown, ok });
       expect(ok, `${module} ${k.label}: UI "${shown}" vs API ${k.text ?? k.value}`).toBe(true);
     }
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: `tests/screenshots/live/${module}.png`, fullPage: true });
   });
 }
 
@@ -140,6 +138,24 @@ for (const module of MODULES) {
     catRows.push({ module, chart: title, column: col, date, api: String(value), ui: shown, ok });
     expect(ok, `${module} ${title} ${col} ${date}: UI ${shown} vs API ${value}`).toBe(true);
   });
+}
+
+// full pages, every database chart loaded, at desktop and phone width (checked by eye)
+for (const width of [1440, 390]) {
+  for (const module of MODULES) {
+    test(`${module}: screenshot at ${width} px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+      await page.goto(`/${module}`, { waitUntil: 'load' });
+      await expect(page.getByTestId('database-variables')).toBeVisible({ timeout: 180_000 });
+      await expect(page.locator('[data-category-chart]').first()).toBeVisible({ timeout: 180_000 });
+      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 180_000 });
+      await expect(page.locator('[data-state="error"]')).toHaveCount(0);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, 'horizontal overflow (px)').toBeLessThanOrEqual(1);
+      await page.waitForTimeout(1500);
+      await page.screenshot({ path: `tests/screenshots/live/${module}-${width}.png`, fullPage: true });
+    });
+  }
 }
 
 test.afterAll(() => {

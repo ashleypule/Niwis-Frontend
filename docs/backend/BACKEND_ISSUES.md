@@ -4,21 +4,21 @@ For the backend team. Found while connecting the NIWIS frontend to the backend (
 request, what the frontend expected and what came back, and what the frontend does meanwhile. Reproduce the structural
 ones with `npm run contract:check` in the frontend repo (report: `docs/backend/CONTRACT_CHECK.md`).
 
-| #   | Endpoint                                                                                     | Severity                        | Frontend workaround               |
-| --- | -------------------------------------------------------------------------------------------- | ------------------------------- | --------------------------------- |
-| 1   | `vegetation/timeseries?metric=indices&set=…` ignores `set`                                   | Wrong data on a tab             | Tab shows "Not yet available"     |
-| 2   | `drought/table?metric=cascade`: row keys differ from the contract                            | Panel would be blank            | Adapter in `CascadeFlow`          |
-| 3   | `climate/table?metric=signal-chain`: row keys differ from the contract                       | Panel would be blank            | Adapter in `CascadeFlow`          |
-| 4   | Per-IP rate limit (120 / min) vs. requests per page                                          | 429s for offices behind one NAT | Client backs off on `Retry-After` |
-| 5   | `climate/timeseries?metric=indicator-trends`: all-null series without an `unavailable` entry | Minor                           | Hidden, listed as "no values"     |
-| 6   | `climate/breakdown?metric=seasonal-change`: values for 1981–2000                              | Misleading values               | Series listed in `unavailable` hidden |
-| 7   | `isStale` on annual data                                                                       | Misleading marker               | Shown as sent                     |
-| 8   | Category series: `kind` is always `line` (no recommended chart type)                           | Minor                           | Chart type inferred per column    |
-| 9   | `climate/summary` → `runoff`: labelled "Mean Annual Runoff", value is a % anomaly             | Misleading label                | Renamed in `KpiCard` (`kpiLabel`) |
-| 10  | Category groups with only withheld columns: `asOf: null`                                      | Schema (contract says omitted)  | Schema accepts null; UI does not request these groups |
-| 11  | Summary series do not name their source column                                                 | Labels cannot follow the catalogue | Map in `src/config/seriesColumns.ts` |
-| 12  | Vegetation classes still Very Healthy … Very Stressed (spec §5.3: Excellent … Very Poor)      | Wrong wording                   | Mapped in the client (`src/lib/vegClasses.ts`) |
-| 13  | Daily category groups take 2–4 s each                                                          | Slow pages                      | One request per group (`vars=all`), toggles client-side |
+| #   | Endpoint                                                                                     | Severity                           | Frontend workaround                                     |
+| --- | -------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------- |
+| 1   | `vegetation/timeseries?metric=indices&set=…` ignores `set`                                   | Wrong data on a tab                | Tab shows "Not yet available"                           |
+| 2   | `drought/table?metric=cascade`: row keys differ from the contract                            | Panel would be blank               | Adapter in `CascadeFlow`                                |
+| 3   | `climate/table?metric=signal-chain`: row keys differ from the contract                       | Panel would be blank               | Adapter in `CascadeFlow`                                |
+| 4   | Per-IP rate limit (120 / min) vs. requests per page                                          | 429s for offices behind one NAT    | Client backs off on `Retry-After`                       |
+| 5   | `climate/timeseries?metric=indicator-trends`: all-null series without an `unavailable` entry | Minor                              | Hidden, listed as "no values"                           |
+| 6   | `climate/breakdown?metric=seasonal-change`: values for 1981–2000                             | Misleading values                  | Series listed in `unavailable` hidden                   |
+| 7   | `isStale` on annual data                                                                     | Misleading marker                  | Shown as sent                                           |
+| 8   | Category series: `kind` is always `line` (no recommended chart type)                         | Minor                              | Chart type inferred per column                          |
+| 9   | `climate/summary` → `runoff`: labelled "Mean Annual Runoff", value is a % anomaly            | Misleading label                   | Renamed in `KpiCard` (`kpiLabel`)                       |
+| 10  | Category groups with only withheld columns: `asOf: null`                                     | Schema (contract says omitted)     | Schema accepts null; UI does not request these groups   |
+| 11  | Summary series do not name their source column                                               | Labels cannot follow the catalogue | Map in `src/config/seriesColumns.ts`                    |
+| 12  | Vegetation classes still Very Healthy … Very Stressed (spec §5.3: Excellent … Very Poor)     | Wrong wording                      | Mapped in the client (`src/lib/vegClasses.ts`)          |
+| 13  | Daily category groups take 2–4 s each                                                        | Slow pages                         | One request per group (`vars=all`), toggles client-side |
 
 **Status 2026-10-16:** #1–#7 are fixed in the backend (`../Niwis Backend/docs/ISSUE_FIXES.md`) and confirmed by
 `npm run contract:check` and the recorded fixtures: `set` is honoured, the cascade and signal chain carry the contract
@@ -103,7 +103,7 @@ annual values carry `periodEnd` and are no longer stale. #8–#13 are new (datab
 
 - **Request:** `GET /api/v1/climate/summary`
 - **Actual:** `{"id": "runoff", "metric": "runoffAnomaly", "label": "Mean Annual Runoff", "value": 29.7, "unit": "%",
-  "sublabel": "2025 vs 2000–2025 mean (100 mm)"}`: the value is the 2025 runoff anomaly, not MAR.
+"sublabel": "2025 vs 2000–2025 mean (100 mm)"}`: the value is the 2025 runoff anomaly, not MAR.
 - **Expected:** label "Runoff anomaly (vs 2000–2025)", or a MAR volume / depth if that is what the card should show.
 - **Frontend:** `kpiLabel()` in `KpiCard` names it "Runoff anomaly (vs 2000–2025)" (period from the sub-label) when
   the metric is `runoffAnomaly`, the unit `%` and the label says Mean Annual Runoff; it drops out once the label is fixed.
