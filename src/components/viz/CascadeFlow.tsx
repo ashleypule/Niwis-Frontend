@@ -13,18 +13,6 @@ import { formatNumber } from '@/lib/format';
 import { reasonFor } from '@/lib/provenance';
 import type { TableSet } from '@/types/api';
 
-/** Icon / colour scale per stage id for the backend's cascade and signal-chain rows (which carry no metric / scale). */
-const STAGE: Record<string, { metric: string; scale?: string }> = {
-  meteorological: { metric: 'spi', scale: 'spi' },
-  agricultural: { metric: 'vhi', scale: 'vci' },
-  hydrological: { metric: 'storagePct', scale: 'storage' },
-  'socio-economic': { metric: 'settlementsAtRisk' },
-  temp: { metric: 'tmean' },
-  et0: { metric: 'et0' },
-  rain: { metric: 'rainfall' },
-  runoff: { metric: 'runoff' },
-};
-
 interface Stage {
   id: string;
   stage: string;
@@ -37,39 +25,47 @@ interface Stage {
   bar: number | null;
   asOf?: string;
   stale: boolean;
+  /** why the stage has no value */
   missing?: string;
+  /** why a stage with a value has no class (e.g. no agreed soil-moisture classes) */
+  noClass?: string;
 }
 
 /**
- * Rows → stages. Accepts the contract / mock shape `{stage, metric, value (text), cls, scale, bar}` and the backend's
- * shapes: drought cascade `{id, stage, value (number), class, severity, asOf}` and climate signal chain
- * `{id, signal, change, severity}` (docs/backend/BACKEND_ISSUES.md #2–3).
+ * Rows → stages, in the backend's `order` (the drought cascade's 7 spec stages; the climate signal chain). Rows carry
+ * the contract keys `{stage, metric, value (text), valueNum, cls, scale, bar}`; a null value or class comes with its
+ * reason in `unavailable` (`rows.<id>` / `rows.<id>.cls`).
  */
 export function cascadeStages(t: TableSet): Stage[] {
-  const clsCol = t.columns.find((c) => ['cls', 'class', 'severity'].includes(c.key) && c.type === 'class');
-  return t.rows.map((r, i) => {
+  const rows = [...t.rows].sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0));
+  return rows.map((r, i) => {
     const id = String(r[t.rowKey ?? 'id'] ?? r.id ?? i);
-    const known = STAGE[id];
-    const raw = r.value ?? r.change ?? null;
+    const raw = r.value ?? null;
     const missing = raw == null ? (reasonFor(t.unavailable, id) ?? 'Not in the database') : undefined;
+    const num = typeof r.valueNum === 'number' ? r.valueNum : typeof raw === 'number' ? raw : null;
     const value =
       raw == null ? '—' : typeof raw === 'number' ? formatNumber(raw, Math.abs(raw) < 10 ? 2 : 1) : String(raw);
-    const cls = (r.cls ?? r.class ?? (typeof r.severity === 'string' ? r.severity : null)) as string | null;
-    const bar = typeof r.bar === 'number' ? r.bar : typeof r.severity === 'number' ? r.severity : null;
-    const asOf = typeof r.asOf === 'string' ? r.asOf : undefined;
-    const comp = t.components?.find((c) => c.key === id);
+    const cls = typeof r.cls === 'string' ? r.cls : null;
+    // the row's own class reason, else the class column's (climate signal chain: no classes at all)
+    const noClass =
+      raw != null && cls == null
+        ? (reasonFor(t.unavailable, `${id}.cls`) ??
+          t.unavailable?.find((u) => u.field === 'rows.cls' || u.field === 'cls')?.reason)
+        : undefined;
+    const comp = t.components?.find((c) => c.key === id || c.key === r.stageId);
     return {
       id,
-      stage: String(r.stage ?? r.signal ?? id),
-      metric: String(r.metric ?? known?.metric ?? 'spi'),
+      stage: String(r.stage ?? id),
+      metric: String(r.metric ?? 'spi'),
       value,
       cls,
-      scale: String(r.scale ?? clsCol?.scale ?? known?.scale ?? 'risk'),
-      num: typeof raw === 'number' ? raw : null,
-      bar,
-      asOf,
+      scale: String(r.scale ?? 'risk'),
+      num,
+      bar: typeof r.bar === 'number' ? r.bar : null,
+      asOf: typeof r.asOf === 'string' ? r.asOf : undefined,
       stale: !!comp?.isStale,
       missing,
+      noClass,
     };
   });
 }
@@ -94,6 +90,11 @@ export function CascadeFlow({
 }) {
   const q = useTable(module, metric);
   const stages = q.data ? cascadeStages(q.data) : [];
+  // one reason shared by every stage (no classes at all) is said once, under the stages
+  const shared =
+    stages.length > 1 && stages.every((r) => r.noClass && r.noClass === stages[0].noClass)
+      ? stages[0].noClass
+      : undefined;
   const vertical = orientation === 'vertical';
   return (
     <Card title={title} className={className} provenance={panelProvenance(q, module)}>
@@ -133,6 +134,7 @@ export function CascadeFlow({
                     </p>
                     <p className="num text-base font-bold leading-tight text-ink">{r.value}</p>
                     {r.missing && <p className="text-[11px] leading-tight text-muted">{r.missing}</p>}
+                    {r.noClass && !shared && <p className="text-[11px] leading-tight text-muted">{r.noClass}</p>}
                     {(r.asOf || r.stale) && (
                       <p className="mt-0.5 flex flex-wrap items-center gap-1 text-[11px] text-muted">
                         {r.stale ? <StaleChip asOf={r.asOf} /> : <span>{monthYear(r.asOf)}</span>}
@@ -150,9 +152,11 @@ export function CascadeFlow({
                       </div>
                     )}
                   </div>
-                  <div className={vertical ? '' : 'mt-1'}>
-                    <Pill scale={r.scale} value={r.cls} label={r.cls ?? '—'} size="sm" />
-                  </div>
+                  {!r.missing && !r.noClass && (
+                    <div className={vertical ? '' : 'mt-1'}>
+                      <Pill scale={r.scale} value={r.cls} label={r.cls ?? '—'} size="sm" />
+                    </div>
+                  )}
                 </div>
                 {i < stages.length - 1 && (
                   <span
@@ -170,6 +174,7 @@ export function CascadeFlow({
           })}
         </ol>
       )}
+      {shared && <p className="mt-1.5 text-[11px] text-muted">No classes: {shared}</p>}
     </Card>
   );
 }

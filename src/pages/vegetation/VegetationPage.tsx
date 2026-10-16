@@ -94,7 +94,7 @@ export default function VegetationPage() {
         />
       </Row>
 
-      <Row className="md:grid-cols-2 xl:grid-cols-4">
+      <Row className="md:grid-cols-2 xl:grid-cols-[1fr_1.6fr_1fr_1fr]">
         <CategoryPanel
           module="vegetation"
           metric="land-cover"
@@ -106,7 +106,12 @@ export default function VegetationPage() {
           variant="hbar"
           height={230}
         />
-        <TablePanel module="vegetation" metric="provinces" title="Top Provinces by Vegetation Health" />
+        <TablePanel
+          module="vegetation"
+          metric="provinces"
+          title="Top Provinces by Vegetation Health"
+          context="Ranked by VCI"
+        />
         <CategoryPanel
           module="vegetation"
           metric="by-province"

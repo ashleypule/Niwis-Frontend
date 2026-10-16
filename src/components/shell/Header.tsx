@@ -4,7 +4,7 @@ import { Bell, ChevronDown, LogOut, Menu, Moon, Search, Sun, UserCircle2 } from 
 import { MODULES, moduleForPath } from '@/config/modules';
 import { APP, isLive, isMock, showProvenance } from '@/config/app';
 import { useUi } from '@/store/filters';
-import { useAlerts, useHealth } from '@/api/queries/core';
+import { useAlerts, useHealth, useMetaCoverage } from '@/api/queries/core';
 
 export function SampleDataBadge() {
   if (!isMock) return null;
@@ -128,6 +128,12 @@ export function Header() {
   const read = useUi((s) => s.readAlerts);
   const { data } = useAlerts({ limit: 50 });
   const unread = data ? data.items.filter((a) => !read.includes(a.id)).length : 0;
+  // "1960 – present" is the mock record; a live module states the period its database tables actually cover
+  const coverage = useMetaCoverage();
+  const first = coverage.data?.modules.find((m) => m.module === mod.id)?.firstDate?.slice(0, 4);
+  const keywords = mod.keywords.flatMap((k) =>
+    /^\d{4} – present$/.test(k) && isLive(mod.id) ? (first ? [`${first} – present`] : []) : [k],
+  );
   const title =
     mod.id === 'overview'
       ? 'National Integrated Water Information System'
@@ -150,7 +156,7 @@ export function Header() {
             <SampleDataBadge />
             <LiveSummaryBadge />
           </div>
-          <p className="mt-0.5 hidden text-sm text-white/80 sm:block">{mod.keywords.join(' · ')}</p>
+          <p className="mt-0.5 hidden text-sm text-white/80 sm:block">{keywords.join(' · ')}</p>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
           <button

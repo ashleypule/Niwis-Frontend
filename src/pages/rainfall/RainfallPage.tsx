@@ -74,7 +74,8 @@ export default function RainfallPage() {
         <CategoryPanel
           module="rainfall"
           metric="seasonal"
-          title="Seasonal Rainfall Distribution (DJF / MAM / JJA / SON)"
+          // the seasons are the backend's own (6.1 stores JFM / AMJ / JAS / OND): shown in the legend as sent
+          title="Seasonal Rainfall Distribution"
           variant="bar"
           height={240}
         />
@@ -104,7 +105,7 @@ export default function RainfallPage() {
           height={230}
         />
       </Row>
-      <Row className="md:grid-cols-2 xl:grid-cols-[1fr_1.3fr_1fr]">
+      <Row className="md:grid-cols-2 xl:grid-cols-[1fr_1.7fr_0.9fr]">
         <TablePanel module="rainfall" metric="sources" title="Rainfall Data Sources and Coverage" />
         <TablePanel module="rainfall" metric="statistics" title="Rainfall Statistics (Selected Area)" />
         <AlertsList module="drought" limit={5} />

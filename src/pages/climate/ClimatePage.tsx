@@ -116,7 +116,8 @@ export default function ClimatePage() {
         <SeriesPanel
           module="climate"
           metric="drought-frequency"
-          title="Drought Frequency (SPI-3 ≤ −1.5)"
+          // live: share of the area in spec classes D2–D4 (district SPI-3), not a national-mean threshold
+          title={isLive('climate') ? 'Drought Frequency (area in D2–D4)' : 'Drought Frequency (SPI-3 ≤ −1.5)'}
           height={240}
         />
       </Row>

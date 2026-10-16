@@ -56,6 +56,18 @@ export function kpiSublabel(kpi: Kpi): string | undefined {
   return kpi.sublabel ? `${kpi.sublabel} · ${month}` : month;
 }
 
+/**
+ * The backend labels the runoff anomaly KPI "Mean Annual Runoff" although its value is a % anomaly (BACKEND_ISSUES #9):
+ * name what is shown, with the comparison period from its sub-label.
+ */
+export function kpiLabel(kpi: Kpi): string {
+  if (kpi.metric === 'runoffAnomaly' && /mean annual runoff/i.test(kpi.label) && kpi.unit === '%') {
+    const period = /\d{4}\s*[–-]\s*\d{4}/.exec(kpi.sublabel ?? '')?.[0] ?? '2000–2025';
+    return `Runoff anomaly (vs ${period})`;
+  }
+  return kpi.label;
+}
+
 export function KpiCard({
   kpi,
   compact = false,
@@ -71,6 +83,7 @@ export function KpiCard({
 }) {
   const sample = provenance?.kind === 'sample';
   const sublabel = kpiSublabel(kpi);
+  const label = kpiLabel(kpi);
   const md = metric(kpi.metric);
   const good = kpi.goodDirection ?? md.goodDirection;
   const { icon: Icon, tint } = metricIcon(kpi.metric);
@@ -91,7 +104,7 @@ export function KpiCard({
         sample && 'prov-sample',
       )}
       data-provenance={provenance?.kind}
-      aria-label={`${kpi.label}: ${missing ? `not available${kpi.unavailableReason ? ` (${kpi.unavailableReason})` : ''}` : (kpi.text ?? withUnit(valueText, unit))}`}
+      aria-label={`${label}: ${missing ? `not available${kpi.unavailableReason ? ` (${kpi.unavailableReason})` : ''}` : (kpi.text ?? withUnit(valueText, unit))}`}
     >
       <div className="flex items-start gap-2.5">
         <span
@@ -102,11 +115,12 @@ export function KpiCard({
           <Icon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-ink" title={kpi.label}>
-            {kpi.label}
+          <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-ink" title={label}>
+            {label}
           </h3>
           {sublabel && (
-            <p className="truncate text-[11px] leading-tight text-muted" title={sublabel}>
+            // two lines: the drought class sub-value ("85 % of area in D1–D4 · …") must stay readable
+            <p className="line-clamp-2 text-[11px] leading-tight text-muted" title={sublabel}>
               {sublabel}
             </p>
           )}
@@ -121,8 +135,17 @@ export function KpiCard({
           >
             <span className={compact ? 'text-xl' : 'text-[26px]'}>—</span>
           </p>
-        ) : kpi.status && !kpi.text ? (
+        ) : kpi.status && !kpi.text && kpi.value == null ? (
           <Pill scale={kpi.status.scale} value={kpi.status.id} label={kpi.status.label} className="text-sm" />
+        ) : kpi.status && !kpi.text ? (
+          // an index with its class: the number, and the class it falls in
+          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+            <p className="num whitespace-nowrap font-bold leading-none tracking-tight text-ink">
+              <span className={compact ? 'text-xl' : 'text-[26px]'}>{valueText}</span>
+              {unit && <span className="ml-1 text-sm font-semibold text-ink-2">{unit}</span>}
+            </p>
+            <Pill scale={kpi.status.scale} value={kpi.status.id} label={kpi.status.label} size="sm" />
+          </div>
         ) : (
           <p className="num min-w-0 whitespace-nowrap font-bold leading-none tracking-tight text-ink">
             <span className={compact ? 'text-xl' : 'text-[26px]'}>{valueText}</span>
