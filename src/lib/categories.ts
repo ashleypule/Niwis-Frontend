@@ -366,3 +366,41 @@ export function variablesBySource(tables: CategoryTable[] | undefined): Map<stri
   for (const t of tables ?? []) for (const v of t.variables) m.set(v.source ?? `${t.table}.${v.column}`, v);
   return m;
 }
+
+// ------------------------------------------------------------------ columns that end before the selected period
+const MONTHS: Record<string, number> = { '1M': 1, '3M': 3, '6M': 6, '12M': 12, '24M': 24, '5Y': 60, '10Y': 120 };
+
+/** Months in the page period ("latest", "historical" and custom ranges: 12). */
+export const periodMonths = (period?: string) => (period && MONTHS[period]) || 12;
+
+/**
+ * Selected live columns that have a last date (`periodEnd`) but no value in this response: their data end before the
+ * selected period (SGI ends Aug 2024; the default 12 months start later). The latest such end and those columns.
+ */
+export function endedBefore(
+  set: SeriesSet,
+  vars: CategoryVariable[],
+  visible: string[],
+): { end: string; columns: CategoryVariable[] } | undefined {
+  // the window this response covers starts at its first date; a column empty here but ending later has no data for
+  // this scope, which is not the same thing (the generic "Not available" note covers it)
+  const xs = set.series.flatMap((x) => (x.data.length ? [String(x.data[0][0]).slice(0, 10)] : [])).sort();
+  const start = xs[0];
+  const columns = vars
+    .filter((v) => visible.includes(v.column) && isAvailable(v) && (v.periodEnd ?? v.asOf))
+    .filter((v) => !start || (v.periodEnd ?? v.asOf)!.slice(0, 10) < start)
+    .filter((v) => {
+      const s = set.series.find((x) => x.key === v.column);
+      return !s || s.data.every((p) => p.slice(1).every((x) => x == null));
+    });
+  if (!columns.length) return undefined;
+  const end = columns.map((v) => (v.periodEnd ?? v.asOf)!.slice(0, 10)).sort()[columns.length - 1];
+  return { end, columns };
+}
+
+/** The last `months` whole months up to `end` (inclusive): {from: first day, to: end}. */
+export function lastMonths(end: string, months: number): { from: string; to: string } {
+  const [y, m] = end.split('-').map(Number);
+  const first = new Date(Date.UTC(y, m - 1 - (months - 1), 1));
+  return { from: first.toISOString().slice(0, 10), to: end };
+}

@@ -187,7 +187,8 @@ function categoryRules(e: ManifestEntry, live: Any): string[] {
 
 async function run(e: ManifestEntry): Promise<Result> {
   const params = new URLSearchParams();
-  if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind)) params.set('period', '12M');
+  if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind) && !e.params?.from)
+    params.set('period', '12M');
   for (const [k, v] of Object.entries(manifestParams(e))) if (v !== '') params.set(k, String(v));
   params.sort();
   const url = `${BASE}${manifestPath(e)}${params.size ? `?${params}` : ''}`;

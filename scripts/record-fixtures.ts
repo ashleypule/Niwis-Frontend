@@ -28,7 +28,8 @@ async function main() {
   for (const e of requests) {
     const base: Record<string, string> = {};
     // the pages send the period on every module request (useFilterParams); not on reference / meta / entity cards
-    if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind)) base.period = '12M';
+    if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind) && !e.params?.from)
+      base.period = '12M';
     for (const scope of e.scoped === false ? [{}] : SCOPES) {
       const p = liveParams({ ...base, ...scope, ...manifestParams(e) }) as Record<string, string>;
       const sp = new URLSearchParams(

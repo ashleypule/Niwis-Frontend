@@ -1,3 +1,5 @@
+import { lastMonths } from '@/lib/categories';
+
 /**
  * Every backend request the live pages make (incl. tab variants), for `npm run contract:check` and
  * `npm run fixtures:record`. Keep in sync with the pages: a panel added to a live page belongs here.
@@ -351,18 +353,36 @@ export function manifestParams(e: ManifestEntry): Record<string, string | number
   return { ...(keyParam && e.key ? { [keyParam]: e.key } : {}), ...e.params };
 }
 
-/** One manifest entry per chart group of a `/categories` response (the pages request every column: `vars=all`). */
+/**
+ * One manifest entry per chart group of a `/categories` response (the pages request every column: `vars=all`), plus,
+ * for groups with a stale column, the chart's own "last available 12 months" request (from / to, no period).
+ */
 export function expandCategories(
   e: ManifestEntry,
-  catalogue: { tables: { id: string; groups: { id: string }[] }[] },
+  catalogue: {
+    tables: {
+      id: string;
+      groups: { id: string; columns: string[] }[];
+      variables: { column: string; status: string; isStale?: boolean; periodEnd?: string; asOf?: string }[];
+    }[];
+  },
 ): ManifestEntry[] {
   return catalogue.tables.flatMap((t) =>
-    t.groups.map((g): ManifestEntry => ({
-      page: e.page,
-      kind: 'category',
-      module: e.module,
-      key: `${t.id}/${g.id}`,
-      params: { vars: 'all' },
-    })),
+    t.groups.flatMap((g): ManifestEntry[] => {
+      const base: ManifestEntry = {
+        page: e.page,
+        kind: 'category',
+        module: e.module,
+        key: `${t.id}/${g.id}`,
+        params: { vars: 'all' },
+      };
+      const ends = t.variables
+        .filter((v) => g.columns.includes(v.column) && v.status === 'live' && v.isStale && (v.periodEnd ?? v.asOf))
+        .map((v) => (v.periodEnd ?? v.asOf)!.slice(0, 10))
+        .sort();
+      if (!ends.length) return [base];
+      const own = lastMonths(ends[ends.length - 1], 12);
+      return [base, { ...base, params: { vars: 'all', from: own.from, to: own.to } }];
+    }),
   );
 }

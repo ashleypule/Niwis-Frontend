@@ -2,14 +2,16 @@
  * One chart group of a database table (docs/backend/FRONTEND_INTEGRATION.md §8): the catalogue's table and group
  * labels as the title, one toggle chip per column (catalogue label and unit, source column in the tooltip), one axis
  * per unit. The selection is in the URL (`?drought.<table>.<group>=col1,col2`), so a view can be shared.
+ * A column whose data end before the page period (SGI ends Aug 2024) offers this chart its last available months.
  */
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import clsx from 'clsx';
 import type { ModuleId } from '@/config/modules';
 import type { CategoryGroup, CategoryTable } from '@/types/api';
 import { useCategorySeries } from '@/api/queries/core';
-import { panelProvenance } from '@/components/provenance/provenance';
+import { monthYear, panelProvenance } from '@/components/provenance/provenance';
+import { toParams, useFilters } from '@/store/filters';
 import { UnavailableState } from '@/components/feedback/PanelBoundary';
 import { splitNullSeries } from '@/lib/provenance';
 import {
@@ -18,9 +20,12 @@ import {
   categoryRows,
   chipTooltip,
   duplicatesFor,
+  endedBefore,
   groupVariables,
   isAvailable,
+  lastMonths,
   parseSelection,
+  periodMonths,
   selectionParam,
   serializeSelection,
   unitOf,
@@ -71,7 +76,15 @@ export function CategoryChart({
   const raw = sp.get(param);
   const visible = useMemo(() => parseSelection(raw, group, vars), [raw, group, vars]);
   const plan = useMemo(() => axisPlan(vars, visible, group), [vars, visible, group]);
-  const q = useCategorySeries(module, table.id, group.id, available.length > 0);
+  // this chart's own period ("last available months"), kept only while the page filters stay as they were
+  const filters = useFilters();
+  const filterKey = JSON.stringify(toParams(filters));
+  const [own, setOwn] = useState<{ from: string; to: string; key: string } | null>(null);
+  const ownPeriod = useMemo(
+    () => (own && own.key === filterKey ? { from: own.from, to: own.to } : undefined),
+    [own, filterKey],
+  );
+  const q = useCategorySeries(module, table.id, group.id, available.length > 0, ownPeriod);
 
   const select = useCallback(
     (cols: string[]) =>
@@ -93,8 +106,21 @@ export function CategoryChart({
     () => (q.data ? categoryChartData(q.data, table, group, visible) : undefined),
     [q.data, table, group, visible],
   );
-  // a live column with no values in this scope is hidden and listed under the chart
-  const split = useMemo(() => (data ? splitNullSeries(data.set) : undefined), [data]);
+  // columns whose data end before the page period: "Data ends …" with an offer of their last months
+  const ended = useMemo(
+    () => (q.data && !ownPeriod ? endedBefore(q.data, vars, visible) : undefined),
+    [q.data, ownPeriod, vars, visible],
+  );
+  const months = periodMonths(filters.period);
+  const offer = ended ? lastMonths(ended.end, months) : undefined;
+  // a live column with no values in this scope is hidden and listed under the chart (ended columns: the banner says why)
+  const split = useMemo(() => {
+    if (!data) return undefined;
+    const sp = splitNullSeries(data.set);
+    const said = new Set(ended?.columns.map((v) => v.label));
+    return ended ? { ...sp, missing: sp.missing.filter((m) => !said.has(m.name)) } : sp;
+  }, [data, ended]);
+  const hasData = !!split && split.set.series.some((s) => s.data.some((p) => p.slice(1).some((v) => v != null)));
   const option = useMemo(
     () =>
       split && data
@@ -205,11 +231,48 @@ export function CategoryChart({
       </p>
     ) : undefined;
 
+  const endedBanner =
+    ended && offer ? (
+      <div
+        className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border border-stale/30 bg-stale-soft px-3 py-2 text-[12px] text-ink"
+        data-testid="data-ends"
+      >
+        <span>
+          <b>Data ends {monthYear(ended.end)}</b>
+          {ended.columns.length < visible.length && ` (${ended.columns.map((v) => v.label).join(', ')})`}: nothing in
+          the selected period.
+        </span>
+        <button
+          type="button"
+          className="rounded-md border border-primary/40 bg-surface px-2 py-1 font-semibold text-primary hover:bg-primary-soft"
+          onClick={() => setOwn({ ...offer, key: filterKey })}
+        >
+          Show last available {months} months ({monthYear(offer.from)} – {monthYear(offer.to)})
+        </button>
+      </div>
+    ) : null;
+  const windowNote = ownPeriod ? (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-ink-2" data-testid="chart-own-period">
+      <span>
+        This chart only: {monthYear(ownPeriod.from)} – {monthYear(ownPeriod.to)}, the last {months} months with data.
+      </span>
+      <button type="button" className="font-semibold text-primary hover:underline" onClick={() => setOwn(null)}>
+        Back to the page period
+      </button>
+    </div>
+  ) : null;
+
   const common = {
     title,
     info: q.data?.note,
     height,
-    controls: chips,
+    controls: (
+      <>
+        {chips}
+        {windowNote}
+        {hasData && endedBanner}
+      </>
+    ),
     footer,
     provenance: available.length ? panelProvenance(q, module) : { kind: 'unavailable' as const },
   };
@@ -242,10 +305,15 @@ export function CategoryChart({
       error={q.error}
       onRetry={() => q.refetch()}
       missing={split?.missing}
-      empty={visible.length > 0 && !!split && split.set.series.every((s) => !s.data.length)}
-      option={visible.length ? option : undefined}
+      empty={visible.length > 0 && !!split && !hasData && !endedBanner}
+      option={visible.length && (hasData || !endedBanner) ? option : undefined}
       rows={rows}
     >
+      {visible.length > 0 && !hasData && endedBanner && (
+        <div className="flex flex-col justify-center" style={{ minHeight: height }}>
+          {endedBanner}
+        </div>
+      )}
       {visible.length === 0 && (
         <div
           className="flex items-center justify-center rounded-lg border border-dashed border-line text-sm text-muted"

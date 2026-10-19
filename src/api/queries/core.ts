@@ -163,8 +163,22 @@ export function useColumnCatalogue(enabled = true): Map<string, CategoryVariable
  * Every column of one chart group (`vars=all`, withheld columns as null series), with the global filters. The chart
  * toggles columns on the client, so switching a chip never refetches.
  */
-export function useCategorySeries(module: ModuleId, tableId: string, groupId: string, enabled = true) {
-  const params = useFilterParams({ vars: 'all' });
+export function useCategorySeries(
+  module: ModuleId,
+  tableId: string,
+  groupId: string,
+  enabled = true,
+  /** this chart's own period (e.g. the last months a column has data), instead of the page's */
+  window?: { from: string; to: string },
+) {
+  const filters = useFilterParams({ vars: 'all' });
+  const params = useMemo(() => {
+    if (!window) return filters;
+    // from / to win over period on the backend; period is dropped so the request says what it shows
+    const { period: _period, ...rest } = filters;
+    void _period;
+    return { ...rest, from: window.from, to: window.to };
+  }, [filters, window]);
   return useQuery({
     queryKey: ['category', module, tableId, groupId, params],
     queryFn: ({ signal }) => apiGet(endpoints.category(module, tableId, groupId), params, SeriesSetSchema, signal),

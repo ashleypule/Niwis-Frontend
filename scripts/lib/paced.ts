@@ -28,11 +28,11 @@ export async function getPaced(url: string): Promise<Response> {
 }
 
 /** LIVE_REQUESTS with every catalogue's chart groups added (one request per /categories entry). */
-export async function withCategoryGroups<E extends { kind: string; module?: string }>(
+export async function withCategoryGroups<E extends { kind: string; module?: string }, C>(
   base: string,
   entries: E[],
   path: (e: E) => string,
-  expand: (e: E, catalogue: { tables: { id: string; groups: { id: string }[] }[] }) => E[],
+  expand: (e: E, catalogue: C) => E[],
 ): Promise<E[]> {
   const out: E[] = [];
   for (const e of entries) {
@@ -43,7 +43,7 @@ export async function withCategoryGroups<E extends { kind: string; module?: stri
       console.error(`  ${res.status} ${path(e)}: chart groups not expanded`);
       continue;
     }
-    out.push(...expand(e, (await res.json()) as Parameters<typeof expand>[1]));
+    out.push(...expand(e, (await res.json()) as C));
   }
   return out;
 }
