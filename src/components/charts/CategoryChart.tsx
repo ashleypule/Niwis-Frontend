@@ -3,8 +3,9 @@
  * labels as the title, one toggle chip per column (catalogue label and unit, source column in the tooltip), one axis
  * per unit. The selection is in the URL (`?drought.<table>.<group>=col1,col2`), so a view can be shared.
  * A column whose data end before the page period (SGI ends Aug 2024) offers this chart its last available months.
+ * Series load lazily, when the chart comes near the viewport (the Climate page holds 28 charts).
  */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import clsx from 'clsx';
 import type { ModuleId } from '@/config/modules';
@@ -84,7 +85,25 @@ export function CategoryChart({
     () => (own && own.key === filterKey ? { from: own.from, to: own.to } : undefined),
     [own, filterKey],
   );
-  const q = useCategorySeries(module, table.id, group.id, available.length > 0, ownPeriod);
+  // load when the chart comes within 400 px of the viewport, then keep it
+  const box = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(() => typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    const el = box.current;
+    if (near || !el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  const q = useCategorySeries(module, table.id, group.id, available.length > 0 && near, ownPeriod);
 
   const select = useCallback(
     (cols: string[]) =>
@@ -278,6 +297,7 @@ export function CategoryChart({
   };
   const wrap = (body: React.ReactNode) => (
     <div
+      ref={box}
       data-category-chart={`${table.id}/${group.id}`}
       data-axes={JSON.stringify(axes)}
       data-visible={visible.join(',')}
@@ -313,6 +333,10 @@ export function CategoryChart({
         <div className="flex flex-col justify-center" style={{ minHeight: height }}>
           {endedBanner}
         </div>
+      )}
+      {!near && visible.length > 0 && (
+        // not requested yet (off screen): no spinner, so the page does not count as loading
+        <div className="rounded-lg bg-surface-2/50" style={{ height }} data-state="deferred" aria-hidden="true" />
       )}
       {visible.length === 0 && (
         <div
