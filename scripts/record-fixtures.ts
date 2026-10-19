@@ -5,8 +5,9 @@
  * whenever the backend changes.
  *
  *   BACKEND_URL=http://localhost:8000 npm run fixtures:record
+ *   npm run fixtures:record -- --only=seasonal-total   (re-record the matching requests, keep the rest)
  */
-import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { LIVE_REQUESTS, expandCategories, manifestParams, manifestPath } from '@/api/liveManifest';
 import { liveParams } from '@/api/scope';
@@ -14,6 +15,8 @@ import { fixtureFile, fixtureKey, type Fixture } from '@/mocks/fixtures';
 import { getPaced, withCategoryGroups } from './lib/paced';
 
 const BASE = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+/** --only=<text>: re-record only the requests whose fixture key contains <text>, merged into the existing set. */
+const ONLY = process.argv.find((a) => a.startsWith('--only='))?.slice(7);
 const DIR = resolve(import.meta.dirname, '../tests/fixtures/backend');
 
 /** Location filters as the UI holds them; liveParams() turns them into what the client sends. */
@@ -36,10 +39,13 @@ async function main() {
       urls.add(`${BASE}${manifestPath(e)}${sp.size ? `?${sp}` : ''}`);
     }
   }
-  console.log(`fixtures:record — ${urls.size} requests against ${BASE}`);
-  rmSync(DIR, { recursive: true, force: true });
+  if (ONLY) for (const u of urls) if (!fixtureKey(new URL(u)).includes(ONLY)) urls.delete(u);
+  console.log(`fixtures:record — ${urls.size} requests against ${BASE}${ONLY ? ` (only "${ONLY}")` : ''}`);
+  const indexFile = resolve(DIR, 'index.json');
+  const index: Record<string, string> =
+    ONLY && existsSync(indexFile) ? (JSON.parse(readFileSync(indexFile, 'utf8')) as Record<string, string>) : {};
+  if (!ONLY) rmSync(DIR, { recursive: true, force: true });
   mkdirSync(DIR, { recursive: true });
-  const index: Record<string, string> = {};
   const queue = [...urls];
   let done = 0;
   const failed: string[] = [];

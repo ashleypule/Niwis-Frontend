@@ -107,6 +107,8 @@ export const SeriesSchema = z.object({
   source: z.array(z.string()).optional(),
   resolution: z.string().optional(),
   status: z.string().optional(),
+  /** the column's recommended chart type (category series) */
+  chart: z.string().optional(),
 });
 export type Series = z.infer<typeof SeriesSchema>;
 
@@ -134,12 +136,12 @@ export const SeriesSetSchema = z.object({
   refLines: z
     .array(z.object({ y: z.number(), label: z.string(), axis: z.number().optional(), color: z.string().optional() }))
     .optional(),
-  /**
-   * Newest date in the set ("Historical | Forecast" divider when forecast values follow it). Null on category groups
-   * whose columns are all withheld (BACKEND_ISSUES #10; the contract says omitted, never null).
-   */
-  asOf: z.string().nullable().optional(),
+  /** "Historical | Forecast" divider when forecast values follow it */
+  asOf: z.string().optional(),
   note: z.string().optional(),
+  /** category groups: the group's recommended chart type and, for "band", [min column, max column] */
+  chart: z.string().optional(),
+  band: z.array(z.string()).optional(),
 });
 export type SeriesSet = z.infer<typeof SeriesSetSchema>;
 
@@ -170,6 +172,8 @@ export const CategoryVariableSchema = z.object({
   source: z.string().optional(),
   note: z.string().optional(),
   unitOverride: z.string().optional(),
+  /** recommended chart type: bar (totals, counts) | diverging-bar (anomalies) | line (states, indices) */
+  chart: z.string().optional(),
 });
 export type CategoryVariable = z.infer<typeof CategoryVariableSchema>;
 
@@ -181,8 +185,10 @@ export const CategoryGroupSchema = z.object({
   columns: z.array(z.string()),
   defaultVisible: z.array(z.string()),
   path: z.string().optional(),
-  /** recommended chart type, if the backend gives one */
+  /** recommended chart type: the members' common type (bar | diverging-bar | line), band (min / max pair) or mixed */
   chart: z.string().optional(),
+  /** for chart "band": [min column, max column] */
+  band: z.array(z.string()).optional(),
 });
 export type CategoryGroup = z.infer<typeof CategoryGroupSchema>;
 

@@ -19,6 +19,12 @@ ones with `npm run contract:check` in the frontend repo (report: `docs/backend/C
 | 11  | Summary series do not name their source column                                               | Labels cannot follow the catalogue | Map in `src/config/seriesColumns.ts`                    |
 | 12  | Vegetation classes still Very Healthy … Very Stressed (spec §5.3: Excellent … Very Poor)     | Wrong wording                      | Mapped in the client (`src/lib/vegClasses.ts`)          |
 | 13  | Daily category groups take 2–4 s each                                                        | Slow pages                         | One request per group (`vars=all`), toggles client-side |
+| 14  | Scoped `seasonal-total-mm` (6.1) hits the 10 s statement timeout under load                  | 500 on province / district / WMA   | None (shows the error with Retry); fixtures re-recorded |
+
+**Status 2026-10-19:** #8–#13 are fixed in the backend (`CONTRACT_CHANGES.md` §13) and the frontend workarounds are
+removed: chart types come from the catalogue (`chart`, `band`), summary series name their column (`source`), the
+vegetation classes arrive with the spec names, `asOf` is never null (the schema is strict again), category groups are
+pre-warmed. New: #14.
 
 **Status 2026-10-16:** #1–#7 are fixed in the backend (`../Niwis Backend/docs/ISSUE_FIXES.md`) and confirmed by
 `npm run contract:check` and the recorded fixtures: `set` is honoured, the cascade and signal chain carry the contract
@@ -146,6 +152,19 @@ annual values carry `periodEnd` and are no longer stale. #8–#13 are new (datab
   10–30 s after the page opens.
 - **Frontend:** one request per group (`vars=all`); switching chips never refetches. A per-module bulk endpoint, or
   caching of the daily aggregates, would help.
+
+## 14. Scoped seasonal totals time out
+
+- **Requests:** `rainfall/category/core-rainfall-variables/seasonal-total-mm?vars=all&period=12M` with `province=WC`,
+  `municipality=DC32` or `wma=WMA5` (2026-10-19, during `fixtures:record`).
+- **Actual:** `500 {"error": "Internal server error", "requestId": "15d9052446f44d6f"}` after 10.5 s; the log shows
+  `asyncpg.exceptions.QueryCanceledError: canceling statement due to statement timeout` in
+  `CategoryService.scope_group` (`app/modules/categories.py:372`). Retried a minute later, the same requests answered
+  in 3.5–6.8 s, i.e. just under the timeout; the national request is pre-warmed and fast.
+- **Expected:** scoped annual groups well under the statement timeout (they read the whole 2000–2025 record from the
+  daily `6.1` table to sum seasons), or a pre-computed annual aggregate.
+- **Frontend:** the chart shows the error with its request id and Retry; with lazy loading it is requested only when
+  scrolled into view. `npm run fixtures:record -- --only=<text>` re-records just the affected fixtures.
 
 ## Not backend bugs (fixed in the frontend)
 

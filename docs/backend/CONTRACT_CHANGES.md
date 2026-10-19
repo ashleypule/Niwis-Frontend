@@ -363,3 +363,67 @@ present it replaces the palette's classes.
 database repeats on every daily row count once per period. TAMSAT is now **monthly** ("TAMSAT rainfall estimate (mm
 per dekad, one value per month)"); it was listed as daily. The spec (§6.1) expects a dekadal product; the database holds
 one value per month (DATA_GAPS §15).
+
+## 13. Category-chart review fixes (2026-10-16)
+
+### 13.1 Duplicates per page
+
+A `duplicate` column is hidden on a page only when the column it duplicates is shown on the **same** page (its table is
+in that page's `category_modules`). On every other page it is served as a normal **live** column in its own table's
+chart groups, with `note` "Same values as <table.column>" and `duplicateOf` kept. Groups (ids, labels, members,
+`defaultVisible`) are therefore per page: always take them from the page's `/categories` (`groups[].path`), never
+from another page. Example: the Drought page now charts `meteorological_drought_master`'s rainfall and temperature
+columns (6.1 and 4_1 are not on that page), but not its SPI (6.2 is). `counts` are per page.
+
+### 13.2 Recommended chart type (BACKEND_ISSUES #8)
+
+Every catalogue variable has `chart` (`bar` for totals and counts, `diverging-bar` for anomalies, `line` for states
+and indices, standardised indices such as RAI included); every group has `chart` (the members' common type, `band`
+when the group holds a min / max pair, else `mixed`) and, for bands, `band: [min column, max column]` (e.g.
+`["Tmin_C", "Tmax_C"]`). Category series carry the column's `chart` and `kind: "bar"` for bar types (was always
+`line`); the SeriesSet carries the group's `chart` / `band`.
+
+### 13.3 No null `asOf` (BACKEND_ISSUES #10)
+
+Optional `asOf` / `periodEnd` are omitted when there is no date (e.g. category groups whose columns are all withheld),
+never sent as `null`; table cells are unchanged (a cascade row's `asOf` cell is still null when the stage has no data).
+
+### 13.4 Summary series name their column (BACKEND_ISSUES #11)
+
+Series on the module endpoints that plot **one stored column** (as stored, area-weighted, or a monthly / annual mean)
+carry `source: ["table.column"]`, the same key category series have: e.g. `drought/timeseries?metric=soil-moisture`
+`surface` → `satellite_remote_sensing.surface_soil_moisture`, `rainfall/timeseries?metric=spi-spei`, vegetation
+`indices`, climate `temperature-long` / `extremes` / `national-trend` (temperature, rainfall), drivers (mean-type),
+the drought SPI / SPEI / NDVI / VCI / VHI series. Derived series (sums, counts from daily values, anomalies, area
+shares, fits, bands) have no `source`: use their `name`.
+
+### 13.5 Vegetation classes: spec names (BACKEND_ISSUES #12)
+
+VCI / VHI / TCI classes are **Excellent / Good / Fair / Poor / Very Poor** (spec §5.3; breaks unchanged at 80 / 60 /
+40 / 20 %) everywhere a class is sent: vegetation `summary` status, `breakdown?metric=classification` categories,
+`table?metric=provinces|hotspots`, and the drought cascade's vegetation stage (`cls`, `class`). They were Very
+Healthy / Healthy / Moderate / Stressed / Very Stressed. `reference/thresholds.ts` is refreshed from the frontend.
+The frontend's `normalizeVegClasses()` mapping is no longer needed.
+
+### 13.6 Category charts answer from cache (BACKEND_ISSUES #13)
+
+No contract change. Every chart group of every page is pre-loaded at startup for the default request (national,
+`period=12M`) and refreshed before the cache expires (`PREWARM_CATEGORIES`, default on; at most `DB_POOL_MAX − 1`
+queries at a time, so requests always get a connection): 43 groups in ≈ 20 s on Supabase, then a few ms per request.
+All columns of a group are now read in one table scan, so uncached scopes are faster too (`temperature-c` for DC32:
+4.2 s → 2.1 s cold).
+
+### 13.7 SGI served May 2002 – Aug 2024 only
+
+SGI repeats its Aug 2024 value in every district from Sep 2024, so it is served for May 2002 – Aug 2024 only (registry
+`valid_from` / `valid_until`; a new `valid_until` sits next to `valid_from`):
+
+- `drought/timeseries?metric=gw-sgi` is **200 again** (was 501 in 13.x): the `sgi` series covers the page period
+  ending Aug 2024, with `asOf` 2024-08-01, `isStale: true`, `periodEnd` 2024-08-31 and `source`; the response has the
+  same `asOf` / `isStale` / `periodEnd` and `note` "Values after Aug 2024 repeat Aug 2024 and are withheld." The
+  borehole level stays null + `unavailable`.
+- Category view: `sgi_dimensionless` is `live` with `asOf` 2024-08-01, `isStale: true` and the note "Served May 2002 –
+  Aug 2024 only: …"; series stop at Aug 2024 (`periodEnd` 2024-08-31) and the SeriesSet `note` says so. A period
+  entirely after Aug 2024 (the default 12M) gives a null series whose `unavailable` reason names the cut-off.
+- `drought/summary` → `sgi` KPI and `drought/table?metric=cascade` → groundwater stage stay **null**, reason
+  "Latest valid SGI is Aug 2024 (more than 90 days old)" (they come back once a current SGI exists).
