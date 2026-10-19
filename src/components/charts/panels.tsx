@@ -5,9 +5,8 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
-import { useBreakdown, useCategories, useForecast, useMatrix, useSeries } from '@/api/queries/core';
-import { SERIES_COLUMNS, LABEL_CATALOGUES } from '@/config/seriesColumns';
-import { applyColumnLabels, variablesBySource } from '@/lib/categories';
+import { useBreakdown, useColumnCatalogue, useForecast, useMatrix, useSeries } from '@/api/queries/core';
+import { applyColumnLabels } from '@/lib/categories';
 import { categoryRows, matrixRows, seriesRows } from '@/lib/exporter';
 import { Tabs } from '@/components/ui/Card';
 import { ChartCard } from './ChartCard';
@@ -107,13 +106,12 @@ export function SeriesPanel({
   const t = useChartTheme();
   const wrongSet = q.data && active?.expect ? wrongSeries(q.data, active.expect) : undefined;
   // entirely-null series (withheld by the backend) are hidden and listed under the chart
-  // series that are a database column as stored are labelled with the column's catalogue label and unit
-  const columns = isLive(mod) ? SERIES_COLUMNS[`${mod}/${m}`] : undefined;
-  const cat = useCategories(LABEL_CATALOGUES[0], !!columns && isLive(LABEL_CATALOGUES[0]));
-  const lookup = useMemo(() => variablesBySource(cat.data?.tables), [cat.data]);
+  // series that plot one stored column (`source`) are labelled with the column's catalogue label and unit
+  const hasSource = !!q.data?.series.some((s) => s.source?.length === 1);
+  const lookup = useColumnCatalogue(hasSource && isLive(mod));
   const split = useMemo(
-    () => (q.data && !wrongSet ? splitNullSeries(applyColumnLabels(q.data, columns, lookup)) : undefined),
-    [q.data, wrongSet, columns, lookup],
+    () => (q.data && !wrongSet ? splitNullSeries(applyColumnLabels(q.data, lookup)) : undefined),
+    [q.data, wrongSet, lookup],
   );
   const prov: PanelProvenance = wrongSet ? { kind: 'unavailable', detail: wrongSet } : panelProvenance(q, mod);
   const option = useMemo(() => (split ? seriesOption(split.set, t, opts) : undefined), [split, t, opts]);

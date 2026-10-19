@@ -3,7 +3,7 @@
  * All hooks include the global filter params, keep previous data while refetching (no layout jumps) and
  * share cache entries across pages (same params → same key → same numbers everywhere).
  */
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import type { ZodType, ZodTypeDef } from 'zod';
 import { apiGet, type QueryParams } from '../client';
@@ -32,7 +32,9 @@ import {
 } from '@/types/api';
 import { toParams, useFilters } from '@/store/filters';
 import type { ModuleId } from '@/config/modules';
-import { APP, showProvenance } from '@/config/app';
+import { APP, isLive, showProvenance } from '@/config/app';
+import { variablesBySource } from '@/lib/categories';
+import type { CategoryVariable } from '@/types/api';
 
 const STALE = 5 * 60_000;
 
@@ -133,6 +135,28 @@ export function useCategories(module: ModuleId, enabled = true) {
     enabled,
     staleTime: STALE,
   });
+}
+
+/** Modules that serve a database catalogue (`/{module}/categories`). */
+export const CATALOGUE_MODULES: ModuleId[] = ['rainfall', 'drought', 'climate', 'vegetation', 'runoff'];
+
+/**
+ * Catalogue variables of every live module by `table.column`: a summary series' source table may sit on another page
+ * (the rainfall page's SPEI comes from meteorological_drought_master, a Drought table). Cached like the catalogues.
+ */
+export function useColumnCatalogue(enabled = true): Map<string, CategoryVariable> {
+  const modules = CATALOGUE_MODULES.filter((m) => isLive(m));
+  const qs = useQueries({
+    queries: modules.map((m) => ({
+      queryKey: ['categories', m],
+      queryFn: ({ signal }: { signal: AbortSignal }) => apiGet(endpoints.categories(m), {}, CategoryListSchema, signal),
+      enabled,
+      staleTime: STALE,
+    })),
+  });
+  const stamp = qs.map((q) => q.dataUpdatedAt).join(',');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => variablesBySource(qs.flatMap((q) => q.data?.tables ?? [])), [stamp]);
 }
 
 /**

@@ -7,7 +7,10 @@ import type { CategoryGroup, CategoryTable, CategoryVariable, Series, SeriesSet 
 import { DROUGHT_CLASSES } from '@/config/thresholds';
 import { getScale } from '@/config/palettes';
 
-/** How a column is drawn: totals as bars, anomalies as bars around 0, SPI/SPEI over the D0–D4 bands, min/max pairs as a band. */
+/**
+ * The frontend's inference, used when the backend recommends no chart type: totals as bars, anomalies as bars around 0,
+ * SPI / SPEI over the D0–D4 bands (always, whatever the chart type), min / max pairs as a band.
+ */
 export type VariableKind = 'total' | 'anomaly' | 'spi' | 'range' | 'state';
 
 /** Amounts accumulated over a period (a bar's length is the amount). */
@@ -35,6 +38,24 @@ export function variableKind(v: Pick<CategoryVariable, 'label' | 'name' | 'unit'
   if (AMOUNT_UNITS.has(unit) && !NOT_A_TOTAL.test(name)) return 'total';
   if (unit === 'mm/day' && /rain|precip/i.test(name)) return 'total';
   return 'state';
+}
+
+/** The backend's chart types (FRONTEND_INTEGRATION §8 "Recommended chart type"). */
+export type ChartType = 'bar' | 'diverging-bar' | 'line';
+const CHART_TYPES: readonly string[] = ['bar', 'diverging-bar', 'line'];
+
+/**
+ * How a column is drawn: the backend's recommendation (the catalogue variable's `chart`, else its series'), and only
+ * when there is none the frontend's inference from the column's name and unit (variableKind).
+ */
+export function chartTypeOf(
+  v: Pick<CategoryVariable, 'label' | 'name' | 'unit' | 'column' | 'chart'>,
+  s?: Pick<Series, 'chart'>,
+): ChartType {
+  const rec = v.chart ?? s?.chart;
+  if (rec && CHART_TYPES.includes(rec)) return rec as ChartType;
+  const kind = variableKind(v);
+  return kind === 'total' ? 'bar' : kind === 'anomaly' ? 'diverging-bar' : 'line';
 }
 
 /** The group's columns in catalogue order, with their catalogue entries. */
@@ -146,6 +167,24 @@ export function spiBands(): NonNullable<SeriesSet['bands']> {
   }));
 }
 
+/**
+ * Min / max pairs drawn as a band: the backend's `band` (group or response), else, when the backend recommends nothing
+ * for the group, pairs inferred from the names (Tmin / Tmax). Both columns must be switched on.
+ */
+function bandPairs(
+  group: CategoryGroup,
+  set: SeriesSet,
+  shown: CategoryVariable[],
+): [CategoryVariable, CategoryVariable][] {
+  const band = group.band ?? set.band;
+  if (band?.length === 2) {
+    const lo = shown.find((v) => v.column === band[0]);
+    const hi = shown.find((v) => v.column === band[1]);
+    return lo && hi ? [[lo, hi]] : [];
+  }
+  return (group.chart ?? set.chart) ? [] : minMaxPairs(shown);
+}
+
 function minMaxPairs(vars: CategoryVariable[]): [CategoryVariable, CategoryVariable][] {
   const pairs: [CategoryVariable, CategoryVariable][] = [];
   for (const lo of vars) {
@@ -162,8 +201,8 @@ const isMonthStart = (x: unknown) => typeof x === 'string' && /^\d{4}-\d{2}-01/.
 
 /**
  * The visible columns of a category response as a SeriesSet for seriesOption: one axis per unit, chart type per
- * column (the backend's own kind wins when it recommends something other than its default line), a band for
- * min / max pairs, D0–D4 bands behind SPI / SPEI.
+ * column (chartTypeOf: the backend's recommendation, else the inference), a band for the min / max pair, D0–D4 bands
+ * behind SPI / SPEI.
  */
 export function categoryChartData(
   set: SeriesSet,
@@ -175,7 +214,7 @@ export function categoryChartData(
   const plan = axisPlan(vars, visible, group);
   const shown = vars.filter((v) => visible.includes(v.column) && isAvailable(v) && !plan.blocked.has(v.column));
   const byKey = new Map(set.series.map((s) => [s.key, s]));
-  const pairs = minMaxPairs(shown);
+  const pairs = bandPairs(group, set, shown);
   const inPair = new Set(pairs.flatMap(([a, b]) => [a.column, b.column]));
   const series: Series[] = [];
   const diverging: CategoryChartData['diverging'] = [];
@@ -199,13 +238,10 @@ export function categoryChartData(
     if (inPair.has(v.column)) continue;
     const s = byKey.get(v.column);
     if (!s) continue;
-    const kind = variableKind(v);
-    const recommended = group.chart ?? (s.kind !== 'line' ? s.kind : undefined);
-    const drawn: Series['kind'] =
-      (recommended as Series['kind'] | undefined) ?? (kind === 'total' || kind === 'anomaly' ? 'bar' : 'line');
-    if (kind === 'anomaly' && drawn === 'bar')
+    const type = chartTypeOf(v, s);
+    if (type === 'diverging-bar')
       diverging.push({ key: s.key, warmIsPositive: /temp|°C/i.test(`${v.label} ${v.unit ?? ''}`) });
-    series.push({ ...s, kind: drawn, axis: axisOf(v), stack: undefined });
+    series.push({ ...s, kind: type === 'line' ? 'line' : 'bar', axis: axisOf(v), stack: undefined });
   }
   const spi = shown.some((v) => variableKind(v) === 'spi');
   // every axis names its unit; a column without one says so
@@ -295,23 +331,26 @@ export function coverageCounts(tables: CategoryTable[]) {
 }
 
 /**
- * Summary-panel series that are a database column as stored (config/seriesColumns.ts): legend = the column's catalogue
- * label, axis = its unit. An axis is relabelled only when every series on it is such a column with the same unit.
+ * Summary-panel series that plot one stored column (they carry `source: ["table.column"]`, CONTRACT_CHANGES §13.4):
+ * legend = the column's catalogue label, provided the column's unit is the unit on the series' axis (a derived total
+ * of a daily rate keeps the backend's name). An axis is relabelled only when every series on it is such a column with
+ * the same unit. Derived series (no `source`) keep their names.
  */
-export function applyColumnLabels(
-  set: SeriesSet,
-  columns: Record<string, string> | undefined,
-  lookup: Map<string, CategoryVariable>,
-): SeriesSet {
-  if (!columns || !lookup.size) return set;
-  const varOf = (key: string) => (columns[key] ? lookup.get(columns[key]) : undefined);
+export function applyColumnLabels(set: SeriesSet, lookup: Map<string, CategoryVariable>): SeriesSet {
+  if (!lookup.size || !set.series.some((s) => s.source?.length === 1)) return set;
+  const noUnit = (u?: string) => !u || u === '—' || u === '-' || u === 'index';
+  const varOf = (s: Series) => {
+    const v = s.source?.length === 1 ? lookup.get(s.source[0]) : undefined;
+    const axisUnit = set.axes[s.axis ?? 0]?.unit;
+    return v && (v.unit === axisUnit || (noUnit(v.unit) && noUnit(axisUnit))) ? v : undefined;
+  };
   const series = set.series.map((s) => {
-    const v = varOf(s.key);
+    const v = varOf(s);
     return v ? { ...s, name: v.label } : s;
   });
   const axes = set.axes.map((a, i) => {
     const on = set.series.filter((s) => (s.axis ?? 0) === i && s.kind !== 'band');
-    const vs = on.map((s) => varOf(s.key));
+    const vs = on.map(varOf);
     if (!on.length || vs.some((v) => !v)) return a;
     const units = new Set(vs.map((v) => v!.unit ?? ''));
     if (units.size !== 1) return a;

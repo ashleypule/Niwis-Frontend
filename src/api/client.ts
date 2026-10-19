@@ -12,7 +12,6 @@
 import type { ZodType, ZodTypeDef } from 'zod';
 import { APP, isLivePath, usesMsw } from '@/config/app';
 import { ApiErrorBodySchema, type ApiErrorBody } from '@/types/api';
-import { normalizeVegClasses } from '@/lib/vegClasses';
 import { liveParams } from './scope';
 
 export type ApiErrorKind =
@@ -227,7 +226,7 @@ export async function apiGet<T>(
     );
   }
   const kind: ProvenanceKind = live ? 'live' : APP.dataSource === 'mock' ? 'mock' : 'sample';
-  return stamp(normalizeVegClasses(parsed.data), { kind, requestId });
+  return stamp(parsed.data, { kind, requestId });
 }
 
 /** The sample (MSW) version of a live endpoint, with the user's original filters. Undefined if there is none. */
@@ -244,7 +243,7 @@ async function fetchSample<T>(
     });
     if (!res.ok) return undefined;
     const parsed = schema.safeParse(await res.json());
-    return parsed.success ? normalizeVegClasses(parsed.data) : undefined;
+    return parsed.success ? parsed.data : undefined;
   } catch (e) {
     if (signal?.aborted) throw e;
     return undefined;

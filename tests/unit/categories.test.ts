@@ -12,7 +12,6 @@ import {
   variableKind,
   variablesBySource,
 } from '@/lib/categories';
-import { normalizeVegClasses } from '@/lib/vegClasses';
 import { hasForecast, logRange, seriesOption } from '@/components/charts/options';
 import { chartThemes } from '@/components/charts/theme';
 import { cellFormat } from '@/components/table/DataTable';
@@ -152,19 +151,39 @@ describe('category charts', () => {
     expect(coverageCounts([table])).toEqual({ tables: 1, columns: 10, live: 7, withheld: 1, duplicate: 2 });
   });
 
-  it('labels summary series that are a database column with its catalogue label and unit', () => {
+  it('labels summary series from their source column, if its unit is the axis unit; derived series keep their name', () => {
+    const lookup = variablesBySource([table]);
     const out = applyColumnLabels(
       {
         id: 'spi',
         xType: 'time',
         axes: [{ unit: '—', label: 'SPEI-1' }],
-        series: [{ key: 'spei1', name: 'SPEI-1', kind: 'line', data: [] }],
+        series: [
+          { key: 'spei1', name: 'SPEI-1', kind: 'line', data: [], source: [`${T}.spei_1`] },
+          { key: 'mean', name: 'Long-term mean', kind: 'line', data: [] },
+        ],
       },
-      { spei1: `${T}.spei_1` },
-      variablesBySource([table]),
+      lookup,
     );
-    expect(out.series[0].name).toBe('SPEI 1');
-    expect(out.axes[0]).toEqual({ unit: 'index', label: undefined });
+    expect(out.series.map((s) => s.name)).toEqual(['SPEI 1', 'Long-term mean']);
+    // one series on the axis is derived: the axis keeps the backend's label
+    expect(out.axes[0]).toEqual({ unit: '—', label: 'SPEI-1' });
+    const only = applyColumnLabels(
+      { id: 'x', xType: 'time', axes: [{ unit: '—', label: 'SPEI-1' }], series: [out.series[0]] },
+      lookup,
+    );
+    expect(only.axes[0]).toEqual({ unit: 'index', label: undefined });
+    // an annual total of a daily-rate column is not the column: the backend's name stays
+    const total = applyColumnLabels(
+      {
+        id: 'r',
+        xType: 'time',
+        axes: [{ unit: 'mm/yr' }],
+        series: [{ key: 'rain', name: 'Rainfall', kind: 'bar', data: [], source: [`${T}.rain_mm`] }],
+      },
+      lookup,
+    );
+    expect(total.series[0].name).toBe('Rainfall');
   });
 });
 
@@ -246,37 +265,5 @@ describe('chart data table', () => {
 describe('vegetation classes (spec §5.3)', () => {
   it('classifies VCI / VHI with the spec names', () => {
     expect([90, 70, 50, 30, 10].map(vegClass)).toEqual(['Excellent', 'Good', 'Fair', 'Poor', 'Very Poor']);
-  });
-
-  it("maps the backend's legacy names in KPIs, class columns, text columns, cascade rows and category lists", () => {
-    const kpis = normalizeVegClasses({
-      kpis: [{ status: { scale: 'vci', id: 'Very Healthy', label: 'Very Healthy' } }],
-    });
-    expect(kpis.kpis[0].status).toEqual({ scale: 'vci', id: 'Excellent', label: 'Excellent' });
-    const tbl = normalizeVegClasses({
-      columns: [
-        { key: 'vci', type: 'number', scale: 'vci' },
-        { key: 'status', type: 'text' },
-        { key: 'risk', type: 'text' },
-      ],
-      rows: [
-        { vci: 90, status: 'Very Healthy', risk: 'Moderate' },
-        { vci: 50, status: 'Moderate', risk: 'High', scale: 'vci', cls: 'Stressed' },
-      ],
-    });
-    expect(tbl.rows.map((r) => r.status)).toEqual(['Excellent', 'Fair']);
-    // a risk column with a "Moderate" value is not a vegetation class
-    expect(tbl.rows.map((r) => r.risk)).toEqual(['Moderate', 'High']);
-    expect(tbl.rows[1].cls).toBe('Poor');
-    const cats = normalizeVegClasses({
-      categories: ['Very Healthy', 'Healthy', 'Moderate', 'Stressed', 'Very Stressed'],
-      series: [],
-    });
-    expect(cats.categories).toEqual(['Excellent', 'Good', 'Fair', 'Poor', 'Very Poor']);
-    // elsewhere, a lone "Moderate" stays
-    expect(normalizeVegClasses({ categories: ['Low', 'Moderate'], series: [] }).categories).toEqual([
-      'Low',
-      'Moderate',
-    ]);
   });
 });
