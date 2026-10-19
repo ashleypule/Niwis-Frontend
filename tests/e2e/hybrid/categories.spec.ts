@@ -4,6 +4,7 @@ import { expect, test, type Page } from '@playwright/test';
  * Database category charts on the five live pages (recorded backend responses). The expectations are read from the
  * recorded catalogue (`/{module}/categories`), so a table or column the data team adds is covered without editing
  * this file. Chart internals are checked on the options each chart was drawn with (EChart's `data-chart` summary).
+ * Charts load lazily: `open()` scrolls every placeholder into view first.
  */
 const MODULES = ['drought', 'rainfall', 'climate', 'vegetation', 'runoff'] as const;
 
@@ -13,6 +14,9 @@ interface Variable {
   unit?: string;
   status: string;
   group?: string;
+  chart?: string;
+  isStale?: boolean;
+  periodEnd?: string;
 }
 interface Group {
   id: string;
@@ -20,6 +24,8 @@ interface Group {
   unit?: string;
   columns: string[];
   defaultVisible: string[];
+  chart?: string;
+  band?: string[];
 }
 interface Table {
   id: string;
@@ -44,6 +50,21 @@ async function catalogue(page: Page, module: string): Promise<Table[]> {
 async function open(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'networkidle' });
   await expect(page.getByTestId('database-variables')).toBeVisible({ timeout: 45_000 });
+  await expect(page.locator('[data-category-chart]').first()).toBeVisible({ timeout: 45_000 });
+  await loadAll(page);
+}
+
+/** Bring every lazily loaded chart into view until none is waiting, then wait for the data. */
+async function loadAll(page: Page) {
+  const deferred = page.locator('[data-state="deferred"]');
+  for (let i = 0; i < 120 && (await deferred.count()); i++) {
+    await deferred
+      .first()
+      .scrollIntoViewIfNeeded({ timeout: 2_000 })
+      .catch(() => undefined); // replaced by the chart while scrolling
+    await page.waitForTimeout(100);
+  }
+  await expect(deferred).toHaveCount(0);
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 60_000 });
 }
 
@@ -103,6 +124,19 @@ for (const module of MODULES) {
         if (!summary) continue; // every visible column empty in this scope: listed under the chart instead
         expect(summary.y.length, `${t.id}/${g.id} axes`).toBe(Math.max(1, units.length));
         units.forEach((u, i) => expect(summary.y[i].name, `${t.id}/${g.id} axis ${i}`).toBe(u || 'no unit'));
+        // chart types are the catalogue's: bar / diverging-bar → bars, line → lines, the band pair as one band
+        const band = g.band?.length === 2 && g.band.every((c) => visible.includes(c)) ? g.band : [];
+        if (band.length)
+          expect(
+            summary.s.some((x) => x.name.includes(' – ')),
+            `${t.id}/${g.id} band`,
+          ).toBe(true);
+        for (const c of visible) {
+          const v = t.variables.find((x) => x.column === c)!;
+          const drawn = summary.s.find((x) => x.name === v.label);
+          if (band.includes(c) || !v.chart || !drawn) continue; // in the band, or no values in this scope
+          expect(drawn.type, `${t.id}/${g.id} ${c} (${v.chart})`).toBe(v.chart === 'line' ? 'line' : 'bar');
+        }
       }
     }
   });
@@ -256,3 +290,59 @@ async function chartSummary(chart: ReturnType<Page['locator']>): Promise<ChartSu
   if (!(await el.count())) return undefined;
   return JSON.parse((await el.getAttribute('data-chart')) ?? '{}') as ChartSummary;
 }
+
+test('category charts load lazily, as they scroll into view', async ({ page }) => {
+  let requests = 0;
+  page.on('request', (r) => /\/api\/v1\/[^/]+\/category\//.test(r.url()) && requests++);
+  await page.goto('/climate', { waitUntil: 'networkidle' });
+  await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 45_000 });
+  await page.waitForTimeout(1_000);
+  // the section starts below the fold: nothing requested yet
+  expect(requests).toBe(0);
+  expect(await page.locator('[data-state="deferred"]').count()).toBeGreaterThan(5);
+  await loadAll(page);
+  expect(requests).toBeGreaterThan(5);
+});
+
+test('a column that ends before the period offers its last available months, for that chart only', async ({ page }) => {
+  const tables = await catalogue(page, 'drought');
+  const t = tables.find((x) => x.variables.some((v) => v.column === 'sgi_dimensionless'))!;
+  const sgi = t.variables.find((v) => v.column === 'sgi_dimensionless')!;
+  expect(sgi).toMatchObject({ status: 'live', isStale: true });
+  await open(page, '/drought');
+  const chart = page.locator(`[data-category-chart="${t.id}/${sgi.group}"]`);
+  await expect(chart.getByTestId('data-ends')).toContainText('Data ends Aug 2024');
+  const offer = chart.getByRole('button', { name: 'Show last available 12 months (Sep 2023 – Aug 2024)' });
+  const before = page.url();
+  await offer.click();
+  await expect(chart.getByTestId('chart-own-period')).toContainText('Sep 2023 – Aug 2024');
+  await expect(chart.locator('[data-chart]')).toBeVisible();
+  await expect(chart.locator('[data-marker="stale"]')).toContainText('Data to Aug 2024');
+  // the page keeps its own period: URL unchanged, the other charts untouched
+  expect(page.url()).toBe(before);
+  await expect(page.getByRole('radiogroup', { name: 'Period' }).getByRole('radio', { name: '12M' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await chart.getByRole('button', { name: 'Back to the page period' }).click();
+  await expect(chart.getByTestId('data-ends')).toBeVisible();
+});
+
+test('drought: meteorological rainfall and temperature charts, SGI KPI and groundwater stage blank with a reason', async ({
+  page,
+}) => {
+  const tables = await catalogue(page, 'drought');
+  const met = tables.find((x) => x.table === 'meteorological_drought_master')!;
+  const live = (re: RegExp) =>
+    met.groups.filter(
+      (g) => re.test(g.label) && g.columns.some((c) => met.variables.find((v) => v.column === c)?.status === 'live'),
+    );
+  expect(live(/rainfall/i).length).toBeGreaterThan(2);
+  expect(live(/^temp/i).length).toBeGreaterThan(0);
+  await open(page, '/drought');
+  for (const g of [...live(/rainfall/i), ...live(/^temp/i)])
+    await expect(page.locator(`[data-category-chart="${met.id}/${g.id}"] [data-chart]`), g.label).toBeVisible();
+  const kpi = page.getByRole('article', { name: /^SGI:/ });
+  await expect(kpi).toHaveAttribute('aria-label', /not available \(Latest valid SGI is Aug 2024/);
+  await expect(page.locator('section[aria-label^="Drought Cascade"]')).toContainText('Latest valid SGI is Aug 2024');
+});

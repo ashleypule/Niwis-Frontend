@@ -5,9 +5,13 @@ import {
   axisPlan,
   categoryChartData,
   categoryRows,
+  chartTypeOf,
   coverageCounts,
   duplicatesFor,
+  endedBefore,
+  lastMonths,
   parseSelection,
+  periodMonths,
   serializeSelection,
   variableKind,
   variablesBySource,
@@ -184,6 +188,82 @@ describe('category charts', () => {
       lookup,
     );
     expect(total.series[0].name).toBe('Rainfall');
+  });
+});
+
+describe('backend recommendations and columns that end early', () => {
+  const tt: CategoryTable = {
+    ...table,
+    groups: [
+      {
+        id: 'temp',
+        label: 'Temperature (°C)',
+        unit: '°C',
+        columns: ['tmin', 'tmax', 'tavg'],
+        defaultVisible: ['tmin', 'tmax', 'tavg'],
+        chart: 'band',
+        band: ['tmin', 'tmax'],
+      },
+      { id: 'idx', label: 'SSI / SGI (index)', columns: ['sgi'], defaultVisible: ['sgi'], chart: 'line' },
+    ],
+    variables: [
+      { column: 'tmin', label: 'Tmin (°C)', unit: '°C', status: 'live', chart: 'line' },
+      { column: 'tmax', label: 'Tmax (°C)', unit: '°C', status: 'live', chart: 'line' },
+      { column: 'tavg', label: 'Tavg (°C)', unit: '°C', status: 'live', chart: 'line' },
+      { column: 'sgi', label: 'SGI', status: 'live', chart: 'line', isStale: true, periodEnd: '2024-08-31' },
+    ],
+  };
+  const pts = (v: number | null) => [
+    ['2025-01-01', v] as [string, number | null],
+    ['2025-02-01', v] as [string, number | null],
+  ];
+
+  it("uses the backend's chart type and keeps the inference only as a fallback", () => {
+    // the name says "anomaly" (inference: diverging bars) but the backend says line
+    expect(chartTypeOf({ column: 'a', label: 'Rainfall Anomaly (mm)', unit: 'mm', chart: 'line' })).toBe('line');
+    expect(chartTypeOf({ column: 'a', label: 'Rainfall Anomaly (mm)', unit: 'mm' }, { chart: 'bar' })).toBe('bar');
+    expect(chartTypeOf({ column: 'a', label: 'Rainfall Anomaly (mm)', unit: 'mm' })).toBe('diverging-bar');
+    // an unknown value is not a recommendation
+    expect(chartTypeOf({ column: 'a', label: 'Daily Rainfall Total (mm)', unit: 'mm', chart: 'pie' })).toBe('bar');
+  });
+
+  it("draws the group's band pair as one band and the other columns by their own type", () => {
+    const set: SeriesSet = {
+      id: 't',
+      xType: 'time',
+      axes: [{ unit: '°C' }],
+      series: ['tmin', 'tmax', 'tavg'].map((k, i) => ({ key: k, name: k, kind: 'line', data: pts(10 + i) })),
+    };
+    const all = categoryChartData(set, tt, tt.groups[0], ['tmin', 'tmax', 'tavg']);
+    expect(all.set.series.map((s) => [s.key, s.kind])).toEqual([
+      ['tmin__tmax', 'band'],
+      ['tavg', 'line'],
+    ]);
+    expect(all.set.series[0].data[0]).toEqual(['2025-01-01', 10, 11]);
+    // half the pair switched off: no band, the other end is a line
+    const half = categoryChartData(set, tt, tt.groups[0], ['tmax', 'tavg']);
+    expect(half.set.series.map((s) => s.kind)).toEqual(['line', 'line']);
+  });
+
+  it('finds columns whose data end before the window, and their last months', () => {
+    const empty: SeriesSet = {
+      id: 'g',
+      xType: 'time',
+      axes: [{ unit: 'index' }],
+      series: [{ key: 'sgi', name: 'SGI', kind: 'line', data: pts(null) }],
+    };
+    expect(endedBefore(empty, tt.variables, ['sgi'])).toMatchObject({ end: '2024-08-31' });
+    // empty here but its data run into the window: not "ended" (no data for this scope)
+    const recent = tt.variables.map((v) => (v.column === 'sgi' ? { ...v, periodEnd: '2025-12-31' } : v));
+    expect(endedBefore(empty, recent, ['sgi'])).toBeUndefined();
+    expect(
+      endedBefore({ ...empty, series: [{ ...empty.series[0], data: pts(0.4) }] }, tt.variables, ['sgi']),
+    ).toBeUndefined();
+    expect(lastMonths('2024-08-31', 12)).toEqual({ from: '2023-09-01', to: '2024-08-31' });
+    expect(lastMonths('2024-08-31', 3)).toEqual({ from: '2024-06-01', to: '2024-08-31' });
+    expect([periodMonths('24M'), periodMonths('5Y'), periodMonths('historical'), periodMonths()]).toEqual([
+      24, 60, 12, 12,
+    ]);
   });
 });
 

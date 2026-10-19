@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 /**
  * Opt-in smoke against the running backend (npm run test:live; backend on BACKEND_URL, default http://localhost:8000).
@@ -120,6 +120,8 @@ for (const module of MODULES) {
 
     await page.goto(`/${module}`, { waitUntil: 'load' });
     const chart = page.locator(`[data-category-chart="${pick.t.id}/${pick.g.id}"]`);
+    // charts load as they scroll into view
+    await chart.scrollIntoViewIfNeeded({ timeout: 180_000 });
     await expect(chart.locator('[data-chart]')).toBeVisible({ timeout: 180_000 });
     const title = `${pick.t.label} · ${pick.g.label}${pick.t.specTag ? ` · ${pick.t.specTag}` : ''}`;
     await chart.getByRole('button', { name: `${title} options` }).click();
@@ -147,8 +149,9 @@ for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
       await page.goto(`/${module}`, { waitUntil: 'load' });
       await expect(page.getByTestId('database-variables')).toBeVisible({ timeout: 180_000 });
-      await expect(page.locator('[data-category-chart]').first()).toBeVisible({ timeout: 180_000 });
-      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 180_000 });
+      await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 180_000 });
+      await loadAll(page);
+      await expect(page.locator('[data-state="deferred"]')).toHaveCount(0);
       await expect(page.locator('[data-state="error"]')).toHaveCount(0);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, 'horizontal overflow (px)').toBeLessThanOrEqual(1);
@@ -156,6 +159,19 @@ for (const width of [1440, 390]) {
       await page.screenshot({ path: `tests/screenshots/live/${module}-${width}.png`, fullPage: true });
     });
   }
+}
+
+/** Category charts load lazily: bring every placeholder into view, then wait for the data. */
+async function loadAll(page: Page) {
+  const deferred = page.locator('[data-state="deferred"]');
+  for (let i = 0; i < 120 && (await deferred.count()); i++) {
+    await deferred
+      .first()
+      .scrollIntoViewIfNeeded({ timeout: 2_000 })
+      .catch(() => undefined); // replaced by the chart while scrolling
+    await page.waitForTimeout(100);
+  }
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 120_000 });
 }
 
 test.afterAll(() => {

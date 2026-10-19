@@ -27,7 +27,21 @@ async function settle(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'networkidle' });
   await expect(page.locator('h1').first()).toBeVisible();
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 45_000 });
+  if (await page.getByTestId('database-variables').count()) await loadAll(page);
   await page.waitForTimeout(800);
+}
+
+/** Category charts load lazily: bring every placeholder into view, then wait for the data. */
+async function loadAll(page: Page) {
+  const deferred = page.locator('[data-state="deferred"]');
+  for (let i = 0; i < 120 && (await deferred.count()); i++) {
+    await deferred
+      .first()
+      .scrollIntoViewIfNeeded({ timeout: 2_000 })
+      .catch(() => undefined); // replaced by the chart while scrolling
+    await page.waitForTimeout(100);
+  }
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 120_000 });
 }
 
 /** Every panel whose data is sample must say so (and be hatched); no sample panel may carry a Live marker. */
