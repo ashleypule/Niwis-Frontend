@@ -128,7 +128,7 @@ charts comes from the mockup screens.
 
 - **Summary panels:** series that plot one column as stored (drought SPI, soil moisture, SGI and vegetation; rainfall
   SPI / SPEI; vegetation indices) take that column's catalogue label and unit, read from the live catalogue
-  (`src/config/seriesColumns.ts`; the backend does not name source columns on these series, #11). Derived series keep
+  (then via `src/config/seriesColumns.ts`; since the follow-up, from each series' own `source`). Derived series keep
   the backend's names. **No chart was removed:** none is an exact duplicate of a database chart (the closest, the
   vegetation "Condition" tab, is one tab of a three-tab panel; the drought vegetation chart combines NDVI with VCI / VHI
   on two axes; the summary soil-moisture chart adds the min–max range and the long-term mean).
@@ -143,7 +143,7 @@ charts comes from the mockup screens.
 5. Date axes: a minimum tick spacing per period and labels only at period starts, so no "Nov 2025 Nov 2025"; axis
    unit titles moved above the axis (they were clipped); legend height for the chart's real width.
 6. Vegetation classes Excellent / Good / Fair / Poor / Very Poor (`vegClass`, `vci` palette, mock); the backend's names
-   are mapped in one place (`src/lib/vegClasses.ts`, #12).
+   were mapped in the client until the backend sent the spec names (mapping removed in the follow-up).
 7. "Top Provinces by Vegetation Health": "Ranked by VCI", and a wider card so the VCI column shows.
 8. Header period from `/meta/coverage` ("2000 – present"); "(1960 – Present)" titles show the record's first year.
 9. Climate "Mean Annual Runoff" KPI (an anomaly) is shown as "Runoff anomaly (vs 2000–2025)" (#9).
@@ -164,7 +164,7 @@ charts comes from the mockup screens.
 - `npm run fixtures:record`: 1 012 fixtures. The hybrid project (32 tests) reads the recorded catalogues, so new tables
   and columns are covered automatically.
 - `npm run test:e2e`: 139 passed (mock smoke and axe unchanged, hybrid, backend-down). Run `npm run build` first:
-  `npm run verify` ends with `build:live`, which also writes `dist/`, and the mock project previews `dist/`.
+  `npm run verify` ended with `build:live`, which also wrote `dist/` (fixed in the follow-up: `dist-live/`).
 - `npm run test:live`: 20 / 20. 15 KPI values and 5 category-chart values (newest value in the chart's data table vs
   `/category/…`) equal the API (`docs/backend/UI_VERIFICATION.md`). It found a bug in every chart's data table: the
   en-ZA decimal comma was printed as a space (9.43 → "9 43"); fixed (`tableNumber`).
@@ -174,3 +174,55 @@ charts comes from the mockup screens.
 - Not matching the spec yet (data, not frontend): 49 of 95 chart groups have no live column (withheld after the
   backend's plausibility checks, e.g. all of §4.4, §4.5, §4.6 and §5.1, dam storage, river discharge); no chart type
   recommendations from the backend (#8).
+
+## Follow-up after the backend fixes (19 October 2026)
+
+Applies `../Niwis Backend/docs/FRONTEND_INTEGRATION.md` §8 items 16–21 and `CONTRACT_CHANGES.md` §13 (BACKEND_ISSUES
+#8–#13 fixed in the backend).
+
+| Step | Scope                                                                                                  | Commit        |
+| ---- | ------------------------------------------------------------------------------------------------------ | ------------- |
+| 1    | Fixtures re-recorded, `contract:check`, `chart` / `band` schemas, strict `asOf`, backend issue #14     | `3e6268e`     |
+| 2    | Backend chart types, labels from `source`, `seriesColumns.ts` and the vegetation class mapping removed | `939342f`     |
+| 3    | "Data ends Aug 2024" + this chart's last available months                                              | `6fc68d5`     |
+| 4    | Lazy category charts (IntersectionObserver)                                                            | `3823d74`     |
+| 5    | `build:live` / `preview:live` → `dist-live/`                                                           | `755a5a2`     |
+| 6    | Drought checks, two-line KPI reasons, tests                                                            | `6b59c39`     |
+| 7    | All checks, screenshots, this section                                                                  | see `git log` |
+
+- **Chart types:** each column is drawn as the catalogue says (`chart` on the variable, else on its series): `bar`,
+  `diverging-bar` (bars around 0, coloured by sign), `line`; a group's `band: [min, max]` is one band when both are
+  on, the other columns by their own type (`mixed` groups likewise). The name / unit inference is only a fallback.
+- **Summary series** with `source: ["table.column"]` take that column's catalogue label (from the catalogues of all
+  five live pages, so a source table on another page is found), only when the column's unit is the axis unit;
+  derived series keep the backend's names. `src/config/seriesColumns.ts` is deleted; so is the vegetation class
+  mapping (the backend sends Excellent … Very Poor).
+- **Columns that end early:** a selected live column with a `periodEnd` before the response's first date shows "Data
+  ends Aug 2024" and "Show last available 12 months (Sep 2023 – Aug 2024)" (N = the page period). The button sets
+  `from` / `to` for that chart only (local state, dropped when the page filters change; URL and page period
+  unchanged); the response's `isStale` shows "Data to Aug 2024"; "Back to the page period" undoes it. The manifest adds
+  each stale group's last-12-months request, so the fixtures hold it.
+- **Lazy loading:** a category chart requests its series when it comes within 400 px of the viewport. Climate (28
+  charts) sends 0 category requests on load and 11 after scrolling through (17 groups have no live column and never
+  request). The placeholder is not "busy", so page-level loading checks are unaffected; tests and screenshots scroll
+  charts in first.
+- **Build folders:** `build:live` / `preview:live` use `dist-live/`; `npm run verify` followed by `npm run test:e2e`
+  now works without an extra `npm run build`.
+- **Drought page:** `meteorological_drought_master` now contributes 9 plotted charts (daily rainfall / PET / ET₀,
+  monthly rainfall, rainfall anomaly mm and %, rainfall intensity, temperature band, temperature anomaly, humidity,
+  SPEI) and 3 withheld ones; its SPI columns stay listed as duplicates of §6.2 (also on the page). The SGI chart says
+  "Data ends Aug 2024" and offers Sep 2023 – Aug 2024 with the stale marker; the SGI KPI and the cascade's groundwater
+  stage are blank with "Latest valid SGI is Aug 2024 (more than 90 days old)" (KPI reasons now use two lines).
+
+### Verification (follow-up)
+
+- `npm run fixtures:record`: 1 100 fixtures (1 052 + 48 chart-only periods), none 5xx / 429. Three scoped
+  `seasonal-total-mm` requests first failed with a Postgres statement timeout (BACKEND_ISSUES #14) and were
+  re-recorded with the new `npm run fixtures:record -- --only=<text>`.
+- `npm run contract:check`: **269 ok, 0 schema failures, 0 errors**, 68 unavailable (501), 8 structural differences
+  (unchanged, documented).
+- `npm run verify` ✔ (84 unit tests). `npm run test:e2e`: **142 passed** (mock smoke and axe, hybrid incl. chart types,
+  band pairs, lazy loading, the SGI chart-only period and the Drought checks, backend-down).
+- `npm run test:live`: **20 / 20** (15 KPI values, 5 category-chart values; `docs/backend/UI_VERIFICATION.md`).
+- Screenshots `tests/screenshots/live/{page}-1440.png` and `-390.png`, every chart loaded, checked by eye: chart
+  types as recommended, units on the axes, withheld groups with their reasons, nothing clipped, no horizontal scroll.

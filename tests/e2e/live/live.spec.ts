@@ -104,19 +104,32 @@ for (const module of MODULES) {
     const cat = (await (await request.get(`${BACKEND}/api/v1/${module}/categories`, { timeout: 60_000 })).json()) as {
       tables: CatTable[];
     };
-    // the first group with a live column switched on by default
-    const pick = cat.tables
-      .flatMap((t) => t.groups.map((g) => ({ t, g })))
-      .find(({ t, g }) => g.defaultVisible.some((c) => t.variables.find((v) => v.column === c)?.status === 'live'))!;
-    const col = pick.g.defaultVisible.find((c) => pick.t.variables.find((v) => v.column === c)?.status === 'live')!;
+    // the first group with a live column switched on by default that has values in the default 12 months
+    // (SGI ends Aug 2024: its chart offers its last months instead, checked in the hybrid suite)
+    const candidates = cat.tables.flatMap((t) =>
+      t.groups.flatMap((g) =>
+        g.defaultVisible
+          .filter((c) => t.variables.find((x) => x.column === c)?.status === 'live')
+          .map((c) => ({ t, g, c })),
+      ),
+    );
+    let found: { t: CatTable; g: CatGroup; c: string; date: string; value: number } | undefined;
+    for (const { t, g, c } of candidates) {
+      const api = (await (
+        await request.get(`${BACKEND}/api/v1/${module}/category/${t.id}/${g.id}?vars=all&period=12M`, {
+          timeout: 60_000,
+        })
+      ).json()) as { series: { key: string; data: [string, number | null][] }[] };
+      const points = (api.series.find((x) => x.key === c)?.data ?? []).filter((p) => p[1] != null);
+      if (!points.length) continue;
+      const [date, value] = points[points.length - 1];
+      found = { t, g, c, date, value: value! };
+      break;
+    }
+    expect(found, `${module}: a live default column with values in 12 months`).toBeTruthy();
+    const { t: pickT, g: pickG, c: col, date, value } = found!;
+    const pick = { t: pickT, g: pickG };
     const v = pick.t.variables.find((x) => x.column === col)!;
-    const api = (await (
-      await request.get(`${BACKEND}/api/v1/${module}/category/${pick.t.id}/${pick.g.id}?vars=all&period=12M`, {
-        timeout: 60_000,
-      })
-    ).json()) as { series: { key: string; data: [string, number | null][] }[] };
-    const points = api.series.find((s) => s.key === col)!.data.filter((p) => p[1] != null);
-    const [date, value] = points[points.length - 1];
 
     await page.goto(`/${module}`, { waitUntil: 'load' });
     const chart = page.locator(`[data-category-chart="${pick.t.id}/${pick.g.id}"]`);
