@@ -8,7 +8,7 @@ import { expect, test, type Page } from '@playwright/test';
  * written to docs/backend/UI_VERIFICATION.md and full-page screenshots to tests/screenshots/live/ for a visual check.
  */
 const BACKEND = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
-const MODULES = ['rainfall', 'drought', 'climate', 'vegetation', 'runoff', 'dams'];
+const MODULES = ['rainfall', 'drought', 'climate', 'vegetation', 'runoff', 'dams', 'surface-water'];
 
 interface Kpi {
   id: string;

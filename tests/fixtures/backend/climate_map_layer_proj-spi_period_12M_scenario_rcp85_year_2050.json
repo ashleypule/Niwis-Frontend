@@ -1,1 +1,1 @@
-{"status":501,"requestId":"516eb069a1564703","body":{"error":"No climate projections or vulnerability index in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections or vulnerability index in the database","missing":["proj-spi"]}}
+{"status":501,"requestId":"5f63979752e84163","body":{"error":"No climate projections or vulnerability index in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections or vulnerability index in the database","missing":["proj-spi"]}}

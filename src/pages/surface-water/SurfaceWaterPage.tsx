@@ -6,9 +6,21 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
+import { isLive } from '@/config/app';
 
 const mod = moduleById('surface-water');
+
+/** Live: one flow record per district (no gauging stations in the database), drawn by district. */
+const LIVE_LAYERS = [
+  { id: 'discharge', label: 'River discharge (district)' },
+  { id: 'flow-status', label: 'Flow status' },
+  { id: 'flow-anomaly', label: 'Flow anomaly' },
+  { id: 'ssi', label: 'SSI-3 (from discharge)' },
+  { id: 'stations', label: 'Gauging stations' },
+  { id: 'catchment-runoff', label: 'Catchment runoff' },
+];
 
 const LAYERS = [
   { id: 'flow-status', label: 'Gauging station status' },
@@ -21,7 +33,9 @@ const LAYERS = [
 export default function SurfaceWaterPage() {
   const st = useSelectedEntity('surface-water');
   const p = { entityId: st.id };
-  const ctx = st.name ? `[Station: ${st.name}]` : undefined;
+  const noun = entityNoun('surface-water');
+  const ctx = st.name ? `[${noun}: ${st.name}]` : undefined;
+  const live = isLive('surface-water');
   return (
     <div>
       <PageTabs mod={mod} />
@@ -29,8 +43,8 @@ export default function SurfaceWaterPage() {
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel
           module="surface-water"
-          title="River Network & Gauging Stations – South Africa"
-          layers={LAYERS}
+          title={live ? 'River Flows by District – South Africa' : 'River Network & Gauging Stations – South Africa'}
+          layers={live ? LIVE_LAYERS : LAYERS}
           defaultBase={['provinces', 'rivers']}
           height={520}
         />
@@ -38,17 +52,21 @@ export default function SurfaceWaterPage() {
           <SeriesPanel
             module="surface-water"
             metric="discharge"
-            title="River Discharge (Selected Station)"
+            title={`River Discharge (Selected ${noun})`}
             context={ctx}
             extra={p}
+            enabled={!!st.id}
+            blockedBy={st.list}
             height={200}
           />
           <SeriesPanel
             module="surface-water"
             metric="water-level"
-            title="Water Level (Selected Station)"
+            title={`Water Level (Selected ${noun})`}
             context={ctx}
             extra={p}
+            enabled={!!st.id}
+            blockedBy={st.list}
             height={200}
           />
         </div>
@@ -56,9 +74,11 @@ export default function SurfaceWaterPage() {
           <SeriesPanel
             module="surface-water"
             metric="sediment"
-            title="Suspended Sediment (Selected Station)"
+            title={`Suspended Sediment (Selected ${noun})`}
             context={ctx}
             extra={p}
+            enabled={!!st.id}
+            blockedBy={st.list}
             tabs={[
               { value: 'conc', label: 'Concentration', params: { kind: 'conc' } },
               { value: 'load', label: 'Load (t/day)', params: { kind: 'load' } },
@@ -71,6 +91,8 @@ export default function SurfaceWaterPage() {
             title="Baseflow and Quickflow Separation"
             context={ctx}
             extra={p}
+            enabled={!!st.id}
+            blockedBy={st.list}
             height={200}
           />
         </div>
@@ -82,6 +104,8 @@ export default function SurfaceWaterPage() {
           title="Flow Duration Curve"
           context={ctx}
           extra={p}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={230}
         />
         <CategoryPanel
@@ -101,18 +125,25 @@ export default function SurfaceWaterPage() {
         <CategoryPanel
           module="surface-water"
           metric="status"
-          title="Gauging Station Status"
+          title={live ? 'Flow Status by District' : 'Gauging Station Status'}
           variant="donut"
           height={180}
         />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr]">
-        <EntityInfoCard module="surface-water" id={st.id} title="Station Information (Selected Station)" />
-        <TablePanel module="surface-water" metric="gauge-quality" title="Water Quality at Gauging Station" extra={p} />
+        <EntityInfoCard module="surface-water" id={st.id} title={`${noun} Information (Selected ${noun})`} />
+        <TablePanel
+          module="surface-water"
+          metric="gauge-quality"
+          title="Water Quality at Gauging Station"
+          extra={p}
+          enabled={!!st.id}
+          blockedBy={st.list}
+        />
         <TablePanel
           module="surface-water"
           metric="top-stations"
-          title="Top / Lowest Flows (National)"
+          title={live ? 'Highest / Lowest District Flows' : 'Top / Lowest Flows (National)'}
           selectEntity
           tabs={[
             { value: 'h', label: 'Highest flows', params: { order: 'highest' } },
@@ -130,9 +161,11 @@ export default function SurfaceWaterPage() {
         <SeriesPanel
           module="surface-water"
           metric="seasonal"
-          title="Hydrological Regime (Selected Station)"
+          title={`Hydrological Regime (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={220}
         />
         <CategoryPanel
@@ -144,6 +177,7 @@ export default function SurfaceWaterPage() {
         />
         <TablePanel module="surface-water" metric="alerts" title="Surface Water Alerts (Last 7 Days)" />
       </Row>
+      <DatabaseVariables module="surface-water" />
     </div>
   );
 }

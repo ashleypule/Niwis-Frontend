@@ -1,0 +1,1 @@
+{"status":501,"requestId":"2acdb4403aa540ad","body":{"error":"Gauge data-quality records are not in the database; water quality is served on the Water Quality page","code":"DATA_UNAVAILABLE","detail":"Gauge data-quality records are not in the database; water quality is served on the Water Quality page","missing":["table:surface-water:gauge-quality"]}}

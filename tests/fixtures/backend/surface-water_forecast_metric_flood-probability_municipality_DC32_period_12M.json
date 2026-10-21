@@ -1,0 +1,1 @@
+{"status":501,"requestId":"46c86ab19c1846b8","body":{"error":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","code":"DATA_UNAVAILABLE","detail":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","missing":["forecast:surface-water:flood-probability"]}}

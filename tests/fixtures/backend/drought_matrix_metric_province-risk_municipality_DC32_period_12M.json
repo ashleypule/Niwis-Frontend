@@ -1,1 +1,1 @@
-{"status":501,"requestId":"bc1e0640bd6d4464","body":{"error":"Province risk probabilities need a forecast model","code":"DATA_UNAVAILABLE","detail":"Province risk probabilities need a forecast model","missing":["forecast:province-risk"]}}
+{"status":501,"requestId":"d32e4dd7bba84917","body":{"error":"Province risk probabilities need a forecast model","code":"DATA_UNAVAILABLE","detail":"Province risk probabilities need a forecast model","missing":["forecast:province-risk"]}}

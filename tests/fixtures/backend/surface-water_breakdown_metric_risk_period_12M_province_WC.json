@@ -1,0 +1,1 @@
+{"status":501,"requestId":"5e9f995079a24811","body":{"error":"No flood / drought risk classification of stations in the database","code":"DATA_UNAVAILABLE","detail":"No flood / drought risk classification of stations in the database","missing":["breakdown:surface-water:risk"]}}

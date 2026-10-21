@@ -6,7 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
  * this file. Chart internals are checked on the options each chart was drawn with (EChart's `data-chart` summary).
  * Charts load lazily: `open()` scrolls every placeholder into view first.
  */
-const MODULES = ['drought', 'rainfall', 'climate', 'vegetation', 'runoff', 'dams'] as const;
+const MODULES = ['drought', 'rainfall', 'climate', 'vegetation', 'runoff', 'dams', 'surface-water'] as const;
 
 interface Variable {
   column: string;
@@ -238,7 +238,12 @@ for (const module of MODULES) {
     expect(charts.length).toBeGreaterThan(10);
     // at least one live chart per catalogue group that has a live column (dams: 2 — its storage is withheld)
     const liveGroups = (await catalogue(page, module)).flatMap((t) =>
-      t.groups.filter((g) => g.columns.some((c) => t.variables.find((v) => v.column === c)?.status === 'live')),
+      t.groups.filter((g) =>
+        g.columns.some((c) => {
+          const v = t.variables.find((x) => x.column === c) as (Variable & { kind?: string }) | undefined;
+          return v?.status === 'live' && v.kind !== 'categorical'; // class columns are shown per district
+        }),
+      ),
     ).length;
     expect(liveGroups).toBeGreaterThan(0);
     expect(charts.filter((c) => c.live).length).toBeGreaterThanOrEqual(liveGroups);
