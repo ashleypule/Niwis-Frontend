@@ -270,3 +270,18 @@ Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
 - Alerts are read-only: no acknowledge / assign / resolve, no browser-stored workflow state; the status column shows
   the status the data service reports.
 - Test: `smoke.spec.ts` "public system: no user menu or sign-out, a theme toggle, read-only alerts".
+
+### Part 3 — public release: production build, CI, open source (21–22 October 2026)
+
+- Production build `npm run build:release` (`.env.release`, api mode): no Mock Service Worker, no sample data. A card
+  with no data source shows "Not yet available" (`Card`, `NO_SOURCE`); alert panels show the API's 501 reason; the
+  report tools carry no marker; the Overview strip keeps its six live cards when the overview summary is 501.
+- `Dockerfile` (node build → nginx, non-root, port 8080) and `deploy/nginx.conf` (gzip, immutable assets, `no-cache`
+  index, CSP with the inline script's hash kept in sync by `tests/unit/csp.test.ts`, `/api` and `/docs` proxied).
+- `npm run test:release` (Playwright `release` project) against the backend's `deploy/docker-compose.prod.yml`: all
+  25 routes with no sample marker, no CSP violation, live markers on the live pages, "Not yet available" elsewhere.
+- ECharts 5.6 → 6.1 (GHSA-fgmj-fm8m-jvvx, XSS); `npm audit --omit=dev`: 0 vulnerabilities; non-breaking dev fixes
+  applied (vitest 5 left for later: dev-only). Lockfile URLs normalised to registry.npmjs.org.
+- `.github/workflows/ci.yml`: verify, release build, audit, Playwright mock / hybrid / backend-down from recorded
+  fixtures, gitleaks — no secrets, no backend. `.gitleaks.toml`, CONTRIBUTING.md, SECURITY.md, README licence note.
+- Full e2e after the ECharts upgrade: 170 passed.

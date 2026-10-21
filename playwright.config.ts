@@ -6,8 +6,11 @@ import { defineConfig } from '@playwright/test';
  *   hybrid        the five live pages with recorded backend responses      → dist-fixtures (VITE_FIXTURES=true)
  *   backend-down  hybrid build with the backend unreachable                 → dist-live, proxy to a closed port
  *   live          opt-in smoke against the running backend (npm run test:live) → dist-live, proxy to localhost:8000
+ *   release       opt-in check of the production stack (npm run test:release) → nginx + API from the backend's
+ *                 deploy/docker-compose.prod.yml, at NIWIS_RELEASE_URL (default http://localhost:8088); no server here
  */
 const LIVE = process.argv.some((a) => a === '--project=live' || a === 'live');
+const RELEASE = process.argv.some((a) => a === '--project=release' || a === 'release');
 
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -19,7 +22,7 @@ export default defineConfig({
   projects: [
     {
       name: 'mock',
-      testIgnore: ['hybrid/**', 'live/**'],
+      testIgnore: ['hybrid/**', 'live/**', 'release/**'],
       use: { baseURL: 'http://localhost:4173' },
     },
     {
@@ -33,44 +36,52 @@ export default defineConfig({
       use: { baseURL: 'http://localhost:4175' },
     },
     {
+      name: 'release',
+      testMatch: 'release/**/*.spec.ts',
+      timeout: 180_000,
+      use: { baseURL: process.env.NIWIS_RELEASE_URL ?? 'http://localhost:8088' },
+    },
+    {
       name: 'live',
       testMatch: 'live/**/*.spec.ts',
       timeout: 180_000,
       use: { baseURL: 'http://localhost:4176' },
     },
   ],
-  webServer: LIVE
-    ? [
-        {
-          command:
-            'npx vite build --mode live --outDir dist-live && npx vite preview --mode live --outDir dist-live --port 4176 --strictPort',
-          port: 4176,
-          reuseExistingServer: true,
-          timeout: 240_000,
-        },
-      ]
-    : [
-        {
-          command: 'npm run preview -- --port 4173 --strictPort',
-          port: 4173,
-          reuseExistingServer: true,
-          timeout: 120_000,
-        },
-        {
-          command:
-            'npm run build:fixtures && npx vite preview --mode fixtures --outDir dist-fixtures --port 4174 --strictPort',
-          port: 4174,
-          reuseExistingServer: true,
-          timeout: 240_000,
-        },
-        {
-          command:
-            'npx vite build --mode live --outDir dist-live && npx vite preview --mode live --outDir dist-live --port 4175 --strictPort',
-          port: 4175,
-          reuseExistingServer: true,
-          timeout: 240_000,
-          // nothing listens on port 9: every live request fails at the proxy
-          env: { VITE_API_PROXY_TARGET: 'http://127.0.0.1:9' },
-        },
-      ],
+  webServer: RELEASE
+    ? []
+    : LIVE
+      ? [
+          {
+            command:
+              'npx vite build --mode live --outDir dist-live && npx vite preview --mode live --outDir dist-live --port 4176 --strictPort',
+            port: 4176,
+            reuseExistingServer: true,
+            timeout: 240_000,
+          },
+        ]
+      : [
+          {
+            command: 'npm run preview -- --port 4173 --strictPort',
+            port: 4173,
+            reuseExistingServer: true,
+            timeout: 120_000,
+          },
+          {
+            command:
+              'npm run build:fixtures && npx vite preview --mode fixtures --outDir dist-fixtures --port 4174 --strictPort',
+            port: 4174,
+            reuseExistingServer: true,
+            timeout: 240_000,
+          },
+          {
+            command:
+              'npx vite build --mode live --outDir dist-live && npx vite preview --mode live --outDir dist-live --port 4175 --strictPort',
+            port: 4175,
+            reuseExistingServer: true,
+            timeout: 240_000,
+            // nothing listens on port 9: every live request fails at the proxy
+            env: { VITE_API_PROXY_TARGET: 'http://127.0.0.1:9' },
+          },
+        ],
 });

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { Info } from 'lucide-react';
-import { PanelBoundary } from '@/components/feedback/PanelBoundary';
+import { PanelBoundary, UnavailableState } from '@/components/feedback/PanelBoundary';
 import { ProvenanceChips } from '@/components/provenance/Markers';
 import {
   NO_MARKER,
@@ -10,7 +10,7 @@ import {
   withBaseline,
   type PanelProvenance,
 } from '@/components/provenance/provenance';
-import { showProvenance } from '@/config/app';
+import { APP, showProvenance } from '@/config/app';
 
 interface CardProps {
   title?: ReactNode;
@@ -44,7 +44,10 @@ export function Card({
   provenance,
 }: CardProps) {
   const fallback = useDefaultProvenance();
-  const prov = !showProvenance || provenance === null ? NO_MARKER : (provenance ?? fallback);
+  const marked = !showProvenance || provenance === null ? NO_MARKER : (provenance ?? fallback);
+  // production builds talk only to the API: a card whose content is design sample (no data source) says so instead
+  const withheld = APP.dataSource === 'api' && marked.kind === 'sample';
+  const prov = withheld ? { kind: 'unavailable' as const, detail: NO_SOURCE } : marked;
   // never show "1981–2010" over live data (the backend's baseline is shorter)
   const shownTitle = typeof title === 'string' ? withBaseline(title, prov) : title;
   const shownContext = typeof context === 'string' ? withBaseline(context, prov) : context;
@@ -89,11 +92,14 @@ export function Card({
       )}
       <div className={clsx('min-h-0 flex-1 px-4 pb-3', !title && 'pt-3', bodyClassName)}>
         {!title && !actions && <ProvenanceChips p={prov} className="mb-2" />}
-        <PanelBoundary>{children}</PanelBoundary>
+        <PanelBoundary>{withheld ? <UnavailableState detail={NO_SOURCE} height={140} /> : children}</PanelBoundary>
       </div>
     </section>
   );
 }
+
+/** What a production card without a data source shows (its sample content is never rendered). */
+export const NO_SOURCE = 'Not in the national database yet: this panel has no data source.';
 
 export function Tabs<T extends string>({
   value,

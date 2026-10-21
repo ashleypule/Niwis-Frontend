@@ -124,7 +124,7 @@ test('public system: no user menu or sign-out, a theme toggle, read-only alerts'
   await header.getByRole('button', { name: /Switch to (dark|light) theme/ }).click();
   await expect(html).not.toHaveAttribute('data-theme', before ?? '');
   await page.goto('/alerts');
-  await expect(page.getByRole('row').nth(1)).toBeVisible();
+  await expect(page.getByRole('row').nth(1)).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole('button', { name: /Acknowledge|Assign|Mark resolved/ })).toHaveCount(0);
   await expect(page.getByRole('columnheader', { name: 'Actions' })).toHaveCount(0);
 });

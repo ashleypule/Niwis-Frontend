@@ -96,7 +96,7 @@ export default function ReportsPage() {
   return (
     <div>
       <Row className="xl:grid-cols-[1.6fr_1fr]">
-        <Card title="Standard Reports">
+        <Card title="Standard Reports" provenance={null}>
           <ul className="grid gap-2 md:grid-cols-2">
             {STANDARD_REPORTS.map((r) => (
               <li key={r.id} className="flex flex-col rounded-xl border border-line p-3">
@@ -121,7 +121,7 @@ export default function ReportsPage() {
           </ul>
         </Card>
         <div className="grid content-start gap-3">
-          <Card title="Report Builder">
+          <Card title="Report Builder" provenance={null}>
             <div className="space-y-2">
               <label className="block text-xs font-medium text-muted">
                 Report title
@@ -177,7 +177,7 @@ export default function ReportsPage() {
               </Button>
             </div>
           </Card>
-          <Card title="Data Export (Current Filters)">
+          <Card title="Data Export (Current Filters)" provenance={null}>
             <div className="space-y-2">
               <Select
                 hideLabel={false}
@@ -209,7 +209,7 @@ export default function ReportsPage() {
               </div>
             </div>
           </Card>
-          <Card title="Downloads History (this browser)">
+          <Card title="Downloads History (this browser)" provenance={null}>
             {history.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted">No downloads yet.</p>
             ) : (

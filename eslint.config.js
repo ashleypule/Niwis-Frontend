@@ -9,6 +9,7 @@ export default tseslint.config(
     ignores: [
       'dist-fixtures',
       'dist-live',
+      'dist-release',
       'dist',
       'node_modules',
       'public/mockServiceWorker.js',

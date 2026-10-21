@@ -1263,7 +1263,7 @@ Page `/alerts` · spec §2.2
 ```json
 {
   "module": "dams",
-  "asOf": "2026-10-21T06:00:00.000Z",
+  "asOf": "2026-10-22T06:00:00.000Z",
   "scope": {
     "level": "national",
     "id": "ZA",
@@ -1293,10 +1293,10 @@ Page `/alerts` · spec §2.2
       "metric": "storageVolume",
       "label": "Current Volume",
       "sublabel": "of 32 161 Mm³ capacity",
-      "value": 24996,
+      "value": 25004,
       "unit": "Mm³",
       "decimals": 0,
-      "delta": 7.6,
+      "delta": 7.7,
       "deltaUnit": " pp",
       "deltaLabel": "vs last year",
       "spark": [
@@ -1340,18 +1340,18 @@ Page `/alerts` · spec §2.2
         ],
         [
           "2026-10-01",
-          67.605,
-          88.432
+          67.634,
+          88.448
         ],
         [
           "2026-11-01",
-          66.559,
-          91.183
+          66.586,
+          91.19
         ],
         [
           "2026-12-01",
-          66.68,
-          93.306
+          66.704,
+          93.311
         ],
         "… 9 more"
       ],
@@ -1394,15 +1394,15 @@ Page `/alerts` · spec §2.2
         ],
         [
           "2026-10-01",
-          78.411
+          78.442
         ],
         [
           "2026-11-01",
-          80.037
+          80.064
         ],
         [
           "2026-12-01",
-          81.903
+          81.928
         ],
         "… 9 more"
       ],
@@ -1456,29 +1456,29 @@ Page `/alerts` · spec §2.2
       "name": "Gariep",
       "province": "FS",
       "capacity": 5341,
-      "volume": 4842.2,
+      "volume": 4845.1,
       "pct": 90.7,
-      "ly": 86.7,
-      "trend": 1.1
+      "ly": 86.6,
+      "trend": 1.2
     },
     {
       "id": "dam-vanderkloof",
       "name": "Vanderkloof",
       "province": "FS",
       "capacity": 3171,
-      "volume": 1701,
-      "pct": 53.6,
+      "volume": 1703.2,
+      "pct": 53.7,
       "ly": 59.6,
-      "trend": 0
+      "trend": 0.1
     },
     {
       "id": "dam-sterkfontein",
       "name": "Sterkfontein",
       "province": "FS",
       "capacity": 2617,
-      "volume": 2567.8,
-      "pct": 98.1,
-      "ly": 92.5,
+      "volume": 2568.9,
+      "pct": 98.2,
+      "ly": 92.6,
       "trend": 0.9
     },
     {
@@ -1486,8 +1486,8 @@ Page `/alerts` · spec §2.2
       "name": "Vaal",
       "province": "GP",
       "capacity": 2536,
-      "volume": 2297.9,
-      "pct": 90.6,
+      "volume": 2299.1,
+      "pct": 90.7,
       "ly": 77.6,
       "trend": 0
     },
@@ -1509,7 +1509,7 @@ Page `/alerts` · spec §2.2
   "level": "point",
   "scale": "storage",
   "unit": "%",
-  "date": "2026-10-21",
+  "date": "2026-10-22",
   "points": [
     {
       "id": "dam-gariep",
@@ -1519,37 +1519,37 @@ Page `/alerts` · spec §2.2
       "value": 90.7,
       "size": 0.9940543689827611,
       "kind": "dam",
-      "sub": "Free State · 4 842 of 5 341 Mm³"
+      "sub": "Free State · 4 845 of 5 341 Mm³"
     },
     {
       "id": "dam-vanderkloof",
       "name": "Vanderkloof Dam",
       "lat": -29.993,
       "lon": 24.732,
-      "value": 53.6,
+      "value": 53.7,
       "size": 0.9336888476388177,
       "kind": "dam",
-      "sub": "Free State · 1 701 of 3 171 Mm³"
+      "sub": "Free State · 1 703 of 3 171 Mm³"
     },
     {
       "id": "dam-sterkfontein",
       "name": "Sterkfontein Dam",
       "lat": -28.4,
       "lon": 29.03,
-      "value": 98.1,
+      "value": 98.2,
       "size": 0.9114585712572633,
       "kind": "dam",
-      "sub": "Free State · 2 568 of 2 617 Mm³"
+      "sub": "Free State · 2 569 of 2 617 Mm³"
     },
     {
       "id": "dam-vaal",
       "name": "Vaal Dam",
       "lat": -26.883,
       "lon": 28.117,
-      "value": 90.6,
+      "value": 90.7,
       "size": 0.9078187912591282,
       "kind": "dam",
-      "sub": "Gauteng · 2 298 of 2 536 Mm³"
+      "sub": "Gauteng · 2 299 of 2 536 Mm³"
     },
     "… 147 more"
   ]

@@ -8,4 +8,5 @@ docs/DATA_DICTIONARY.md
 src/mocks/reference/lm-to-district.json
 dist-fixtures
 dist-live
+dist-release
 tests/fixtures/backend

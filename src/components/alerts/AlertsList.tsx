@@ -3,7 +3,9 @@ import type { ModuleId } from '@/config/modules';
 import { useAlerts } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Pill, SeverityIcon } from '@/components/ui/Pill';
-import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { ErrorState, Skeleton, UnavailableState } from '@/components/feedback/PanelBoundary';
+import { isUnavailable } from '@/api/client';
+import { panelProvenance } from '@/components/provenance/provenance';
 import { formatDate } from '@/lib/format';
 import { isLive, isLivePath } from '@/config/app';
 import { endpoints } from '@/api/endpoints';
@@ -41,6 +43,7 @@ export function AlertsList({
     <Card
       title={title}
       className={className}
+      provenance={q.isError && isUnavailable(q.error) ? panelProvenance(q) : undefined}
       actions={
         <Link
           to={module ? `/alerts?module=${module}` : '/alerts'}
@@ -50,7 +53,9 @@ export function AlertsList({
         </Link>
       }
     >
-      {q.isError ? (
+      {q.isError && isUnavailable(q.error) ? (
+        <UnavailableState detail={q.error.detail} height={140} />
+      ) : q.isError ? (
         <ErrorState onRetry={() => q.refetch()} />
       ) : !q.data ? (
         <Skeleton height={180} />

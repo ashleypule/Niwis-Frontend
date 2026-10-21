@@ -7,7 +7,9 @@ import { MapPanel } from '@/components/map/MapPanel';
 import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Select';
 import { Pill, SeverityIcon } from '@/components/ui/Pill';
-import { Skeleton } from '@/components/feedback/PanelBoundary';
+import { ErrorState, Skeleton, UnavailableState } from '@/components/feedback/PanelBoundary';
+import { isUnavailable } from '@/api/client';
+import { panelProvenance } from '@/components/provenance/provenance';
 import { formatDate } from '@/lib/format';
 import { registerExport } from '@/lib/exporter';
 
@@ -49,7 +51,11 @@ export default function AlertsPage() {
     <div>
       <KpiStrip module="alerts" count={6} />
       <div className="mt-3 grid gap-3 xl2:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
-        <Card title="Alerts & Early Warnings (All Modules)" context={`${items.length} alerts shown`}>
+        <Card
+          title="Alerts & Early Warnings (All Modules)"
+          context={q.data ? `${items.length} alerts shown` : undefined}
+          provenance={q.isError && isUnavailable(q.error) ? panelProvenance(q) : undefined}
+        >
           <div className="mb-3 grid grid-cols-2 gap-2 md:grid-cols-5">
             <Select
               hideLabel={false}
@@ -103,7 +109,11 @@ export default function AlertsPage() {
               />
             </label>
           </div>
-          {!q.data ? (
+          {q.isError && isUnavailable(q.error) ? (
+            <UnavailableState detail={q.error.detail} height={240} />
+          ) : q.isError ? (
+            <ErrorState error={q.error} onRetry={() => q.refetch()} />
+          ) : !q.data ? (
             <Skeleton height={400} />
           ) : (
             <div className="max-h-[640px] overflow-auto rounded-lg border border-line">

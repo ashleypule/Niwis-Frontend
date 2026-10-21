@@ -8,3 +8,4 @@ tests/screenshots/**/*.png
 !tests/screenshots/.gitkeep
 dist-fixtures
 dist-live
+dist-release

@@ -4,17 +4,22 @@ Web dashboard for the Department of Water and Sanitation (DWS): national drought
 groundwater, water quality and compliance (Green / Blue Drop, RWQO), water resources (IWRM, quantity, services, tariffs,
 settlements) and the platform modules (AI, data integration, governance, roadmap), plus alerts and reports.
 
-This repository is the **frontend only**. The NIWIS backend (`../Niwis Backend`, FastAPI on the DWS database) serves **rainfall,
-drought, climate, vegetation and runoff**; every other module runs on a seeded mock API (Mock Service Worker) that answers the same
-`/api/v1/*` contract. In **hybrid** mode each panel says where its numbers come from (**Live** or **Sample**); in **mock** mode
-every screen shows a "Sample data" badge.
+This repository is the **frontend only**. The NIWIS backend (`Niwis-Backend`, FastAPI on the DWS database, read-only)
+serves **rainfall, drought, climate, vegetation, runoff, dams, surface water, groundwater, groundwater reserve and water
+quality**, plus the database variables of Green Drop, Blue Drop, RWQO and IWRM. The system is public with no login.
+
+- **Production** (`npm run build:release`): everything from the API; a panel the database cannot serve says "Not yet
+  available" with the API's reason. No sample data.
+- **Hybrid** (development): live modules from the API, every other panel from a seeded mock API (Mock Service Worker),
+  each panel marked **Live** or **Sample**.
+- **Mock**: everything sample, with a "Sample data" badge on every screen.
 
 ## Quick start
 
 ```bash
 npm install
 npm run dev          # http://localhost:5173 (mock API, sample data)
-npm run dev:live     # hybrid: five modules from the backend on localhost:8000, sample data for the rest
+npm run dev:live     # hybrid: the live modules from the backend on localhost:8000, sample data for the rest
 ```
 
 Node ≥ 20. No backend, database or API key is needed for development.
@@ -29,6 +34,8 @@ Node ≥ 20. No backend, database or API key is needed for development.
 | `npm run test:e2e`                    | Playwright: hybrid pages with recorded backend responses, backend-down errors, and the mock smoke test of all 39 routes at 1440 px and 390 px (screenshots → `tests/screenshots/`) and axe WCAG 2.1 AA in light and dark themes. First run: `npx playwright install chromium` |
 | `npm run dev:live`                    | Hybrid mode against the backend on `localhost:8000` (see "Running against the backend")                                                                                                                                                                                       |
 | `npm run build:live` / `preview:live` | Production build in hybrid mode to `dist-live/` (never `dist/`, which the mock e2e project serves) / serve it                                                                                                                                                                 |
+| `npm run build:release`               | Production build (api mode, no mock service worker, no sample data) to `dist-release/`; the `Dockerfile` serves it with nginx (`deploy/nginx.conf`)                                                                                                                           |
+| `npm run test:release`                | Opt-in Playwright check of the production stack (`deploy/docker-compose.prod.yml` in the backend) at `NIWIS_RELEASE_URL`: no sample data, no error panels, no CSP violations                                                                                                  |
 | `npm run contract:check`              | Validate every live endpoint the pages use against the zod schemas and diff it with the mock → `docs/backend/CONTRACT_CHECK.md`                                                                                                                                               |
 | `npm run fixtures:record`             | Record the backend's responses for the Playwright hybrid project → `tests/fixtures/backend/`                                                                                                                                                                                  |
 | `npm run test:live`                   | Opt-in Playwright smoke against the running backend; writes `docs/backend/UI_VERIFICATION.md`                                                                                                                                                                                 |
@@ -155,3 +162,14 @@ and Natural Earth), simplified for the web.
 - [`docs/backend/`](docs/backend/): backend integration guide, contract changes, issues found, contract check, UI verification.
 - [`PLAN.md`](PLAN.md): mockup → page mapping, routes, the data plan and the backend integration plan (§7). [`PROGRESS.md`](PROGRESS.md): build status and known limitations.
 - `/dev/components`: a live gallery of every building block (not linked from the navigation).
+- Deployment (both containers behind nginx): `DEPLOYMENT.md` in the backend repository.
+
+## Contributing and security
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`SECURITY.md`](SECURITY.md) (report vulnerabilities privately).
+
+## Licence
+
+Licence: to be confirmed by DWS. Until the Department of Water and Sanitation confirms a licence, no licence is granted
+for this code. The boundary data in `public/geo` carry their own licences (`public/geo/SOURCES.md`); the DWS logo is
+governed by the department's corporate-identity rules.

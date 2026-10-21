@@ -1,0 +1,12 @@
+# gitleaks configuration: the default rules plus an allowlist of verified false positives (2026-10-21 full-history
+# scan: 444 "generic-api-key" hits, every one a database column name in a recorded backend response, e.g.
+# "key":"river_discharge_m3_s"). Keep it narrow: never allowlist a real credential, rotate it instead.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "verified false positives"
+paths = [
+  # responses recorded from the NIWIS API by scripts/record-fixtures.ts (public data; the API serves no secrets)
+  '''(^|/)tests/fixtures/backend/[^/]+\.json$''',
+]

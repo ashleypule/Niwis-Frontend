@@ -10,7 +10,9 @@ import type { Kpi } from '@/types/api';
 
 /**
  * Overview KPIs that belong to a live module come from that module's summary (the same query, so the Overview and the
- * module page always show the same number); the rest stay on the overview sample data and are marked Sample.
+ * module page always show the same number); the rest stay on the overview sample data and are marked Sample. When the
+ * overview's own summary is not available (production: the API has no overview table) the live cards still show, and
+ * one card says why the others are missing.
  */
 export const OVERVIEW_LIVE_KPIS: Record<string, { module: ModuleId; id: string; label: string }> = {
   rain: { module: 'rainfall', id: 'total', label: 'Rainfall (National)' },
@@ -47,6 +49,16 @@ export function OverviewKpis() {
     return { kpi: { ...found, label: o.label }, prov: panelProvenance(q, o.module) };
   };
 
+  // production: no overview summary → the live module cards alone, then the API's reason for the rest
+  const baseUnavailable = base.isError && isUnavailable(base.error);
+  const cards: Kpi[] | undefined =
+    base.data?.kpis ??
+    (baseUnavailable
+      ? Object.keys(OVERVIEW_LIVE_KPIS)
+          .filter((id) => isLive(OVERVIEW_LIVE_KPIS[id].module))
+          .map((id) => ({ id }) as Kpi)
+      : undefined);
+
   // mixed strip: every card carries its own Live / Sample marker
   return (
     <>
@@ -55,14 +67,14 @@ export function OverviewKpis() {
         data-testid="kpi-strip"
         className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl2:grid-cols-8"
       >
-        {base.isError ? (
+        {base.isError && !baseUnavailable ? (
           <div className="col-span-full">
             <ErrorState error={base.error} onRetry={() => base.refetch()} />
           </div>
-        ) : !base.data ? (
+        ) : !cards ? (
           Array.from({ length: 8 }, (_, i) => <LoadingState key={i} height={118} />)
         ) : (
-          base.data.kpis.map((k) => {
+          cards.map((k) => {
             const s = slot(k);
             if (s.kpi) return <KpiCard key={k.id} kpi={s.kpi} provenance={s.prov} marker />;
             if (s.state === 'unavailable')
@@ -73,6 +85,9 @@ export function OverviewKpis() {
               return <ErrorState key={k.id} height={118} error={s.error} onRetry={() => live[k.id].refetch()} />;
             return <LoadingState key={k.id} height={118} />;
           })
+        )}
+        {baseUnavailable && (
+          <UnavailableState height={118} compact detail={isUnavailable(base.error) ? base.error.detail : undefined} />
         )}
       </section>
     </>
