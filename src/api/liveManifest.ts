@@ -108,6 +108,10 @@ const V = '/vegetation';
 const VF = '/vegetation/forecast';
 const RO = '/runoff';
 const ROF = '/runoff/forecast';
+const DM = '/dams';
+const DMF = '/dams/forecast';
+const SW = '/surface-water';
+const SWF = '/surface-water/forecast';
 
 export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- rainfall
@@ -292,6 +296,53 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   fc(ROF, 'runoff', 'flow', { entityId: SAMPLE_DISTRICT }),
   fc(ROF, 'runoff', 'flood-probability'),
 
+  // ---------------------------------------------------------------- dams
+  sum(DM, 'dams'),
+  ents(DM, 'dams'),
+  ent(DM, 'dams', SAMPLE_DISTRICT),
+  ...many(
+    (k) => mp(DM, 'dams', k),
+    ['catchment-rainfall', 'soil-moisture', 'storage', 'anomaly', 'inflow', 'status', 'forecast-12'],
+  ),
+  ...many((k) => ts(DM, 'dams', k), ['storage-trend', 'flows', 'cumulative-inflow', 'low-storage-prob']),
+  ...many(
+    (k) => ts(DM, 'dams', k, { entityId: SAMPLE_DISTRICT }),
+    ['dam-storage', 'dam-flows', 'dam-monthly', 'rule-curve', 'dam-anomaly'],
+  ),
+  ...many(
+    (k) => bd(DM, 'dams', k),
+    ['by-wma', 'distribution', 'operational', 'wma-volume', 'by-province', 'risk-categories'],
+  ),
+  tb(DM, 'dams', 'top10'),
+  ...many((k) => tb(DM, 'dams', 'lowest', { order: k }), ['lowest', 'highest']),
+  ...many((p) => fc(DMF, 'dams', 'storage', p ? { province: p } : {}), PROVINCE_TAB_IDS.slice(0, 2)),
+  ...many((p) => fc(DMF, 'dams', 'flows', p ? { province: p } : {}), PROVINCE_TAB_IDS.slice(0, 2)),
+  fc(DMF, 'dams', 'storage', { entityId: SAMPLE_DISTRICT }),
+  ...many((k) => tb(DMF, 'dams', k), ['key-dams-forecast', 'risk-outlook']),
+
+  // ---------------------------------------------------------------- surface water
+  sum(SW, 'surface-water'),
+  ents(SW, 'surface-water'),
+  ent(SW, 'surface-water', SAMPLE_DISTRICT),
+  ...many(
+    (k) => mp(SW, 'surface-water', k),
+    ['discharge', 'flow-status', 'flow-anomaly', 'ssi', 'stations', 'catchment-runoff'],
+  ),
+  ...many(
+    (k) => ts(SW, 'surface-water', k, { entityId: SAMPLE_DISTRICT }),
+    ['discharge', 'water-level', 'baseflow', 'fdc', 'seasonal'],
+  ),
+  ...many((k) => ts(SW, 'surface-water', 'sediment', { entityId: SAMPLE_DISTRICT, kind: k }), ['conc', 'load']),
+  ts(SW, 'surface-water', 'flow-anomaly'),
+  ...many((k) => bd(SW, 'surface-water', k), ['eflow', 'risk', 'status', 'abstraction']),
+  tb(SW, 'surface-water', 'gauge-quality', { entityId: SAMPLE_DISTRICT }),
+  ...many((k) => tb(SW, 'surface-water', 'top-stations', { order: k }), ['highest', 'lowest']),
+  tb(SW, 'surface-water', 'alerts'),
+  tb(SWF, 'surface-water', 'statistics', { entityId: SAMPLE_DISTRICT }),
+  fc(SWF, 'surface-water', 'runoff'),
+  fc(SWF, 'surface-water', 'flow', { entityId: SAMPLE_DISTRICT }),
+  fc(SWF, 'surface-water', 'flood-probability'),
+
   // ---------------------------------------------------------------- database variables (every live page)
   // the chart groups are not listed here: scripts expand them from each catalogue (expandCategories), so a table or
   // column the data team adds is recorded and checked without editing this file
@@ -302,6 +353,8 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
       [C, 'climate'],
       [V, 'vegetation'],
       [RO, 'runoff'],
+      [DM, 'dams'],
+      [SW, 'surface-water'],
     ] as const
   ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
 

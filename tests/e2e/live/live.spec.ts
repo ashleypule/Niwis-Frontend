@@ -8,7 +8,7 @@ import { expect, test, type Page } from '@playwright/test';
  * written to docs/backend/UI_VERIFICATION.md and full-page screenshots to tests/screenshots/live/ for a visual check.
  */
 const BACKEND = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
-const MODULES = ['rainfall', 'drought', 'climate', 'vegetation', 'runoff'];
+const MODULES = ['rainfall', 'drought', 'climate', 'vegetation', 'runoff', 'dams'];
 
 interface Kpi {
   id: string;
@@ -74,7 +74,10 @@ for (const module of MODULES) {
   test(`${module}: UI values equal the API`, async ({ page, request }) => {
     const res = await request.get(`${BACKEND}/api/v1/${module}/summary?period=12M`, { timeout: 60_000 });
     expect(res.ok()).toBe(true);
-    const kpis = ((await res.json()) as { kpis: Kpi[] }).kpis.filter((k) => k.value != null || k.text).slice(0, 3);
+    const all = ((await res.json()) as { kpis: (Kpi & { unavailableReason?: string })[] }).kpis;
+    const kpis = all.filter((k) => k.value != null || k.text).slice(0, 3);
+    // a module whose KPIs the database cannot serve (dams): the first three cards show the backend's reason
+    const missing = kpis.length ? [] : all.filter((k) => k.unavailableReason).slice(0, 3);
 
     await page.goto(`/${module}`, { waitUntil: 'load' });
     // first loads after a backend restart can take ~20 s per request
@@ -95,8 +98,44 @@ for (const module of MODULES) {
       rows.push({ module, kpi: k.label, api: k.text ?? `${k.value} ${k.unit ?? ''}`.trim(), ui: shown, ok });
       expect(ok, `${module} ${k.label}: UI "${shown}" vs API ${k.text ?? k.value}`).toBe(true);
     }
+    for (const k of missing) {
+      const escaped = k.label.replace(/[()]/g, (m) => `\\${m}`);
+      const card = page.getByRole('article', { name: new RegExp(`^${escaped}:`) });
+      const label = (await card.getAttribute('aria-label')) ?? '';
+      const ok = label.includes('not available') && label.includes(k.unavailableReason!.slice(0, 60));
+      rows.push({
+        module,
+        kpi: k.label,
+        api: `null — ${k.unavailableReason!.slice(0, 60)}…`,
+        ui: label.slice(0, 80),
+        ok,
+      });
+      expect(ok, `${module} ${k.label}: the card shows the backend's reason`).toBe(true);
+    }
   });
 }
+
+// entity cards that carry their own values (dams: the reservoir's catchment rainfall and soil moisture)
+test('dams: the reservoir card equals the API', async ({ page, request }) => {
+  const list = (await (await request.get(`${BACKEND}/api/v1/dams/entities?limit=500`)).json()) as {
+    items: { id: string; name: string }[];
+  };
+  const first = list.items[0];
+  const card = (await (await request.get(`${BACKEND}/api/v1/dams/entities/${first.id}`)).json()) as {
+    fields: { label: string; value: number | string | null }[];
+  };
+  await page.goto(`/dams?entity=${first.id}`, { waitUntil: 'load' });
+  const panel = page.getByRole('region', { name: /Reservoir \(Selected District\)/ });
+  await expect(panel.locator('dl')).toBeVisible({ timeout: 120_000 });
+  for (const f of card.fields.filter((x) => typeof x.value === 'number')) {
+    const dd = panel.locator('dt', { hasText: f.label }).locator('xpath=following-sibling::dd[1]');
+    const shown = (await dd.innerText()).trim();
+    const ui = parseUi(shown);
+    const ok = typeof ui === 'number' && Math.abs(ui - (f.value as number)) <= 0.0051;
+    rows.push({ module: 'dams', kpi: `card: ${f.label}`, api: String(f.value), ui: shown, ok });
+    expect(ok, `dams card ${f.label}: UI "${shown}" vs API ${f.value}`).toBe(true);
+  }
+});
 
 // one database category chart per module: the newest value in the chart's data table equals the API's
 for (const module of MODULES) {

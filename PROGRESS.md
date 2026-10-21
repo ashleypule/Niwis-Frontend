@@ -226,3 +226,21 @@ Applies `../Niwis Backend/docs/FRONTEND_INTEGRATION.md` §8 items 16–21 and `C
 - `npm run test:live`: **20 / 20** (15 KPI values, 5 category-chart values; `docs/backend/UI_VERIFICATION.md`).
 - Screenshots `tests/screenshots/live/{page}-1440.png` and `-390.png`, every chart loaded, checked by eye: chart
   types as recommended, units on the axes, withheld groups with their reasons, nothing clipped, no horizontal scroll.
+
+## Completion from the database (20–21 October 2026)
+
+Owner's decisions: the database is the authoritative record, shown as **Live**; the system is public with no login.
+Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
+
+| Module    | Live from the backend                                                                                                                          | Not available (reason shown on the panel)                                                                                                                |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dams (§8) | 52 district reservoirs (`8_1` name, river), reservoir card (catchment rainfall, soil moisture), district layers, Database variables (2 charts) | every storage / flow / alert panel: `8_1` storage is a placeholder (51 of 52 districts at 100 % FSC every day); point layers (no coordinates); forecasts |
+
+- Dams page: a note explains why storage is missing; the live layer list starts with `catchment-rainfall` /
+  `soil-moisture`; the water-extent card shows "Not yet available" with the reason instead of drawing a reservoir from a
+  missing storage level; entity cards list the backend's reason for every null field (`unavailable: fields.<label>`).
+- Selected-entity panels wait for the entity list (no request without `entityId`).
+- Tests: hybrid `/dams` at 1440 / 390 px and a Dams behaviour test; the header count follows `.env.fixtures`; the
+  category spec's live-chart threshold follows the catalogue; live: Dams KPI reasons, reservoir card = API, a Dams
+  category chart = API. `npm run verify` ✔, `contract:check` 289 ok / 0 schema failures / 0 errors, `test:e2e` 147 ✔,
+  `test:live` Dams 5 / 5. Screenshots `tests/screenshots/{hybrid,live}/…dams…` checked by eye.

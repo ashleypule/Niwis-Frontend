@@ -8,6 +8,8 @@ import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
 import { Row } from '@/components/layout/Grid';
 import { WaterExtentCard } from './WaterExtentCard';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
+import { isLive } from '@/config/app';
 
 const mod = moduleById('dams');
 
@@ -17,21 +19,35 @@ export const DAM_LAYERS = [
   { id: 'inflow', label: 'Inflow (m³/s)' },
   { id: 'status', label: 'Operational status' },
 ];
+/** Live: the database's two plausible reservoir columns, per district, before the storage layers it cannot serve. */
+export const DAM_LAYERS_LIVE = [
+  { id: 'catchment-rainfall', label: 'Catchment rainfall (month)' },
+  { id: 'soil-moisture', label: 'Catchment soil moisture' },
+  ...DAM_LAYERS,
+];
 
 export default function DamsPage() {
   const sel = useSelectedEntity('dams');
   const ctx = sel.name ? `[${sel.name}]` : undefined;
   const p = { entityId: sel.id };
+  const live = isLive('dams');
   return (
     <div>
       <PageTabs mod={mod} />
+      {live && (
+        <p className="mb-2 rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink-2" role="note">
+          <b>Reservoir storage is not published yet.</b> The database&apos;s storage, level and flow values fail the
+          plausibility check (the reason is on each panel). Shown: the district reservoirs, their catchment rainfall and
+          soil moisture, and every database variable below.
+        </p>
+      )}
       <KpiStrip module="dams" count={8} />
 
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <MapPanel
           module="dams"
-          title="Dam Storage Status Map (Major Dams)"
-          layers={DAM_LAYERS}
+          title={live ? 'Reservoir Catchments by District' : 'Dam Storage Status Map (Major Dams)'}
+          layers={live ? DAM_LAYERS_LIVE : DAM_LAYERS}
           height={500}
           baseLayers={['provinces', 'wmas', 'catchments', 'rivers', 'towns', 'basemap']}
           defaultBase={['provinces', 'rivers']}
@@ -65,7 +81,11 @@ export default function DamsPage() {
       </Row>
 
       <Row className="md:grid-cols-2 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <EntityInfoCard module="dams" id={sel.id} title="Key Dam (Selected View)" />
+        <EntityInfoCard
+          module="dams"
+          id={sel.id}
+          title={live ? 'Reservoir (Selected District)' : 'Key Dam (Selected View)'}
+        />
         <CategoryPanel module="dams" metric="operational" title="Operational Status" variant="donut" height={190} />
         <WaterExtentCard id={sel.id} />
       </Row>
@@ -77,6 +97,8 @@ export default function DamsPage() {
           title="Storage Level Trend (Selected Dam)"
           context={ctx}
           extra={p}
+          enabled={!!sel.id}
+          blockedBy={sel.list}
           height={240}
         />
         <SeriesPanel
@@ -85,6 +107,8 @@ export default function DamsPage() {
           title="Inflow and Outflow (Selected Dam)"
           context={ctx}
           extra={p}
+          enabled={!!sel.id}
+          blockedBy={sel.list}
           height={240}
         />
         <SeriesPanel
@@ -93,6 +117,8 @@ export default function DamsPage() {
           title="Monthly Storage Comparison (Selected Dam)"
           context={ctx}
           extra={p}
+          enabled={!!sel.id}
+          blockedBy={sel.list}
           height={240}
         />
       </Row>
@@ -104,6 +130,8 @@ export default function DamsPage() {
           title="Operational Rule Curve (Selected Dam)"
           context={ctx}
           extra={p}
+          enabled={!!sel.id}
+          blockedBy={sel.list}
           height={230}
         />
         <SeriesPanel
@@ -112,6 +140,8 @@ export default function DamsPage() {
           title="Storage Anomaly (Selected Dam)"
           context={ctx}
           extra={p}
+          enabled={!!sel.id}
+          blockedBy={sel.list}
           height={230}
         />
         <TablePanel
@@ -144,6 +174,7 @@ export default function DamsPage() {
         />
         <SeriesPanel module="dams" metric="cumulative-inflow" title="Cumulative Inflow (Year to Date)" height={230} />
       </Row>
+      <DatabaseVariables module="dams" />
     </div>
   );
 }

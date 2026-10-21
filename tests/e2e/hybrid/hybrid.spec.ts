@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
 /**
@@ -5,7 +7,14 @@ import { expect, test, type Page } from '@playwright/test';
  * live data with Live markers, sample data is always visibly marked, and the Overview agrees with the module pages.
  * Re-record the fixtures with `npm run fixtures:record` when the backend changes.
  */
-const PAGES = ['/rainfall', '/drought', '/climate', '/vegetation', '/runoff'];
+/** The live modules of the fixtures build (.env.fixtures), so the header count follows the configuration. */
+const LIVE = (
+  /^VITE_LIVE_MODULES=(.*)$/m.exec(readFileSync(resolve(import.meta.dirname, '../../../.env.fixtures'), 'utf8'))?.[1] ??
+  ''
+)
+  .split(',')
+  .filter(Boolean);
+const PAGES = LIVE.map((m) => `/${m}`);
 const VIEWPORTS = [
   { width: 1440, height: 900 },
   { width: 390, height: 844 },
@@ -69,7 +78,7 @@ for (const vp of VIEWPORTS) {
         await sampleAlwaysMarked(page);
         // live data never fails silently into an error state with recorded responses
         await expect(page.locator('[data-state="error"]')).toHaveCount(0);
-        await expect(page.getByTestId('live-summary')).toContainText('5 of 24 modules live');
+        await expect(page.getByTestId('live-summary')).toContainText(`${LIVE.length} of 24 modules live`);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
         expect(overflow, 'horizontal overflow (px)').toBeLessThanOrEqual(1);
         await page.screenshot({ path: `tests/screenshots/hybrid/${vp.width}/${slug(route)}.png`, fullPage: true });
@@ -121,6 +130,25 @@ test.describe('hybrid behaviour', () => {
     await settle(page, '/runoff');
     expect(await page.locator('[data-marker="modelled"]').count()).toBeGreaterThan(3);
     await expect(page.getByRole('note').filter({ hasText: 'Modelled values' })).toBeVisible();
+  });
+
+  test('dams: storage is not published, and every empty panel says why', async ({ page }) => {
+    await settle(page, '/dams');
+    await expect(page.getByRole('note').filter({ hasText: 'Reservoir storage is not published yet' })).toBeVisible();
+    const storage = page.getByRole('article', { name: /^Total Storage:/ });
+    await expect(storage).toHaveAttribute('aria-label', /not available \(.*51 of 52 districts/);
+    // the water-extent card no longer draws a reservoir without a storage level
+    const extent = page.getByRole('region', { name: /Satellite Water Extent/ });
+    await expect(extent.locator('[data-state="unavailable"]')).toBeVisible();
+    await expect(extent.locator('svg[role="img"]')).toHaveCount(0);
+    // the reservoir card shows the district's reservoir from 8_1 and why storage is missing
+    await expect(page.getByTestId('entity-unavailable').first()).toContainText('51 of 52 districts');
+    // the live district layers come first on the map
+    await expect(page.getByRole('tab', { name: 'Catchment rainfall (month)' }).first()).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await sampleAlwaysMarked(page);
   });
 
   test('Data Integration shows the national database tables', async ({ page }) => {

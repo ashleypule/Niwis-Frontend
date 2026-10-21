@@ -2,14 +2,37 @@ import { useEntity } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/feedback/PanelBoundary';
 import { formatNumber } from '@/lib/format';
+import { isLive } from '@/config/app';
+import { panelProvenance } from '@/components/provenance/provenance';
 
 /**
  * Satellite water-extent panel (SANSA NDWI). Surface area scales with storage^0.67 (reservoir hypsometry);
- * the outline is a stylised reservoir shape — no imagery is hotlinked.
+ * the outline is a stylised reservoir shape — no imagery is hotlinked. Without a storage level (live: the database's
+ * storage is withheld) the panel says why instead of drawing an empty reservoir.
  */
 export function WaterExtentCard({ id }: { id?: string }) {
   const q = useEntity('dams', id);
-  const pct = Number(q.data?.fields.find((f) => f.label === 'Storage level')?.value ?? 0);
+  const field = q.data?.fields.find((f) => f.label === 'Storage level');
+  const value = field?.value;
+  const reason = q.data?.unavailable?.find((u) => u.field === 'fields.Storage level')?.reason;
+  if (q.data && (value == null || typeof value !== 'number') && (isLive('dams') || reason)) {
+    return (
+      <Card
+        title="Satellite Water Extent (NDWI)"
+        context={q.data.name}
+        provenance={{ kind: 'unavailable', detail: reason }}
+      >
+        <div className="flex min-h-[190px] flex-col justify-center gap-2 text-sm" data-state="unavailable">
+          <p className="font-semibold text-ink">Not yet available</p>
+          <p className="text-ink-2">
+            The water extent is drawn from the reservoir&apos;s storage level, which the database cannot provide yet.
+          </p>
+          {reason && <p className="text-xs leading-snug text-muted">{reason}</p>}
+        </div>
+      </Card>
+    );
+  }
+  const pct = Number(value ?? 0);
   const ratio = Math.pow(Math.max(0.02, pct / 100), 0.67);
   const shape = (s: number) => {
     const pts: string[] = [];
@@ -21,7 +44,7 @@ export function WaterExtentCard({ id }: { id?: string }) {
     return pts.join(' ');
   };
   return (
-    <Card title="Satellite Water Extent (NDWI)" context={q.data?.name}>
+    <Card title="Satellite Water Extent (NDWI)" context={q.data?.name} provenance={panelProvenance(q, 'dams')}>
       {!q.data ? (
         <Skeleton height={190} />
       ) : (

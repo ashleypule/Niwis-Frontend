@@ -39,6 +39,13 @@ export function EntityInfoCard({
 }
 
 export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean }) {
+  // fields the backend returns as null, with the reason (`unavailable: [{ field: "fields.<label>", reason }]`)
+  const reasons = new Map(
+    (e.unavailable ?? []).filter((u) => u.field.startsWith('fields.')).map((u) => [u.field.slice(7), u.reason]),
+  );
+  const shown = [
+    ...new Set(e.fields.filter((f) => f.value == null && reasons.has(f.label)).map((f) => reasons.get(f.label)!)),
+  ];
   return (
     <div className="@container">
       <div className={compact ? 'flex flex-col gap-3' : 'flex flex-col gap-3 @[34rem]:flex-row'}>
@@ -75,6 +82,10 @@ export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean 
                     ),
                     f.unit,
                   )
+                ) : f.value == null && reasons.has(f.label) ? (
+                  <span title={reasons.get(f.label)} data-state="unavailable">
+                    —<span className="sr-only"> (not available)</span>
+                  </span>
                 ) : (
                   (f.value ?? '—')
                 )}
@@ -83,6 +94,16 @@ export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean 
           ))}
         </dl>
       </div>
+      {shown.length > 0 && (
+        <ul className="mt-2 space-y-1 text-xs leading-snug text-muted" data-testid="entity-unavailable">
+          {shown.map((r) => (
+            <li key={r}>
+              <span className="font-semibold text-ink-2">Not available: </span>
+              {r}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
