@@ -114,6 +114,8 @@ const SW = '/surface-water';
 const SWF = '/surface-water/forecast';
 const GW = '/groundwater';
 const GWR = '/groundwater-reserve';
+const WQ = '/water-quality';
+const WQF = '/water-quality/forecast';
 
 export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- rainfall
@@ -378,6 +380,37 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   // the groundwater page's recharge layer comes from this module
   mp(GW, 'groundwater-reserve', 'recharge'),
 
+  // ---------------------------------------------------------------- water quality
+  sum(WQ, 'water-quality'),
+  ents(WQ, 'water-quality'),
+  ent(WQ, 'water-quality', SAMPLE_DISTRICT),
+  ...many(
+    (k) => mp(WQ, 'water-quality', k),
+    ['wqi', 'ph', 'do', 'ec', 'turbidity', 'nitrate', 'phosphate', 'ammonia', 'bod', 'cod', 'ecoli', 'lead'],
+  ),
+  ...many(
+    (k) => ts(WQ, 'water-quality', 'param-trend', { entityId: SAMPLE_DISTRICT, param: k }),
+    ['ec', 'ph', 'turbidity', 'do', 'bod', 'cod', 'nitrate', 'phosphate', 'ecoli'],
+  ),
+  ts(WQ, 'water-quality', 'station-wqi', { entityId: SAMPLE_DISTRICT }),
+  ...many(
+    (k) => ts(WQ, 'water-quality', 'group', { entityId: SAMPLE_DISTRICT, group: k }),
+    ['nutrients', 'metals', 'micro'],
+  ),
+  ...many(
+    (k) => bd(WQ, 'water-quality', k),
+    ['param-range', 'compliance', 'by-province', 'param-compliance', 'wqi-distribution', 'by-type'],
+  ),
+  ...many((k) => tb(WQ, 'water-quality', 'ranking', { order: k }), ['poorest', 'best']),
+  tb(WQ, 'water-quality', 'latest', { entityId: SAMPLE_DISTRICT }),
+  tb(WQ, 'water-quality', 'hotspots'),
+  mp(WQF, 'water-quality', 'forecast-wqi'),
+  ...many((h) => fc(WQF, 'water-quality', 'wqi', { horizon: h }), [3, 6, 12, 24]),
+  fc(WQF, 'water-quality', 'params'),
+  fc(WQF, 'water-quality', 'ecoli-catchment'),
+  tb(WQF, 'water-quality', 'forecast-indicators'),
+  bd(WQF, 'water-quality', 'risk-outlook'),
+
   // ---------------------------------------------------------------- database variables (every live page)
   // the chart groups are not listed here: scripts expand them from each catalogue (expandCategories), so a table or
   // column the data team adds is recorded and checked without editing this file
@@ -392,6 +425,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
       [SW, 'surface-water'],
       [GW, 'groundwater'],
       [GWR, 'groundwater-reserve'],
+      [WQ, 'water-quality'],
     ] as const
   ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
 

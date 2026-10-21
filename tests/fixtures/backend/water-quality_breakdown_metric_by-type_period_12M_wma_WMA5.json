@@ -1,0 +1,1 @@
+{"status":501,"requestId":"a90abd1304494bb0","body":{"error":"No water-body type (river, dam, wetland, groundwater) in the database: one record per district","code":"DATA_UNAVAILABLE","detail":"No water-body type (river, dam, wetland, groundwater) in the database: one record per district","missing":["breakdown:water-quality:by-type"]}}

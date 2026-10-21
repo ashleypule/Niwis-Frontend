@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
 /**
@@ -6,16 +8,13 @@ import { expect, test, type Page } from '@playwright/test';
  * this file. Chart internals are checked on the options each chart was drawn with (EChart's `data-chart` summary).
  * Charts load lazily: `open()` scrolls every placeholder into view first.
  */
-const MODULES = [
-  'drought',
-  'rainfall',
-  'climate',
-  'vegetation',
-  'runoff',
-  'dams',
-  'surface-water',
-  'groundwater',
-] as const;
+/** The live modules of the build under test (.env.fixtures): a module made live is covered without editing this file. */
+const MODULES = (
+  /^VITE_LIVE_MODULES=(.*)$/m.exec(readFileSync(resolve(import.meta.dirname, '../../../.env.fixtures'), 'utf8'))?.[1] ??
+  ''
+)
+  .split(',')
+  .filter(Boolean);
 
 interface Variable {
   column: string;

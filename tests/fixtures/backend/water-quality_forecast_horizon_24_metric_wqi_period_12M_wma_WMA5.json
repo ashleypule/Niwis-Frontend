@@ -1,0 +1,1 @@
+{"status":501,"requestId":"89874d9817d84c61","body":{"error":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","code":"DATA_UNAVAILABLE","detail":"Forecasts are not available yet: no forecast models or forecast tables exist in the database.","missing":["forecast:water-quality:wqi"]}}

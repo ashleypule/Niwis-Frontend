@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
@@ -8,17 +8,12 @@ import { expect, test, type Page } from '@playwright/test';
  * written to docs/backend/UI_VERIFICATION.md and full-page screenshots to tests/screenshots/live/ for a visual check.
  */
 const BACKEND = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
-const MODULES = [
-  'rainfall',
-  'drought',
-  'climate',
-  'vegetation',
-  'runoff',
-  'dams',
-  'surface-water',
-  'groundwater',
-  'groundwater-reserve',
-];
+/** The live modules of the build under test (.env.live): a module made live is covered without editing this file. */
+const MODULES = (
+  /^VITE_LIVE_MODULES=(.*)$/m.exec(readFileSync(resolve(import.meta.dirname, '../../../.env.live'), 'utf8'))?.[1] ?? ''
+)
+  .split(',')
+  .filter(Boolean);
 
 interface Kpi {
   id: string;

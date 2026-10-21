@@ -6,7 +6,8 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 
 const mod = moduleById('water-quality');
 
@@ -41,7 +42,8 @@ const LABEL: Record<string, string> = {
 export default function WaterQualityPage() {
   const st = useSelectedEntity('water-quality');
   const p = { entityId: st.id };
-  const ctx = st.name ? `[Station: ${st.name}]` : undefined;
+  const noun = entityNoun('water-quality');
+  const ctx = st.name ? `[${noun}: ${st.name}]` : undefined;
   return (
     <div>
       <PageTabs mod={mod} />
@@ -57,9 +59,11 @@ export default function WaterQualityPage() {
           <SeriesPanel
             module="water-quality"
             metric="param-trend"
-            title="Key Water Quality Trends (Selected Station)"
+            title={`Key Water Quality Trends (Selected ${noun})`}
             context={ctx}
             extra={p}
+            enabled={!!st.id}
+            blockedBy={st.list}
             tabs={PARAMS.map((v) => ({ value: v, label: LABEL[v], params: { param: v } }))}
             height={210}
           />
@@ -96,9 +100,11 @@ export default function WaterQualityPage() {
         <SeriesPanel
           module="water-quality"
           metric="station-wqi"
-          title="WQI Time Series (Selected Station)"
+          title={`WQI Time Series (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={230}
         />
         <CategoryPanel
@@ -128,31 +134,44 @@ export default function WaterQualityPage() {
         <SeriesPanel
           module="water-quality"
           metric="group"
-          title="Nutrients (Selected Station)"
+          title={`Nutrients (Selected ${noun})`}
           context={ctx}
           extra={{ ...p, group: 'nutrients' }}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={220}
         />
         <SeriesPanel
           module="water-quality"
           metric="group"
-          title="Metals (Selected Station)"
+          title={`Metals (Selected ${noun})`}
           context={ctx}
           extra={{ ...p, group: 'metals' }}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={220}
         />
         <SeriesPanel
           module="water-quality"
           metric="group"
-          title="Microbiological – E. coli (Selected Station)"
+          title={`Microbiological – E. coli (Selected ${noun})`}
           context={ctx}
           extra={{ ...p, group: 'micro' }}
+          enabled={!!st.id}
+          blockedBy={st.list}
           height={220}
         />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.1fr_1fr_1.2fr]">
-        <EntityInfoCard module="water-quality" id={st.id} title="Station Information" />
-        <TablePanel module="water-quality" metric="latest" title="Latest Results (Selected Station)" extra={p} />
+        <EntityInfoCard module="water-quality" id={st.id} title={`${noun} Information`} />
+        <TablePanel
+          module="water-quality"
+          metric="latest"
+          title={`Latest Results (Selected ${noun})`}
+          extra={p}
+          enabled={!!st.id}
+          blockedBy={st.list}
+        />
         <div className="grid content-start gap-3">
           <TablePanel module="water-quality" metric="hotspots" title="Hotspots / Non-compliance Locations" />
           <CategoryPanel
@@ -164,6 +183,7 @@ export default function WaterQualityPage() {
           />
         </div>
       </Row>
+      <DatabaseVariables module="water-quality" />
     </div>
   );
 }
