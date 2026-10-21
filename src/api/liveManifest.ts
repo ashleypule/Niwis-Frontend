@@ -113,6 +113,7 @@ const DMF = '/dams/forecast';
 const SW = '/surface-water';
 const SWF = '/surface-water/forecast';
 const GW = '/groundwater';
+const GWR = '/groundwater-reserve';
 
 export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- rainfall
@@ -360,6 +361,23 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   ...many((k) => tb(GW, 'groundwater', 'lowest', { order: k }), ['deepest', 'shallowest']),
   ...many((k) => tb(GW, 'groundwater', k), ['aquifers', 'declining', 'nitrate']),
 
+  // ---------------------------------------------------------------- groundwater reserve
+  sum(GWR, 'groundwater-reserve'),
+  ents(GWR, 'groundwater-reserve'),
+  ent(GWR, 'groundwater-reserve', SAMPLE_DISTRICT),
+  ...many((k) => mp(GWR, 'groundwater-reserve', k), ['ei', 'recharge', 'gw-level', 'sgi']),
+  { ...ts(GWR, 'groundwater', 'level-long', { entityId: SAMPLE_DISTRICT }) },
+  bd(GWR, 'groundwater-reserve', 'components', { entityId: SAMPLE_DISTRICT }),
+  ...many(
+    (k) => ts(GWR, 'groundwater-reserve', k, { entityId: SAMPLE_DISTRICT }),
+    ['recharge-abstraction', 'yield-ei'],
+  ),
+  bd(GWR, 'groundwater-reserve', 'ei-classes'),
+  tb(GWR, 'groundwater-reserve', 'aquifers'),
+  tb(GWR, 'groundwater', 'lowest'),
+  // the groundwater page's recharge layer comes from this module
+  mp(GW, 'groundwater-reserve', 'recharge'),
+
   // ---------------------------------------------------------------- database variables (every live page)
   // the chart groups are not listed here: scripts expand them from each catalogue (expandCategories), so a table or
   // column the data team adds is recorded and checked without editing this file
@@ -373,6 +391,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
       [DM, 'dams'],
       [SW, 'surface-water'],
       [GW, 'groundwater'],
+      [GWR, 'groundwater-reserve'],
     ] as const
   ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
 

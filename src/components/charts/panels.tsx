@@ -178,10 +178,22 @@ export function CategoryPanel({
   labels,
   log,
   legend,
-}: PanelBase & { variant?: CategoryVariant; labels?: boolean; log?: boolean; legend?: boolean }) {
+  enabled = true,
+  blockedBy,
+}: PanelBase & {
+  variant?: CategoryVariant;
+  labels?: boolean;
+  log?: boolean;
+  legend?: boolean;
+  /** false until what the request needs (e.g. the selected entity) is known */
+  enabled?: boolean;
+  /** the query `enabled` waits for: its failure is this panel's failure */
+  blockedBy?: Blocker;
+}) {
   const { active, tabRow } = useTabs(tabs);
   const mod = active?.module ?? module;
-  const q = useBreakdown(mod, active?.metric ?? metric, { ...extra, ...active?.params });
+  const q = useBreakdown(mod, active?.metric ?? metric, { ...extra, ...active?.params }, enabled);
+  const waiting = !enabled && !q.data;
   const t = useChartTheme();
   const split = useMemo(() => (q.data ? splitNullCategories(q.data) : undefined), [q.data]);
   const prov = panelProvenance(q, mod);
@@ -198,12 +210,12 @@ export function CategoryPanel({
         info={info}
         className={className}
         band={band}
-        isLoading={q.isLoading}
-        isError={q.isError}
-        error={q.error}
+        isLoading={q.isLoading || (waiting && !blockedBy?.isError)}
+        isError={q.isError || (waiting && !!blockedBy?.isError)}
+        error={q.error ?? blockedBy?.error}
         missing={split?.missing}
         provenance={prov}
-        onRetry={() => q.refetch()}
+        onRetry={() => (q.isError ? q.refetch() : blockedBy?.refetch())}
         rows={rows}
         footer={footer}
         controls={tabRow ?? controls}
@@ -222,12 +234,12 @@ export function CategoryPanel({
       height={height}
       className={className}
       band={band}
-      isLoading={q.isLoading}
-      isError={q.isError}
-      error={q.error}
+      isLoading={q.isLoading || (waiting && !blockedBy?.isError)}
+      isError={q.isError || (waiting && !!blockedBy?.isError)}
+      error={q.error ?? blockedBy?.error}
       missing={split?.missing}
       provenance={prov}
-      onRetry={() => q.refetch()}
+      onRetry={() => (q.isError ? q.refetch() : blockedBy?.refetch())}
       empty={!!split && (!split.set.categories.length || !split.set.series.length)}
       option={option}
       rows={rows}

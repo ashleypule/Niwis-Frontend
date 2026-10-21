@@ -1,0 +1,1 @@
+{"status":501,"requestId":"3794d8334b794d6a","body":{"error":"A sustainable yield in Mm³/year is not in the database (11.3 stores borehole yield in m³/h per borehole)","code":"DATA_UNAVAILABLE","detail":"A sustainable yield in Mm³/year is not in the database (11.3 stores borehole yield in m³/h per borehole)","missing":["timeseries:groundwater-reserve:yield-ei"]}}
