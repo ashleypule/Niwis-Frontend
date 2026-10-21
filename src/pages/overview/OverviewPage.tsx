@@ -1,5 +1,6 @@
 import { OverviewKpis } from './OverviewKpis';
 import { isLive } from '@/config/app';
+import type { ModuleId } from '@/config/modules';
 import { MapPanel, type PointLayerDef, type ThematicLayer } from '@/components/map/MapPanel';
 import { TablePanel } from '@/components/table/TablePanel';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
@@ -27,6 +28,14 @@ const POINTS: PointLayerDef[] = [
   { id: 'wtp', label: 'Treatment plants (WWTW)', module: 'green-drop', layer: 'compliance', shape: 'square' },
   { id: 'wss', label: 'Water supply systems', module: 'blue-drop', layer: 'compliance', shape: 'triangle' },
 ];
+
+/** Key-indicator tabs served by a live module: the same request as on that module's page. */
+const LIVE_TABS: Record<string, { module: ModuleId; metric: string }> = {
+  rainfall: { module: 'rainfall', metric: 'monthly' },
+  streamflow: { module: 'surface-water', metric: 'discharge' },
+  groundwater: { module: 'groundwater', metric: 'level' },
+  quality: { module: 'water-quality', metric: 'station-wqi' },
+};
 
 export default function OverviewPage() {
   return (
@@ -65,8 +74,8 @@ export default function OverviewPage() {
             value: t,
             label: t === 'quality' ? 'Water Quality' : t[0].toUpperCase() + t.slice(1),
             params: { tab: t },
-            // the rainfall tab comes from the live Rainfall module, so it matches the Rainfall page
-            ...(t === 'rainfall' && isLive('rainfall') ? { module: 'rainfall' as const, metric: 'monthly' } : {}),
+            // tabs of live modules come from those modules, so they match the module pages
+            ...(LIVE_TABS[t] && isLive(LIVE_TABS[t].module) ? { ...LIVE_TABS[t], params: {} } : {}),
           }))}
           height={210}
         />

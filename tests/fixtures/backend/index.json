@@ -972,6 +972,10 @@
  "groundwater/timeseries?metric=anomaly&period=12M": "groundwater_timeseries_metric_anomaly_period_12M.json",
  "groundwater/timeseries?metric=anomaly&period=12M&province=WC": "groundwater_timeseries_metric_anomaly_period_12M_province_WC.json",
  "groundwater/timeseries?metric=anomaly&period=12M&wma=WMA5": "groundwater_timeseries_metric_anomaly_period_12M_wma_WMA5.json",
+ "groundwater/timeseries?metric=level&municipality=DC32&period=12M": "groundwater_timeseries_metric_level_municipality_DC32_period_12M.json",
+ "groundwater/timeseries?metric=level&period=12M": "groundwater_timeseries_metric_level_period_12M.json",
+ "groundwater/timeseries?metric=level&period=12M&province=WC": "groundwater_timeseries_metric_level_period_12M_province_WC.json",
+ "groundwater/timeseries?metric=level&period=12M&wma=WMA5": "groundwater_timeseries_metric_level_period_12M_wma_WMA5.json",
  "groundwater/timeseries?metric=recharge-abstraction&municipality=DC32&period=12M": "groundwater_timeseries_metric_recharge-abstraction_municipality_DC32_period_12M.json",
  "groundwater/timeseries?metric=recharge-abstraction&period=12M": "groundwater_timeseries_metric_recharge-abstraction_period_12M.json",
  "groundwater/timeseries?metric=recharge-abstraction&period=12M&province=WC": "groundwater_timeseries_metric_recharge-abstraction_period_12M_province_WC.json",
@@ -1538,6 +1542,10 @@
  "surface-water/timeseries?entityId=DC44&metric=water-level&period=12M": "surface-water_timeseries_entityId_DC44_metric_water-level_period_12M.json",
  "surface-water/timeseries?entityId=DC44&metric=water-level&period=12M&province=WC": "surface-water_timeseries_entityId_DC44_metric_water-level_period_12M_province_WC.json",
  "surface-water/timeseries?entityId=DC44&metric=water-level&period=12M&wma=WMA5": "surface-water_timeseries_entityId_DC44_metric_water-level_period_12M_wma_WMA5.json",
+ "surface-water/timeseries?metric=discharge&municipality=DC32&period=12M": "surface-water_timeseries_metric_discharge_municipality_DC32_period_12M.json",
+ "surface-water/timeseries?metric=discharge&period=12M": "surface-water_timeseries_metric_discharge_period_12M.json",
+ "surface-water/timeseries?metric=discharge&period=12M&province=WC": "surface-water_timeseries_metric_discharge_period_12M_province_WC.json",
+ "surface-water/timeseries?metric=discharge&period=12M&wma=WMA5": "surface-water_timeseries_metric_discharge_period_12M_wma_WMA5.json",
  "surface-water/timeseries?metric=flow-anomaly&municipality=DC32&period=12M": "surface-water_timeseries_metric_flow-anomaly_municipality_DC32_period_12M.json",
  "surface-water/timeseries?metric=flow-anomaly&period=12M": "surface-water_timeseries_metric_flow-anomaly_period_12M.json",
  "surface-water/timeseries?metric=flow-anomaly&period=12M&province=WC": "surface-water_timeseries_metric_flow-anomaly_period_12M_province_WC.json",
@@ -1967,5 +1975,9 @@
  "water-quality/timeseries?entityId=DC44&metric=station-wqi&municipality=DC32&period=12M": "water-quality_timeseries_entityId_DC44_metric_station-wqi_municipality_DC32_period_12M.json",
  "water-quality/timeseries?entityId=DC44&metric=station-wqi&period=12M": "water-quality_timeseries_entityId_DC44_metric_station-wqi_period_12M.json",
  "water-quality/timeseries?entityId=DC44&metric=station-wqi&period=12M&province=WC": "water-quality_timeseries_entityId_DC44_metric_station-wqi_period_12M_province_WC.json",
- "water-quality/timeseries?entityId=DC44&metric=station-wqi&period=12M&wma=WMA5": "water-quality_timeseries_entityId_DC44_metric_station-wqi_period_12M_wma_WMA5.json"
+ "water-quality/timeseries?entityId=DC44&metric=station-wqi&period=12M&wma=WMA5": "water-quality_timeseries_entityId_DC44_metric_station-wqi_period_12M_wma_WMA5.json",
+ "water-quality/timeseries?metric=station-wqi&municipality=DC32&period=12M": "water-quality_timeseries_metric_station-wqi_municipality_DC32_period_12M.json",
+ "water-quality/timeseries?metric=station-wqi&period=12M": "water-quality_timeseries_metric_station-wqi_period_12M.json",
+ "water-quality/timeseries?metric=station-wqi&period=12M&province=WC": "water-quality_timeseries_metric_station-wqi_period_12M_province_WC.json",
+ "water-quality/timeseries?metric=station-wqi&period=12M&wma=WMA5": "water-quality_timeseries_metric_station-wqi_period_12M_wma_WMA5.json"
 }

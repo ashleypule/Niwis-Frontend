@@ -432,6 +432,16 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- overview (live panels)
   ts('/', 'drought', 'drought-area', { period: '24M' }),
   ...many((k) => mp('/', 'drought', k), ['municipal-class', 'rain-anomaly', 'vci']),
+  ...many((m) => sum('/', m), ['dams', 'runoff', 'groundwater', 'water-quality']),
+  mp('/', 'dams', 'storage'),
+  mp('/', 'surface-water', 'flow-status'),
+  mp('/', 'groundwater', 'gw-level'),
+  mp('/', 'water-quality', 'wqi'),
+  tb('/', 'dams', 'top10'),
+  ts('/', 'rainfall', 'monthly'),
+  ts('/', 'surface-water', 'discharge'),
+  ts('/', 'groundwater', 'level'),
+  ts('/', 'water-quality', 'station-wqi'),
 
   // ---------------------------------------------------------------- cross-module
   { page: '*', kind: 'reference', key: 'provinces', scoped: false },

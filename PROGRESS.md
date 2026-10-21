@@ -250,3 +250,15 @@ Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
   category spec's live-chart threshold follows the catalogue; live: Dams KPI reasons, reservoir card = API, a Dams
   category chart = API. `npm run verify` ✔, `contract:check` 289 ok / 0 schema failures / 0 errors, `test:e2e` 147 ✔,
   `test:live` Dams 5 / 5. Screenshots `tests/screenshots/{hybrid,live}/…dams…` checked by eye.
+
+### National Overview and cross-page
+
+- KPI strip: six live cards (rainfall, drought, dam storage, runoff anomaly, groundwater level, water-quality
+  compliance), each the module's own summary KPI, so the Overview agrees with the module pages; Dam Storage states the
+  `8_1` withholding reason. Water services access and demand stay Sample (no tables).
+- Key Indicators: the Rainfall, Streamflow, Groundwater and Water Quality tabs load the live module series (without the
+  overview `tab` parameter); Demand stays Sample. Map tabs, drought trend and the Top 10 table come from the modules
+  (the Top 10 is 501 for lack of dam capacities: Sample in fixture builds, "Not yet available" in production).
+- Data Integration and Governance read `/meta` (36 tables) and the header count reads `/health` ("10 of 24 modules
+  live"); neither needed code changes. Both pages and `/` are now in the hybrid screenshot sweep (1440 / 390 px).
+- `contract:check` 467 ok · 9 known structural differences · 135 unavailable · 0 schema failures · 0 errors; hybrid 62 ✔.

@@ -15,19 +15,26 @@ import type { Kpi } from '@/types/api';
 export const OVERVIEW_LIVE_KPIS: Record<string, { module: ModuleId; id: string; label: string }> = {
   rain: { module: 'rainfall', id: 'total', label: 'Rainfall (National)' },
   drought: { module: 'drought', id: 'class', label: 'Drought Status' },
+  dams: { module: 'dams', id: 'storage', label: 'Dam Storage (FSC)' },
+  streamflow: { module: 'runoff', id: 'anomaly', label: 'Runoff Anomaly (12 months)' },
+  gw: { module: 'groundwater', id: 'anomaly', label: 'Groundwater Levels' },
+  wq: { module: 'water-quality', id: 'compliance', label: 'Water Quality (Compliance)' },
 };
 
 type Slot = { kpi?: Kpi; prov: PanelProvenance; state?: 'loading' | 'error' | 'unavailable'; error?: unknown };
 
 export function OverviewKpis() {
-  const rainLive = isLive('rainfall');
-  const droughtLive = isLive('drought');
   const base = useSummary('overview');
-  const rain = useSummary('rainfall', {}, rainLive);
-  const drought = useSummary('drought', {}, droughtLive);
-  if (!rainLive && !droughtLive) return <KpiStrip module="overview" count={8} />;
+  // one summary query per live module (a fixed set of hooks); the module page uses the same query
+  const rain = useSummary('rainfall', {}, isLive('rainfall'));
+  const drought = useSummary('drought', {}, isLive('drought'));
+  const dams = useSummary('dams', {}, isLive('dams'));
+  const streamflow = useSummary('runoff', {}, isLive('runoff'));
+  const gw = useSummary('groundwater', {}, isLive('groundwater'));
+  const wq = useSummary('water-quality', {}, isLive('water-quality'));
+  if (!Object.values(OVERVIEW_LIVE_KPIS).some((o) => isLive(o.module))) return <KpiStrip module="overview" count={8} />;
 
-  const live: Record<string, typeof rain> = { rain, drought };
+  const live: Record<string, typeof rain> = { rain, drought, dams, streamflow, gw, wq };
   const baseProv = panelProvenance(base, 'overview');
   const slot = (k: Kpi): Slot => {
     const o = OVERVIEW_LIVE_KPIS[k.id];

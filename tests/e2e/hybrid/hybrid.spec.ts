@@ -14,7 +14,7 @@ const LIVE = (
 )
   .split(',')
   .filter(Boolean);
-const PAGES = LIVE.map((m) => `/${m}`);
+const PAGES = ['/', ...LIVE.map((m) => `/${m}`), '/data-integration', '/governance'];
 const VIEWPORTS = [
   { width: 1440, height: 900 },
   { width: 390, height: 844 },
@@ -99,9 +99,16 @@ test.describe('hybrid behaviour', () => {
     expect(onOverview?.split(':')[1]).toBe(onRainfall?.split(':')[1]);
     // the live cards say Live; the overview's own sample cards say Sample
     const strip = page.getByTestId('kpi-strip');
-    await expect(strip.locator('[data-marker="live"]')).toHaveCount(2);
+    await expect(strip.locator('[data-marker="live"]')).toHaveCount(6);
     expect(await strip.locator('[data-marker="sample"]').count()).toBeGreaterThan(0);
     await sampleAlwaysMarked(page);
+    // the Key Indicators tabs of live modules load those modules' series (no tab parameter, no error)
+    const ki = page.getByRole('region', { name: 'Key Indicators (Last 12 Months)' });
+    for (const tab of ['Streamflow', 'Groundwater', 'Water Quality', 'Rainfall']) {
+      await ki.getByRole('tab', { name: tab }).click();
+      await expect(ki.locator('[data-marker="live"]')).toBeVisible();
+      await expect(ki.locator('[data-state="error"]')).toHaveCount(0);
+    }
   });
 
   test('a local municipality rolls up to its district on live pages', async ({ page }) => {

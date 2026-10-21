@@ -1,1 +1,1 @@
-{"status":501,"requestId":"20613fb4cf22491d","body":{"error":"Recovery probabilities need a forecast model","code":"DATA_UNAVAILABLE","detail":"Recovery probabilities need a forecast model","missing":["forecast:recovery"]}}
+{"status":501,"requestId":"934d47fdd90d45ae","body":{"error":"Recovery probabilities need a forecast model","code":"DATA_UNAVAILABLE","detail":"Recovery probabilities need a forecast model","missing":["forecast:recovery"]}}

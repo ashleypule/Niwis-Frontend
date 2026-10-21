@@ -23,7 +23,7 @@ export function SampleDataBadge() {
 /** Modules with their own data (everything except the report builder). */
 const DATA_MODULES = MODULES.filter((m) => m.id !== 'reports');
 
-/** Hybrid / api mode: "5 of 24 modules live" from /health, linking to the Data Integration page. */
+/** Hybrid / api mode: "N of 24 modules live" from /health, linking to the Data Integration page. */
 export function LiveSummaryBadge() {
   const health = useHealth();
   if (!showProvenance || !APP.liveMeta) return null;
