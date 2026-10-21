@@ -104,7 +104,7 @@ export function buildUrl(path: string, params: QueryParams = {}, live = isLivePa
 
 const MESSAGES: Record<number, string> = {
   400: 'The request was not valid.',
-  401: 'Your session has expired. Please sign in again.',
+  401: 'The data service refused the request.',
   403: 'You do not have access to this data.',
   404: 'This dataset is not available.',
   429: 'Too many requests. Please wait a moment.',

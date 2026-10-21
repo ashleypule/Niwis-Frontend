@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Bell, ChevronDown, LogOut, Menu, Moon, Search, Sun, UserCircle2 } from 'lucide-react';
+import { Bell, Menu, Moon, Search, Sun } from 'lucide-react';
 import { MODULES, moduleForPath } from '@/config/modules';
 import { APP, isLive, isMock, showProvenance } from '@/config/app';
 import { useUi } from '@/store/filters';
@@ -59,62 +58,21 @@ export function LiveSummaryBadge() {
   );
 }
 
-function UserMenu() {
-  const [open, setOpen] = useState(false);
+/** The system is public with no login: the header keeps only the theme toggle (no user, role or sign-out). */
+function ThemeToggle() {
   const theme = useUi((s) => s.theme);
   const setTheme = useUi((s) => s.setTheme);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const close = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
-    document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
-  }, []);
+  const dark = theme === 'dark';
   return (
-    <div className="relative" ref={ref}>
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 text-white hover:bg-white/10"
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        <UserCircle2 className="h-8 w-8 text-white/90" aria-hidden="true" />
-        <span className="hidden text-left leading-tight md:block">
-          <span className="block text-sm font-semibold">DWS User</span>
-          <span className="block text-[11px] text-white/70">Analyst</span>
-        </span>
-        <ChevronDown className="h-4 w-4 text-white/70" aria-hidden="true" />
-      </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-pop"
-        >
-          <div className="border-b border-line px-3 py-2">
-            <div className="text-sm font-semibold">DWS User</div>
-            <div className="text-xs text-muted">Analyst · National Office</div>
-          </div>
-          <button
-            role="menuitem"
-            type="button"
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-2"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            {theme === 'dark' ? 'Light theme' : 'Dark theme'}
-          </button>
-          <button
-            role="menuitem"
-            type="button"
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2"
-            onClick={() => setOpen(false)}
-            title="Single sign-on is configured by the backend team"
-          >
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
-        </div>
-      )}
-    </div>
+    <button
+      type="button"
+      onClick={() => setTheme(dark ? 'light' : 'dark')}
+      className="rounded-lg p-2 hover:bg-white/10"
+      aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+      title={dark ? 'Light theme' : 'Dark theme'}
+    >
+      {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </button>
   );
 }
 
@@ -186,7 +144,7 @@ export function Header() {
               </span>
             )}
           </button>
-          <UserMenu />
+          <ThemeToggle />
         </div>
       </div>
     </header>

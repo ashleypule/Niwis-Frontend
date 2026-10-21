@@ -113,3 +113,18 @@ test('filters are synced to the URL', async ({ page }) => {
   await expect(page).toHaveURL(/province=WC/);
   await expect(page).toHaveURL(/period=24M/);
 });
+
+test('public system: no user menu or sign-out, a theme toggle, read-only alerts', async ({ page }) => {
+  await page.goto('/');
+  const header = page.locator('header.hero');
+  await expect(header).not.toContainText('DWS User');
+  await expect(header.getByRole('button', { name: /sign out|account|user/i })).toHaveCount(0);
+  const html = page.locator('html');
+  const before = await html.getAttribute('data-theme');
+  await header.getByRole('button', { name: /Switch to (dark|light) theme/ }).click();
+  await expect(html).not.toHaveAttribute('data-theme', before ?? '');
+  await page.goto('/alerts');
+  await expect(page.getByRole('row').nth(1)).toBeVisible();
+  await expect(page.getByRole('button', { name: /Acknowledge|Assign|Mark resolved/ })).toHaveCount(0);
+  await expect(page.getByRole('columnheader', { name: 'Actions' })).toHaveCount(0);
+});

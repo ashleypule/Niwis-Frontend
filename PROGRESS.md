@@ -262,3 +262,11 @@ Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
 - Data Integration and Governance read `/meta` (36 tables) and the header count reads `/health` ("10 of 24 modules
   live"); neither needed code changes. Both pages and `/` are now in the hybrid screenshot sweep (1440 / 390 px).
 - `contract:check` 467 ok · 9 known structural differences · 135 unavailable · 0 schema failures · 0 errors; hybrid 62 ✔.
+
+### Part 3 — public release: no login (21 October 2026)
+
+- Header: the user menu ("DWS User", role, sign out) is gone; a theme toggle button replaces it. Report covers name
+  only the issuing department. The 401 message no longer asks users to sign in.
+- Alerts are read-only: no acknowledge / assign / resolve, no browser-stored workflow state; the status column shows
+  the status the data service reports.
+- Test: `smoke.spec.ts` "public system: no user menu or sign-out, a theme toggle, read-only alerts".

@@ -361,7 +361,7 @@ export const MODULES: ModuleDef[] = [
     short: 'Alerts',
     group: 'Intelligence',
     icon: BarChart3,
-    keywords: ['Unified alerts', 'All modules', 'Acknowledge & assign'],
+    keywords: ['Unified alerts', 'All modules', 'Read-only'],
     hasForecast: false,
     presets: ['latest', '1M', '3M', '12M'],
     spec: '§2.2',
