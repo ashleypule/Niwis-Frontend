@@ -1,0 +1,1 @@
+{"status":501,"requestId":"405cf80ab32a49d1","body":{"error":"No groundwater EC in the database","code":"DATA_UNAVAILABLE","detail":"No groundwater EC in the database","missing":["map:groundwater:ec"]}}

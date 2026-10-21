@@ -1,0 +1,1 @@
+{"status":501,"requestId":"f78b7c53a5d44b42","body":{"error":"Abstraction by sector is not in the database","code":"DATA_UNAVAILABLE","detail":"Abstraction by sector is not in the database","missing":["breakdown:groundwater:sector"]}}

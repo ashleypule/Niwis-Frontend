@@ -112,6 +112,7 @@ const DM = '/dams';
 const DMF = '/dams/forecast';
 const SW = '/surface-water';
 const SWF = '/surface-water/forecast';
+const GW = '/groundwater';
 
 export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- rainfall
@@ -343,6 +344,22 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   fc(SWF, 'surface-water', 'flow', { entityId: SAMPLE_DISTRICT }),
   fc(SWF, 'surface-water', 'flood-probability'),
 
+  // ---------------------------------------------------------------- groundwater
+  sum(GW, 'groundwater'),
+  ents(GW, 'groundwater'),
+  ent(GW, 'groundwater', SAMPLE_DISTRICT),
+  ...many((k) => mp(GW, 'groundwater', k), ['gw-level', 'sgi', 'level-change', 'status', 'ec']),
+  ...many((k) => ts(GW, 'groundwater', k, { entityId: SAMPLE_DISTRICT }), ['level', 'sgi', 'level-long', 'seasonal']),
+  ...many(
+    (k) => ts(GW, 'groundwater', 'quality', { entityId: SAMPLE_DISTRICT, param: k }),
+    ['ec', 'ph', 'nitrate', 'fluoride', 'tds'],
+  ),
+  ts(GW, 'groundwater', 'anomaly'),
+  ts(GW, 'groundwater', 'recharge-abstraction'),
+  ...many((k) => bd(GW, 'groundwater', k), ['by-aquifer', 'status', 'sector', 'distribution']),
+  ...many((k) => tb(GW, 'groundwater', 'lowest', { order: k }), ['deepest', 'shallowest']),
+  ...many((k) => tb(GW, 'groundwater', k), ['aquifers', 'declining', 'nitrate']),
+
   // ---------------------------------------------------------------- database variables (every live page)
   // the chart groups are not listed here: scripts expand them from each catalogue (expandCategories), so a table or
   // column the data team adds is recorded and checked without editing this file
@@ -355,6 +372,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
       [RO, 'runoff'],
       [DM, 'dams'],
       [SW, 'surface-water'],
+      [GW, 'groundwater'],
     ] as const
   ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
 

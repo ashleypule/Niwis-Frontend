@@ -6,7 +6,16 @@ import { expect, test, type Page } from '@playwright/test';
  * this file. Chart internals are checked on the options each chart was drawn with (EChart's `data-chart` summary).
  * Charts load lazily: `open()` scrolls every placeholder into view first.
  */
-const MODULES = ['drought', 'rainfall', 'climate', 'vegetation', 'runoff', 'dams', 'surface-water'] as const;
+const MODULES = [
+  'drought',
+  'rainfall',
+  'climate',
+  'vegetation',
+  'runoff',
+  'dams',
+  'surface-water',
+  'groundwater',
+] as const;
 
 interface Variable {
   column: string;

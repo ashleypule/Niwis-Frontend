@@ -7,7 +7,8 @@ import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 
 const mod = moduleById('groundwater');
 
@@ -23,7 +24,8 @@ const LAYERS = [
 export default function GroundwaterPage() {
   const bh = useSelectedEntity('groundwater');
   const p = { entityId: bh.id };
-  const ctx = bh.name ? `[Borehole: ${bh.name}]` : undefined;
+  const noun = entityNoun('groundwater', 'Borehole');
+  const ctx = bh.name ? `[${noun}: ${bh.name}]` : undefined;
   return (
     <div>
       <PageTabs mod={mod} />
@@ -34,10 +36,12 @@ export default function GroundwaterPage() {
           <SeriesPanel
             module="groundwater"
             metric="level"
-            title="Groundwater Level Trend (Selected Borehole)"
+            title={`Groundwater Level Trend (Selected ${noun})`}
             info="Depth axis is inverted: deeper water levels plot lower."
             context={ctx}
             extra={p}
+            enabled={!!bh.id}
+            blockedBy={bh.list}
             height={210}
           />
           <SeriesPanel
@@ -46,6 +50,8 @@ export default function GroundwaterPage() {
             title="Groundwater Level Anomaly (SGI)"
             context={ctx}
             extra={p}
+            enabled={!!bh.id}
+            blockedBy={bh.list}
             height={200}
           />
         </div>
@@ -60,7 +66,9 @@ export default function GroundwaterPage() {
           <TablePanel
             module="groundwater"
             metric="lowest"
-            title="Boreholes with Lowest Levels"
+            title={
+              noun === 'District' ? 'Districts with the Deepest / Shallowest Levels' : 'Boreholes with Lowest Levels'
+            }
             selectEntity
             tabs={[
               { value: 'd', label: 'Deepest levels', params: { order: 'deepest' } },
@@ -73,9 +81,11 @@ export default function GroundwaterPage() {
         <SeriesPanel
           module="groundwater"
           metric="level-long"
-          title="Long-term Level Record (Selected Borehole)"
+          title={`Long-term Level Record (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={!!bh.id}
+          blockedBy={bh.list}
           height={230}
         />
         <SeriesPanel
@@ -84,6 +94,8 @@ export default function GroundwaterPage() {
           title="Seasonal Groundwater Level (Last 5 Years)"
           context={ctx}
           extra={p}
+          enabled={!!bh.id}
+          blockedBy={bh.list}
           height={230}
         />
         <SeriesPanel
@@ -104,9 +116,11 @@ export default function GroundwaterPage() {
         <SeriesPanel
           module="groundwater"
           metric="quality"
-          title="Groundwater Quality (Selected Borehole)"
+          title={`Groundwater Quality (Selected ${noun})`}
           context={ctx}
           extra={p}
+          enabled={!!bh.id}
+          blockedBy={bh.list}
           tabs={['ec', 'ph', 'nitrate', 'fluoride', 'tds'].map((v) => ({
             value: v,
             label: v === 'ec' ? 'EC' : v === 'ph' ? 'pH' : v === 'tds' ? 'TDS' : v[0].toUpperCase() + v.slice(1),
@@ -131,18 +145,19 @@ export default function GroundwaterPage() {
         />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr]">
-        <EntityInfoCard module="groundwater" id={bh.id} title="Borehole Information (Selected Borehole)" />
+        <EntityInfoCard module="groundwater" id={bh.id} title={`Borehole Information (Selected ${noun})`} />
         <TablePanel module="groundwater" metric="aquifers" title="Aquifer Status (Selected Region)" />
         <div className="grid content-start gap-3">
           <TablePanel
             module="groundwater"
             metric="declining"
-            title="Top Boreholes with Declining Levels"
+            title={noun === 'District' ? 'Districts with Declining Levels' : 'Top Boreholes with Declining Levels'}
             selectEntity
           />
           <AlertsList module="groundwater" limit={4} />
         </div>
       </Row>
+      <DatabaseVariables module="groundwater" />
     </div>
   );
 }

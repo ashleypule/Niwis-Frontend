@@ -1,0 +1,1 @@
+{"status":501,"requestId":"f8439816f6f848db","body":{"error":"No groundwater nitrate in the database (12.2 nitrate is not identified as groundwater)","code":"DATA_UNAVAILABLE","detail":"No groundwater nitrate in the database (12.2 nitrate is not identified as groundwater)","missing":["table:groundwater:nitrate"]}}

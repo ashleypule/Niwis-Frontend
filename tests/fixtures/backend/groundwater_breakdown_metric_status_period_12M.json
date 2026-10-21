@@ -1,0 +1,1 @@
+{"status":501,"requestId":"460cb6753a56436f","body":{"error":"Borehole status classes come from a current SGI, which the database does not have (the valid SGI ends Aug 2024)","code":"DATA_UNAVAILABLE","detail":"Borehole status classes come from a current SGI, which the database does not have (the valid SGI ends Aug 2024)","missing":["breakdown:groundwater:status"]}}
