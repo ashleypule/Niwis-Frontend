@@ -46,6 +46,7 @@ export function KpiStrip({
     <>
       <ProvenanceChips p={prov} className="mb-1.5" />
       <section aria-label="Key indicators" data-testid="kpi-strip" data-provenance={prov.kind} className={grid}>
+        <h2 className="sr-only">Key indicators</h2>
         {isLoading
           ? Array.from({ length: n }, (_, i) => <LoadingState key={i} height={118} />)
           : kpis.map((k) => <KpiCard key={k.id} kpi={k} compact={n >= 9} provenance={prov} />)}

@@ -430,19 +430,29 @@ export function colorFor(scale: ScaleId | string | ScaleDef, value: number | str
   return classify(sc, value)?.color ?? sc.noData ?? NO_DATA;
 }
 
-/** Readable text colour for a background (WCAG relative luminance). */
-export function inkFor(bg: string): string {
-  const hex = bg.replace('#', '');
+/** WCAG relative luminance of a #rgb / #rrggbb colour. */
+function luminance(color: string): number {
+  const hex = color.replace('#', '');
   const n = parseInt(hex.length === 3 ? hex.replace(/./g, '$&$&') : hex, 16);
   const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
     const x = v / 255;
     return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
   });
-  const L = 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
-  // pick whichever ink gives the higher WCAG contrast ratio (#13233A has L ≈ 0.016)
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+}
+
+const INK = '#13233A';
+const INK_L = luminance(INK);
+
+/** Readable text colour for a background: the navy ink or white, whichever contrasts more; when neither reaches the
+ * 4.5 : 1 of WCAG AA small text (mid tones such as the "No drought" green #1A9850), pure black or white. */
+export function inkFor(bg: string): string {
+  const L = luminance(bg);
   const onWhite = 1.05 / (L + 0.05);
-  const onDark = (L + 0.05) / 0.066;
-  return onDark >= onWhite ? '#13233A' : '#FFFFFF';
+  const onInk = (L + 0.05) / (INK_L + 0.05);
+  if (Math.max(onInk, onWhite) >= 4.5) return onInk >= onWhite ? INK : '#FFFFFF';
+  const onBlack = (L + 0.05) / 0.05;
+  return onBlack >= onWhite ? '#000000' : '#FFFFFF';
 }
 
 export function binInk(bin: ScaleBin): string {

@@ -67,6 +67,7 @@ export function OverviewKpis() {
         data-testid="kpi-strip"
         className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl2:grid-cols-8"
       >
+        <h2 className="sr-only">Key indicators</h2>
         {base.isError && !baseUnavailable ? (
           <div className="col-span-full">
             <ErrorState error={base.error} onRetry={() => base.refetch()} />

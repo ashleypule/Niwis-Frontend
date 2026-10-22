@@ -26,8 +26,10 @@ const DATA_MODULES = MODULES.filter((m) => m.id !== 'reports');
 export function LiveSummaryBadge() {
   const health = useHealth();
   if (!showProvenance || !APP.liveMeta) return null;
+  // min-width = the width of "10 of 24 modules live", so "Connecting…" reserves it: the badge never re-wraps the title
+  // row (and shifts the whole page) when /health answers
   const base =
-    'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold hover:bg-white/10';
+    'inline-flex min-w-[10.5rem] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold hover:bg-white/10';
   if (health.isError || (health.data && health.data.database?.reachable === false))
     return (
       <Link

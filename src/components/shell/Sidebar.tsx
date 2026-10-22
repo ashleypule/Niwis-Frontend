@@ -106,6 +106,8 @@ export function Sidebar() {
       <div
         className={clsx('fixed inset-0 z-40 lg:hidden', mobileOpen ? '' : 'pointer-events-none')}
         aria-hidden={!mobileOpen}
+        // closed: nothing inside may take focus either (React 18 passes `inert` through only as a string attribute)
+        {...((mobileOpen ? {} : { inert: '' }) as Record<string, string>)}
       >
         <div
           className={clsx('absolute inset-0 bg-black/50 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')}

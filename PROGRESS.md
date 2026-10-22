@@ -285,3 +285,7 @@ Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
 - `.github/workflows/ci.yml`: verify, release build, audit, Playwright mock / hybrid / backend-down from recorded
   fixtures, gitleaks — no secrets, no backend. `.gitleaks.toml`, CONTRIBUTING.md, SECURITY.md, README licence note.
 - Full e2e after the ECharts upgrade: 170 passed.
+- Lighthouse (`docs/LIGHTHOUSE.md`): desktop 94 / 97 / 94 performance, 100 accessibility on Overview / Drought / Dams;
+  mobile accessibility 100 but performance 50–62 (below 85: ~450 KB gzipped JavaScript on a throttled phone — lazy
+  chart / map loading is the follow-up). Fixed while measuring: header badge layout shift (CLS 0.288 → 0.018), drawer
+  `inert`, KPI strip headings, pill contrast (`inkFor`).
