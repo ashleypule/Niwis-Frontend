@@ -26,8 +26,9 @@ const DATA_MODULES = MODULES.filter((m) => m.id !== 'reports');
 export function LiveSummaryBadge() {
   const health = useHealth();
   if (!showProvenance || !APP.liveMeta) return null;
-  // min-width = the width of "10 of 24 modules live", so "Connecting…" reserves it: the badge never re-wraps the title
-  // row (and shifts the whole page) when /health answers
+  // min-width = the width of "10 of 24 modules live"; the placeholder "Checking live modules…" is at least as wide, so
+  // the answer from /health neither re-wraps the title row (a layout shift) nor enlarges the header's text (which
+  // would re-stamp the page's Largest Contentful Paint at the time /health answers)
   const base =
     'inline-flex min-w-[10.5rem] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold hover:bg-white/10';
   if (health.isError || (health.data && health.data.database?.reachable === false))
@@ -55,7 +56,7 @@ export function LiveSummaryBadge() {
       data-testid="live-summary"
     >
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" aria-hidden="true" />
-      {health.data ? `${live.length} of ${DATA_MODULES.length} modules live` : 'Connecting…'}
+      {health.data ? `${live.length} of ${DATA_MODULES.length} modules live` : 'Checking live modules…'}
     </Link>
   );
 }

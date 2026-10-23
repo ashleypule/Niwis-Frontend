@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { scrollThrough } from './scroll';
 
 /** WCAG 2.1 AA checks (axe) on representative pages, in both themes. */
 const ROUTES = [
@@ -25,6 +26,7 @@ for (const theme of ['light', 'dark'] as const) {
       test(route, async ({ page }) => {
         await page.addInitScript((t) => localStorage.setItem('niwis-theme', t), theme);
         await page.goto(route, { waitUntil: 'networkidle' });
+        await scrollThrough(page);
         await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 30_000 });
         await page.waitForTimeout(600);
         const results = await new AxeBuilder({ page })

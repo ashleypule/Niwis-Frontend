@@ -194,18 +194,19 @@ table,
   }
 }
 
+/* an opacity pulse runs on the compositor; the earlier background-position shimmer repainted every skeleton on every
+   frame while a page loaded */
 .skeleton {
-  background: linear-gradient(90deg, var(--c-surface-3) 25%, var(--c-surface-2) 50%, var(--c-surface-3) 75%);
-  background-size: 200% 100%;
+  background: var(--c-surface-3);
   border-radius: 8px;
 }
 @media (prefers-reduced-motion: no-preference) {
   .skeleton {
-    animation: niwis-shimmer 1.4s infinite linear;
+    animation: niwis-pulse 1.4s ease-in-out infinite;
   }
-  @keyframes niwis-shimmer {
-    to {
-      background-position: -200% 0;
+  @keyframes niwis-pulse {
+    50% {
+      opacity: 0.55;
     }
   }
 }

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { scrollThrough } from './scroll';
 
 /** Every routed page (spec screens) — rendered at desktop and phone widths, screenshots saved for review. */
 const ROUTES = [
@@ -77,6 +78,7 @@ for (const vp of VIEWPORTS) {
         await page.goto(route, { waitUntil: 'networkidle' });
         // shell renders a page title; print view renders its own cover heading
         await expect(page.locator('h1').first()).toBeVisible();
+        await scrollThrough(page);
         await expect(page.getByText('Something went wrong')).toHaveCount(0);
         // all panels resolve (no skeletons left, no panel-level error states)
         await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 30_000 });

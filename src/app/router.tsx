@@ -1,10 +1,15 @@
+import { lazy } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './Layout';
 import { RouteError } from '@/components/feedback/RouteError';
 
-/** One lazily-loaded chunk per module. */
-const page = (load: () => Promise<{ default: React.ComponentType }>): Pick<RouteObject, 'lazy'> => ({
-  lazy: async () => ({ Component: (await load()).default }),
+/**
+ * One lazily-loaded chunk per module, as a React.lazy component under Layout's Suspense boundary — not the router's
+ * `lazy` route property: on the first load the router waits for every `lazy` route before rendering anything, so the
+ * header, sidebar and filter bar could not paint until the page chunk had arrived and the whole page had rendered.
+ */
+const page = (load: () => Promise<{ default: React.ComponentType }>): Pick<RouteObject, 'Component'> => ({
+  Component: lazy(load),
 });
 
 const children: RouteObject[] = [

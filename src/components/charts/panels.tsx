@@ -2,7 +2,8 @@
  * Data-bound panels: each fetches one dataset through the query hooks and renders it in a ChartCard.
  * Tabs switch query params (e.g. SPI timescale), so tab state lives in the panel.
  */
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useInView } from '@/lib/useInView';
 import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useBreakdown, useColumnCatalogue, useForecast, useMatrix, useSeries } from '@/api/queries/core';
@@ -100,8 +101,11 @@ export function SeriesPanel({
   const params = { ...extra, ...active?.params };
   const m = active?.metric ?? metric;
   const mod = active?.module ?? module;
-  const series = useSeries(mod, m, params, !forecast && enabled);
-  const fc = useForecast(mod, m, params, !!forecast && enabled);
+  // data load when the panel nears the viewport: the first screen's requests are not queued behind every panel's
+  const box = useRef<HTMLElement>(null);
+  const near = useInView(box);
+  const series = useSeries(mod, m, params, !forecast && enabled && near);
+  const fc = useForecast(mod, m, params, !!forecast && enabled && near);
   const q = forecast ? fc : series;
   const t = useChartTheme();
   const wrongSet = q.data && active?.expect ? wrongSeries(q.data, active.expect) : undefined;
@@ -127,6 +131,7 @@ export function SeriesPanel({
         band={band}
         provenance={prov}
         controls={tabRow ?? controls}
+        sectionRef={box}
       >
         <UnavailableState detail={wrongSet} height={height} />
       </ChartCard>
@@ -140,7 +145,8 @@ export function SeriesPanel({
       className={className}
       band={band}
       provenance={prov}
-      isLoading={q.isLoading || (!enabled && !q.data && !blockedBy?.isError)}
+      sectionRef={box}
+      isLoading={q.isLoading || (!q.data && !q.isError && !near) || (!enabled && !q.data && !blockedBy?.isError)}
       isError={q.isError || (!enabled && !!blockedBy?.isError)}
       error={q.error ?? blockedBy?.error}
       missing={split?.missing}
@@ -192,8 +198,12 @@ export function CategoryPanel({
 }) {
   const { active, tabRow } = useTabs(tabs);
   const mod = active?.module ?? module;
-  const q = useBreakdown(mod, active?.metric ?? metric, { ...extra, ...active?.params }, enabled);
+  // data load when the panel nears the viewport: the first screen's requests are not queued behind every panel's
+  const box = useRef<HTMLElement>(null);
+  const near = useInView(box);
+  const q = useBreakdown(mod, active?.metric ?? metric, { ...extra, ...active?.params }, enabled && near);
   const waiting = !enabled && !q.data;
+  const pending = !q.data && !q.isError && !near;
   const t = useChartTheme();
   const split = useMemo(() => (q.data ? splitNullCategories(q.data) : undefined), [q.data]);
   const prov = panelProvenance(q, mod);
@@ -210,7 +220,8 @@ export function CategoryPanel({
         info={info}
         className={className}
         band={band}
-        isLoading={q.isLoading || (waiting && !blockedBy?.isError)}
+        sectionRef={box}
+        isLoading={q.isLoading || pending || (waiting && !blockedBy?.isError)}
         isError={q.isError || (waiting && !!blockedBy?.isError)}
         error={q.error ?? blockedBy?.error}
         missing={split?.missing}
@@ -234,7 +245,8 @@ export function CategoryPanel({
       height={height}
       className={className}
       band={band}
-      isLoading={q.isLoading || (waiting && !blockedBy?.isError)}
+      sectionRef={box}
+      isLoading={q.isLoading || pending || (waiting && !blockedBy?.isError)}
       isError={q.isError || (waiting && !!blockedBy?.isError)}
       error={q.error ?? blockedBy?.error}
       missing={split?.missing}
@@ -271,7 +283,10 @@ export function MatrixPanel({
 }: PanelBase) {
   const { active, tabRow } = useTabs(tabs);
   const mod = active?.module ?? module;
-  const q = useMatrix(mod, active?.metric ?? metric, { ...extra, ...active?.params });
+  // data load when the panel nears the viewport: the first screen's requests are not queued behind every panel's
+  const box = useRef<HTMLElement>(null);
+  const near = useInView(box);
+  const q = useMatrix(mod, active?.metric ?? metric, { ...extra, ...active?.params }, near);
   const t = useChartTheme();
   const option = useMemo(() => (q.data ? matrixOption(q.data, t) : undefined), [q.data, t]);
   const rows = useMemo(() => (q.data ? matrixRows(q.data) : undefined), [q.data]);
@@ -283,7 +298,8 @@ export function MatrixPanel({
       height={height}
       className={className}
       band={band}
-      isLoading={q.isLoading}
+      sectionRef={box}
+      isLoading={q.isLoading || (!q.data && !q.isError && !near)}
       isError={q.isError}
       error={q.error}
       provenance={panelProvenance(q, mod)}

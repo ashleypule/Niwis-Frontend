@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { scrollThrough } from '../scroll';
 
 /**
  * The production stack (nginx + the API, `deploy/docker-compose.prod.yml` in the backend repository): every page loads
@@ -63,6 +64,7 @@ for (const route of ROUTES) {
     const errors = watch(page);
     await page.goto(route, { waitUntil: 'networkidle', timeout: 120_000 });
     await expect(page.locator('h1').first()).toBeVisible();
+    await scrollThrough(page);
     await expect(page.locator('[data-marker="sample"]'), 'no sample data in production').toHaveCount(0);
     await expect(page.getByText('Sample data', { exact: false })).toHaveCount(0);
     // a panel without data says "Not yet available"; nothing fails into an error panel

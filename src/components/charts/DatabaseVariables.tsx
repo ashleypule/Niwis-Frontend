@@ -3,7 +3,8 @@
  * variable = column). Built entirely from `/{module}/categories`: a table or column the data team adds appears here
  * once the backend catalogue is rebuilt. Live modules only (the mock has no database tables).
  */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useInView } from '@/lib/useInView';
 import { ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 import { moduleById, type ModuleId } from '@/config/modules';
@@ -181,11 +182,14 @@ function TableBlock({ module, table }: { module: ModuleId; table: CategoryTable 
 
 export function DatabaseVariables({ module }: { module: ModuleId }) {
   const live = isLive(module);
-  const q = useCategories(module, live);
+  // the catalogue (and every table's charts) load when the section nears the viewport: it ends every page
+  const box = useRef<HTMLElement>(null);
+  const near = useInView(box, '600px');
+  const q = useCategories(module, live && near);
   if (!live) return null;
   const title = 'Database variables';
   return (
-    <section className="mt-6" aria-labelledby={`dbvars-${module}`} data-testid="database-variables">
+    <section ref={box} className="mt-6" aria-labelledby={`dbvars-${module}`} data-testid="database-variables">
       <div className="mb-2 flex flex-wrap items-baseline gap-x-3">
         <h2 id={`dbvars-${module}`} className="text-lg font-bold tracking-tight text-ink">
           {title}

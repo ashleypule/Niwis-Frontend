@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { scrollThrough } from '../scroll';
 
 /**
  * Hybrid build with the backend unreachable (the preview proxy points at a closed port). Live panels must show error
@@ -9,6 +10,7 @@ test.use({ viewport: { width: 1440, height: 900 } });
 test('live panels show errors, not sample data, when the backend is down', async ({ page }) => {
   await page.goto('/rainfall', { waitUntil: 'load' });
   await expect(page.locator('h1').first()).toBeVisible();
+  await scrollThrough(page); // panels below the fold request their data as they come into view
   // network errors are retried twice with back-off before the error shows
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 60_000 });
   expect(await page.locator('[data-state="error"]').count()).toBeGreaterThan(5);

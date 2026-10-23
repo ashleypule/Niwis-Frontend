@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
+import { scrollThrough } from '../scroll';
 
 /**
  * Hybrid mode with recorded backend responses (tests/fixtures/backend, served through MSW): the five live pages render
@@ -35,6 +36,7 @@ function watch(page: Page) {
 async function settle(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'networkidle' });
   await expect(page.locator('h1').first()).toBeVisible();
+  await scrollThrough(page);
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 45_000 });
   if (await page.getByTestId('database-variables').count()) await loadAll(page);
   await page.waitForTimeout(800);

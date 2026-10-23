@@ -289,3 +289,13 @@ Data decisions are recorded in `../Niwis Backend/docs/DECISIONS.md`.
   mobile accessibility 100 but performance 50–62 (below 85: ~450 KB gzipped JavaScript on a throttled phone — lazy
   chart / map loading is the follow-up). Fixed while measuring: header badge layout shift (CLS 0.288 → 0.018), drawer
   `inert`, KPI strip headings, pill contrast (`inkFor`).
+
+### Follow-up (23 October 2026): production stack check, mobile performance
+
+- Production stack (`test:release`) re-run on the committed Overview fix: 25 / 25 (no sample data, no CSP violations,
+  six live KPI cards on the Overview); again 25 / 25 after the performance work.
+- Mobile Lighthouse (median of three runs, production stack): Overview 62 → 89, Drought 56 → 87, Dams 64 → 87;
+  accessibility 100 throughout; desktop 99 / 100 / 100 (`docs/LIGHTHOUSE.md`). Changes: shell renders before the page
+  chunk (`React.lazy` routes), ECharts and Leaflet loaded only near the viewport (`EChartCanvas`, `MapCanvas`,
+  `useInView`), vendor chunks by package, panel data on approach, opacity skeletons, papaparse replaced.
+- e2e: pages are scrolled through before checking every panel (`tests/e2e/scroll.ts`); 170 passed.

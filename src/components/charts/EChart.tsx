@@ -1,7 +1,9 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { echarts, type EChartsOption } from './echarts';
+import { forwardRef, lazy, Suspense, useImperativeHandle, useMemo, useRef } from 'react';
+import type { EChartsOption } from './echarts';
+import { useInView } from '@/lib/useInView';
 import { legendTop } from './options';
+
+const EChartCanvas = lazy(() => import('./EChartCanvas'));
 
 export interface EChartHandle {
   toPng: (bg: string) => string | undefined;
@@ -46,40 +48,27 @@ export function adjustLegend(option: EChartsOption, width: number): EChartsOptio
   return top === grid.top ? option : ({ ...o, grid: { ...grid, top } } as EChartsOption);
 }
 
-/** Thin wrapper: tree-shaken core, canvas renderer, auto-resizes with its container (ResizeObserver). */
+/**
+ * The chart's box (accessible name, size and the `data-chart` summary the tests read) renders at once; the ECharts
+ * canvas (EChartCanvas: tree-shaken core, canvas renderer, auto-resizing) is imported only when the box nears the
+ * viewport, so a page's first download carries no charting library.
+ */
 export const EChart = forwardRef<
   EChartHandle,
   { option: EChartsOption; height: number | string; ariaLabel: string; onClick?: (p: unknown) => void }
 >(function EChart({ option, height, ariaLabel, onClick }, ref) {
-  const inner = useRef<ReactEChartsCore>(null);
-  useImperativeHandle(ref, () => ({
-    toPng: (bg: string) =>
-      inner.current?.getEchartsInstance().getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: bg }),
-  }));
   const box = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    const el = box.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    // rounded to 20 px so a resize re-lays the chart out only when the legend may wrap differently
-    const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width / 20) * 20));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-  const shown = useMemo(() => adjustLegend(option, width), [option, width]);
+  const inView = useInView(box);
+  const canvas = useRef<EChartHandle>(null);
+  useImperativeHandle(ref, () => ({ toPng: (bg: string) => canvas.current?.toPng(bg) }));
   const summary = useMemo(() => optionSummary(option), [option]);
   return (
     <div ref={box} role="img" aria-label={ariaLabel} style={{ height }} className="w-full min-w-0" data-chart={summary}>
-      <ReactEChartsCore
-        ref={inner}
-        echarts={echarts}
-        option={shown}
-        notMerge
-        lazyUpdate
-        style={{ height: '100%', width: '100%' }}
-        opts={{ renderer: 'canvas' }}
-        onEvents={onClick ? { click: onClick } : undefined}
-      />
+      {inView && (
+        <Suspense fallback={null}>
+          <EChartCanvas ref={canvas} option={option} onClick={onClick} />
+        </Suspense>
+      )}
     </div>
   );
 });

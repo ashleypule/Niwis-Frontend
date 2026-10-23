@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { Info } from 'lucide-react';
 import { PanelBoundary, UnavailableState } from '@/components/feedback/PanelBoundary';
 import { ProvenanceChips } from '@/components/provenance/Markers';
@@ -29,6 +29,8 @@ interface CardProps {
    * (no marker); omitted = the page default, which is Sample: only a backend response can make a panel Live.
    */
   provenance?: PanelProvenance | null;
+  /** ref on the card's <section> (e.g. for `useInView`: load the panel's data when it nears the viewport) */
+  sectionRef?: Ref<HTMLElement>;
 }
 
 export function Card({
@@ -42,6 +44,7 @@ export function Card({
   band,
   id,
   provenance,
+  sectionRef,
 }: CardProps) {
   const fallback = useDefaultProvenance();
   const marked = !showProvenance || provenance === null ? NO_MARKER : (provenance ?? fallback);
@@ -55,6 +58,7 @@ export function Card({
   const chips = <ProvenanceChips p={prov} className="mt-1" />;
   return (
     <section
+      ref={sectionRef}
       id={id}
       className={clsx(
         'card anim-in flex min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-card',

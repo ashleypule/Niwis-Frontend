@@ -41,16 +41,15 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 1200,
       rollupOptions: {
         output: {
-          manualChunks: {
-            react: ['react', 'react-dom', 'react-router'],
-            echarts: [
-              'echarts/core',
-              'echarts/charts',
-              'echarts/components',
-              'echarts/renderers',
-              'echarts-for-react/lib/core',
-            ],
-            leaflet: ['leaflet', 'react-leaflet'],
+          // A function, not a { chunk: [entries] } map: with the map, Rollup put shared dependencies (react-dom) into
+          // the leaflet chunk, so every page preloaded Leaflet. Vendor chunks hold only their own packages, and ECharts /
+          // Leaflet load only with EChartCanvas / MapCanvas (dynamic imports).
+          manualChunks(id: string) {
+            if (!id.includes('node_modules')) return undefined;
+            if (/[\\/]node_modules[\\/](echarts|zrender|echarts-for-react)[\\/]/.test(id)) return 'echarts';
+            if (/[\\/]node_modules[\\/](leaflet|react-leaflet|@react-leaflet)[\\/]/.test(id)) return 'leaflet';
+            if (/[\\/]node_modules[\\/](react|react-dom|react-router|scheduler)[\\/]/.test(id)) return 'react';
+            return undefined;
           },
         },
       },

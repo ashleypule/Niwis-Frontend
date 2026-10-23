@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
+import { scrollThrough } from '../scroll';
 
 /**
  * Database category charts on the five live pages (recorded backend responses). The expectations are read from the
@@ -57,7 +58,11 @@ async function catalogue(page: Page, module: string): Promise<Table[]> {
 
 async function open(page: Page, route: string) {
   await page.goto(route, { waitUntil: 'networkidle' });
-  await expect(page.getByTestId('database-variables')).toBeVisible({ timeout: 45_000 });
+  const section = page.getByTestId('database-variables');
+  await expect(section).toBeVisible({ timeout: 45_000 });
+  // panels, and the section's catalogue, load as they near the viewport: bring the whole page into view once
+  await scrollThrough(page);
+  await section.scrollIntoViewIfNeeded();
   await expect(page.locator('[data-category-chart]').first()).toBeVisible({ timeout: 45_000 });
   await loadAll(page);
 }
@@ -313,11 +318,14 @@ test('category charts load lazily, as they scroll into view', async ({ page }) =
   let requests = 0;
   page.on('request', (r) => /\/api\/v1\/[^/]+\/category\//.test(r.url()) && requests++);
   await page.goto('/climate', { waitUntil: 'networkidle' });
-  await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 45_000 });
   await page.waitForTimeout(1_000);
-  // the section starts below the fold: nothing requested yet
+  // the section starts below the fold: no chart has been requested
   expect(requests).toBe(0);
+  // reaching the section draws its first charts; those further down still wait for the reader
+  await page.getByTestId('database-variables').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 45_000 });
   expect(await page.locator('[data-state="deferred"]').count()).toBeGreaterThan(5);
+  await scrollThrough(page); // the panels above the section load as they pass too
   await loadAll(page);
   expect(requests).toBeGreaterThan(5);
 });

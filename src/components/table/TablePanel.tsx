@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
+import { useInView } from '@/lib/useInView';
 import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useTable } from '@/api/queries/core';
@@ -48,11 +49,21 @@ export function TablePanel({
 }) {
   const [tab, setTab] = useState(tabs?.[0]?.value ?? '');
   const active = tabs?.find((t) => t.value === tab);
-  const q = useTable(module, active?.metric ?? metric, { ...extra, ...active?.params }, enabled);
+  // data load when the panel nears the viewport: the first screen's requests are not queued behind every panel's
+  const box = useRef<HTMLElement>(null);
+  const near = useInView(box);
+  const q = useTable(module, active?.metric ?? metric, { ...extra, ...active?.params }, enabled && near);
   const entity = useUi((s) => s.filters.entity);
   const setFilter = useUi((s) => s.setFilter);
   return (
-    <Card title={title} context={context} info={info} className={className} provenance={panelProvenance(q, module)}>
+    <Card
+      title={title}
+      context={context}
+      info={info}
+      className={className}
+      provenance={panelProvenance(q, module)}
+      sectionRef={box}
+    >
       {(tabs || controls) && (
         <div className="mb-2 flex flex-wrap items-center gap-2">
           {tabs && (

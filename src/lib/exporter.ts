@@ -2,7 +2,6 @@
  * Data export: every ChartCard / DataTable registers the dataset it is showing, so "Download Data" in the
  * filter bar can export everything visible on the page (one CSV, or a zip when there are several).
  */
-import Papa from 'papaparse';
 import type { CategorySet, MatrixSet, SeriesSet, TableSet } from '@/types/api';
 
 export type Row = Record<string, string | number | null>;
@@ -32,8 +31,18 @@ export const safeName = (s: string) =>
     .replace(/(^-|-$)/g, '')
     .slice(0, 60) || 'data';
 
+/** A cell: quoted when it holds a comma, quote, line break or edge whitespace; quotes doubled (RFC 4180). */
+function cell(v: string | number | null | undefined): string {
+  if (v == null) return '';
+  const s = String(v);
+  return /[",\r\n]|^\s|\s$/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+/** CSV with the first row's keys as the header and CRLF line ends (the format the papaparse writer produced). */
 export function toCsv(rows: Row[]): string {
-  return Papa.unparse(rows);
+  if (!rows.length) return '';
+  const keys = Object.keys(rows[0]);
+  return [keys.map(cell).join(','), ...rows.map((r) => keys.map((k) => cell(r[k])).join(','))].join('\r\n');
 }
 
 export function download(filename: string, data: Blob | string, type = 'text/csv;charset=utf-8') {

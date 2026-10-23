@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type Ref } from 'react';
 import { Download, Expand, ImageDown, MoreVertical, Table2, X } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { EmptyState, ErrorState, LoadingState, UnavailableState } from '@/components/feedback/PanelBoundary';
@@ -38,6 +38,7 @@ export interface ChartCardProps {
   onChartClick?: (p: unknown) => void;
   /** see Card: data panels pass their query's provenance */
   provenance?: PanelProvenance | null;
+  sectionRef?: Ref<HTMLElement>;
 }
 
 /**
@@ -99,6 +100,7 @@ export function ChartCard({
   footer,
   onChartClick,
   provenance,
+  sectionRef,
 }: ChartCardProps) {
   const [menu, setMenu] = useState(false);
   const [showTable, setShowTable] = useState(false);
@@ -211,6 +213,7 @@ export function ChartCard({
       className={className}
       band={band}
       provenance={provenance}
+      sectionRef={sectionRef}
     >
       {controls && <div className="mb-1.5 flex flex-wrap items-center gap-2">{controls}</div>}
       {body}
