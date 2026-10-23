@@ -5,6 +5,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -55,7 +56,7 @@ jobs:
             test-results
           retention-days: 7
 
-  secrets:
+  secret-scan:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
