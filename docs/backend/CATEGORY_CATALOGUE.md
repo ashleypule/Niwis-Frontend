@@ -25,1355 +25,1391 @@
 
 ## Summary
 
-| Category (table) | Spec | Pages | Live | Withheld | Duplicate | Chart groups |
-| --- | --- | --- | ---: | ---: | ---: | --- |
-| [Meteorological Drought](#meteorological-drought) (`meteorological_drought_master`) | §3.1 | drought | 8 | 3 | 14 | 12 |
-| [Satellite Remote Sensing](#satellite-remote-sensing) (`satellite_remote_sensing`) | §3.2 | drought, vegetation | 9 | 1 | 0 | 12 |
-| [Hydrological Drought](#hydrological-drought) (`hydrological_drought_master`) | §3.3 | drought, runoff | 1 | 10 | 0 | 12 |
-| [Temperature Change](#temperature-change) (`4_1_temperature_change_master`) | §4.1 | climate | 9 | 0 | 0 | 5 |
-| [Wet Dry Spells](#wet-dry-spells) (`4_2_wet_dry_spells_master`) | §4.2 | climate, rainfall | 8 | 0 | 0 | 6 |
-| [Mean Annual Precipitation](#mean-annual-precipitation) (`4_3_mean_annual_precipitation_master`) | §4.3 | climate, rainfall | 6 | 5 | 0 | 16 |
-| [Potential Evaporation Daily](#potential-evaporation-daily) (`4_4_potential_evaporation_daily_master`) | §4.4 | climate | 0 | 6 | 0 | 3 |
-| [Irrigation Demand Daily](#irrigation-demand-daily) (`4_5_irrigation_demand_daily_master`) | §4.5 | climate | 0 | 6 | 0 | 5 |
-| [Streamflow and Climate Linkage Annual](#streamflow-and-climate-linkage-annual) (`4_6_streamflow_and_climate_linkage_annual _master`) | §4.6 | climate | 0 | 6 | 0 | 4 |
-| [Primary Satellite Vegetation Variables SANSA](#primary-satellite-vegetation-variables-sansa) (`5.1_primary_satellite_vegetation_variables_sansa_master`) | §5.1 | vegetation | 0 | 14 | 0 | 5 |
-| [Meteorological Drivers SAWS](#meteorological-drivers-saws) (`5.2_meteorological_drivers_saws_master`) | §5.2 | vegetation | 1 | 0 | 10 | 5 |
-| [Core Rainfall Variables](#core-rainfall-variables) (`6.1_core_rainfall_variables_master`) | §6.1 | rainfall | 12 | 0 | 2 | 8 |
-| [Rainfall Derived Drought Indices](#rainfall-derived-drought-indices) (`6.2_rainfall_derived_drought_indices_master`) | §6.2 | rainfall, drought | 6 | 0 | 2 | 2 |
-| [Runoff Variables](#runoff-variables) (`runoff_variables_master`) | §7.1 | runoff | 3 | 8 | 1 | 10 |
-| [Derived Runoff Indicators](#derived-runoff-indicators) (`7.2_derived_runoff_indicators_master`) | §7.2 | runoff | 1 | 9 | 0 | 5 |
-| [Reservoir Operational](#reservoir-operational) (`8_1_reservoir_operational_master`) | §8.1 | dams | 2 | 12 | 0 | 9 |
-| [Hydrological Station](#hydrological-station) (`9_1_hydrological_station_master`) | §9.1 | surface-water | 6 | 6 | 0 | 10 |
-| [Catchment Characteristics](#catchment-characteristics) (`9_2_catchment_characteristics_master`) | §9.2 | surface-water | 13 | 4 | 0 | 7 |
-| [SANSA Earth Observation](#sansa-earth-observation) (`9_3_sansa_earth_observation_master`) | §9.3 | surface-water | 0 | 6 | 0 | 5 |
-| [Borehole and Aquifer](#borehole-and-aquifer) (`10_1_borehole_and_aquifer_master`) | §10.1 | groundwater | 7 | 6 | 0 | 13 |
-| [Recharge Supporting](#recharge-supporting) (`10_2_recharge_supporting _master`) | §10.2 | groundwater | 6 | 0 | 0 | 5 |
-| [Hydrogeological](#hydrogeological) (`11_1_hydrogeological`) | §11.1 | groundwater-reserve | 11 | 2 | 0 | 11 |
-| [Recharge and Discharge](#recharge-and-discharge) (`11.2_recharge_and_discharge`) | §11.2 | groundwater-reserve | 5 | 1 | 0 | 5 |
-| [Aquifer Sustainability](#aquifer-sustainability) (`11.3_aquifer_sustainability`) | §11.3 | groundwater-reserve | 6 | 0 | 0 | 6 |
-| [Physical Water Quality](#physical-water-quality) (`12.1_physical_water_quality_master`) | §12.1 | water-quality | 7 | 0 | 0 | 6 |
-| [Chemical Water Quality](#chemical-water-quality) (`12.2_chemical_water_quality_master`) | §12.2 | water-quality | 16 | 0 | 0 | 3 |
-| [Biological Water Quality](#biological-water-quality) (`12.3_biological_water_quality_master`) | §12.3 | water-quality | 7 | 0 | 0 | 5 |
-| [SANSA Water Quality](#sansa-water-quality) (`12.4_sansa_water_quality_master`) | §12.4 | water-quality | 5 | 0 | 0 | 5 |
-| [Wastewater Effluent Quality](#wastewater-effluent-quality) (`13.1_wastewater_effluent_quality_master`) | §13.1 | green-drop | 11 | 4 | 0 | 9 |
-| [WWTW Operational](#wwtw-operational) (`13.2_WWTW_operational_master`) | §13.2 | green-drop | 7 | 1 | 0 | 5 |
-| [Meteorological Variables (SAWS) For WWTW Compliance](#meteorological-variables-saws-for-wwtw-compliance) (`13.3_meteorological_variables_(SAWS)_for_WWTW_Compliance_master`) | §13.3 | green-drop | 0 | 4 | 0 | 3 |
-| [SANS 241 Compliance](#sans-241-compliance) (`14.1_SANS_241_compliance_master`) | §14.1 | blue-drop | 6 | 23 | 0 | 10 |
-| [Ecological Variables](#ecological-variables) (`15.1_ecological_variables_master`) | §15.1 | rwqo | 6 | 0 | 0 | 6 |
-| [Chemical RWQO Variables](#chemical-rwqo-variables) (`15.2_chemical_RWQO_variables_master`) | §15.2 | rwqo | 4 | 10 | 0 | 7 |
-| [Hydrological RWQO Variables](#hydrological-rwqo-variables) (`15.3_hydrological_RWQO_variables_master`) | §15.3 | rwqo | 3 | 8 | 0 | 6 |
-| [Complete WRM Matrix](#complete-wrm-matrix) (`16_1_complete_wrm_matrix_master`) | §16.1 | iwrm | 16 | 0 | 0 | 8 |
-| **Total** | | | **208** | **155** | **29** | **254** |
+| Category (table)                                                                                                                                                              | Spec  | Pages               |    Live | Withheld | Duplicate | Chart groups |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------------------- | ------: | -------: | --------: | ------------ |
+| [Meteorological Drought](#meteorological-drought) (`meteorological_drought_master`)                                                                                           | §3.1  | drought             |       8 |        3 |        14 | 12           |
+| [Satellite Remote Sensing](#satellite-remote-sensing) (`satellite_remote_sensing`)                                                                                            | §3.2  | drought, vegetation |       9 |        1 |         0 | 12           |
+| [Hydrological Drought](#hydrological-drought) (`hydrological_drought_master`)                                                                                                 | §3.3  | drought, runoff     |       1 |       10 |         0 | 12           |
+| [Temperature Change](#temperature-change) (`4_1_temperature_change_master`)                                                                                                   | §4.1  | climate             |       9 |        0 |         0 | 5            |
+| [Wet Dry Spells](#wet-dry-spells) (`4_2_wet_dry_spells_master`)                                                                                                               | §4.2  | climate, rainfall   |       8 |        0 |         0 | 6            |
+| [Mean Annual Precipitation](#mean-annual-precipitation) (`4_3_mean_annual_precipitation_master`)                                                                              | §4.3  | climate, rainfall   |       6 |        5 |         0 | 16           |
+| [Potential Evaporation Daily](#potential-evaporation-daily) (`4_4_potential_evaporation_daily_master`)                                                                        | §4.4  | climate             |       0 |        6 |         0 | 3            |
+| [Irrigation Demand Daily](#irrigation-demand-daily) (`4_5_irrigation_demand_daily_master`)                                                                                    | §4.5  | climate             |       0 |        6 |         0 | 5            |
+| [Streamflow and Climate Linkage Annual](#streamflow-and-climate-linkage-annual) (`4_6_streamflow_and_climate_linkage_annual _master`)                                         | §4.6  | climate             |       0 |        6 |         0 | 4            |
+| [Primary Satellite Vegetation Variables SANSA](#primary-satellite-vegetation-variables-sansa) (`5.1_primary_satellite_vegetation_variables_sansa_master`)                     | §5.1  | vegetation          |       0 |       14 |         0 | 5            |
+| [Meteorological Drivers SAWS](#meteorological-drivers-saws) (`5.2_meteorological_drivers_saws_master`)                                                                        | §5.2  | vegetation          |       1 |        0 |        10 | 5            |
+| [Core Rainfall Variables](#core-rainfall-variables) (`6.1_core_rainfall_variables_master`)                                                                                    | §6.1  | rainfall            |      12 |        0 |         2 | 8            |
+| [Rainfall Derived Drought Indices](#rainfall-derived-drought-indices) (`6.2_rainfall_derived_drought_indices_master`)                                                         | §6.2  | rainfall, drought   |       6 |        0 |         2 | 2            |
+| [Runoff Variables](#runoff-variables) (`runoff_variables_master`)                                                                                                             | §7.1  | runoff              |       3 |        8 |         1 | 10           |
+| [Derived Runoff Indicators](#derived-runoff-indicators) (`7.2_derived_runoff_indicators_master`)                                                                              | §7.2  | runoff              |       1 |        9 |         0 | 5            |
+| [Reservoir Operational](#reservoir-operational) (`8_1_reservoir_operational_master`)                                                                                          | §8.1  | dams                |       2 |       12 |         0 | 9            |
+| [Hydrological Station](#hydrological-station) (`9_1_hydrological_station_master`)                                                                                             | §9.1  | surface-water       |       6 |        6 |         0 | 10           |
+| [Catchment Characteristics](#catchment-characteristics) (`9_2_catchment_characteristics_master`)                                                                              | §9.2  | surface-water       |      13 |        4 |         0 | 7            |
+| [SANSA Earth Observation](#sansa-earth-observation) (`9_3_sansa_earth_observation_master`)                                                                                    | §9.3  | surface-water       |       0 |        6 |         0 | 5            |
+| [Borehole and Aquifer](#borehole-and-aquifer) (`10_1_borehole_and_aquifer_master`)                                                                                            | §10.1 | groundwater         |       7 |        6 |         0 | 13           |
+| [Recharge Supporting](#recharge-supporting) (`10_2_recharge_supporting _master`)                                                                                              | §10.2 | groundwater         |       6 |        0 |         0 | 5            |
+| [Hydrogeological](#hydrogeological) (`11_1_hydrogeological`)                                                                                                                  | §11.1 | groundwater-reserve |      11 |        2 |         0 | 11           |
+| [Recharge and Discharge](#recharge-and-discharge) (`11.2_recharge_and_discharge`)                                                                                             | §11.2 | groundwater-reserve |       5 |        1 |         0 | 5            |
+| [Aquifer Sustainability](#aquifer-sustainability) (`11.3_aquifer_sustainability`)                                                                                             | §11.3 | groundwater-reserve |       6 |        0 |         0 | 6            |
+| [Physical Water Quality](#physical-water-quality) (`12.1_physical_water_quality_master`)                                                                                      | §12.1 | water-quality       |       7 |        0 |         0 | 6            |
+| [Chemical Water Quality](#chemical-water-quality) (`12.2_chemical_water_quality_master`)                                                                                      | §12.2 | water-quality       |      16 |        0 |         0 | 3            |
+| [Biological Water Quality](#biological-water-quality) (`12.3_biological_water_quality_master`)                                                                                | §12.3 | water-quality       |       7 |        0 |         0 | 5            |
+| [SANSA Water Quality](#sansa-water-quality) (`12.4_sansa_water_quality_master`)                                                                                               | §12.4 | water-quality       |       5 |        0 |         0 | 5            |
+| [Wastewater Effluent Quality](#wastewater-effluent-quality) (`13.1_wastewater_effluent_quality_master`)                                                                       | §13.1 | green-drop          |      11 |        4 |         0 | 9            |
+| [WWTW Operational](#wwtw-operational) (`13.2_WWTW_operational_master`)                                                                                                        | §13.2 | green-drop          |       7 |        1 |         0 | 5            |
+| [Meteorological Variables (SAWS) For WWTW Compliance](#meteorological-variables-saws-for-wwtw-compliance) (`13.3_meteorological_variables_(SAWS)_for_WWTW_Compliance_master`) | §13.3 | green-drop          |       0 |        4 |         0 | 3            |
+| [SANS 241 Compliance](#sans-241-compliance) (`14.1_SANS_241_compliance_master`)                                                                                               | §14.1 | blue-drop           |       6 |       23 |         0 | 10           |
+| [Ecological Variables](#ecological-variables) (`15.1_ecological_variables_master`)                                                                                            | §15.1 | rwqo                |       6 |        0 |         0 | 6            |
+| [Chemical RWQO Variables](#chemical-rwqo-variables) (`15.2_chemical_RWQO_variables_master`)                                                                                   | §15.2 | rwqo                |       4 |       10 |         0 | 7            |
+| [Hydrological RWQO Variables](#hydrological-rwqo-variables) (`15.3_hydrological_RWQO_variables_master`)                                                                       | §15.3 | rwqo                |       3 |        8 |         0 | 6            |
+| [Complete WRM Matrix](#complete-wrm-matrix) (`16_1_complete_wrm_matrix_master`)                                                                                               | §16.1 | iwrm                |      16 |        0 |         0 | 8            |
+| **Total**                                                                                                                                                                     |       |                     | **208** |  **155** |    **29** | **254**      |
 
 <a id="meteorological-drought"></a>
+
 ## Meteorological Drought · §3.1
 
 Table `meteorological_drought_master` · id `meteorological-drought` · daily · pages: drought · 8 live, 3 withheld, 14 duplicate · keys: `id`, `district_name`, `date`, `year`, `month`
 
 **Drought page** — duplicates shown here (live): `daily_rainfall_mm_day`, `monthly_rainfall_mm_month`, `rainfall_anomaly_mm`, `rainfall_anomaly_pct`, `rainfall_intensity_mm_h`, `tmin_c`, `tmax_c`, `tavg_c`, `temp_anomaly_c`
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Daily Rainfall / PET / ET₀ (mm/day) | `daily-rainfall-pet-et0-mm-day` | mm/day | daily | mixed | `daily_rainfall_mm_day` ★, `pet_mm_day` ★, `et0_mm_day` ★ |
-| Monthly Rainfall (mm/month) | `monthly-rainfall-mm-month` | mm/month | monthly | bar | `monthly_rainfall_mm_month` ★ |
-| Seasonal Rainfall (mm/season) | `seasonal-rainfall-mm-season` | mm/season | annual | bar | `seasonal_rainfall_mm_season` ★ |
-| Rainfall Anomaly (mm) | `rainfall-anomaly-mm` | mm | monthly | diverging-bar | `rainfall_anomaly_mm` ★ |
-| Rainfall Anomaly (%) | `rainfall-anomaly-pct` | % | monthly | diverging-bar | `rainfall_anomaly_pct` ★ |
-| Rainfall Intensity (mm/h) | `rainfall-intensity-mm-h` | mm/h | daily | line | `rainfall_intensity_mm_h` ★ |
-| Temperature (°C) | `temperature-c` | °C | daily | band (tmin_c – tmax_c) | `tmin_c` ★, `tmax_c` ★, `tavg_c` ★ |
-| Temp Anomaly (°C) | `temp-anomaly-c` | °C | monthly | diverging-bar | `temp_anomaly_c` ★ |
-| Relative Humidity (%) | `relative-humidity-pct` | % | daily | line | `relative_humidity_pct` ★ |
-| Solar Radiation (W/m²) | `solar-radiation-w-m2` | W/m² | daily | line | `solar_radiation_wm2` ★ |
-| Wind Speed 2m (m/s) | `wind-speed-2m-m-s` | m/s | daily | line | `wind_speed_2m_ms` ★ |
-| SPEI (index) | `spei-index` | index | monthly | line | `spei_1` ★, `spei_3` ★, `spei_6` ★, `spei_12`, `spei_24` |
+| Chart group                         | id                              | Axis unit | Resolution | Chart                  | Columns (★ default)                                       |
+| ----------------------------------- | ------------------------------- | --------- | ---------- | ---------------------- | --------------------------------------------------------- |
+| Daily Rainfall / PET / ET₀ (mm/day) | `daily-rainfall-pet-et0-mm-day` | mm/day    | daily      | mixed                  | `daily_rainfall_mm_day` ★, `pet_mm_day` ★, `et0_mm_day` ★ |
+| Monthly Rainfall (mm/month)         | `monthly-rainfall-mm-month`     | mm/month  | monthly    | bar                    | `monthly_rainfall_mm_month` ★                             |
+| Seasonal Rainfall (mm/season)       | `seasonal-rainfall-mm-season`   | mm/season | annual     | bar                    | `seasonal_rainfall_mm_season` ★                           |
+| Rainfall Anomaly (mm)               | `rainfall-anomaly-mm`           | mm        | monthly    | diverging-bar          | `rainfall_anomaly_mm` ★                                   |
+| Rainfall Anomaly (%)                | `rainfall-anomaly-pct`          | %         | monthly    | diverging-bar          | `rainfall_anomaly_pct` ★                                  |
+| Rainfall Intensity (mm/h)           | `rainfall-intensity-mm-h`       | mm/h      | daily      | line                   | `rainfall_intensity_mm_h` ★                               |
+| Temperature (°C)                    | `temperature-c`                 | °C        | daily      | band (tmin_c – tmax_c) | `tmin_c` ★, `tmax_c` ★, `tavg_c` ★                        |
+| Temp Anomaly (°C)                   | `temp-anomaly-c`                | °C        | monthly    | diverging-bar          | `temp_anomaly_c` ★                                        |
+| Relative Humidity (%)               | `relative-humidity-pct`         | %         | daily      | line                   | `relative_humidity_pct` ★                                 |
+| Solar Radiation (W/m²)              | `solar-radiation-w-m2`          | W/m²      | daily      | line                   | `solar_radiation_wm2` ★                                   |
+| Wind Speed 2m (m/s)                 | `wind-speed-2m-m-s`             | m/s       | daily      | line                   | `wind_speed_2m_ms` ★                                      |
+| SPEI (index)                        | `spei-index`                    | index     | monthly    | line                   | `spei_1` ★, `spei_3` ★, `spei_6` ★, `spei_12`, `spei_24`  |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `daily_rainfall_mm_day` | Daily Rainfall (mm/day) | mm/day | daily | bar | drought: `daily-rainfall-pet-et0-mm-day` | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; live on drought |
-| `monthly_rainfall_mm_month` | Monthly Rainfall (mm/month) | mm/month | monthly | bar | drought: `monthly-rainfall-mm-month` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Total_Precipitation_mm`; live on drought |
-| `seasonal_rainfall_mm_season` | Seasonal Rainfall (mm/season) | mm/season | annual | bar | drought: `seasonal-rainfall-mm-season` | withheld — holds the calendar-year total, not a season: one value per district-year (Alfred Nzo 2014 = 825.67 mm = sum of its 12 monthly totals, 31 Dec missing) |
-| `rainfall_anomaly_mm` | Rainfall Anomaly (mm) | mm | monthly | diverging-bar | drought: `rainfall-anomaly-mm` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_mm`; live on drought |
-| `rainfall_anomaly_pct` | Rainfall Anomaly (%) | % | monthly | diverging-bar | drought: `rainfall-anomaly-pct` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_percent`; live on drought |
-| `rainfall_intensity_mm_h` | Rainfall Intensity (mm/h) | mm/h | daily | line | drought: `rainfall-intensity-mm-h` | duplicate of `6.1_core_rainfall_variables_master.Hourly_Rainfall_Intensity_mm_h`; live on drought |
-| `tmin_c` | Tmin (°C) | °C | daily | line | drought: `temperature-c` | duplicate of `4_1_temperature_change_master.Tmin_C`; live on drought |
-| `tmax_c` | Tmax (°C) | °C | daily | line | drought: `temperature-c` | duplicate of `4_1_temperature_change_master.Tmax_C`; live on drought |
-| `tavg_c` | Tavg (°C) | °C | daily | line | drought: `temperature-c` | duplicate of `4_1_temperature_change_master.Tavg_C`; live on drought |
-| `temp_anomaly_c` | Temp Anomaly (°C) | °C | monthly | diverging-bar | drought: `temp-anomaly-c` | duplicate of `4_1_temperature_change_master.Temperature_Anomaly_C`; live on drought |
-| `pet_mm_day` | PET (mm/day) | mm/day | daily | line | drought: `daily-rainfall-pet-et0-mm-day` | live |
-| `et0_mm_day` | ET₀ (mm/day) | mm/day | daily | line | drought: `daily-rainfall-pet-et0-mm-day` | live — plausible 1–7.4 mm/day (the 4_4 table's ET₀ is withheld) |
-| `relative_humidity_pct` | Relative Humidity (%) | % | daily | line | drought: `relative-humidity-pct` | live |
-| `solar_radiation_wm2` | Solar Radiation (W/m²) | W/m² | daily | line | drought: `solar-radiation-w-m2` | withheld — synthetic: one value per calendar day (365 distinct values), identical in all 52 districts and every year; peaks in April (247 W/m²) with the minimum in Sep–Oct (113 W/m²), where the Southern-Hemisphere maximum is in December |
-| `wind_speed_2m_ms` | Wind Speed 2m (m/s) | m/s | daily | line | drought: `wind-speed-2m-m-s` | withheld — constant 2.5 m/s in every row |
-| `spi_1` | SPI 1 | — | monthly | line | — | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_1_Meteorological_Drought_Onset`; hidden |
-| `spi_3` | SPI 3 | — | monthly | line | — | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_3_Short_Term_Agricultural_Drought`; hidden |
-| `spi_6` | SPI 6 | — | monthly | line | — | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_6_Medium_Term_Hydrological_Impacts`; hidden |
-| `spi_12` | SPI 12 | — | monthly | line | — | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_12_Long_Term_Groundwater_Impacts`; hidden |
-| `spi_24` | SPI 24 | — | monthly | line | — | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_24_Very_Long_Term_Drought`; hidden |
-| `spei_1` | SPEI 1 | — | monthly | line | drought: `spei-index` | live |
-| `spei_3` | SPEI 3 | — | monthly | line | drought: `spei-index` | live |
-| `spei_6` | SPEI 6 | — | monthly | line | drought: `spei-index` | live |
-| `spei_12` | SPEI 12 | — | monthly | line | drought: `spei-index` | live |
-| `spei_24` | SPEI 24 | — | monthly | line | drought: `spei-index` | live |
+| Column                        | Label                         | Unit      | Resolution | Chart         | Group                                    | Status                                                                                                                                                                                                                                       |
+| ----------------------------- | ----------------------------- | --------- | ---------- | ------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `daily_rainfall_mm_day`       | Daily Rainfall (mm/day)       | mm/day    | daily      | bar           | drought: `daily-rainfall-pet-et0-mm-day` | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; live on drought                                                                                                                                                   |
+| `monthly_rainfall_mm_month`   | Monthly Rainfall (mm/month)   | mm/month  | monthly    | bar           | drought: `monthly-rainfall-mm-month`     | duplicate of `6.1_core_rainfall_variables_master.Monthly_Total_Precipitation_mm`; live on drought                                                                                                                                            |
+| `seasonal_rainfall_mm_season` | Seasonal Rainfall (mm/season) | mm/season | annual     | bar           | drought: `seasonal-rainfall-mm-season`   | withheld — holds the calendar-year total, not a season: one value per district-year (Alfred Nzo 2014 = 825.67 mm = sum of its 12 monthly totals, 31 Dec missing)                                                                             |
+| `rainfall_anomaly_mm`         | Rainfall Anomaly (mm)         | mm        | monthly    | diverging-bar | drought: `rainfall-anomaly-mm`           | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_mm`; live on drought                                                                                                                                                        |
+| `rainfall_anomaly_pct`        | Rainfall Anomaly (%)          | %         | monthly    | diverging-bar | drought: `rainfall-anomaly-pct`          | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_percent`; live on drought                                                                                                                                                   |
+| `rainfall_intensity_mm_h`     | Rainfall Intensity (mm/h)     | mm/h      | daily      | line          | drought: `rainfall-intensity-mm-h`       | duplicate of `6.1_core_rainfall_variables_master.Hourly_Rainfall_Intensity_mm_h`; live on drought                                                                                                                                            |
+| `tmin_c`                      | Tmin (°C)                     | °C        | daily      | line          | drought: `temperature-c`                 | duplicate of `4_1_temperature_change_master.Tmin_C`; live on drought                                                                                                                                                                         |
+| `tmax_c`                      | Tmax (°C)                     | °C        | daily      | line          | drought: `temperature-c`                 | duplicate of `4_1_temperature_change_master.Tmax_C`; live on drought                                                                                                                                                                         |
+| `tavg_c`                      | Tavg (°C)                     | °C        | daily      | line          | drought: `temperature-c`                 | duplicate of `4_1_temperature_change_master.Tavg_C`; live on drought                                                                                                                                                                         |
+| `temp_anomaly_c`              | Temp Anomaly (°C)             | °C        | monthly    | diverging-bar | drought: `temp-anomaly-c`                | duplicate of `4_1_temperature_change_master.Temperature_Anomaly_C`; live on drought                                                                                                                                                          |
+| `pet_mm_day`                  | PET (mm/day)                  | mm/day    | daily      | line          | drought: `daily-rainfall-pet-et0-mm-day` | live                                                                                                                                                                                                                                         |
+| `et0_mm_day`                  | ET₀ (mm/day)                  | mm/day    | daily      | line          | drought: `daily-rainfall-pet-et0-mm-day` | live — plausible 1–7.4 mm/day (the 4_4 table's ET₀ is withheld)                                                                                                                                                                              |
+| `relative_humidity_pct`       | Relative Humidity (%)         | %         | daily      | line          | drought: `relative-humidity-pct`         | live                                                                                                                                                                                                                                         |
+| `solar_radiation_wm2`         | Solar Radiation (W/m²)        | W/m²      | daily      | line          | drought: `solar-radiation-w-m2`          | withheld — synthetic: one value per calendar day (365 distinct values), identical in all 52 districts and every year; peaks in April (247 W/m²) with the minimum in Sep–Oct (113 W/m²), where the Southern-Hemisphere maximum is in December |
+| `wind_speed_2m_ms`            | Wind Speed 2m (m/s)           | m/s       | daily      | line          | drought: `wind-speed-2m-m-s`             | withheld — constant 2.5 m/s in every row                                                                                                                                                                                                     |
+| `spi_1`                       | SPI 1                         | —         | monthly    | line          | —                                        | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_1_Meteorological_Drought_Onset`; hidden                                                                                                                                        |
+| `spi_3`                       | SPI 3                         | —         | monthly    | line          | —                                        | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_3_Short_Term_Agricultural_Drought`; hidden                                                                                                                                     |
+| `spi_6`                       | SPI 6                         | —         | monthly    | line          | —                                        | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_6_Medium_Term_Hydrological_Impacts`; hidden                                                                                                                                    |
+| `spi_12`                      | SPI 12                        | —         | monthly    | line          | —                                        | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_12_Long_Term_Groundwater_Impacts`; hidden                                                                                                                                      |
+| `spi_24`                      | SPI 24                        | —         | monthly    | line          | —                                        | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_24_Very_Long_Term_Drought`; hidden                                                                                                                                             |
+| `spei_1`                      | SPEI 1                        | —         | monthly    | line          | drought: `spei-index`                    | live                                                                                                                                                                                                                                         |
+| `spei_3`                      | SPEI 3                        | —         | monthly    | line          | drought: `spei-index`                    | live                                                                                                                                                                                                                                         |
+| `spei_6`                      | SPEI 6                        | —         | monthly    | line          | drought: `spei-index`                    | live                                                                                                                                                                                                                                         |
+| `spei_12`                     | SPEI 12                       | —         | monthly    | line          | drought: `spei-index`                    | live                                                                                                                                                                                                                                         |
+| `spei_24`                     | SPEI 24                       | —         | monthly    | line          | drought: `spei-index`                    | live                                                                                                                                                                                                                                         |
 
 <a id="satellite-remote-sensing"></a>
+
 ## Satellite Remote Sensing · §3.2
 
 Table `satellite_remote_sensing` · id `satellite-remote-sensing` · monthly · pages: drought, vegetation · 9 live, 1 withheld, 0 duplicate · keys: `id`, `date`, `district_name`, `year`
 
 **Drought page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| NDVI / NDWI (index) | `ndvi-ndwi-index` | index | monthly | line | `ndvi` ★, `ndwi` ★ |
-| LST (°C) | `lst-c` | °C | monthly | line | `lst` ★ |
-| VCI / TCI / VHI (%) | `vci-tci-vhi-pct` | % | monthly | line | `vci` ★, `tci` ★, `vhi` ★ |
-| Soil Moisture (m³/m³) | `soil-moisture-m3-m3` | m³/m³ | monthly | line | `rootzone_soil_moisture` ★, `surface_soil_moisture` ★ |
-| Surface Water Extent (km²) | `surface-water-extent-km2` | km² | monthly | line | `surface_water_extent_km2` ★ |
-| GRACE TWS | `grace-tws` | — | monthly | line | `grace_tws` ★ |
+| Chart group                | id                         | Axis unit | Resolution | Chart | Columns (★ default)                                   |
+| -------------------------- | -------------------------- | --------- | ---------- | ----- | ----------------------------------------------------- |
+| NDVI / NDWI (index)        | `ndvi-ndwi-index`          | index     | monthly    | line  | `ndvi` ★, `ndwi` ★                                    |
+| LST (°C)                   | `lst-c`                    | °C        | monthly    | line  | `lst` ★                                               |
+| VCI / TCI / VHI (%)        | `vci-tci-vhi-pct`          | %         | monthly    | line  | `vci` ★, `tci` ★, `vhi` ★                             |
+| Soil Moisture (m³/m³)      | `soil-moisture-m3-m3`      | m³/m³     | monthly    | line  | `rootzone_soil_moisture` ★, `surface_soil_moisture` ★ |
+| Surface Water Extent (km²) | `surface-water-extent-km2` | km²       | monthly    | line  | `surface_water_extent_km2` ★                          |
+| GRACE TWS                  | `grace-tws`                | —         | monthly    | line  | `grace_tws` ★                                         |
 
 **Vegetation page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| NDVI / NDWI (index) | `ndvi-ndwi-index` | index | monthly | line | `ndvi` ★, `ndwi` ★ |
-| LST (°C) | `lst-c` | °C | monthly | line | `lst` ★ |
-| VCI / TCI / VHI (%) | `vci-tci-vhi-pct` | % | monthly | line | `vci` ★, `tci` ★, `vhi` ★ |
-| Soil Moisture (m³/m³) | `soil-moisture-m3-m3` | m³/m³ | monthly | line | `rootzone_soil_moisture` ★, `surface_soil_moisture` ★ |
-| Surface Water Extent (km²) | `surface-water-extent-km2` | km² | monthly | line | `surface_water_extent_km2` ★ |
-| GRACE TWS | `grace-tws` | — | monthly | line | `grace_tws` ★ |
+| Chart group                | id                         | Axis unit | Resolution | Chart | Columns (★ default)                                   |
+| -------------------------- | -------------------------- | --------- | ---------- | ----- | ----------------------------------------------------- |
+| NDVI / NDWI (index)        | `ndvi-ndwi-index`          | index     | monthly    | line  | `ndvi` ★, `ndwi` ★                                    |
+| LST (°C)                   | `lst-c`                    | °C        | monthly    | line  | `lst` ★                                               |
+| VCI / TCI / VHI (%)        | `vci-tci-vhi-pct`          | %         | monthly    | line  | `vci` ★, `tci` ★, `vhi` ★                             |
+| Soil Moisture (m³/m³)      | `soil-moisture-m3-m3`      | m³/m³     | monthly    | line  | `rootzone_soil_moisture` ★, `surface_soil_moisture` ★ |
+| Surface Water Extent (km²) | `surface-water-extent-km2` | km²       | monthly    | line  | `surface_water_extent_km2` ★                          |
+| GRACE TWS                  | `grace-tws`                | —         | monthly    | line  | `grace_tws` ★                                         |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `ndvi` | NDVI | — | monthly | line | drought: `ndvi-ndwi-index`; vegetation: `ndvi-ndwi-index` | live — passes the NDVI plausibility check (arid west low, wet east high, seasonal cycle follows the rains) |
-| `lst` | LST (°C) | °C ¹ | monthly | line | drought: `lst-c`; vegetation: `lst-c` | live |
-| `ndwi` | NDWI | — | monthly | line | drought: `ndvi-ndwi-index`; vegetation: `ndvi-ndwi-index` | live |
-| `vci` | VCI (%) | % ¹ | monthly | line | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct` | live |
-| `tci` | TCI (%) | % ¹ | monthly | line | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct` | live |
-| `vhi` | VHI (%) | % ¹ | monthly | line | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct` | live |
-| `rootzone_soil_moisture` | Rootzone Soil Moisture (m³/m³) | m³/m³ ¹ | monthly | line | drought: `soil-moisture-m3-m3`; vegetation: `soil-moisture-m3-m3` | live — Served from Mar 2015: one constant value per district from 2001 to Feb 2015 (a fill before the satellite record); real monthly values from Mar 2015 |
-| `surface_soil_moisture` | Surface Soil Moisture (m³/m³) | m³/m³ ¹ | monthly | line | drought: `soil-moisture-m3-m3`; vegetation: `soil-moisture-m3-m3` | live — Served from Mar 2015: one constant value per district from 2001 to Feb 2015 (a fill before the satellite record); real monthly values from Mar 2015 |
-| `surface_water_extent_km2` | Surface Water Extent (km²) | km² | monthly | line | drought: `surface-water-extent-km2`; vegetation: `surface-water-extent-km2` | live — plausibility checked 2026-10-15: ≥ 0 everywhere, different in every district |
-| `grace_tws` | GRACE TWS | — | monthly | line | drought: `grace-tws`; vegetation: `grace-tws` | withheld — values of 70–412 in 2001 and up to 270 in 2002, before GRACE data exist (launch March 2002); about ±10 from 2003; unit undocumented |
+| Column                     | Label                          | Unit    | Resolution | Chart | Group                                                                       | Status                                                                                                                                                     |
+| -------------------------- | ------------------------------ | ------- | ---------- | ----- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ndvi`                     | NDVI                           | —       | monthly    | line  | drought: `ndvi-ndwi-index`; vegetation: `ndvi-ndwi-index`                   | live — passes the NDVI plausibility check (arid west low, wet east high, seasonal cycle follows the rains)                                                 |
+| `lst`                      | LST (°C)                       | °C ¹    | monthly    | line  | drought: `lst-c`; vegetation: `lst-c`                                       | live                                                                                                                                                       |
+| `ndwi`                     | NDWI                           | —       | monthly    | line  | drought: `ndvi-ndwi-index`; vegetation: `ndvi-ndwi-index`                   | live                                                                                                                                                       |
+| `vci`                      | VCI (%)                        | % ¹     | monthly    | line  | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct`                   | live                                                                                                                                                       |
+| `tci`                      | TCI (%)                        | % ¹     | monthly    | line  | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct`                   | live                                                                                                                                                       |
+| `vhi`                      | VHI (%)                        | % ¹     | monthly    | line  | drought: `vci-tci-vhi-pct`; vegetation: `vci-tci-vhi-pct`                   | live                                                                                                                                                       |
+| `rootzone_soil_moisture`   | Rootzone Soil Moisture (m³/m³) | m³/m³ ¹ | monthly    | line  | drought: `soil-moisture-m3-m3`; vegetation: `soil-moisture-m3-m3`           | live — Served from Mar 2015: one constant value per district from 2001 to Feb 2015 (a fill before the satellite record); real monthly values from Mar 2015 |
+| `surface_soil_moisture`    | Surface Soil Moisture (m³/m³)  | m³/m³ ¹ | monthly    | line  | drought: `soil-moisture-m3-m3`; vegetation: `soil-moisture-m3-m3`           | live — Served from Mar 2015: one constant value per district from 2001 to Feb 2015 (a fill before the satellite record); real monthly values from Mar 2015 |
+| `surface_water_extent_km2` | Surface Water Extent (km²)     | km²     | monthly    | line  | drought: `surface-water-extent-km2`; vegetation: `surface-water-extent-km2` | live — plausibility checked 2026-10-15: ≥ 0 everywhere, different in every district                                                                        |
+| `grace_tws`                | GRACE TWS                      | —       | monthly    | line  | drought: `grace-tws`; vegetation: `grace-tws`                               | withheld — values of 70–412 in 2001 and up to 270 in 2002, before GRACE data exist (launch March 2002); about ±10 from 2003; unit undocumented             |
 
 <a id="hydrological-drought"></a>
+
 ## Hydrological Drought · §3.3
 
 Table `hydrological_drought_master` · id `hydrological-drought` · monthly · pages: drought, runoff · 1 live, 10 withheld, 0 duplicate · keys: `id`, `date`, `district_name`
 
 **Drought page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| River Discharge / FDC Percentiles / Surface Runoff / Baseflow Separation (m³/s) | `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | m³/s | monthly | line | `river_discharge_m3_s` ★, `fdc_percentiles_m3_s` ★, `surface_runoff_m3_s` ★, `baseflow_separation_m3_s` |
-| SSI / SGI (index) | `ssi-sgi-index` | index | monthly | line | `ssi_dimensionless`, `sgi_dimensionless` ★ |
-| Dam Storage (Mm³) | `dam-storage-mm3` | Mm³ | monthly | bar | `dam_storage_million_m3` ★ |
-| Dam Level (% FSC) | `dam-level-pct-fsc` | % FSC | monthly | line | `dam_level_pct_fsc` ★ |
-| Dam Inflow / Dam Outflow (m³/s) | `dam-inflow-dam-outflow-m3-s` | m³/s | monthly | line | `dam_inflow_m3_s` ★, `dam_outflow_m3_s` ★ |
-| Borehole Water Level (m bgl) | `borehole-water-level-m-bgl` | m bgl | monthly | line | `borehole_water_level_m_bgl` ★ |
+| Chart group                                                                     | id                                                                        | Axis unit | Resolution | Chart | Columns (★ default)                                                                                     |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------------------------------------- |
+| River Discharge / FDC Percentiles / Surface Runoff / Baseflow Separation (m³/s) | `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | m³/s      | monthly    | line  | `river_discharge_m3_s` ★, `fdc_percentiles_m3_s` ★, `surface_runoff_m3_s` ★, `baseflow_separation_m3_s` |
+| SSI / SGI (index)                                                               | `ssi-sgi-index`                                                           | index     | monthly    | line  | `ssi_dimensionless`, `sgi_dimensionless` ★                                                              |
+| Dam Storage (Mm³)                                                               | `dam-storage-mm3`                                                         | Mm³       | monthly    | bar   | `dam_storage_million_m3` ★                                                                              |
+| Dam Level (% FSC)                                                               | `dam-level-pct-fsc`                                                       | % FSC     | monthly    | line  | `dam_level_pct_fsc` ★                                                                                   |
+| Dam Inflow / Dam Outflow (m³/s)                                                 | `dam-inflow-dam-outflow-m3-s`                                             | m³/s      | monthly    | line  | `dam_inflow_m3_s` ★, `dam_outflow_m3_s` ★                                                               |
+| Borehole Water Level (m bgl)                                                    | `borehole-water-level-m-bgl`                                              | m bgl     | monthly    | line  | `borehole_water_level_m_bgl` ★                                                                          |
 
 **Runoff page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| River Discharge / FDC Percentiles / Surface Runoff / Baseflow Separation (m³/s) | `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | m³/s | monthly | line | `river_discharge_m3_s` ★, `fdc_percentiles_m3_s` ★, `surface_runoff_m3_s` ★, `baseflow_separation_m3_s` |
-| SSI / SGI (index) | `ssi-sgi-index` | index | monthly | line | `ssi_dimensionless`, `sgi_dimensionless` ★ |
-| Dam Storage (Mm³) | `dam-storage-mm3` | Mm³ | monthly | bar | `dam_storage_million_m3` ★ |
-| Dam Level (% FSC) | `dam-level-pct-fsc` | % FSC | monthly | line | `dam_level_pct_fsc` ★ |
-| Dam Inflow / Dam Outflow (m³/s) | `dam-inflow-dam-outflow-m3-s` | m³/s | monthly | line | `dam_inflow_m3_s` ★, `dam_outflow_m3_s` ★ |
-| Borehole Water Level (m bgl) | `borehole-water-level-m-bgl` | m bgl | monthly | line | `borehole_water_level_m_bgl` ★ |
+| Chart group                                                                     | id                                                                        | Axis unit | Resolution | Chart | Columns (★ default)                                                                                     |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------------------------------------- |
+| River Discharge / FDC Percentiles / Surface Runoff / Baseflow Separation (m³/s) | `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | m³/s      | monthly    | line  | `river_discharge_m3_s` ★, `fdc_percentiles_m3_s` ★, `surface_runoff_m3_s` ★, `baseflow_separation_m3_s` |
+| SSI / SGI (index)                                                               | `ssi-sgi-index`                                                           | index     | monthly    | line  | `ssi_dimensionless`, `sgi_dimensionless` ★                                                              |
+| Dam Storage (Mm³)                                                               | `dam-storage-mm3`                                                         | Mm³       | monthly    | bar   | `dam_storage_million_m3` ★                                                                              |
+| Dam Level (% FSC)                                                               | `dam-level-pct-fsc`                                                       | % FSC     | monthly    | line  | `dam_level_pct_fsc` ★                                                                                   |
+| Dam Inflow / Dam Outflow (m³/s)                                                 | `dam-inflow-dam-outflow-m3-s`                                             | m³/s      | monthly    | line  | `dam_inflow_m3_s` ★, `dam_outflow_m3_s` ★                                                               |
+| Borehole Water Level (m bgl)                                                    | `borehole-water-level-m-bgl`                                              | m bgl     | monthly    | line  | `borehole_water_level_m_bgl` ★                                                                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `river_discharge_m3_s` | River Discharge (m³/s) | m³/s | monthly | line | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder) |
-| `fdc_percentiles_m3_s` | FDC Percentiles (m³/s) | m³/s | monthly | line | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — constant 0.01 |
-| `ssi_dimensionless` | SSI | — | monthly | line | drought: `ssi-sgi-index`; runoff: `ssi-sgi-index` | withheld — computed from the placeholder discharge |
-| `dam_storage_million_m3` | Dam Storage (Mm³) | Mm³ | monthly | bar | drought: `dam-storage-mm3`; runoff: `dam-storage-mm3` | withheld — failed plausibility: frozen since Dec 2021 in all 52 districts (national 17 715 Mm³ every month) and implausible swings before (national 421 Mm³ in Jun 2021, 16 617 Mm³ in Aug 2021) |
-| `dam_level_pct_fsc` | Dam Level (% FSC) | % FSC | monthly | line | drought: `dam-level-pct-fsc`; runoff: `dam-level-pct-fsc` | withheld — failed plausibility: frozen since Dec 2021; 1 212 district-months at 0 % FSC (national mean 69 % in Jul 2002, 0.5 % in Jul 2003) |
-| `dam_inflow_m3_s` | Dam Inflow (m³/s) | m³/s | monthly | line | drought: `dam-inflow-dam-outflow-m3-s`; runoff: `dam-inflow-dam-outflow-m3-s` | withheld — failed plausibility: inflow = outflow in 2 496 of 2 600 district-months since Nov 2021 (storage frozen) |
-| `dam_outflow_m3_s` | Dam Outflow (m³/s) | m³/s | monthly | line | drought: `dam-inflow-dam-outflow-m3-s`; runoff: `dam-inflow-dam-outflow-m3-s` | withheld — failed plausibility: inflow = outflow in 2 496 of 2 600 district-months since Nov 2021 (storage frozen) |
-| `borehole_water_level_m_bgl` | Borehole Water Level (m bgl) | m bgl | monthly | line | drought: `borehole-water-level-m-bgl`; runoff: `borehole-water-level-m-bgl` | withheld — range −0.18…+0.20: not a depth below ground level |
-| `sgi_dimensionless` | SGI | — | monthly | line | drought: `ssi-sgi-index`; runoff: `ssi-sgi-index` | live — Served May 2002 – Aug 2024 only: values after Aug 2024 repeat Aug 2024 and are withheld; Jan 2001 – Apr 2002 is a constant spin-up. Johannesburg, Ekurhuleni, Sedibeng and West Rand share one identical series, as do Sisonke and uMgungundlovu |
-| `surface_runoff_m3_s` | Surface Runoff (m³/s) | m³/s | monthly | line | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder) |
-| `baseflow_separation_m3_s` | Baseflow Separation (m³/s) | m³/s | monthly | line | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder) |
+| Column                       | Label                        | Unit  | Resolution | Chart | Group                                                                                                                                                                 | Status                                                                                                                                                                                                                                                  |
+| ---------------------------- | ---------------------------- | ----- | ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `river_discharge_m3_s`       | River Discharge (m³/s)       | m³/s  | monthly    | line  | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder)                                                                                                                                                                                |
+| `fdc_percentiles_m3_s`       | FDC Percentiles (m³/s)       | m³/s  | monthly    | line  | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — constant 0.01                                                                                                                                                                                                                                |
+| `ssi_dimensionless`          | SSI                          | —     | monthly    | line  | drought: `ssi-sgi-index`; runoff: `ssi-sgi-index`                                                                                                                     | withheld — computed from the placeholder discharge                                                                                                                                                                                                      |
+| `dam_storage_million_m3`     | Dam Storage (Mm³)            | Mm³   | monthly    | bar   | drought: `dam-storage-mm3`; runoff: `dam-storage-mm3`                                                                                                                 | withheld — failed plausibility: frozen since Dec 2021 in all 52 districts (national 17 715 Mm³ every month) and implausible swings before (national 421 Mm³ in Jun 2021, 16 617 Mm³ in Aug 2021)                                                        |
+| `dam_level_pct_fsc`          | Dam Level (% FSC)            | % FSC | monthly    | line  | drought: `dam-level-pct-fsc`; runoff: `dam-level-pct-fsc`                                                                                                             | withheld — failed plausibility: frozen since Dec 2021; 1 212 district-months at 0 % FSC (national mean 69 % in Jul 2002, 0.5 % in Jul 2003)                                                                                                             |
+| `dam_inflow_m3_s`            | Dam Inflow (m³/s)            | m³/s  | monthly    | line  | drought: `dam-inflow-dam-outflow-m3-s`; runoff: `dam-inflow-dam-outflow-m3-s`                                                                                         | withheld — failed plausibility: inflow = outflow in 2 496 of 2 600 district-months since Nov 2021 (storage frozen)                                                                                                                                      |
+| `dam_outflow_m3_s`           | Dam Outflow (m³/s)           | m³/s  | monthly    | line  | drought: `dam-inflow-dam-outflow-m3-s`; runoff: `dam-inflow-dam-outflow-m3-s`                                                                                         | withheld — failed plausibility: inflow = outflow in 2 496 of 2 600 district-months since Nov 2021 (storage frozen)                                                                                                                                      |
+| `borehole_water_level_m_bgl` | Borehole Water Level (m bgl) | m bgl | monthly    | line  | drought: `borehole-water-level-m-bgl`; runoff: `borehole-water-level-m-bgl`                                                                                           | withheld — range −0.18…+0.20: not a depth below ground level                                                                                                                                                                                            |
+| `sgi_dimensionless`          | SGI                          | —     | monthly    | line  | drought: `ssi-sgi-index`; runoff: `ssi-sgi-index`                                                                                                                     | live — Served May 2002 – Aug 2024 only: values after Aug 2024 repeat Aug 2024 and are withheld; Jan 2001 – Apr 2002 is a constant spin-up. Johannesburg, Ekurhuleni, Sedibeng and West Rand share one identical series, as do Sisonke and uMgungundlovu |
+| `surface_runoff_m3_s`        | Surface Runoff (m³/s)        | m³/s  | monthly    | line  | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder)                                                                                                                                                                                |
+| `baseflow_separation_m3_s`   | Baseflow Separation (m³/s)   | m³/s  | monthly    | line  | drought: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s`; runoff: `river-discharge-fdc-percentiles-surface-runoff-baseflow-separation-m3-s` | withheld — identical value in all 52 districts every month (placeholder)                                                                                                                                                                                |
 
 <a id="temperature-change"></a>
+
 ## Temperature Change · §4.1
 
 Table `4_1_temperature_change_master` · id `temperature-change` · daily · pages: climate · 9 live, 0 withheld, 0 duplicate · keys: `District_Name`, `Date`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Temperature (°C) | `temperature-c` | °C | daily | band (Tmin_C – Tmax_C) | `Tmin_C` ★, `Tmax_C` ★, `Tavg_C` ★ |
-| Temperature Anomaly (°C) | `temperature-anomaly-c` | °C | monthly | diverging-bar | `Temperature_Anomaly_C` ★ |
-| Heatwave (days) | `heatwave-days` | days | annual | bar | `Heatwave_Frequency_Days` ★, `Heatwave_Duration_Max_Consecutive_Days` ★ |
-| Frost Day Flag | `frost-day-flag` | — | daily | line | `Frost_Day_Flag` ★ |
-| LST Day / LST Night (°C) | `lst-day-lst-night-c` | °C | daily | line | `LST_Day_C` ★, `LST_Night_C` ★ |
+| Chart group              | id                      | Axis unit | Resolution | Chart                  | Columns (★ default)                                                     |
+| ------------------------ | ----------------------- | --------- | ---------- | ---------------------- | ----------------------------------------------------------------------- |
+| Temperature (°C)         | `temperature-c`         | °C        | daily      | band (Tmin_C – Tmax_C) | `Tmin_C` ★, `Tmax_C` ★, `Tavg_C` ★                                      |
+| Temperature Anomaly (°C) | `temperature-anomaly-c` | °C        | monthly    | diverging-bar          | `Temperature_Anomaly_C` ★                                               |
+| Heatwave (days)          | `heatwave-days`         | days      | annual     | bar                    | `Heatwave_Frequency_Days` ★, `Heatwave_Duration_Max_Consecutive_Days` ★ |
+| Frost Day Flag           | `frost-day-flag`        | —         | daily      | line                   | `Frost_Day_Flag` ★                                                      |
+| LST Day / LST Night (°C) | `lst-day-lst-night-c`   | °C        | daily      | line                   | `LST_Day_C` ★, `LST_Night_C` ★                                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Tmin_C` | Tmin (°C) | °C | daily | line | climate: `temperature-c` | live |
-| `Tmax_C` | Tmax (°C) | °C | daily | line | climate: `temperature-c` | live |
-| `Tavg_C` | Tavg (°C) | °C | daily | line | climate: `temperature-c` | live |
-| `Temperature_Anomaly_C` | Temperature Anomaly (°C) | °C | monthly | diverging-bar | climate: `temperature-anomaly-c` | live |
-| `Heatwave_Frequency_Days` | Heatwave Frequency (days) | days | annual | bar | climate: `heatwave-days` | live — = count of days Tmax > 35 °C in the year (verified) |
-| `Heatwave_Duration_Max_Consecutive_Days` | Heatwave Duration Max Consecutive (days) | days | annual | bar | climate: `heatwave-days` | live — = longest run of days with Tmax > 35 °C in the year (1 404 / 1 404 district-years verified) |
-| `Frost_Day_Flag` | Frost Day Flag | — | daily | line | climate: `frost-day-flag` | live |
-| `LST_Day_C` | LST Day (°C) | °C | daily | line | climate: `lst-day-lst-night-c` | live |
-| `LST_Night_C` | LST Night (°C) | °C | daily | line | climate: `lst-day-lst-night-c` | live |
+| Column                                   | Label                                    | Unit | Resolution | Chart         | Group                            | Status                                                                                             |
+| ---------------------------------------- | ---------------------------------------- | ---- | ---------- | ------------- | -------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `Tmin_C`                                 | Tmin (°C)                                | °C   | daily      | line          | climate: `temperature-c`         | live                                                                                               |
+| `Tmax_C`                                 | Tmax (°C)                                | °C   | daily      | line          | climate: `temperature-c`         | live                                                                                               |
+| `Tavg_C`                                 | Tavg (°C)                                | °C   | daily      | line          | climate: `temperature-c`         | live                                                                                               |
+| `Temperature_Anomaly_C`                  | Temperature Anomaly (°C)                 | °C   | monthly    | diverging-bar | climate: `temperature-anomaly-c` | live                                                                                               |
+| `Heatwave_Frequency_Days`                | Heatwave Frequency (days)                | days | annual     | bar           | climate: `heatwave-days`         | live — = count of days Tmax > 35 °C in the year (verified)                                         |
+| `Heatwave_Duration_Max_Consecutive_Days` | Heatwave Duration Max Consecutive (days) | days | annual     | bar           | climate: `heatwave-days`         | live — = longest run of days with Tmax > 35 °C in the year (1 404 / 1 404 district-years verified) |
+| `Frost_Day_Flag`                         | Frost Day Flag                           | —    | daily      | line          | climate: `frost-day-flag`        | live                                                                                               |
+| `LST_Day_C`                              | LST Day (°C)                             | °C   | daily      | line          | climate: `lst-day-lst-night-c`   | live                                                                                               |
+| `LST_Night_C`                            | LST Night (°C)                           | °C   | daily      | line          | climate: `lst-day-lst-night-c`   | live                                                                                               |
 
 <a id="wet-dry-spells"></a>
+
 ## Wet Dry Spells · §4.2
 
 Table `4_2_wet_dry_spells_master` · id `wet-dry-spells` · annual · pages: climate, rainfall · 8 live, 0 withheld, 0 duplicate · keys: `District_Name`, `Year`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| CWD / CDD / R10mm / R20mm (days) | `cwd-cdd-r10mm-r20mm-days` | days | annual | bar | `CWD_Days` ★, `CDD_Days` ★, `R10mm_Days` ★, `R20mm_Days` |
-| Rx1day / Rx5day / PRCPTOT (mm) | `rx1day-rx5day-prcptot-mm` | mm | annual | bar | `Rx1day_mm` ★, `Rx5day_mm` ★, `PRCPTOT_mm` ★ |
-| SDII (mm/wet day) | `sdii-mm-wet-day` | mm/wet day | annual | line | `SDII_mm_per_wet_day` ★ |
+| Chart group                      | id                         | Axis unit  | Resolution | Chart | Columns (★ default)                                      |
+| -------------------------------- | -------------------------- | ---------- | ---------- | ----- | -------------------------------------------------------- |
+| CWD / CDD / R10mm / R20mm (days) | `cwd-cdd-r10mm-r20mm-days` | days       | annual     | bar   | `CWD_Days` ★, `CDD_Days` ★, `R10mm_Days` ★, `R20mm_Days` |
+| Rx1day / Rx5day / PRCPTOT (mm)   | `rx1day-rx5day-prcptot-mm` | mm         | annual     | bar   | `Rx1day_mm` ★, `Rx5day_mm` ★, `PRCPTOT_mm` ★             |
+| SDII (mm/wet day)                | `sdii-mm-wet-day`          | mm/wet day | annual     | line  | `SDII_mm_per_wet_day` ★                                  |
 
 **Rainfall page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| CWD / CDD / R10mm / R20mm (days) | `cwd-cdd-r10mm-r20mm-days` | days | annual | bar | `CWD_Days` ★, `CDD_Days` ★, `R10mm_Days` ★, `R20mm_Days` |
-| Rx1day / Rx5day / PRCPTOT (mm) | `rx1day-rx5day-prcptot-mm` | mm | annual | bar | `Rx1day_mm` ★, `Rx5day_mm` ★, `PRCPTOT_mm` ★ |
-| SDII (mm/wet day) | `sdii-mm-wet-day` | mm/wet day | annual | line | `SDII_mm_per_wet_day` ★ |
+| Chart group                      | id                         | Axis unit  | Resolution | Chart | Columns (★ default)                                      |
+| -------------------------------- | -------------------------- | ---------- | ---------- | ----- | -------------------------------------------------------- |
+| CWD / CDD / R10mm / R20mm (days) | `cwd-cdd-r10mm-r20mm-days` | days       | annual     | bar   | `CWD_Days` ★, `CDD_Days` ★, `R10mm_Days` ★, `R20mm_Days` |
+| Rx1day / Rx5day / PRCPTOT (mm)   | `rx1day-rx5day-prcptot-mm` | mm         | annual     | bar   | `Rx1day_mm` ★, `Rx5day_mm` ★, `PRCPTOT_mm` ★             |
+| SDII (mm/wet day)                | `sdii-mm-wet-day`          | mm/wet day | annual     | line  | `SDII_mm_per_wet_day` ★                                  |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `CWD_Days` | CWD (days) | days | annual | bar | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live |
-| `CDD_Days` | CDD (days) | days | annual | bar | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live |
-| `Rx1day_mm` | Rx1day (mm) | mm | annual | bar | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live |
-| `Rx5day_mm` | Rx5day (mm) | mm | annual | bar | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live |
-| `PRCPTOT_mm` | PRCPTOT (mm) | mm | annual | bar | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live |
-| `R10mm_Days` | R10mm (days) | days | annual | bar | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live |
-| `R20mm_Days` | R20mm (days) | days | annual | bar | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live |
-| `SDII_mm_per_wet_day` | SDII (mm/wet day) | mm/wet day | annual | line | climate: `sdii-mm-wet-day`; rainfall: `sdii-mm-wet-day` | live |
+| Column                | Label             | Unit       | Resolution | Chart | Group                                                                     | Status |
+| --------------------- | ----------------- | ---------- | ---------- | ----- | ------------------------------------------------------------------------- | ------ |
+| `CWD_Days`            | CWD (days)        | days       | annual     | bar   | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live   |
+| `CDD_Days`            | CDD (days)        | days       | annual     | bar   | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live   |
+| `Rx1day_mm`           | Rx1day (mm)       | mm         | annual     | bar   | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live   |
+| `Rx5day_mm`           | Rx5day (mm)       | mm         | annual     | bar   | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live   |
+| `PRCPTOT_mm`          | PRCPTOT (mm)      | mm         | annual     | bar   | climate: `rx1day-rx5day-prcptot-mm`; rainfall: `rx1day-rx5day-prcptot-mm` | live   |
+| `R10mm_Days`          | R10mm (days)      | days       | annual     | bar   | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live   |
+| `R20mm_Days`          | R20mm (days)      | days       | annual     | bar   | climate: `cwd-cdd-r10mm-r20mm-days`; rainfall: `cwd-cdd-r10mm-r20mm-days` | live   |
+| `SDII_mm_per_wet_day` | SDII (mm/wet day) | mm/wet day | annual     | line  | climate: `sdii-mm-wet-day`; rainfall: `sdii-mm-wet-day`                   | live   |
 
 <a id="mean-annual-precipitation"></a>
+
 ## Mean Annual Precipitation · §4.3
 
 Table `4_3_mean_annual_precipitation_master` · id `mean-annual-precipitation` · annual · pages: climate, rainfall · 6 live, 5 withheld, 0 duplicate · keys: `District_Name`, `Year`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| MAP (mm) | `map-mm` | mm | annual | bar | `MAP_mm` ★ |
-| Precipitation (mm) | `precipitation-mm` | mm | annual | bar | `Precip_DJF_mm` ★, `Precip_JJA_mm` ★, `Precip_MAM_mm` ★, `Precip_SON_mm` |
-| Nino34 Annual Mean | `nino34-annual-mean` | — | annual | line | `Nino34_Annual_Mean` ★ |
-| Precip CV (%) | `precip-cv-pct` | % | annual | line | `Precip_CV_Percent` ★ |
-| MK Sens Slope (mm/year) | `mk-sens-slope-mm-year` | mm/year | annual | line | `MK_Sens_Slope_mm_yr` ★ |
-| MK P Value | `mk-p-value` | — | annual | line | `MK_p_value` ★ |
-| MK Trend (class) | `mk-trend-class` | class | annual | line | `MK_Trend` ★ |
-| ENSO Nino34 Correlation | `enso-nino34-correlation` | — | annual | line | `ENSO_Nino34_Correlation` ★ |
+| Chart group             | id                        | Axis unit | Resolution | Chart | Columns (★ default)                                                      |
+| ----------------------- | ------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------ |
+| MAP (mm)                | `map-mm`                  | mm        | annual     | bar   | `MAP_mm` ★                                                               |
+| Precipitation (mm)      | `precipitation-mm`        | mm        | annual     | bar   | `Precip_DJF_mm` ★, `Precip_JJA_mm` ★, `Precip_MAM_mm` ★, `Precip_SON_mm` |
+| Nino34 Annual Mean      | `nino34-annual-mean`      | —         | annual     | line  | `Nino34_Annual_Mean` ★                                                   |
+| Precip CV (%)           | `precip-cv-pct`           | %         | annual     | line  | `Precip_CV_Percent` ★                                                    |
+| MK Sens Slope (mm/year) | `mk-sens-slope-mm-year`   | mm/year   | annual     | line  | `MK_Sens_Slope_mm_yr` ★                                                  |
+| MK P Value              | `mk-p-value`              | —         | annual     | line  | `MK_p_value` ★                                                           |
+| MK Trend (class)        | `mk-trend-class`          | class     | annual     | line  | `MK_Trend` ★                                                             |
+| ENSO Nino34 Correlation | `enso-nino34-correlation` | —         | annual     | line  | `ENSO_Nino34_Correlation` ★                                              |
 
 **Rainfall page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| MAP (mm) | `map-mm` | mm | annual | bar | `MAP_mm` ★ |
-| Precipitation (mm) | `precipitation-mm` | mm | annual | bar | `Precip_DJF_mm` ★, `Precip_JJA_mm` ★, `Precip_MAM_mm` ★, `Precip_SON_mm` |
-| Nino34 Annual Mean | `nino34-annual-mean` | — | annual | line | `Nino34_Annual_Mean` ★ |
-| Precip CV (%) | `precip-cv-pct` | % | annual | line | `Precip_CV_Percent` ★ |
-| MK Sens Slope (mm/year) | `mk-sens-slope-mm-year` | mm/year | annual | line | `MK_Sens_Slope_mm_yr` ★ |
-| MK P Value | `mk-p-value` | — | annual | line | `MK_p_value` ★ |
-| MK Trend (class) | `mk-trend-class` | class | annual | line | `MK_Trend` ★ |
-| ENSO Nino34 Correlation | `enso-nino34-correlation` | — | annual | line | `ENSO_Nino34_Correlation` ★ |
+| Chart group             | id                        | Axis unit | Resolution | Chart | Columns (★ default)                                                      |
+| ----------------------- | ------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------ |
+| MAP (mm)                | `map-mm`                  | mm        | annual     | bar   | `MAP_mm` ★                                                               |
+| Precipitation (mm)      | `precipitation-mm`        | mm        | annual     | bar   | `Precip_DJF_mm` ★, `Precip_JJA_mm` ★, `Precip_MAM_mm` ★, `Precip_SON_mm` |
+| Nino34 Annual Mean      | `nino34-annual-mean`      | —         | annual     | line  | `Nino34_Annual_Mean` ★                                                   |
+| Precip CV (%)           | `precip-cv-pct`           | %         | annual     | line  | `Precip_CV_Percent` ★                                                    |
+| MK Sens Slope (mm/year) | `mk-sens-slope-mm-year`   | mm/year   | annual     | line  | `MK_Sens_Slope_mm_yr` ★                                                  |
+| MK P Value              | `mk-p-value`              | —         | annual     | line  | `MK_p_value` ★                                                           |
+| MK Trend (class)        | `mk-trend-class`          | class     | annual     | line  | `MK_Trend` ★                                                             |
+| ENSO Nino34 Correlation | `enso-nino34-correlation` | —         | annual     | line  | `ENSO_Nino34_Correlation` ★                                              |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `MAP_mm` | MAP (mm) | mm | annual | bar | climate: `map-mm`; rainfall: `map-mm` | live — identical to 6.1 Annual_Total_Precipitation_mm |
-| `Precip_DJF_mm` | Precip DJF (mm) | mm | annual | bar | climate: `precipitation-mm`; rainfall: `precipitation-mm` | live |
-| `Precip_JJA_mm` | Precip JJA (mm) | mm | annual | bar | climate: `precipitation-mm`; rainfall: `precipitation-mm` | live |
-| `Precip_MAM_mm` | Precip MAM (mm) | mm | annual | bar | climate: `precipitation-mm`; rainfall: `precipitation-mm` | live |
-| `Precip_SON_mm` | Precip SON (mm) | mm | annual | bar | climate: `precipitation-mm`; rainfall: `precipitation-mm` | live |
-| `Nino34_Annual_Mean` | Nino34 Annual Mean | — | annual | line | climate: `nino34-annual-mean`; rainfall: `nino34-annual-mean` | live — −0.85 … +1.55 for 2000–2025; the 2026 value (−41.28) belongs to the partial year, which is never served |
-| `Precip_CV_Percent` | Precip CV (%) | % | annual | line | climate: `precip-cv-pct`; rainfall: `precip-cv-pct` | withheld — computed over 2000–2026 including the partial year 2026 (Alfred Nzo 17.05 %; 14.70 % over 2000–2025) |
-| `MK_Sens_Slope_mm_yr` | MK Sens Slope (mm/year) | mm/year | annual | line | climate: `mk-sens-slope-mm-year`; rainfall: `mk-sens-slope-mm-year` | withheld — computed over 2000–2026 including the partial year 2026: Alfred Nzo −1.03 mm/yr stored, +0.22 mm/yr over the full years 2000–2025 (app.core.stats) |
-| `MK_p_value` | MK P Value | — | annual | line | climate: `mk-p-value`; rainfall: `mk-p-value` | withheld — computed over 2000–2026 including the partial year 2026 (same test as MK_Sens_Slope_mm_yr) |
-| `MK_Trend` | MK Trend (class) | — | annual | line | climate: `mk-trend-class`; rainfall: `mk-trend-class` | withheld — computed over 2000–2026 including the partial year 2026 (same test as MK_Sens_Slope_mm_yr) |
-| `ENSO_Nino34_Correlation` | ENSO Nino34 Correlation | — | annual | line | climate: `enso-nino34-correlation`; rainfall: `enso-nino34-correlation` | withheld — includes 2026, whose Niño 3.4 value is −41.28: Alfred Nzo +0.48 stored, −0.43 over 2000–2025 |
+| Column                    | Label                   | Unit    | Resolution | Chart | Group                                                                   | Status                                                                                                                                                        |
+| ------------------------- | ----------------------- | ------- | ---------- | ----- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MAP_mm`                  | MAP (mm)                | mm      | annual     | bar   | climate: `map-mm`; rainfall: `map-mm`                                   | live — identical to 6.1 Annual_Total_Precipitation_mm                                                                                                         |
+| `Precip_DJF_mm`           | Precip DJF (mm)         | mm      | annual     | bar   | climate: `precipitation-mm`; rainfall: `precipitation-mm`               | live                                                                                                                                                          |
+| `Precip_JJA_mm`           | Precip JJA (mm)         | mm      | annual     | bar   | climate: `precipitation-mm`; rainfall: `precipitation-mm`               | live                                                                                                                                                          |
+| `Precip_MAM_mm`           | Precip MAM (mm)         | mm      | annual     | bar   | climate: `precipitation-mm`; rainfall: `precipitation-mm`               | live                                                                                                                                                          |
+| `Precip_SON_mm`           | Precip SON (mm)         | mm      | annual     | bar   | climate: `precipitation-mm`; rainfall: `precipitation-mm`               | live                                                                                                                                                          |
+| `Nino34_Annual_Mean`      | Nino34 Annual Mean      | —       | annual     | line  | climate: `nino34-annual-mean`; rainfall: `nino34-annual-mean`           | live — −0.85 … +1.55 for 2000–2025; the 2026 value (−41.28) belongs to the partial year, which is never served                                                |
+| `Precip_CV_Percent`       | Precip CV (%)           | %       | annual     | line  | climate: `precip-cv-pct`; rainfall: `precip-cv-pct`                     | withheld — computed over 2000–2026 including the partial year 2026 (Alfred Nzo 17.05 %; 14.70 % over 2000–2025)                                               |
+| `MK_Sens_Slope_mm_yr`     | MK Sens Slope (mm/year) | mm/year | annual     | line  | climate: `mk-sens-slope-mm-year`; rainfall: `mk-sens-slope-mm-year`     | withheld — computed over 2000–2026 including the partial year 2026: Alfred Nzo −1.03 mm/yr stored, +0.22 mm/yr over the full years 2000–2025 (app.core.stats) |
+| `MK_p_value`              | MK P Value              | —       | annual     | line  | climate: `mk-p-value`; rainfall: `mk-p-value`                           | withheld — computed over 2000–2026 including the partial year 2026 (same test as MK_Sens_Slope_mm_yr)                                                         |
+| `MK_Trend`                | MK Trend (class)        | —       | annual     | line  | climate: `mk-trend-class`; rainfall: `mk-trend-class`                   | withheld — computed over 2000–2026 including the partial year 2026 (same test as MK_Sens_Slope_mm_yr)                                                         |
+| `ENSO_Nino34_Correlation` | ENSO Nino34 Correlation | —       | annual     | line  | climate: `enso-nino34-correlation`; rainfall: `enso-nino34-correlation` | withheld — includes 2026, whose Niño 3.4 value is −41.28: Alfred Nzo +0.48 stored, −0.43 over 2000–2025                                                       |
 
 <a id="potential-evaporation-daily"></a>
+
 ## Potential Evaporation Daily · §4.4
 
 Table `4_4_potential_evaporation_daily_master` · id `potential-evaporation-daily` · daily · pages: climate · 0 live, 6 withheld, 0 duplicate · keys: `District_Name`, `Date`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Evapotranspiration (mm) | `evapotranspiration-mm` | mm | daily | line | `Daily_ET0_mm` ★, `Daily_PET_mm` ★, `Daily_AET_mm` ★, `Daily_Pan_Evap_mm` |
-| Daily VPD (kPa) | `daily-vpd-kpa` | kPa | daily | line | `Daily_VPD_kPa` ★ |
-| SPEI (index) | `spei-index` | index | daily | line | `SPEI_Daily` ★ |
+| Chart group             | id                      | Axis unit | Resolution | Chart | Columns (★ default)                                                       |
+| ----------------------- | ----------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------- |
+| Evapotranspiration (mm) | `evapotranspiration-mm` | mm        | daily      | line  | `Daily_ET0_mm` ★, `Daily_PET_mm` ★, `Daily_AET_mm` ★, `Daily_Pan_Evap_mm` |
+| Daily VPD (kPa)         | `daily-vpd-kpa`         | kPa       | daily      | line  | `Daily_VPD_kPa` ★                                                         |
+| SPEI (index)            | `spei-index`            | index     | daily      | line  | `SPEI_Daily` ★                                                            |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Daily_ET0_mm` | Daily ET₀ (mm) | mm | daily | line | climate: `evapotranspiration-mm` | withheld — 23–97× smaller than meteorological et0_mm_day (implausible magnitude) |
-| `Daily_PET_mm` | Daily PET (mm) | mm | daily | line | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm |
-| `Daily_AET_mm` | Daily AET (mm) | mm | daily | line | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm |
-| `Daily_Pan_Evap_mm` | Daily Pan Evap (mm) | mm | daily | line | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm |
-| `Daily_VPD_kPa` | Daily VPD (kPa) | kPa | daily | line | climate: `daily-vpd-kpa` | withheld — the 4_4 table is withheld: its evaporation values are 23–97× smaller than plausible, so the table is under review |
-| `SPEI_Daily` | SPEI Daily | — | daily | line | climate: `spei-index` | withheld — stored as text, and the 4_4 table is withheld (evaporation values 23–97× too small) |
+| Column              | Label               | Unit | Resolution | Chart | Group                            | Status                                                                                                                       |
+| ------------------- | ------------------- | ---- | ---------- | ----- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `Daily_ET0_mm`      | Daily ET₀ (mm)      | mm   | daily      | line  | climate: `evapotranspiration-mm` | withheld — 23–97× smaller than meteorological et0_mm_day (implausible magnitude)                                             |
+| `Daily_PET_mm`      | Daily PET (mm)      | mm   | daily      | line  | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm                                                                            |
+| `Daily_AET_mm`      | Daily AET (mm)      | mm   | daily      | line  | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm                                                                            |
+| `Daily_Pan_Evap_mm` | Daily Pan Evap (mm) | mm   | daily      | line  | climate: `evapotranspiration-mm` | withheld — same magnitude problem as Daily_ET0_mm                                                                            |
+| `Daily_VPD_kPa`     | Daily VPD (kPa)     | kPa  | daily      | line  | climate: `daily-vpd-kpa`         | withheld — the 4_4 table is withheld: its evaporation values are 23–97× smaller than plausible, so the table is under review |
+| `SPEI_Daily`        | SPEI Daily          | —    | daily      | line  | climate: `spei-index`            | withheld — stored as text, and the 4_4 table is withheld (evaporation values 23–97× too small)                               |
 
 <a id="irrigation-demand-daily"></a>
+
 ## Irrigation Demand Daily · §4.5
 
 Table `4_5_irrigation_demand_daily_master` · id `irrigation-demand-daily` · daily · pages: climate · 0 live, 6 withheld, 0 duplicate · keys: `District_Name`, `Date`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| CWR (mm/day) | `cwr-mm-day` | mm/day | daily | line | `CWR_mm_day` ★ |
-| Irrigation (mm) | `irrigation-mm` | mm | daily | bar | `Irrigation_Water_Demand_mm` ★, `Irrigation_Return_Flow_mm` ★ |
-| Rainfall Deficit (mm) | `rainfall-deficit-mm` | mm | daily | bar | `Rainfall_Deficit_mm` ★ |
-| Soil Moisture Deficit (m³/m³) | `soil-moisture-deficit-m3-m3` | m³/m³ | daily | line | `Soil_Moisture_Deficit_m3m3` ★ |
-| Growing Season Temp (°C) | `growing-season-temp-c` | °C | daily | line | `Growing_Season_Temp_C` ★ |
+| Chart group                   | id                            | Axis unit | Resolution | Chart | Columns (★ default)                                           |
+| ----------------------------- | ----------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------- |
+| CWR (mm/day)                  | `cwr-mm-day`                  | mm/day    | daily      | line  | `CWR_mm_day` ★                                                |
+| Irrigation (mm)               | `irrigation-mm`               | mm        | daily      | bar   | `Irrigation_Water_Demand_mm` ★, `Irrigation_Return_Flow_mm` ★ |
+| Rainfall Deficit (mm)         | `rainfall-deficit-mm`         | mm        | daily      | bar   | `Rainfall_Deficit_mm` ★                                       |
+| Soil Moisture Deficit (m³/m³) | `soil-moisture-deficit-m3-m3` | m³/m³     | daily      | line  | `Soil_Moisture_Deficit_m3m3` ★                                |
+| Growing Season Temp (°C)      | `growing-season-temp-c`       | °C        | daily      | line  | `Growing_Season_Temp_C` ★                                     |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `CWR_mm_day` | CWR (mm/day) | mm/day | daily | line | climate: `cwr-mm-day` | withheld — built on the implausible 4_4 ET₀ (CWR = 0.85 × ET₀) |
-| `Irrigation_Water_Demand_mm` | Irrigation Water Demand (mm) | mm | daily | bar | climate: `irrigation-mm` | withheld — built on the implausible 4_4 ET₀ |
-| `Rainfall_Deficit_mm` | Rainfall Deficit (mm) | mm | daily | bar | climate: `rainfall-deficit-mm` | withheld — built on the implausible 4_4 ET₀ |
-| `Soil_Moisture_Deficit_m3m3` | Soil Moisture Deficit (m³/m³) | m³/m³ | daily | line | climate: `soil-moisture-deficit-m3-m3` | withheld — the 4_5 table is withheld: it is built on the implausible 4_4 evaporation values |
-| `Growing_Season_Temp_C` | Growing Season Temp (°C) | °C | daily | line | climate: `growing-season-temp-c` | withheld — the 4_5 table is withheld: it is built on the implausible 4_4 evaporation values |
-| `Irrigation_Return_Flow_mm` | Irrigation Return Flow (mm) | mm | daily | bar | climate: `irrigation-mm` | withheld — built on the implausible 4_4 ET₀ |
+| Column                       | Label                         | Unit   | Resolution | Chart | Group                                  | Status                                                                                      |
+| ---------------------------- | ----------------------------- | ------ | ---------- | ----- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `CWR_mm_day`                 | CWR (mm/day)                  | mm/day | daily      | line  | climate: `cwr-mm-day`                  | withheld — built on the implausible 4_4 ET₀ (CWR = 0.85 × ET₀)                              |
+| `Irrigation_Water_Demand_mm` | Irrigation Water Demand (mm)  | mm     | daily      | bar   | climate: `irrigation-mm`               | withheld — built on the implausible 4_4 ET₀                                                 |
+| `Rainfall_Deficit_mm`        | Rainfall Deficit (mm)         | mm     | daily      | bar   | climate: `rainfall-deficit-mm`         | withheld — built on the implausible 4_4 ET₀                                                 |
+| `Soil_Moisture_Deficit_m3m3` | Soil Moisture Deficit (m³/m³) | m³/m³  | daily      | line  | climate: `soil-moisture-deficit-m3-m3` | withheld — the 4_5 table is withheld: it is built on the implausible 4_4 evaporation values |
+| `Growing_Season_Temp_C`      | Growing Season Temp (°C)      | °C     | daily      | line  | climate: `growing-season-temp-c`       | withheld — the 4_5 table is withheld: it is built on the implausible 4_4 evaporation values |
+| `Irrigation_Return_Flow_mm`  | Irrigation Return Flow (mm)   | mm     | daily      | bar   | climate: `irrigation-mm`               | withheld — built on the implausible 4_4 ET₀                                                 |
 
 <a id="streamflow-and-climate-linkage-annual"></a>
+
 ## Streamflow and Climate Linkage Annual · §4.6
 
 Table `4_6_streamflow_and_climate_linkage_annual _master` · id `streamflow-and-climate-linkage-annual` · annual · pages: climate · 0 live, 6 withheld, 0 duplicate · keys: `District_Name`, `Year`
 
 **Climate page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| MAR / Q90 LowFlow / Q10 FloodFlow (m³/year) | `mar-q90-lowflow-q10-floodflow-m3-year` | m³/year | annual | bar | `MAR_m3_year` ★, `Q90_LowFlow_m3_year` ★, `Q10_FloodFlow_m3_year` ★ |
-| Streamflow Anomaly (%) | `streamflow-anomaly-pct` | % | annual | diverging-bar | `Streamflow_Anomaly_percent` ★ |
-| Rainfall Runoff Ratio | `rainfall-runoff-ratio` | — | annual | line | `Rainfall_Runoff_Ratio` ★ |
-| Climate Streamflow Elasticity | `climate-streamflow-elasticity` | — | annual | line | `Climate_Streamflow_Elasticity` ★ |
+| Chart group                                 | id                                      | Axis unit | Resolution | Chart         | Columns (★ default)                                                 |
+| ------------------------------------------- | --------------------------------------- | --------- | ---------- | ------------- | ------------------------------------------------------------------- |
+| MAR / Q90 LowFlow / Q10 FloodFlow (m³/year) | `mar-q90-lowflow-q10-floodflow-m3-year` | m³/year   | annual     | bar           | `MAR_m3_year` ★, `Q90_LowFlow_m3_year` ★, `Q10_FloodFlow_m3_year` ★ |
+| Streamflow Anomaly (%)                      | `streamflow-anomaly-pct`                | %         | annual     | diverging-bar | `Streamflow_Anomaly_percent` ★                                      |
+| Rainfall Runoff Ratio                       | `rainfall-runoff-ratio`                 | —         | annual     | line          | `Rainfall_Runoff_Ratio` ★                                           |
+| Climate Streamflow Elasticity               | `climate-streamflow-elasticity`         | —         | annual     | line          | `Climate_Streamflow_Elasticity` ★                                   |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `MAR_m3_year` | MAR (m³/year) | m³/year | annual | bar | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — national sum ≈ 7× South Africa's MAR |
-| `Streamflow_Anomaly_percent` | Streamflow Anomaly (%) | % | annual | diverging-bar | climate: `streamflow-anomaly-pct` | withheld — the rainfall anomaly, not a streamflow signal (r = 0.999 with the MAP anomaly); its mean includes the partial year 2026 |
-| `Q90_LowFlow_m3_year` | Q90 LowFlow (m³/year) | m³/year | annual | bar | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — a volume on the implausible MAR basis; one value per district repeated every year |
-| `Q10_FloodFlow_m3_year` | Q10 FloodFlow (m³/year) | m³/year | annual | bar | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — a volume on the implausible MAR basis; one value per district repeated every year |
-| `Rainfall_Runoff_Ratio` | Rainfall Runoff Ratio | — | annual | line | climate: `rainfall-runoff-ratio` | withheld — 0.49–0.98, implausible for SA (runoff coefficients 0.02–0.2; runoff_variables_master 0.10–0.26) |
-| `Climate_Streamflow_Elasticity` | Climate Streamflow Elasticity | — | annual | line | climate: `climate-streamflow-elasticity` | withheld — about 1.05 in most districts (0.31–2.23), i.e. runoff proportional to rainfall; published SA elasticities are about 2–3.5 |
+| Column                          | Label                         | Unit    | Resolution | Chart         | Group                                            | Status                                                                                                                               |
+| ------------------------------- | ----------------------------- | ------- | ---------- | ------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `MAR_m3_year`                   | MAR (m³/year)                 | m³/year | annual     | bar           | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — national sum ≈ 7× South Africa's MAR                                                                                      |
+| `Streamflow_Anomaly_percent`    | Streamflow Anomaly (%)        | %       | annual     | diverging-bar | climate: `streamflow-anomaly-pct`                | withheld — the rainfall anomaly, not a streamflow signal (r = 0.999 with the MAP anomaly); its mean includes the partial year 2026   |
+| `Q90_LowFlow_m3_year`           | Q90 LowFlow (m³/year)         | m³/year | annual     | bar           | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — a volume on the implausible MAR basis; one value per district repeated every year                                         |
+| `Q10_FloodFlow_m3_year`         | Q10 FloodFlow (m³/year)       | m³/year | annual     | bar           | climate: `mar-q90-lowflow-q10-floodflow-m3-year` | withheld — a volume on the implausible MAR basis; one value per district repeated every year                                         |
+| `Rainfall_Runoff_Ratio`         | Rainfall Runoff Ratio         | —       | annual     | line          | climate: `rainfall-runoff-ratio`                 | withheld — 0.49–0.98, implausible for SA (runoff coefficients 0.02–0.2; runoff_variables_master 0.10–0.26)                           |
+| `Climate_Streamflow_Elasticity` | Climate Streamflow Elasticity | —       | annual     | line          | climate: `climate-streamflow-elasticity`         | withheld — about 1.05 in most districts (0.31–2.23), i.e. runoff proportional to rainfall; published SA elasticities are about 2–3.5 |
 
 <a id="primary-satellite-vegetation-variables-sansa"></a>
+
 ## Primary Satellite Vegetation Variables SANSA · §5.1
 
 Table `5.1_primary_satellite_vegetation_variables_sansa_master` · id `primary-satellite-vegetation-variables-sansa` · daily · pages: vegetation · 0 live, 14 withheld, 0 duplicate · keys: `District_Name`, `Date`, `Year`, `Month`
 
 **Vegetation page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| NDVI / EVI / SAVI / MSAVI2 / NDWI / NDII (index) | `ndvi-evi-savi-msavi2-ndwi-ndii-index` | index | daily | line | `NDVI_10day_composite` ★, `EVI` ★, `SAVI` ★, `MSAVI2`, `NDWI`, `NDII` |
-| VCI / VHI / TCI / VPI / ASI (%) | `vci-vhi-tci-vpi-asi-pct` | % | daily | line | `VCI_percent` ★, `VHI_percent` ★, `TCI_percent` ★, `VPI_percent`, `ASI_percent` |
-| SVI (index) | `svi-index` | index | daily | line | `SVI_standardised` ★ |
-| LST Land Surface Temperature (°C) | `lst-land-surface-temperature-c` | °C | daily | line | `LST_Land_Surface_Temperature_C` ★ |
-| Surface Soil Moisture (m³/m³) | `surface-soil-moisture-m3-m3` | m³/m³ | daily | line | `Surface_Soil_Moisture_m3m3` ★ |
+| Chart group                                      | id                                     | Axis unit | Resolution | Chart | Columns (★ default)                                                             |
+| ------------------------------------------------ | -------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------------- |
+| NDVI / EVI / SAVI / MSAVI2 / NDWI / NDII (index) | `ndvi-evi-savi-msavi2-ndwi-ndii-index` | index     | daily      | line  | `NDVI_10day_composite` ★, `EVI` ★, `SAVI` ★, `MSAVI2`, `NDWI`, `NDII`           |
+| VCI / VHI / TCI / VPI / ASI (%)                  | `vci-vhi-tci-vpi-asi-pct`              | %         | daily      | line  | `VCI_percent` ★, `VHI_percent` ★, `TCI_percent` ★, `VPI_percent`, `ASI_percent` |
+| SVI (index)                                      | `svi-index`                            | index     | daily      | line  | `SVI_standardised` ★                                                            |
+| LST Land Surface Temperature (°C)                | `lst-land-surface-temperature-c`       | °C        | daily      | line  | `LST_Land_Surface_Temperature_C` ★                                              |
+| Surface Soil Moisture (m³/m³)                    | `surface-soil-moisture-m3-m3`          | m³/m³     | daily      | line  | `Surface_Soil_Moisture_m3m3` ★                                                  |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `NDVI_10day_composite` | NDVI 10day Composite | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — failed plausibility: same mean 0.35 and winter peak in every district |
-| `EVI` | EVI | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000) |
-| `SAVI` | SAVI | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000) |
-| `MSAVI2` | MSAVI2 | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — same source as the failed NDVI |
-| `VCI_percent` | VCI (%) | % | daily | line | vegetation: `vci-vhi-tci-vpi-asi-pct` | withheld — same source as the failed NDVI |
-| `VHI_percent` | VHI (%) | % | daily | line | vegetation: `vci-vhi-tci-vpi-asi-pct` | withheld — same source as the failed NDVI |
-| `TCI_percent` | TCI (%) | % | daily | line | vegetation: `vci-vhi-tci-vpi-asi-pct` | withheld — same source as the failed NDVI |
-| `VPI_percent` | VPI (%) | % | daily | line | vegetation: `vci-vhi-tci-vpi-asi-pct` | withheld — exact copy of VCI_percent |
-| `ASI_percent` | ASI (%) | % | daily | line | vegetation: `vci-vhi-tci-vpi-asi-pct` | withheld — = 100 − VHI_percent of the failed source |
-| `SVI_standardised` | SVI | — | daily | line | vegetation: `svi-index` | withheld — same source as the failed NDVI |
-| `NDWI` | NDWI | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — same source as the failed NDVI |
-| `NDII` | NDII | — | daily | line | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000) |
-| `LST_Land_Surface_Temperature_C` | LST Land Surface Temperature (°C) | °C | daily | line | vegetation: `lst-land-surface-temperature-c` | withheld — the 5.1 vegetation source is withheld: its NDVI fails the plausibility check (the same cycle in every district) |
-| `Surface_Soil_Moisture_m3m3` | Surface Soil Moisture (m³/m³) | m³/m³ | daily | line | vegetation: `surface-soil-moisture-m3-m3` | withheld — constant 0.22 |
+| Column                           | Label                             | Unit  | Resolution | Chart | Group                                              | Status                                                                                                                     |
+| -------------------------------- | --------------------------------- | ----- | ---------- | ----- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `NDVI_10day_composite`           | NDVI 10day Composite              | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — failed plausibility: same mean 0.35 and winter peak in every district                                           |
+| `EVI`                            | EVI                               | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000)                                                           |
+| `SAVI`                           | SAVI                              | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000)                                                           |
+| `MSAVI2`                         | MSAVI2                            | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — same source as the failed NDVI                                                                                  |
+| `VCI_percent`                    | VCI (%)                           | %     | daily      | line  | vegetation: `vci-vhi-tci-vpi-asi-pct`              | withheld — same source as the failed NDVI                                                                                  |
+| `VHI_percent`                    | VHI (%)                           | %     | daily      | line  | vegetation: `vci-vhi-tci-vpi-asi-pct`              | withheld — same source as the failed NDVI                                                                                  |
+| `TCI_percent`                    | TCI (%)                           | %     | daily      | line  | vegetation: `vci-vhi-tci-vpi-asi-pct`              | withheld — same source as the failed NDVI                                                                                  |
+| `VPI_percent`                    | VPI (%)                           | %     | daily      | line  | vegetation: `vci-vhi-tci-vpi-asi-pct`              | withheld — exact copy of VCI_percent                                                                                       |
+| `ASI_percent`                    | ASI (%)                           | %     | daily      | line  | vegetation: `vci-vhi-tci-vpi-asi-pct`              | withheld — = 100 − VHI_percent of the failed source                                                                        |
+| `SVI_standardised`               | SVI                               | —     | daily      | line  | vegetation: `svi-index`                            | withheld — same source as the failed NDVI                                                                                  |
+| `NDWI`                           | NDWI                              | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — same source as the failed NDVI                                                                                  |
+| `NDII`                           | NDII                              | —     | daily      | line  | vegetation: `ndvi-evi-savi-msavi2-ndwi-ndii-index` | withheld — perfectly correlated with the failed NDVI (r = 1.000)                                                           |
+| `LST_Land_Surface_Temperature_C` | LST Land Surface Temperature (°C) | °C    | daily      | line  | vegetation: `lst-land-surface-temperature-c`       | withheld — the 5.1 vegetation source is withheld: its NDVI fails the plausibility check (the same cycle in every district) |
+| `Surface_Soil_Moisture_m3m3`     | Surface Soil Moisture (m³/m³)     | m³/m³ | daily      | line  | vegetation: `surface-soil-moisture-m3-m3`          | withheld — constant 0.22                                                                                                   |
 
 <a id="meteorological-drivers-saws"></a>
+
 ## Meteorological Drivers SAWS · §5.2
 
 Table `5.2_meteorological_drivers_saws_master` · id `meteorological-drivers-saws` · monthly · pages: vegetation · 1 live, 0 withheld, 10 duplicate · keys: `District_Name`, `Year`, `Month`, `date`
 
 **Vegetation page** — duplicates shown here (live): `Monthly_Rainfall_mm`, `Rainfall_Anomaly_percent`, `SPI_1_month`, `SPI_3_month`, `SPI_6_month`, `SPEI_1_month`, `SPEI_3_month`, `SPEI_6_month`, `Mean_Temperature_C`, `Potential_Evapotranspiration_ET0_mm`
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Monthly Rainfall / Potential Evapotranspiration ET₀ (mm) | `monthly-rainfall-potential-evapotranspiration-et0-mm` | mm | monthly | bar | `Monthly_Rainfall_mm` ★, `Potential_Evapotranspiration_ET0_mm` ★ |
-| Rainfall Anomaly (%) | `rainfall-anomaly-pct` | % | monthly | diverging-bar | `Rainfall_Anomaly_percent` ★ |
-| SPI / SPEI (index) | `spi-spei-index` | index | monthly | line | `SPI_1_month` ★, `SPI_3_month` ★, `SPI_6_month` ★, `SPEI_1_month`, `SPEI_3_month`, `SPEI_6_month` |
-| Mean Temperature (°C) | `mean-temperature-c` | °C | monthly | line | `Mean_Temperature_C` ★ |
-| Growing Degree Days GDD (°C·days) | `growing-degree-days-gdd-c-days` | °C·days | monthly | bar | `Growing_Degree_Days_GDD_C` ★ |
+| Chart group                                              | id                                                     | Axis unit | Resolution | Chart         | Columns (★ default)                                                                               |
+| -------------------------------------------------------- | ------------------------------------------------------ | --------- | ---------- | ------------- | ------------------------------------------------------------------------------------------------- |
+| Monthly Rainfall / Potential Evapotranspiration ET₀ (mm) | `monthly-rainfall-potential-evapotranspiration-et0-mm` | mm        | monthly    | bar           | `Monthly_Rainfall_mm` ★, `Potential_Evapotranspiration_ET0_mm` ★                                  |
+| Rainfall Anomaly (%)                                     | `rainfall-anomaly-pct`                                 | %         | monthly    | diverging-bar | `Rainfall_Anomaly_percent` ★                                                                      |
+| SPI / SPEI (index)                                       | `spi-spei-index`                                       | index     | monthly    | line          | `SPI_1_month` ★, `SPI_3_month` ★, `SPI_6_month` ★, `SPEI_1_month`, `SPEI_3_month`, `SPEI_6_month` |
+| Mean Temperature (°C)                                    | `mean-temperature-c`                                   | °C        | monthly    | line          | `Mean_Temperature_C` ★                                                                            |
+| Growing Degree Days GDD (°C·days)                        | `growing-degree-days-gdd-c-days`                       | °C·days   | monthly    | bar           | `Growing_Degree_Days_GDD_C` ★                                                                     |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Monthly_Rainfall_mm` | Monthly Rainfall (mm) | mm | monthly | bar | vegetation: `monthly-rainfall-potential-evapotranspiration-et0-mm` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Total_Precipitation_mm`; live on vegetation |
-| `Rainfall_Anomaly_percent` | Rainfall Anomaly (%) | % | monthly | diverging-bar | vegetation: `rainfall-anomaly-pct` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_percent`; live on vegetation |
-| `SPI_1_month` | SPI 1 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_1_Meteorological_Drought_Onset`; live on vegetation |
-| `SPI_3_month` | SPI 3 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_3_Short_Term_Agricultural_Drought`; live on vegetation |
-| `SPI_6_month` | SPI 6 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_6_Medium_Term_Hydrological_Impacts`; live on vegetation |
-| `SPEI_1_month` | SPEI 1 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `meteorological_drought_master.spei_1`; live on vegetation |
-| `SPEI_3_month` | SPEI 3 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `meteorological_drought_master.spei_3`; live on vegetation |
-| `SPEI_6_month` | SPEI 6 Month | — | monthly | line | vegetation: `spi-spei-index` | duplicate of `meteorological_drought_master.spei_6`; live on vegetation |
-| `Mean_Temperature_C` | Mean Temperature (°C) | °C | monthly | line | vegetation: `mean-temperature-c` | duplicate of `4_1_temperature_change_master.Tavg_C`; live on vegetation |
-| `Potential_Evapotranspiration_ET0_mm` | Potential Evapotranspiration ET₀ (mm) | mm | monthly | bar | vegetation: `monthly-rainfall-potential-evapotranspiration-et0-mm` | duplicate of `meteorological_drought_master.et0_mm_day`; live on vegetation |
-| `Growing_Degree_Days_GDD_C` | Growing Degree Days GDD (°C·days) | °C·days ¹ | monthly | bar | vegetation: `growing-degree-days-gdd-c-days` | live — = Σ daily max(Tavg − 10 °C, 0) from 4_1 (624 / 624 district-months of 2015 match): degree-days |
+| Column                                | Label                                 | Unit      | Resolution | Chart         | Group                                                              | Status                                                                                                                |
+| ------------------------------------- | ------------------------------------- | --------- | ---------- | ------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `Monthly_Rainfall_mm`                 | Monthly Rainfall (mm)                 | mm        | monthly    | bar           | vegetation: `monthly-rainfall-potential-evapotranspiration-et0-mm` | duplicate of `6.1_core_rainfall_variables_master.Monthly_Total_Precipitation_mm`; live on vegetation                  |
+| `Rainfall_Anomaly_percent`            | Rainfall Anomaly (%)                  | %         | monthly    | diverging-bar | vegetation: `rainfall-anomaly-pct`                                 | duplicate of `6.1_core_rainfall_variables_master.Monthly_Anomaly_percent`; live on vegetation                         |
+| `SPI_1_month`                         | SPI 1 Month                           | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_1_Meteorological_Drought_Onset`; live on vegetation     |
+| `SPI_3_month`                         | SPI 3 Month                           | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_3_Short_Term_Agricultural_Drought`; live on vegetation  |
+| `SPI_6_month`                         | SPI 6 Month                           | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `6.2_rainfall_derived_drought_indices_master.SPI_6_Medium_Term_Hydrological_Impacts`; live on vegetation |
+| `SPEI_1_month`                        | SPEI 1 Month                          | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `meteorological_drought_master.spei_1`; live on vegetation                                               |
+| `SPEI_3_month`                        | SPEI 3 Month                          | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `meteorological_drought_master.spei_3`; live on vegetation                                               |
+| `SPEI_6_month`                        | SPEI 6 Month                          | —         | monthly    | line          | vegetation: `spi-spei-index`                                       | duplicate of `meteorological_drought_master.spei_6`; live on vegetation                                               |
+| `Mean_Temperature_C`                  | Mean Temperature (°C)                 | °C        | monthly    | line          | vegetation: `mean-temperature-c`                                   | duplicate of `4_1_temperature_change_master.Tavg_C`; live on vegetation                                               |
+| `Potential_Evapotranspiration_ET0_mm` | Potential Evapotranspiration ET₀ (mm) | mm        | monthly    | bar           | vegetation: `monthly-rainfall-potential-evapotranspiration-et0-mm` | duplicate of `meteorological_drought_master.et0_mm_day`; live on vegetation                                           |
+| `Growing_Degree_Days_GDD_C`           | Growing Degree Days GDD (°C·days)     | °C·days ¹ | monthly    | bar           | vegetation: `growing-degree-days-gdd-c-days`                       | live — = Σ daily max(Tavg − 10 °C, 0) from 4_1 (624 / 624 district-months of 2015 match): degree-days                 |
 
 <a id="core-rainfall-variables"></a>
+
 ## Core Rainfall Variables · §6.1
 
 Table `6.1_core_rainfall_variables_master` · id `core-rainfall-variables` · daily · pages: rainfall · 12 live, 0 withheld, 2 duplicate · keys: `District_Name`, `Date`, `Year`, `Month`, `Day`
 
 **Rainfall page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Daily Rainfall Total (mm) | `daily-rainfall-total-mm` | mm | daily | bar | `Daily_Rainfall_Total_mm` ★ |
-| Number of Rainy Days (days/month) | `number-of-rainy-days-days-month` | days/month | monthly | bar | `Number_of_Rainy_Days_days_month` ★ |
-| Monthly (mm) | `monthly-mm` | mm | monthly | mixed | `Monthly_Total_Precipitation_mm` ★, `Monthly_Anomaly_mm` ★ |
-| Monthly Anomaly (%) | `monthly-anomaly-pct` | % | monthly | diverging-bar | `Monthly_Anomaly_percent` ★ |
-| Seasonal Total (mm) | `seasonal-total-mm` | mm | annual | bar | `Seasonal_Total_OND_mm` ★, `Seasonal_Total_JFM_mm` ★, `Seasonal_Total_AMJ_mm` ★, `Seasonal_Total_JAS_mm` |
-| CHIRPS Daily Rainfall Estimate (mm/day) | `chirps-daily-rainfall-estimate-mm-day` | mm/day | daily | bar | `CHIRPS_Daily_Rainfall_Estimate_mm_day` ★ |
-| TAMSAT Satellite Rainfall Estimate (mm/dekad) | `tamsat-satellite-rainfall-estimate-mm-dekad` | mm/dekad | monthly | bar | `TAMSAT_Satellite_Rainfall_Estimate_mm_dekad` ★ |
-| Hourly Rainfall Intensity (mm/h) | `hourly-rainfall-intensity-mm-h` | mm/h | daily | line | `Hourly_Rainfall_Intensity_mm_h` ★ |
+| Chart group                                   | id                                            | Axis unit  | Resolution | Chart         | Columns (★ default)                                                                                      |
+| --------------------------------------------- | --------------------------------------------- | ---------- | ---------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| Daily Rainfall Total (mm)                     | `daily-rainfall-total-mm`                     | mm         | daily      | bar           | `Daily_Rainfall_Total_mm` ★                                                                              |
+| Number of Rainy Days (days/month)             | `number-of-rainy-days-days-month`             | days/month | monthly    | bar           | `Number_of_Rainy_Days_days_month` ★                                                                      |
+| Monthly (mm)                                  | `monthly-mm`                                  | mm         | monthly    | mixed         | `Monthly_Total_Precipitation_mm` ★, `Monthly_Anomaly_mm` ★                                               |
+| Monthly Anomaly (%)                           | `monthly-anomaly-pct`                         | %          | monthly    | diverging-bar | `Monthly_Anomaly_percent` ★                                                                              |
+| Seasonal Total (mm)                           | `seasonal-total-mm`                           | mm         | annual     | bar           | `Seasonal_Total_OND_mm` ★, `Seasonal_Total_JFM_mm` ★, `Seasonal_Total_AMJ_mm` ★, `Seasonal_Total_JAS_mm` |
+| CHIRPS Daily Rainfall Estimate (mm/day)       | `chirps-daily-rainfall-estimate-mm-day`       | mm/day     | daily      | bar           | `CHIRPS_Daily_Rainfall_Estimate_mm_day` ★                                                                |
+| TAMSAT Satellite Rainfall Estimate (mm/dekad) | `tamsat-satellite-rainfall-estimate-mm-dekad` | mm/dekad   | monthly    | bar           | `TAMSAT_Satellite_Rainfall_Estimate_mm_dekad` ★                                                          |
+| Hourly Rainfall Intensity (mm/h)              | `hourly-rainfall-intensity-mm-h`              | mm/h       | daily      | line          | `Hourly_Rainfall_Intensity_mm_h` ★                                                                       |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Daily_Rainfall_Total_mm` | Daily Rainfall Total (mm) | mm | daily | bar | rainfall: `daily-rainfall-total-mm` | live — complete calendar incl. 31 Dec |
-| `Number_of_Rainy_Days_days_month` | Number of Rainy Days (days/month) | days/month | monthly | bar | rainfall: `number-of-rainy-days-days-month` | live — = days ≥ 1 mm (verified) |
-| `Monthly_Total_Precipitation_mm` | Monthly Total Precipitation (mm) | mm | monthly | bar | rainfall: `monthly-mm` | live |
-| `Monthly_Anomaly_mm` | Monthly Anomaly (mm) | mm | monthly | diverging-bar | rainfall: `monthly-mm` | live |
-| `Monthly_Anomaly_percent` | Monthly Anomaly (%) | % | monthly | diverging-bar | rainfall: `monthly-anomaly-pct` | live |
-| `Seasonal_Total_OND_mm` | Seasonal Total OND (mm) | mm | annual | bar | rainfall: `seasonal-total-mm` | live |
-| `Seasonal_Total_JFM_mm` | Seasonal Total JFM (mm) | mm | annual | bar | rainfall: `seasonal-total-mm` | live |
-| `Seasonal_Total_AMJ_mm` | Seasonal Total AMJ (mm) | mm | annual | bar | rainfall: `seasonal-total-mm` | live |
-| `Seasonal_Total_JAS_mm` | Seasonal Total JAS (mm) | mm | annual | bar | rainfall: `seasonal-total-mm` | live |
-| `Annual_Total_Precipitation_mm` | Annual Total Precipitation (mm) | mm | annual | bar | — | duplicate of `4_3_mean_annual_precipitation_master.MAP_mm`; hidden |
-| `Gridded_Rainfall_Product_1km_mm` | Gridded Rainfall Product 1km (mm) | mm | daily | bar | — | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; hidden |
-| `CHIRPS_Daily_Rainfall_Estimate_mm_day` | CHIRPS Daily Rainfall Estimate (mm/day) | mm/day | daily | bar | rainfall: `chirps-daily-rainfall-estimate-mm-day` | live — = Daily_Rainfall_Total_mm × 0.95–1.05 (r = 1.000): derived from the gauge series, not an independent estimate |
-| `TAMSAT_Satellite_Rainfall_Estimate_mm_dekad` | TAMSAT Satellite Rainfall Estimate (mm/dekad) | mm/dekad | monthly | bar | rainfall: `tamsat-satellite-rainfall-estimate-mm-dekad` | live — one value per district-month (mm per dekad, ≈ monthly total ÷ 3, r = 0.998), repeated on every daily row |
-| `Hourly_Rainfall_Intensity_mm_h` | Hourly Rainfall Intensity (mm/h) | mm/h | daily | line | rainfall: `hourly-rainfall-intensity-mm-h` | live — = daily total × 0.15–0.20 (r = 1.000): a proxy, not gauge-measured hourly intensity |
+| Column                                        | Label                                         | Unit       | Resolution | Chart         | Group                                                   | Status                                                                                                               |
+| --------------------------------------------- | --------------------------------------------- | ---------- | ---------- | ------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `Daily_Rainfall_Total_mm`                     | Daily Rainfall Total (mm)                     | mm         | daily      | bar           | rainfall: `daily-rainfall-total-mm`                     | live — complete calendar incl. 31 Dec                                                                                |
+| `Number_of_Rainy_Days_days_month`             | Number of Rainy Days (days/month)             | days/month | monthly    | bar           | rainfall: `number-of-rainy-days-days-month`             | live — = days ≥ 1 mm (verified)                                                                                      |
+| `Monthly_Total_Precipitation_mm`              | Monthly Total Precipitation (mm)              | mm         | monthly    | bar           | rainfall: `monthly-mm`                                  | live                                                                                                                 |
+| `Monthly_Anomaly_mm`                          | Monthly Anomaly (mm)                          | mm         | monthly    | diverging-bar | rainfall: `monthly-mm`                                  | live                                                                                                                 |
+| `Monthly_Anomaly_percent`                     | Monthly Anomaly (%)                           | %          | monthly    | diverging-bar | rainfall: `monthly-anomaly-pct`                         | live                                                                                                                 |
+| `Seasonal_Total_OND_mm`                       | Seasonal Total OND (mm)                       | mm         | annual     | bar           | rainfall: `seasonal-total-mm`                           | live                                                                                                                 |
+| `Seasonal_Total_JFM_mm`                       | Seasonal Total JFM (mm)                       | mm         | annual     | bar           | rainfall: `seasonal-total-mm`                           | live                                                                                                                 |
+| `Seasonal_Total_AMJ_mm`                       | Seasonal Total AMJ (mm)                       | mm         | annual     | bar           | rainfall: `seasonal-total-mm`                           | live                                                                                                                 |
+| `Seasonal_Total_JAS_mm`                       | Seasonal Total JAS (mm)                       | mm         | annual     | bar           | rainfall: `seasonal-total-mm`                           | live                                                                                                                 |
+| `Annual_Total_Precipitation_mm`               | Annual Total Precipitation (mm)               | mm         | annual     | bar           | —                                                       | duplicate of `4_3_mean_annual_precipitation_master.MAP_mm`; hidden                                                   |
+| `Gridded_Rainfall_Product_1km_mm`             | Gridded Rainfall Product 1km (mm)             | mm         | daily      | bar           | —                                                       | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; hidden                                    |
+| `CHIRPS_Daily_Rainfall_Estimate_mm_day`       | CHIRPS Daily Rainfall Estimate (mm/day)       | mm/day     | daily      | bar           | rainfall: `chirps-daily-rainfall-estimate-mm-day`       | live — = Daily_Rainfall_Total_mm × 0.95–1.05 (r = 1.000): derived from the gauge series, not an independent estimate |
+| `TAMSAT_Satellite_Rainfall_Estimate_mm_dekad` | TAMSAT Satellite Rainfall Estimate (mm/dekad) | mm/dekad   | monthly    | bar           | rainfall: `tamsat-satellite-rainfall-estimate-mm-dekad` | live — one value per district-month (mm per dekad, ≈ monthly total ÷ 3, r = 0.998), repeated on every daily row      |
+| `Hourly_Rainfall_Intensity_mm_h`              | Hourly Rainfall Intensity (mm/h)              | mm/h       | daily      | line          | rainfall: `hourly-rainfall-intensity-mm-h`              | live — = daily total × 0.15–0.20 (r = 1.000): a proxy, not gauge-measured hourly intensity                           |
 
 <a id="rainfall-derived-drought-indices"></a>
+
 ## Rainfall Derived Drought Indices · §6.2
 
 Table `6.2_rainfall_derived_drought_indices_master` · id `rainfall-derived-drought-indices` · monthly · pages: rainfall, drought · 6 live, 0 withheld, 2 duplicate · keys: `District_Name`, `Year`, `Month`, `date`
 
 **Rainfall page** — duplicates shown here (live): `SPEI_3_Agricultural_Drought_ET`, `SPEI_12_Annual_Water_Balance_Drought`
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| SPI / SPEI / RAI (index) | `spi-spei-rai-index` | index | monthly | line | `SPI_1_Meteorological_Drought_Onset` ★, `SPI_3_Short_Term_Agricultural_Drought` ★, `SPI_6_Medium_Term_Hydrological_Impacts` ★, `SPI_12_Long_Term_Groundwater_Impacts`, `SPI_24_Very_Long_Term_Drought`, `SPEI_3_Agricultural_Drought_ET`, `SPEI_12_Annual_Water_Balance_Drought`, `RAI_Rainfall_Anomaly_Index` |
+| Chart group              | id                   | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                                                                                                                                                                                                            |
+| ------------------------ | -------------------- | --------- | ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SPI / SPEI / RAI (index) | `spi-spei-rai-index` | index     | monthly    | line  | `SPI_1_Meteorological_Drought_Onset` ★, `SPI_3_Short_Term_Agricultural_Drought` ★, `SPI_6_Medium_Term_Hydrological_Impacts` ★, `SPI_12_Long_Term_Groundwater_Impacts`, `SPI_24_Very_Long_Term_Drought`, `SPEI_3_Agricultural_Drought_ET`, `SPEI_12_Annual_Water_Balance_Drought`, `RAI_Rainfall_Anomaly_Index` |
 
 **Drought page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| SPI / RAI (index) | `spi-rai-index` | index | monthly | line | `SPI_1_Meteorological_Drought_Onset` ★, `SPI_3_Short_Term_Agricultural_Drought` ★, `SPI_6_Medium_Term_Hydrological_Impacts` ★, `SPI_12_Long_Term_Groundwater_Impacts`, `SPI_24_Very_Long_Term_Drought`, `RAI_Rainfall_Anomaly_Index` |
+| Chart group       | id              | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                                                                                                                                  |
+| ----------------- | --------------- | --------- | ---------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| SPI / RAI (index) | `spi-rai-index` | index     | monthly    | line  | `SPI_1_Meteorological_Drought_Onset` ★, `SPI_3_Short_Term_Agricultural_Drought` ★, `SPI_6_Medium_Term_Hydrological_Impacts` ★, `SPI_12_Long_Term_Groundwater_Impacts`, `SPI_24_Very_Long_Term_Drought`, `RAI_Rainfall_Anomaly_Index` |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `SPI_1_Meteorological_Drought_Onset` | SPI 1 – Meteorological Drought Onset | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
-| `SPI_3_Short_Term_Agricultural_Drought` | SPI 3 – Short Term Agricultural Drought | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
-| `SPI_6_Medium_Term_Hydrological_Impacts` | SPI 6 – Medium Term Hydrological Impacts | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
-| `SPI_12_Long_Term_Groundwater_Impacts` | SPI 12 – Long Term Groundwater Impacts | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
-| `SPI_24_Very_Long_Term_Drought` | SPI 24 – Very Long Term Drought | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
-| `SPEI_3_Agricultural_Drought_ET` | SPEI 3 – Agricultural Drought ET | — | monthly | line | rainfall: `spi-spei-rai-index` | duplicate of `meteorological_drought_master.spei_3`; live on rainfall |
-| `SPEI_12_Annual_Water_Balance_Drought` | SPEI 12 – Annual Water Balance Drought | — | monthly | line | rainfall: `spi-spei-rai-index` | duplicate of `meteorological_drought_master.spei_12`; live on rainfall |
-| `RAI_Rainfall_Anomaly_Index` | RAI – Rainfall Anomaly Index | — | monthly | line | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live |
+| Column                                   | Label                                    | Unit | Resolution | Chart | Group                                                    | Status                                                                 |
+| ---------------------------------------- | ---------------------------------------- | ---- | ---------- | ----- | -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `SPI_1_Meteorological_Drought_Onset`     | SPI 1 – Meteorological Drought Onset     | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
+| `SPI_3_Short_Term_Agricultural_Drought`  | SPI 3 – Short Term Agricultural Drought  | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
+| `SPI_6_Medium_Term_Hydrological_Impacts` | SPI 6 – Medium Term Hydrological Impacts | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
+| `SPI_12_Long_Term_Groundwater_Impacts`   | SPI 12 – Long Term Groundwater Impacts   | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
+| `SPI_24_Very_Long_Term_Drought`          | SPI 24 – Very Long Term Drought          | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
+| `SPEI_3_Agricultural_Drought_ET`         | SPEI 3 – Agricultural Drought ET         | —    | monthly    | line  | rainfall: `spi-spei-rai-index`                           | duplicate of `meteorological_drought_master.spei_3`; live on rainfall  |
+| `SPEI_12_Annual_Water_Balance_Drought`   | SPEI 12 – Annual Water Balance Drought   | —    | monthly    | line  | rainfall: `spi-spei-rai-index`                           | duplicate of `meteorological_drought_master.spei_12`; live on rainfall |
+| `RAI_Rainfall_Anomaly_Index`             | RAI – Rainfall Anomaly Index             | —    | monthly    | line  | rainfall: `spi-spei-rai-index`; drought: `spi-rai-index` | live                                                                   |
 
 <a id="runoff-variables"></a>
+
 ## Runoff Variables · §7.1
 
 Table `runoff_variables_master` · id `runoff-variables` · daily · pages: runoff · 3 live, 8 withheld, 1 duplicate · keys: `District_Name`, `Date`, `Year`, `Month`
 
 **Runoff page** — duplicates shown here (live): `Mean_Catchment_Rainfall_mm`
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Catchment Area (km²) | `catchment-area-km2` | km² | daily | line | `Catchment_Area_km2` ★ |
-| Mean Catchment Rainfall / Actual ET from Catchment (mm) | `mean-catchment-rainfall-actual-et-from-catchment-mm` | mm | daily | mixed | `Mean_Catchment_Rainfall_mm` ★, `Actual_ET_from_Catchment_mm` ★ |
-| Daily Surface Runoff Volume (m³/day) | `daily-surface-runoff-volume-m3-day` | m³/day | daily | bar | `Daily_Surface_Runoff_Volume_m3_day` ★ |
-| Monthly Runoff Totals (Mm³/month) | `monthly-runoff-totals-mm3-month` | Mm³/month | monthly | bar | `Monthly_Runoff_Totals_Million_m3_month` ★ |
-| Runoff Coefficient | `runoff-coefficient` | — | daily | line | `Runoff_Coefficient_dimensionless` ★ |
-| Soil Moisture Prior (m³/m³) | `soil-moisture-prior-m3-m3` | m³/m³ | daily | line | `Soil_Moisture_Prior_m3m3` ★ |
-| Curve Number CN | `curve-number-cn` | — | daily | bar | `Curve_Number_CN` ★ |
-| Peak Flow Rates / Baseflow Component (m³/s) | `peak-flow-rates-baseflow-component-m3-s` | m³/s | daily | line | `Peak_Flow_Rates_m3s` ★, `Baseflow_Component_m3s` ★ |
-| Dominant LandCover Class | `dominant-landcover-class` | class | daily | line | `Dominant_LandCover_Class` ★ |
-| Impervious Surface Fraction (%) | `impervious-surface-fraction-pct` | % | daily | line | `Impervious_Surface_Fraction_percent` ★ |
+| Chart group                                             | id                                                    | Axis unit | Resolution | Chart | Columns (★ default)                                             |
+| ------------------------------------------------------- | ----------------------------------------------------- | --------- | ---------- | ----- | --------------------------------------------------------------- |
+| Catchment Area (km²)                                    | `catchment-area-km2`                                  | km²       | daily      | line  | `Catchment_Area_km2` ★                                          |
+| Mean Catchment Rainfall / Actual ET from Catchment (mm) | `mean-catchment-rainfall-actual-et-from-catchment-mm` | mm        | daily      | mixed | `Mean_Catchment_Rainfall_mm` ★, `Actual_ET_from_Catchment_mm` ★ |
+| Daily Surface Runoff Volume (m³/day)                    | `daily-surface-runoff-volume-m3-day`                  | m³/day    | daily      | bar   | `Daily_Surface_Runoff_Volume_m3_day` ★                          |
+| Monthly Runoff Totals (Mm³/month)                       | `monthly-runoff-totals-mm3-month`                     | Mm³/month | monthly    | bar   | `Monthly_Runoff_Totals_Million_m3_month` ★                      |
+| Runoff Coefficient                                      | `runoff-coefficient`                                  | —         | daily      | line  | `Runoff_Coefficient_dimensionless` ★                            |
+| Soil Moisture Prior (m³/m³)                             | `soil-moisture-prior-m3-m3`                           | m³/m³     | daily      | line  | `Soil_Moisture_Prior_m3m3` ★                                    |
+| Curve Number CN                                         | `curve-number-cn`                                     | —         | daily      | bar   | `Curve_Number_CN` ★                                             |
+| Peak Flow Rates / Baseflow Component (m³/s)             | `peak-flow-rates-baseflow-component-m3-s`             | m³/s      | daily      | line  | `Peak_Flow_Rates_m3s` ★, `Baseflow_Component_m3s` ★             |
+| Dominant LandCover Class                                | `dominant-landcover-class`                            | class     | daily      | line  | `Dominant_LandCover_Class` ★                                    |
+| Impervious Surface Fraction (%)                         | `impervious-surface-fraction-pct`                     | %         | daily      | line  | `Impervious_Surface_Fraction_percent` ★                         |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Catchment_Area_km2` | Catchment Area (km²) | km² | daily | line | runoff: `catchment-area-km2` | withheld — constant 6 500 km² for every district |
-| `Mean_Catchment_Rainfall_mm` | Mean Catchment Rainfall (mm) | mm | daily | bar | runoff: `mean-catchment-rainfall-actual-et-from-catchment-mm` | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; live on runoff |
-| `Actual_ET_from_Catchment_mm` | Actual ET from Catchment (mm) | mm | daily | line | runoff: `mean-catchment-rainfall-actual-et-from-catchment-mm` | live |
-| `Daily_Surface_Runoff_Volume_m3_day` | Daily Surface Runoff Volume (m³/day) | m³/day | daily | bar | runoff: `daily-surface-runoff-volume-m3-day` | withheld — volume computed with the constant 6 500 km² area for every district; the runoff page serves depth × real district area instead |
-| `Monthly_Runoff_Totals_Million_m3_month` | Monthly Runoff Totals (Mm³/month) | Mm³/month | monthly | bar | runoff: `monthly-runoff-totals-mm3-month` | withheld — volume computed with the constant 6 500 km² area |
-| `Runoff_Coefficient_dimensionless` | Runoff Coefficient | — | daily | line | runoff: `runoff-coefficient` | live |
-| `Soil_Moisture_Prior_m3m3` | Soil Moisture Prior (m³/m³) | m³/m³ | daily | line | runoff: `soil-moisture-prior-m3-m3` | live — plausibility checked 2026-10-15: 0.025–0.475 m³/m³, varying |
-| `Curve_Number_CN` | Curve Number CN | — | daily | bar | runoff: `curve-number-cn` | withheld — constant 72.9 |
-| `Peak_Flow_Rates_m3s` | Peak Flow Rates (m³/s) | m³/s | daily | line | runoff: `peak-flow-rates-baseflow-component-m3-s` | withheld — flow scaled to the constant 6 500 km² area |
-| `Baseflow_Component_m3s` | Baseflow Component (m³/s) | m³/s | daily | line | runoff: `peak-flow-rates-baseflow-component-m3-s` | withheld — flow scaled to the constant 6 500 km² area for every district; only the baseflow index (a ratio) is served |
-| `Dominant_LandCover_Class` | Dominant LandCover Class (class) | — | daily | line | runoff: `dominant-landcover-class` | withheld — one constant class for every district |
-| `Impervious_Surface_Fraction_percent` | Impervious Surface Fraction (%) | % | daily | line | runoff: `impervious-surface-fraction-pct` | withheld — constant 4.5 % |
+| Column                                   | Label                                | Unit      | Resolution | Chart | Group                                                         | Status                                                                                                                                    |
+| ---------------------------------------- | ------------------------------------ | --------- | ---------- | ----- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `Catchment_Area_km2`                     | Catchment Area (km²)                 | km²       | daily      | line  | runoff: `catchment-area-km2`                                  | withheld — constant 6 500 km² for every district                                                                                          |
+| `Mean_Catchment_Rainfall_mm`             | Mean Catchment Rainfall (mm)         | mm        | daily      | bar   | runoff: `mean-catchment-rainfall-actual-et-from-catchment-mm` | duplicate of `6.1_core_rainfall_variables_master.Daily_Rainfall_Total_mm`; live on runoff                                                 |
+| `Actual_ET_from_Catchment_mm`            | Actual ET from Catchment (mm)        | mm        | daily      | line  | runoff: `mean-catchment-rainfall-actual-et-from-catchment-mm` | live                                                                                                                                      |
+| `Daily_Surface_Runoff_Volume_m3_day`     | Daily Surface Runoff Volume (m³/day) | m³/day    | daily      | bar   | runoff: `daily-surface-runoff-volume-m3-day`                  | withheld — volume computed with the constant 6 500 km² area for every district; the runoff page serves depth × real district area instead |
+| `Monthly_Runoff_Totals_Million_m3_month` | Monthly Runoff Totals (Mm³/month)    | Mm³/month | monthly    | bar   | runoff: `monthly-runoff-totals-mm3-month`                     | withheld — volume computed with the constant 6 500 km² area                                                                               |
+| `Runoff_Coefficient_dimensionless`       | Runoff Coefficient                   | —         | daily      | line  | runoff: `runoff-coefficient`                                  | live                                                                                                                                      |
+| `Soil_Moisture_Prior_m3m3`               | Soil Moisture Prior (m³/m³)          | m³/m³     | daily      | line  | runoff: `soil-moisture-prior-m3-m3`                           | live — plausibility checked 2026-10-15: 0.025–0.475 m³/m³, varying                                                                        |
+| `Curve_Number_CN`                        | Curve Number CN                      | —         | daily      | bar   | runoff: `curve-number-cn`                                     | withheld — constant 72.9                                                                                                                  |
+| `Peak_Flow_Rates_m3s`                    | Peak Flow Rates (m³/s)               | m³/s      | daily      | line  | runoff: `peak-flow-rates-baseflow-component-m3-s`             | withheld — flow scaled to the constant 6 500 km² area                                                                                     |
+| `Baseflow_Component_m3s`                 | Baseflow Component (m³/s)            | m³/s      | daily      | line  | runoff: `peak-flow-rates-baseflow-component-m3-s`             | withheld — flow scaled to the constant 6 500 km² area for every district; only the baseflow index (a ratio) is served                     |
+| `Dominant_LandCover_Class`               | Dominant LandCover Class (class)     | —         | daily      | line  | runoff: `dominant-landcover-class`                            | withheld — one constant class for every district                                                                                          |
+| `Impervious_Surface_Fraction_percent`    | Impervious Surface Fraction (%)      | %         | daily      | line  | runoff: `impervious-surface-fraction-pct`                     | withheld — constant 4.5 %                                                                                                                 |
 
 <a id="derived-runoff-indicators"></a>
+
 ## Derived Runoff Indicators · §7.2
 
 Table `7.2_derived_runoff_indicators_master` · id `derived-runoff-indicators` · monthly · pages: runoff · 1 live, 9 withheld, 0 duplicate · keys: `District_Name`, `Year`, `Month`, `date`
 
 **Runoff page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Runoff Anomaly (%) | `runoff-anomaly-pct` | % | monthly | diverging-bar | `Runoff_Anomaly_percent` ★ |
-| Runoff Ratio Trend (%/year) | `runoff-ratio-trend-pct-year` | %/year | monthly | line | `Runoff_Ratio_Trend_percent_per_yr` ★ |
-| SSI (index) | `ssi-index` | index | monthly | line | `SSI_Standardized_Streamflow_Index` ★ |
-| Flood Flow (m³/s) | `flood-flow-m3-s` | m³/s | monthly | line | `Flood_Flow_2yr_m3s` ★, `Flood_Flow_5yr_m3s` ★, `Flood_Flow_10yr_m3s` ★, `Flood_Flow_20yr_m3s`, `Flood_Flow_50yr_m3s`, `Flood_Flow_100yr_m3s` |
-| Hydrological Response Time (h) | `hydrological-response-time-h` | h | monthly | line | `Hydrological_Response_Time_hours` ★ |
+| Chart group                    | id                             | Axis unit | Resolution | Chart         | Columns (★ default)                                                                                                                           |
+| ------------------------------ | ------------------------------ | --------- | ---------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runoff Anomaly (%)             | `runoff-anomaly-pct`           | %         | monthly    | diverging-bar | `Runoff_Anomaly_percent` ★                                                                                                                    |
+| Runoff Ratio Trend (%/year)    | `runoff-ratio-trend-pct-year`  | %/year    | monthly    | line          | `Runoff_Ratio_Trend_percent_per_yr` ★                                                                                                         |
+| SSI (index)                    | `ssi-index`                    | index     | monthly    | line          | `SSI_Standardized_Streamflow_Index` ★                                                                                                         |
+| Flood Flow (m³/s)              | `flood-flow-m3-s`              | m³/s      | monthly    | line          | `Flood_Flow_2yr_m3s` ★, `Flood_Flow_5yr_m3s` ★, `Flood_Flow_10yr_m3s` ★, `Flood_Flow_20yr_m3s`, `Flood_Flow_50yr_m3s`, `Flood_Flow_100yr_m3s` |
+| Hydrological Response Time (h) | `hydrological-response-time-h` | h         | monthly    | line          | `Hydrological_Response_Time_hours` ★                                                                                                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Runoff_Anomaly_percent` | Runoff Anomaly (%) | % | monthly | diverging-bar | runoff: `runoff-anomaly-pct` | live — = (month's modelled runoff − same-month mean of all months 2000–2026) / that mean (r = 1.00000 with runoff_variables_master); the baseline includes the partial year 2026, as the DB's rainfall anomalies do |
-| `Runoff_Ratio_Trend_percent_per_yr` | Runoff Ratio Trend (%/year) | %/year | monthly | line | runoff: `runoff-ratio-trend-pct-year` | withheld — one constant (0.04) in every row |
-| `SSI_Standardized_Streamflow_Index` | SSI – Standardized Streamflow Index | — | monthly | line | runoff: `ssi-index` | withheld — not a streamflow index: = SPI-3 of rainfall (r = 0.996 with 6.2 SPI-3), r = 0.29 with this table's own runoff anomaly and at most 0.57 with any standardisation of the modelled runoff; never below −1.86 (D4 impossible), capped at +3 |
-| `Flood_Flow_2yr_m3s` | Flood Flow 2yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Flood_Flow_5yr_m3s` | Flood Flow 5yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Flood_Flow_10yr_m3s` | Flood Flow 10yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Flood_Flow_20yr_m3s` | Flood Flow 20yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Flood_Flow_50yr_m3s` | Flood Flow 50yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Flood_Flow_100yr_m3s` | Flood Flow 100yr (m³/s) | m³/s | monthly | line | runoff: `flood-flow-m3-s` | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
-| `Hydrological_Response_Time_hours` | Hydrological Response Time (h) | h | monthly | line | runoff: `hydrological-response-time-h` | withheld — one constant (12.5 h) in every row |
+| Column                              | Label                               | Unit   | Resolution | Chart         | Group                                  | Status                                                                                                                                                                                                                                                                    |
+| ----------------------------------- | ----------------------------------- | ------ | ---------- | ------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Runoff_Anomaly_percent`            | Runoff Anomaly (%)                  | %      | monthly    | diverging-bar | runoff: `runoff-anomaly-pct`           | live — = (month's modelled runoff − same-month mean of all months 2000–2026) / that mean (r = 1.00000 with runoff_variables_master); the baseline includes the partial year 2026, as the DB's rainfall anomalies do                                                       |
+| `Runoff_Ratio_Trend_percent_per_yr` | Runoff Ratio Trend (%/year)         | %/year | monthly    | line          | runoff: `runoff-ratio-trend-pct-year`  | withheld — one constant (0.04) in every row                                                                                                                                                                                                                               |
+| `SSI_Standardized_Streamflow_Index` | SSI – Standardized Streamflow Index | —      | monthly    | line          | runoff: `ssi-index`                    | withheld — not a streamflow index: = SPI-3 of rainfall (r = 0.996 with 6.2 SPI-3), r = 0.29 with this table's own runoff anomaly and at most 0.57 with any standardisation of the modelled runoff; never below −1.86 (D4 impossible), capped at +3                        |
+| `Flood_Flow_2yr_m3s`                | Flood Flow 2yr (m³/s)               | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Flood_Flow_5yr_m3s`                | Flood Flow 5yr (m³/s)               | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Flood_Flow_10yr_m3s`               | Flood Flow 10yr (m³/s)              | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Flood_Flow_20yr_m3s`               | Flood Flow 20yr (m³/s)              | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Flood_Flow_50yr_m3s`               | Flood Flow 50yr (m³/s)              | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Flood_Flow_100yr_m3s`              | Flood Flow 100yr (m³/s)             | m³/s   | monthly    | line          | runoff: `flood-flow-m3-s`              | withheld — a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
+| `Hydrological_Response_Time_hours`  | Hydrological Response Time (h)      | h      | monthly    | line          | runoff: `hydrological-response-time-h` | withheld — one constant (12.5 h) in every row                                                                                                                                                                                                                             |
 
 <a id="reservoir-operational"></a>
+
 ## Reservoir Operational · §8.1
 
 Table `8_1_reservoir_operational_master` · id `reservoir-operational` · daily · pages: dams · 2 live, 12 withheld, 0 duplicate · keys: `district_id`, `district_name`, `province`, `dam_name`, `river`, `date`
 
 **Dams page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Soil Moisture (m³/m³) | `soil-moisture-m3-m3` | m³/m³ | daily | line | `soil_moisture_m3_m3` ★ |
-| Rainfall / Evaporation / Runoff (mm/day) | `rainfall-evaporation-runoff-mm-day` | mm/day | daily | mixed | `rainfall_mm_day` ★, `evaporation_mm_day`, `runoff_mm_day` |
-| District Area / Water Area (km²) | `district-area-water-area-km2` | km² | daily | line | `district_area_km2` ★, `water_area_km2` ★ |
-| Mean NDWI | `mean-ndwi` | — | daily | line | `mean_ndwi` ★ |
-| Storage Volume (m³) | `storage-volume-m3` | m³ | daily | line | `storage_volume_m3` ★ |
-| Pct FSC (% FSC) | `pct-fsc-pct-fsc` | % FSC | daily | line | `pct_fsc` ★ |
-| Fsl / Water Level (m amsl) | `fsl-water-level-m-amsl` | m amsl | daily | line | `fsl_m_amsl` ★, `water_level_m_amsl` ★ |
-| Inflow / Outflow (m³/s) | `inflow-outflow-m3-s` | m³/s | daily | line | `inflow_m3_s` ★, `outflow_m3_s` ★ |
-| Seepage (m³/day) | `seepage-m3-day` | m³/day | daily | bar | `seepage_m3_day` ★ |
+| Chart group                              | id                                   | Axis unit | Resolution | Chart | Columns (★ default)                                        |
+| ---------------------------------------- | ------------------------------------ | --------- | ---------- | ----- | ---------------------------------------------------------- |
+| Soil Moisture (m³/m³)                    | `soil-moisture-m3-m3`                | m³/m³     | daily      | line  | `soil_moisture_m3_m3` ★                                    |
+| Rainfall / Evaporation / Runoff (mm/day) | `rainfall-evaporation-runoff-mm-day` | mm/day    | daily      | mixed | `rainfall_mm_day` ★, `evaporation_mm_day`, `runoff_mm_day` |
+| District Area / Water Area (km²)         | `district-area-water-area-km2`       | km²       | daily      | line  | `district_area_km2` ★, `water_area_km2` ★                  |
+| Mean NDWI                                | `mean-ndwi`                          | —         | daily      | line  | `mean_ndwi` ★                                              |
+| Storage Volume (m³)                      | `storage-volume-m3`                  | m³        | daily      | line  | `storage_volume_m3` ★                                      |
+| Pct FSC (% FSC)                          | `pct-fsc-pct-fsc`                    | % FSC     | daily      | line  | `pct_fsc` ★                                                |
+| Fsl / Water Level (m amsl)               | `fsl-water-level-m-amsl`             | m amsl    | daily      | line  | `fsl_m_amsl` ★, `water_level_m_amsl` ★                     |
+| Inflow / Outflow (m³/s)                  | `inflow-outflow-m3-s`                | m³/s      | daily      | line  | `inflow_m3_s` ★, `outflow_m3_s` ★                          |
+| Seepage (m³/day)                         | `seepage-m3-day`                     | m³/day    | daily      | bar   | `seepage_m3_day` ★                                         |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `soil_moisture_m3_m3` | Soil Moisture (m³/m³) | m³/m³ | daily | line | dams: `soil-moisture-m3-m3` | live — catchment soil moisture at the district's reservoirs (r = 0.74 with the satellite surface soil moisture) |
-| `rainfall_mm_day` | Rainfall (mm/day) | mm/day | daily | bar | dams: `rainfall-evaporation-runoff-mm-day` | live — catchment rainfall at the district's reservoirs; a different series from 6.1 daily rainfall (r = 0.56, same value on 24 % of days); Served up to Aug 2026: from 1 Sep 2026 every district repeats its 31 August value on every day (a forward fill, not observations) |
-| `evaporation_mm_day` | Evaporation (mm/day) | mm/day | daily | line | dams: `rainfall-evaporation-runoff-mm-day` | withheld — four values in the whole table (4.25–6 mm/day), identical in all 52 districts every day |
-| `runoff_mm_day` | Runoff (mm/day) | mm/day | daily | line | dams: `rainfall-evaporation-runoff-mm-day` | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years) |
-| `district_area_km2` | District Area (km²) | km² | daily | line | dams: `district-area-water-area-km2` | withheld — 10 000 km² for every district on most days (a placeholder area; real district areas are 1 645–126 836 km²) |
-| `water_area_km2` | Water Area (km²) | km² | daily | line | dams: `district-area-water-area-km2` | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies |
-| `mean_ndwi` | Mean NDWI | — | daily | line | dams: `mean-ndwi` | withheld — 44 of 52 districts share one identical series |
-| `storage_volume_m3` | Storage Volume (m³) | m³ | daily | line | dams: `storage-volume-m3` | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies |
-| `pct_fsc` | Pct FSC (% FSC) | % FSC ¹ | daily | line | dams: `pct-fsc-pct-fsc` | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies |
-| `fsl_m_amsl` | Fsl (m amsl) | m amsl | daily | line | dams: `fsl-water-level-m-amsl` | withheld — one value (1 200 m) in every row, identical in all 52 districts |
-| `water_level_m_amsl` | Water Level (m amsl) | m amsl | daily | line | dams: `fsl-water-level-m-amsl` | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies |
-| `inflow_m3_s` | Inflow (m³/s) | m³/s | daily | line | dams: `inflow-outflow-m3-s` | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years); inflow = runoff depth × the placeholder area of 10 000 km² (Vhembe: 0.0548 mm/day × 10 000 km² = 6.35 m³/s) and outflow ≈ inflow, so storage never changes |
-| `seepage_m3_day` | Seepage (m³/day) | m³/day | daily | bar | dams: `seepage-m3-day` | withheld — 5.5 m³/day in 94 % of days, identical in 51 districts |
-| `outflow_m3_s` | Outflow (m³/s) | m³/s | daily | line | dams: `inflow-outflow-m3-s` | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years); inflow = runoff depth × the placeholder area of 10 000 km² (Vhembe: 0.0548 mm/day × 10 000 km² = 6.35 m³/s) and outflow ≈ inflow, so storage never changes |
+| Column                | Label                 | Unit    | Resolution | Chart | Group                                      | Status                                                                                                                                                                                                                                                                                              |
+| --------------------- | --------------------- | ------- | ---------- | ----- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `soil_moisture_m3_m3` | Soil Moisture (m³/m³) | m³/m³   | daily      | line  | dams: `soil-moisture-m3-m3`                | live — catchment soil moisture at the district's reservoirs (r = 0.74 with the satellite surface soil moisture)                                                                                                                                                                                     |
+| `rainfall_mm_day`     | Rainfall (mm/day)     | mm/day  | daily      | bar   | dams: `rainfall-evaporation-runoff-mm-day` | live — catchment rainfall at the district's reservoirs; a different series from 6.1 daily rainfall (r = 0.56, same value on 24 % of days); Served up to Aug 2026: from 1 Sep 2026 every district repeats its 31 August value on every day (a forward fill, not observations)                        |
+| `evaporation_mm_day`  | Evaporation (mm/day)  | mm/day  | daily      | line  | dams: `rainfall-evaporation-runoff-mm-day` | withheld — four values in the whole table (4.25–6 mm/day), identical in all 52 districts every day                                                                                                                                                                                                  |
+| `runoff_mm_day`       | Runoff (mm/day)       | mm/day  | daily      | line  | dams: `rainfall-evaporation-runoff-mm-day` | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years)                                                                                                                                                             |
+| `district_area_km2`   | District Area (km²)   | km²     | daily      | line  | dams: `district-area-water-area-km2`       | withheld — 10 000 km² for every district on most days (a placeholder area; real district areas are 1 645–126 836 km²)                                                                                                                                                                               |
+| `water_area_km2`      | Water Area (km²)      | km²     | daily      | line  | dams: `district-area-water-area-km2`       | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies                                                                                                          |
+| `mean_ndwi`           | Mean NDWI             | —       | daily      | line  | dams: `mean-ndwi`                          | withheld — 44 of 52 districts share one identical series                                                                                                                                                                                                                                            |
+| `storage_volume_m3`   | Storage Volume (m³)   | m³      | daily      | line  | dams: `storage-volume-m3`                  | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies                                                                                                          |
+| `pct_fsc`             | Pct FSC (% FSC)       | % FSC ¹ | daily      | line  | dams: `pct-fsc-pct-fsc`                    | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies                                                                                                          |
+| `fsl_m_amsl`          | Fsl (m amsl)          | m amsl  | daily      | line  | dams: `fsl-water-level-m-amsl`             | withheld — one value (1 200 m) in every row, identical in all 52 districts                                                                                                                                                                                                                          |
+| `water_level_m_amsl`  | Water Level (m amsl)  | m amsl  | daily      | line  | dams: `fsl-water-level-m-amsl`             | withheld — 51 of 52 districts hold the same storage (251 997 542.57 m³ = 100 % FSC, level 1 200 m, 52.5 km² water area) on every day from January 2000 to October 2026; only Vhembe varies                                                                                                          |
+| `inflow_m3_s`         | Inflow (m³/s)         | m³/s    | daily      | line  | dams: `inflow-outflow-m3-s`                | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years); inflow = runoff depth × the placeholder area of 10 000 km² (Vhembe: 0.0548 mm/day × 10 000 km² = 6.35 m³/s) and outflow ≈ inflow, so storage never changes |
+| `seepage_m3_day`      | Seepage (m³/day)      | m³/day  | daily      | bar   | dams: `seepage-m3-day`                     | withheld — 5.5 m³/day in 94 % of days, identical in 51 districts                                                                                                                                                                                                                                    |
+| `outflow_m3_s`        | Outflow (m³/s)        | m³/s    | daily      | line  | dams: `inflow-outflow-m3-s`                | withheld — daily values in 2000 only; from 2001 to 2026 one constant value per district (Vhembe 0.0548 mm/day, 6.346 m³/s for 26 years); inflow = runoff depth × the placeholder area of 10 000 km² (Vhembe: 0.0548 mm/day × 10 000 km² = 6.35 m³/s) and outflow ≈ inflow, so storage never changes |
 
 <a id="hydrological-station"></a>
+
 ## Hydrological Station · §9.1
 
 Table `9_1_hydrological_station_master` · id `hydrological-station` · daily · pages: surface-water · 6 live, 6 withheld, 0 duplicate · keys: `date`, `year`, `month`, `district_name`
 
 **Surface-water page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Daily Mean Flow (m³/day) | `daily-mean-flow-m3-day` | m³/day | daily | bar | `daily_mean_flow` ★ |
-| Daily Sediment Load / Monthly Sediment Load (t/day) | `daily-sediment-load-monthly-sediment-load-t-day` | t/day | daily | line | `daily_sediment_load_t_day` ★, `monthly_sediment_load_t_day` |
-| River Discharge Q / Peak Instantaneous Flow (m³/s) | `river-discharge-q-peak-instantaneous-flow-m3-s` | m³/s | daily | line | `river_discharge_q` ★, `peak_instantaneous_flow` |
-| Flow Velocity (m/s) | `flow-velocity-m-s` | m/s | monthly | line | `flow_velocity` ★ |
-| Stage Height (m) | `stage-height-m` | m | monthly | line | `stage_height` ★ |
-| Monthly Mean Flow (m³/month) | `monthly-mean-flow-m3-month` | m³/month | daily | line | `monthly_mean_flow` ★ |
-| Suspended Sediment Concentration (mg/L) | `suspended-sediment-concentration-mg-l` | mg/L | monthly | line | `suspended_sediment_concentration` ★ |
-| A Coeff | `a-coeff` | — | daily | line | `a_coeff` ★ |
-| B Exponent | `b-exponent` | — | daily | line | `b_exponent` ★ |
-| R Squared | `r-squared` | — | daily | line | `r_squared` ★ |
+| Chart group                                         | id                                                | Axis unit | Resolution | Chart | Columns (★ default)                                          |
+| --------------------------------------------------- | ------------------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------ |
+| Daily Mean Flow (m³/day)                            | `daily-mean-flow-m3-day`                          | m³/day    | daily      | bar   | `daily_mean_flow` ★                                          |
+| Daily Sediment Load / Monthly Sediment Load (t/day) | `daily-sediment-load-monthly-sediment-load-t-day` | t/day     | daily      | line  | `daily_sediment_load_t_day` ★, `monthly_sediment_load_t_day` |
+| River Discharge Q / Peak Instantaneous Flow (m³/s)  | `river-discharge-q-peak-instantaneous-flow-m3-s`  | m³/s      | daily      | line  | `river_discharge_q` ★, `peak_instantaneous_flow`             |
+| Flow Velocity (m/s)                                 | `flow-velocity-m-s`                               | m/s       | monthly    | line  | `flow_velocity` ★                                            |
+| Stage Height (m)                                    | `stage-height-m`                                  | m         | monthly    | line  | `stage_height` ★                                             |
+| Monthly Mean Flow (m³/month)                        | `monthly-mean-flow-m3-month`                      | m³/month  | daily      | line  | `monthly_mean_flow` ★                                        |
+| Suspended Sediment Concentration (mg/L)             | `suspended-sediment-concentration-mg-l`           | mg/L      | monthly    | line  | `suspended_sediment_concentration` ★                         |
+| A Coeff                                             | `a-coeff`                                         | —         | daily      | line  | `a_coeff` ★                                                  |
+| B Exponent                                          | `b-exponent`                                      | —         | daily      | line  | `b_exponent` ★                                               |
+| R Squared                                           | `r-squared`                                       | —         | daily      | line  | `r_squared` ★                                                |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `daily_mean_flow` | Daily Mean Flow (m³/day) | m³/day ¹ | daily | bar | surface-water: `daily-mean-flow-m3-day` | live — m³/day (spec §9.1); the flow family consistent with the database's MAR (16_1): summed over the districts ≈ 40 700 Mm³/year (16_1 MAR ≈ 66 300) |
-| `daily_sediment_load_t_day` | Daily Sediment Load (t/day) | t/day | daily | line | surface-water: `daily-sediment-load-monthly-sediment-load-t-day` | live — = daily mean flow × suspended sediment concentration (checked) |
-| `river_discharge_q` | River Discharge Q (m³/s) | m³/s ¹ | daily | line | surface-water: `river-discharge-q-peak-instantaneous-flow-m3-s` | live — Served from Jan 2026: before Jan 2026 the column holds a monthly mean that contradicts the daily flows (1/63 of them on average); from Jan 2026 it is the daily mean flow / 86 400 s, as a discharge should be |
-| `flow_velocity` | Flow Velocity (m/s) | m/s ¹ | monthly | line | surface-water: `flow-velocity-m-s` | live |
-| `stage_height` | Stage Height (m) | m ¹ | monthly | line | surface-water: `stage-height-m` | live — 74 % of months at 0.05 m, the series' lowest value |
-| `monthly_mean_flow` | Monthly Mean Flow (m³/month) | m³/month ¹ | daily | line | surface-water: `monthly-mean-flow-m3-month` | withheld — contradicts the daily flows of the same table: the month's volume is on average 1/63 of the sum of its daily mean flows, and summed over the districts it gives ≈ 650 Mm³/year where the daily flows give ≈ 40 700 Mm³/year and the database's own MAR (16_1) ≈ 66 300 Mm³/year |
-| `suspended_sediment_concentration` | Suspended Sediment Concentration (mg/L) | mg/L ¹ | monthly | line | surface-water: `suspended-sediment-concentration-mg-l` | live |
-| `monthly_sediment_load_t_day` | Monthly Sediment Load (t/day) | t/day | daily | line | surface-water: `daily-sediment-load-monthly-sediment-load-t-day` | withheld — = the monthly discharge (withheld) × sediment concentration; contradicts the daily flows of the same table: the month's volume is on average 1/63 of the sum of its daily mean flows, and summed over the districts it gives ≈ 650 Mm³/year where the daily flows give ≈ 40 700 Mm³/year and the database's own MAR (16_1) ≈ 66 300 Mm³/year |
-| `peak_instantaneous_flow` | Peak Instantaneous Flow (m³/s) | m³/s ¹ | daily | line | surface-water: `river-discharge-q-peak-instantaneous-flow-m3-s` | withheld — impossible in its unit (m³/s, spec §9.1): median 26 300 m³/s and up to 773 100 m³/s, where South Africa's largest recorded flood peaks are about 16 000 m³/s |
-| `a_coeff` | A Coeff | — | daily | line | surface-water: `a-coeff` | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts |
-| `b_exponent` | B Exponent | — | daily | line | surface-water: `b-exponent` | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts |
-| `r_squared` | R Squared | — | daily | line | surface-water: `r-squared` | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts |
+| Column                             | Label                                   | Unit       | Resolution | Chart | Group                                                            | Status                                                                                                                                                                                                                                                                                                                                                  |
+| ---------------------------------- | --------------------------------------- | ---------- | ---------- | ----- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `daily_mean_flow`                  | Daily Mean Flow (m³/day)                | m³/day ¹   | daily      | bar   | surface-water: `daily-mean-flow-m3-day`                          | live — m³/day (spec §9.1); the flow family consistent with the database's MAR (16_1): summed over the districts ≈ 40 700 Mm³/year (16_1 MAR ≈ 66 300)                                                                                                                                                                                                   |
+| `daily_sediment_load_t_day`        | Daily Sediment Load (t/day)             | t/day      | daily      | line  | surface-water: `daily-sediment-load-monthly-sediment-load-t-day` | live — = daily mean flow × suspended sediment concentration (checked)                                                                                                                                                                                                                                                                                   |
+| `river_discharge_q`                | River Discharge Q (m³/s)                | m³/s ¹     | daily      | line  | surface-water: `river-discharge-q-peak-instantaneous-flow-m3-s`  | live — Served from Jan 2026: before Jan 2026 the column holds a monthly mean that contradicts the daily flows (1/63 of them on average); from Jan 2026 it is the daily mean flow / 86 400 s, as a discharge should be                                                                                                                                   |
+| `flow_velocity`                    | Flow Velocity (m/s)                     | m/s ¹      | monthly    | line  | surface-water: `flow-velocity-m-s`                               | live                                                                                                                                                                                                                                                                                                                                                    |
+| `stage_height`                     | Stage Height (m)                        | m ¹        | monthly    | line  | surface-water: `stage-height-m`                                  | live — 74 % of months at 0.05 m, the series' lowest value                                                                                                                                                                                                                                                                                               |
+| `monthly_mean_flow`                | Monthly Mean Flow (m³/month)            | m³/month ¹ | daily      | line  | surface-water: `monthly-mean-flow-m3-month`                      | withheld — contradicts the daily flows of the same table: the month's volume is on average 1/63 of the sum of its daily mean flows, and summed over the districts it gives ≈ 650 Mm³/year where the daily flows give ≈ 40 700 Mm³/year and the database's own MAR (16_1) ≈ 66 300 Mm³/year                                                              |
+| `suspended_sediment_concentration` | Suspended Sediment Concentration (mg/L) | mg/L ¹     | monthly    | line  | surface-water: `suspended-sediment-concentration-mg-l`           | live                                                                                                                                                                                                                                                                                                                                                    |
+| `monthly_sediment_load_t_day`      | Monthly Sediment Load (t/day)           | t/day      | daily      | line  | surface-water: `daily-sediment-load-monthly-sediment-load-t-day` | withheld — = the monthly discharge (withheld) × sediment concentration; contradicts the daily flows of the same table: the month's volume is on average 1/63 of the sum of its daily mean flows, and summed over the districts it gives ≈ 650 Mm³/year where the daily flows give ≈ 40 700 Mm³/year and the database's own MAR (16_1) ≈ 66 300 Mm³/year |
+| `peak_instantaneous_flow`          | Peak Instantaneous Flow (m³/s)          | m³/s ¹     | daily      | line  | surface-water: `river-discharge-q-peak-instantaneous-flow-m3-s`  | withheld — impossible in its unit (m³/s, spec §9.1): median 26 300 m³/s and up to 773 100 m³/s, where South Africa's largest recorded flood peaks are about 16 000 m³/s                                                                                                                                                                                 |
+| `a_coeff`                          | A Coeff                                 | —          | daily      | line  | surface-water: `a-coeff`                                         | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts                                                                                                                                                                                              |
+| `b_exponent`                       | B Exponent                              | —          | daily      | line  | surface-water: `b-exponent`                                      | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts                                                                                                                                                                                              |
+| `r_squared`                        | R Squared                               | —          | daily      | line  | surface-water: `r-squared`                                       | withheld — failed rating-curve fit: exponents b up to 18.8 and coefficients a up to 8.5 × 10²¹ (real rating curves have b ≈ 1.5–3), r² = 0 in 42 districts                                                                                                                                                                                              |
 
 <a id="catchment-characteristics"></a>
+
 ## Catchment Characteristics · §9.2
 
 Table `9_2_catchment_characteristics_master` · id `catchment-characteristics` · monthly · pages: surface-water · 13 live, 4 withheld, 0 duplicate · keys: `date`, `district_name`, `year`, `month`
 
 **Surface-water page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Catchment Area (km²) | `catchment-area-km2` | km² | annual | line | `catchment_area_km2` ★ |
-| Water Bodies / Tree Cover / Shrubland Fynbos / Grassland / Wetland / Builtup Urban / Bare Soil Mining (%) | `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | % | annual | line | `water_bodies_pct` ★, `tree_cover_pct` ★, `shrubland_fynbos_pct` ★, `grassland_pct`, `wetland_pct`, `builtup_urban_pct`, `bare_soil_mining_pct` |
-| Cropland Agri / Vegetation Cover (%) | `cropland-agri-vegetation-cover-pct` | % | monthly | line | `cropland_agri_pct` ★, `vegetation_cover_pct` ★ |
-| Dominant HSG (class) | `dominant-hsg-class` | class | annual | line | `dominant_hsg` ★ |
-| HSG A / HSG B / HSG C / HSG D (%) | `hsg-a-hsg-b-hsg-c-hsg-d-pct` | % | annual | line | `hsg_a_pct` ★, `hsg_b_pct` ★, `hsg_c_pct` ★, `hsg_d_pct` |
-| Mean Slope (°) | `mean-slope` | ° | monthly | line | `mean_slope_degrees` ★ |
-| Mean TWI | `mean-twi` | — | monthly | line | `mean_twi` ★ |
+| Chart group                                                                                               | id                                                                                              | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                                             |
+| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------- | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catchment Area (km²)                                                                                      | `catchment-area-km2`                                                                            | km²       | annual     | line  | `catchment_area_km2` ★                                                                                                                          |
+| Water Bodies / Tree Cover / Shrubland Fynbos / Grassland / Wetland / Builtup Urban / Bare Soil Mining (%) | `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | %         | annual     | line  | `water_bodies_pct` ★, `tree_cover_pct` ★, `shrubland_fynbos_pct` ★, `grassland_pct`, `wetland_pct`, `builtup_urban_pct`, `bare_soil_mining_pct` |
+| Cropland Agri / Vegetation Cover (%)                                                                      | `cropland-agri-vegetation-cover-pct`                                                            | %         | monthly    | line  | `cropland_agri_pct` ★, `vegetation_cover_pct` ★                                                                                                 |
+| Dominant HSG (class)                                                                                      | `dominant-hsg-class`                                                                            | class     | annual     | line  | `dominant_hsg` ★                                                                                                                                |
+| HSG A / HSG B / HSG C / HSG D (%)                                                                         | `hsg-a-hsg-b-hsg-c-hsg-d-pct`                                                                   | %         | annual     | line  | `hsg_a_pct` ★, `hsg_b_pct` ★, `hsg_c_pct` ★, `hsg_d_pct`                                                                                        |
+| Mean Slope (°)                                                                                            | `mean-slope`                                                                                    | °         | monthly    | line  | `mean_slope_degrees` ★                                                                                                                          |
+| Mean TWI                                                                                                  | `mean-twi`                                                                                      | —         | monthly    | line  | `mean_twi` ★                                                                                                                                    |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `catchment_area_km2` | Catchment Area (km²) | km² | annual | line | surface-water: `catchment-area-km2` | live — = the district's area (r = 0.9993 with 11_1 aquifer extent; Namakwa 126 966 km²) |
-| `water_bodies_pct` | Water Bodies (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `tree_cover_pct` | Tree Cover (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `shrubland_fynbos_pct` | Shrubland Fynbos (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `grassland_pct` | Grassland (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `cropland_agri_pct` | Cropland Agri (%) | % | monthly | line | surface-water: `cropland-agri-vegetation-cover-pct` | withheld — identical to grassland_pct in every row (16 744 / 16 744) |
-| `wetland_pct` | Wetland (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `builtup_urban_pct` | Builtup Urban (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `bare_soil_mining_pct` | Bare Soil Mining (%) | % | annual | line | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live |
-| `dominant_hsg` | Dominant HSG (class) | — | annual | line | surface-water: `dominant-hsg-class` | live |
-| `hsg_a_pct` | HSG A (%) | % | annual | line | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct` | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
-| `hsg_b_pct` | HSG B (%) | % | annual | line | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct` | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
-| `hsg_c_pct` | HSG C (%) | % | annual | line | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct` | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
-| `hsg_d_pct` | HSG D (%) | % | annual | line | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct` | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
-| `mean_slope_degrees` | Mean Slope (°) | ° | monthly | line | surface-water: `mean-slope` | withheld — one value (4.5°) in every row, identical in all 52 districts |
-| `mean_twi` | Mean TWI | — | monthly | line | surface-water: `mean-twi` | withheld — one value (7.85) in every row, identical in all 52 districts |
-| `vegetation_cover_pct` | Vegetation Cover (%) | % | monthly | line | surface-water: `cropland-agri-vegetation-cover-pct` | withheld — one value (65.4 %) in every row, identical in all 52 districts |
+| Column                 | Label                | Unit | Resolution | Chart | Group                                                                                                          | Status                                                                                                          |
+| ---------------------- | -------------------- | ---- | ---------- | ----- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `catchment_area_km2`   | Catchment Area (km²) | km²  | annual     | line  | surface-water: `catchment-area-km2`                                                                            | live — = the district's area (r = 0.9993 with 11_1 aquifer extent; Namakwa 126 966 km²)                         |
+| `water_bodies_pct`     | Water Bodies (%)     | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `tree_cover_pct`       | Tree Cover (%)       | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `shrubland_fynbos_pct` | Shrubland Fynbos (%) | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `grassland_pct`        | Grassland (%)        | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `cropland_agri_pct`    | Cropland Agri (%)    | %    | monthly    | line  | surface-water: `cropland-agri-vegetation-cover-pct`                                                            | withheld — identical to grassland_pct in every row (16 744 / 16 744)                                            |
+| `wetland_pct`          | Wetland (%)          | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `builtup_urban_pct`    | Builtup Urban (%)    | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `bare_soil_mining_pct` | Bare Soil Mining (%) | %    | annual     | line  | surface-water: `water-bodies-tree-cover-shrubland-fynbos-grassland-wetland-builtup-urban-bare-soil-mining-pct` | live                                                                                                            |
+| `dominant_hsg`         | Dominant HSG (class) | —    | annual     | line  | surface-water: `dominant-hsg-class`                                                                            | live                                                                                                            |
+| `hsg_a_pct`            | HSG A (%)            | %    | annual     | line  | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct`                                                                   | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| `hsg_b_pct`            | HSG B (%)            | %    | annual     | line  | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct`                                                                   | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| `hsg_c_pct`            | HSG C (%)            | %    | annual     | line  | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct`                                                                   | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| `hsg_d_pct`            | HSG D (%)            | %    | annual     | line  | surface-water: `hsg-a-hsg-b-hsg-c-hsg-d-pct`                                                                   | live — three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| `mean_slope_degrees`   | Mean Slope (°)       | °    | monthly    | line  | surface-water: `mean-slope`                                                                                    | withheld — one value (4.5°) in every row, identical in all 52 districts                                         |
+| `mean_twi`             | Mean TWI             | —    | monthly    | line  | surface-water: `mean-twi`                                                                                      | withheld — one value (7.85) in every row, identical in all 52 districts                                         |
+| `vegetation_cover_pct` | Vegetation Cover (%) | %    | monthly    | line  | surface-water: `cropland-agri-vegetation-cover-pct`                                                            | withheld — one value (65.4 %) in every row, identical in all 52 districts                                       |
 
 <a id="sansa-earth-observation"></a>
+
 ## SANSA Earth Observation · §9.3
 
 Table `9_3_sansa_earth_observation_master` · id `sansa-earth-observation` · monthly · pages: surface-water · 0 live, 6 withheld, 0 duplicate · keys: `date`, `year`, `month`, `district_name`
 
 **Surface-water page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Surface Water Extent / Flood Inundation Extent (km²) | `surface-water-extent-flood-inundation-extent-km2` | km² | monthly | line | `surface_water_extent_km2` ★, `flood_inundation_extent_km2` ★ |
-| NDWI (index) | `ndwi-index` | index | monthly | line | `ndwi_mean` ★ |
-| Turbidity Proxy Ratio | `turbidity-proxy-ratio` | — | monthly | line | `turbidity_proxy_ratio` ★ |
-| Chlorophyll A (mg/m³) | `chlorophyll-a-mg-m3` | mg/m³ | monthly | line | `chlorophyll_a_mg_m3` ★ |
-| Sediment Plume (%) | `sediment-plume-pct` | % | monthly | line | `sediment_plume_pct` ★ |
+| Chart group                                          | id                                                 | Axis unit | Resolution | Chart | Columns (★ default)                                           |
+| ---------------------------------------------------- | -------------------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------- |
+| Surface Water Extent / Flood Inundation Extent (km²) | `surface-water-extent-flood-inundation-extent-km2` | km²       | monthly    | line  | `surface_water_extent_km2` ★, `flood_inundation_extent_km2` ★ |
+| NDWI (index)                                         | `ndwi-index`                                       | index     | monthly    | line  | `ndwi_mean` ★                                                 |
+| Turbidity Proxy Ratio                                | `turbidity-proxy-ratio`                            | —         | monthly    | line  | `turbidity_proxy_ratio` ★                                     |
+| Chlorophyll A (mg/m³)                                | `chlorophyll-a-mg-m3`                              | mg/m³     | monthly    | line  | `chlorophyll_a_mg_m3` ★                                       |
+| Sediment Plume (%)                                   | `sediment-plume-pct`                               | %         | monthly    | line  | `sediment_plume_pct` ★                                        |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `surface_water_extent_km2` | Surface Water Extent (km²) | km² | monthly | line | surface-water: `surface-water-extent-flood-inundation-extent-km2` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 33 of 52 districts share one identical series |
-| `ndwi_mean` | NDWI Mean | — | monthly | line | surface-water: `ndwi-index` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 43 of 52 districts share one identical series |
-| `turbidity_proxy_ratio` | Turbidity Proxy Ratio | — | monthly | line | surface-water: `turbidity-proxy-ratio` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 36 of 52 districts share one identical series |
-| `chlorophyll_a_mg_m3` | Chlorophyll A (mg/m³) | mg/m³ | monthly | line | surface-water: `chlorophyll-a-mg-m3` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 38 of 52 districts share one identical series |
-| `sediment_plume_pct` | Sediment Plume (%) | % | monthly | line | surface-water: `sediment-plume-pct` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 46 of 52 districts share one identical series |
-| `flood_inundation_extent_km2` | Flood Inundation Extent (km²) | km² | monthly | line | surface-water: `surface-water-extent-flood-inundation-extent-km2` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 48 of 52 districts share one identical series |
+| Column                        | Label                         | Unit  | Resolution | Chart | Group                                                             | Status                                                                                                                                                |
+| ----------------------------- | ----------------------------- | ----- | ---------- | ----- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `surface_water_extent_km2`    | Surface Water Extent (km²)    | km²   | monthly    | line  | surface-water: `surface-water-extent-flood-inundation-extent-km2` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 33 of 52 districts share one identical series |
+| `ndwi_mean`                   | NDWI Mean                     | —     | monthly    | line  | surface-water: `ndwi-index`                                       | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 43 of 52 districts share one identical series |
+| `turbidity_proxy_ratio`       | Turbidity Proxy Ratio         | —     | monthly    | line  | surface-water: `turbidity-proxy-ratio`                            | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 36 of 52 districts share one identical series |
+| `chlorophyll_a_mg_m3`         | Chlorophyll A (mg/m³)         | mg/m³ | monthly    | line  | surface-water: `chlorophyll-a-mg-m3`                              | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 38 of 52 districts share one identical series |
+| `sediment_plume_pct`          | Sediment Plume (%)            | %     | monthly    | line  | surface-water: `sediment-plume-pct`                               | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 46 of 52 districts share one identical series |
+| `flood_inundation_extent_km2` | Flood Inundation Extent (km²) | km²   | monthly    | line  | surface-water: `surface-water-extent-flood-inundation-extent-km2` | withheld — two distinct values per district over 27 years (a step, not a monthly satellite series), and 48 of 52 districts share one identical series |
 
 <a id="borehole-and-aquifer"></a>
+
 ## Borehole and Aquifer · §10.1
 
 Table `10_1_borehole_and_aquifer_master` · id `borehole-and-aquifer` · daily · pages: groundwater · 7 live, 6 withheld, 0 duplicate · keys: `date`, `year`, `district_name`, `variable_name`, `value`, `unit`, `source`
 
 **Groundwater page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Annual Abstraction Volume (m³/year) | `annual-abstraction-volume-m3-year` | m³/year | annual | bar | `annual_abstraction_volume_m3_yr` ★ |
-| Annual Recharge Rate (mm/year) | `annual-recharge-rate-mm-year` | mm/year | annual | line | `annual_recharge_rate_mm_yr` ★ |
-| Borehole Pumping Rate (m³/h) | `borehole-pumping-rate-m3-h` | m³/h | annual | line | `borehole_pumping_rate_m3_h` ★ |
-| Groundwater Table Depth (m bgl) | `groundwater-table-depth-m-bgl` | m bgl | daily | line | `groundwater_table_depth_m_bgl` ★ |
-| Hydraulic Conductivity (m/day) | `hydraulic-conductivity-m-day` | m/day | daily | line | `hydraulic_conductivity_m_day` ★ |
-| Hydraulic Head (m amsl) | `hydraulic-head-m-amsl` | m amsl | monthly | line | `hydraulic_head_amsl_m` ★ |
-| Hydraulic Head (m amsl) | `hydraulic-head-m-amsl-2` | m amsl | daily | line | `hydraulic_head_m_amsl` ★ |
-| Recharge Fraction (%) | `recharge-fraction-pct` | % | annual | line | `recharge_fraction_percent` ★ |
-| Saturated Thickness (m) | `saturated-thickness-m` | m | daily | line | `saturated_thickness_m` ★ |
-| Seasonal Water Table Fluctuation (m/season) | `seasonal-water-table-fluctuation-m-season` | m/season | annual | line | `seasonal_water_table_fluctuation_m` ★ |
-| SGI (index) | `sgi-index` | index | daily | line | `sgi_dimensionless` ★ |
-| Storativity Specific Yield | `storativity-specific-yield` | — | daily | line | `storativity_specific_yield_dimensionless` ★ |
-| Transmissivity (m²/day) | `transmissivity-m2-day` | m²/day | daily | line | `transmissivity_m2_day` ★ |
+| Chart group                                 | id                                          | Axis unit | Resolution | Chart | Columns (★ default)                          |
+| ------------------------------------------- | ------------------------------------------- | --------- | ---------- | ----- | -------------------------------------------- |
+| Annual Abstraction Volume (m³/year)         | `annual-abstraction-volume-m3-year`         | m³/year   | annual     | bar   | `annual_abstraction_volume_m3_yr` ★          |
+| Annual Recharge Rate (mm/year)              | `annual-recharge-rate-mm-year`              | mm/year   | annual     | line  | `annual_recharge_rate_mm_yr` ★               |
+| Borehole Pumping Rate (m³/h)                | `borehole-pumping-rate-m3-h`                | m³/h      | annual     | line  | `borehole_pumping_rate_m3_h` ★               |
+| Groundwater Table Depth (m bgl)             | `groundwater-table-depth-m-bgl`             | m bgl     | daily      | line  | `groundwater_table_depth_m_bgl` ★            |
+| Hydraulic Conductivity (m/day)              | `hydraulic-conductivity-m-day`              | m/day     | daily      | line  | `hydraulic_conductivity_m_day` ★             |
+| Hydraulic Head (m amsl)                     | `hydraulic-head-m-amsl`                     | m amsl    | monthly    | line  | `hydraulic_head_amsl_m` ★                    |
+| Hydraulic Head (m amsl)                     | `hydraulic-head-m-amsl-2`                   | m amsl    | daily      | line  | `hydraulic_head_m_amsl` ★                    |
+| Recharge Fraction (%)                       | `recharge-fraction-pct`                     | %         | annual     | line  | `recharge_fraction_percent` ★                |
+| Saturated Thickness (m)                     | `saturated-thickness-m`                     | m         | daily      | line  | `saturated_thickness_m` ★                    |
+| Seasonal Water Table Fluctuation (m/season) | `seasonal-water-table-fluctuation-m-season` | m/season  | annual     | line  | `seasonal_water_table_fluctuation_m` ★       |
+| SGI (index)                                 | `sgi-index`                                 | index     | daily      | line  | `sgi_dimensionless` ★                        |
+| Storativity Specific Yield                  | `storativity-specific-yield`                | —         | daily      | line  | `storativity_specific_yield_dimensionless` ★ |
+| Transmissivity (m²/day)                     | `transmissivity-m2-day`                     | m²/day    | daily      | line  | `transmissivity_m2_day` ★                    |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `annual_abstraction_volume_m3_yr` | Annual Abstraction Volume (m³/year) | m³/year | annual | bar | groundwater: `annual-abstraction-volume-m3-year` | live — per borehole (spec §10.1), not a district total |
-| `annual_recharge_rate_mm_yr` | Annual Recharge Rate (mm/year) | mm/year | annual | line | groundwater: `annual-recharge-rate-mm-year` | withheld — 41 of 52 districts share their whole series with another district (13 groups, e.g. Joe Gqabi = Nelson Mandela Bay = Nkangala = Vhembe = West Rand); 71 distinct values in 1 404 district-years |
-| `borehole_pumping_rate_m3_h` | Borehole Pumping Rate (m³/h) | m³/h | annual | line | groundwater: `borehole-pumping-rate-m3-h` | live |
-| `groundwater_table_depth_m_bgl` | Groundwater Table Depth (m bgl) | m bgl | daily | line | groundwater: `groundwater-table-depth-m-bgl` | live — NGA telemetry (irregular days, about every 7 weeks); the same 202 dates in every district |
-| `hydraulic_conductivity_m_day` | Hydraulic Conductivity (m/day) | m/day | daily | line | groundwater: `hydraulic-conductivity-m-day` | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83) |
-| `hydraulic_head_amsl_m` | Hydraulic Head (m amsl) | m amsl | monthly | line | groundwater: `hydraulic-head-m-amsl` | live — monthly (15th), source: DWS National Groundwater Archive & DEM interpolation; one of two hydraulic-head series (r = 0.06 between them, 363 m apart on average) |
-| `hydraulic_head_m_amsl` | Hydraulic Head (m amsl) | m amsl ¹ | daily | line | groundwater: `hydraulic-head-m-amsl-2` | live — NGA telemetry (irregular days); the unit column says 'm bgl', but the values (448–1 638 m) are elevations as the name says: a water level 1 638 m below ground is impossible in South Africa's aquifers. One of two hydraulic-head series (r = 0.06 between them) |
-| `recharge_fraction_percent` | Recharge Fraction (%) | % | annual | line | groundwater: `recharge-fraction-pct` | live |
-| `saturated_thickness_m` | Saturated Thickness (m) | m | daily | line | groundwater: `saturated-thickness-m` | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83) |
-| `seasonal_water_table_fluctuation_m` | Seasonal Water Table Fluctuation (m/season) | m/season ¹ | annual | line | groundwater: `seasonal-water-table-fluctuation-m-season` | live — two values per year (30 Jun, 31 Dec), in m per season; the annual chart shows the larger |
-| `sgi_dimensionless` | SGI | — | daily | line | groundwater: `sgi-index` | withheld — not a standardised groundwater level: uncorrelated with this table's own water levels (r = −0.007 with depth, 0.001 with head) and with the earlier SGI (r = −0.004); month-to-month autocorrelation 0.01, where groundwater levels persist (0.66–0.83 in this table); every month averages 0 ± 1 across districts, even in the 2015–16 drought |
-| `storativity_specific_yield_dimensionless` | Storativity Specific Yield | — | daily | line | groundwater: `storativity-specific-yield` | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83) |
-| `transmissivity_m2_day` | Transmissivity (m²/day) | m²/day | daily | line | groundwater: `transmissivity-m2-day` | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83) |
+| Column                                     | Label                                       | Unit       | Resolution | Chart | Group                                                    | Status                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------ | ------------------------------------------- | ---------- | ---------- | ----- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `annual_abstraction_volume_m3_yr`          | Annual Abstraction Volume (m³/year)         | m³/year    | annual     | bar   | groundwater: `annual-abstraction-volume-m3-year`         | live — per borehole (spec §10.1), not a district total                                                                                                                                                                                                                                                                                                     |
+| `annual_recharge_rate_mm_yr`               | Annual Recharge Rate (mm/year)              | mm/year    | annual     | line  | groundwater: `annual-recharge-rate-mm-year`              | withheld — 41 of 52 districts share their whole series with another district (13 groups, e.g. Joe Gqabi = Nelson Mandela Bay = Nkangala = Vhembe = West Rand); 71 distinct values in 1 404 district-years                                                                                                                                                  |
+| `borehole_pumping_rate_m3_h`               | Borehole Pumping Rate (m³/h)                | m³/h       | annual     | line  | groundwater: `borehole-pumping-rate-m3-h`                | live                                                                                                                                                                                                                                                                                                                                                       |
+| `groundwater_table_depth_m_bgl`            | Groundwater Table Depth (m bgl)             | m bgl      | daily      | line  | groundwater: `groundwater-table-depth-m-bgl`             | live — NGA telemetry (irregular days, about every 7 weeks); the same 202 dates in every district                                                                                                                                                                                                                                                           |
+| `hydraulic_conductivity_m_day`             | Hydraulic Conductivity (m/day)              | m/day      | daily      | line  | groundwater: `hydraulic-conductivity-m-day`              | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83)                                                                                                                             |
+| `hydraulic_head_amsl_m`                    | Hydraulic Head (m amsl)                     | m amsl     | monthly    | line  | groundwater: `hydraulic-head-m-amsl`                     | live — monthly (15th), source: DWS National Groundwater Archive & DEM interpolation; one of two hydraulic-head series (r = 0.06 between them, 363 m apart on average)                                                                                                                                                                                      |
+| `hydraulic_head_m_amsl`                    | Hydraulic Head (m amsl)                     | m amsl ¹   | daily      | line  | groundwater: `hydraulic-head-m-amsl-2`                   | live — NGA telemetry (irregular days); the unit column says 'm bgl', but the values (448–1 638 m) are elevations as the name says: a water level 1 638 m below ground is impossible in South Africa's aquifers. One of two hydraulic-head series (r = 0.06 between them)                                                                                   |
+| `recharge_fraction_percent`                | Recharge Fraction (%)                       | %          | annual     | line  | groundwater: `recharge-fraction-pct`                     | live                                                                                                                                                                                                                                                                                                                                                       |
+| `saturated_thickness_m`                    | Saturated Thickness (m)                     | m          | daily      | line  | groundwater: `saturated-thickness-m`                     | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83)                                                                                                                             |
+| `seasonal_water_table_fluctuation_m`       | Seasonal Water Table Fluctuation (m/season) | m/season ¹ | annual     | line  | groundwater: `seasonal-water-table-fluctuation-m-season` | live — two values per year (30 Jun, 31 Dec), in m per season; the annual chart shows the larger                                                                                                                                                                                                                                                            |
+| `sgi_dimensionless`                        | SGI                                         | —          | daily      | line  | groundwater: `sgi-index`                                 | withheld — not a standardised groundwater level: uncorrelated with this table's own water levels (r = −0.007 with depth, 0.001 with head) and with the earlier SGI (r = −0.004); month-to-month autocorrelation 0.01, where groundwater levels persist (0.66–0.83 in this table); every month averages 0 ± 1 across districts, even in the 2015–16 drought |
+| `storativity_specific_yield_dimensionless` | Storativity Specific Yield                  | —          | daily      | line  | groundwater: `storativity-specific-yield`                | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83)                                                                                                                             |
+| `transmissivity_m2_day`                    | Transmissivity (m²/day)                     | m²/day     | daily      | line  | groundwater: `transmissivity-m2-day`                     | withheld — aquifer constants that change at random every year (year-to-year correlation −0.02) and fail T = K × saturated thickness (r = −0.004, ratio 0.7 ± 1.4); the static aquifer properties in 11_1 satisfy it (r = 0.83)                                                                                                                             |
 
 <a id="recharge-supporting"></a>
+
 ## Recharge Supporting · §10.2
 
 Table `10_2_recharge_supporting _master` · id `recharge-supporting` · monthly · pages: groundwater · 6 live, 0 withheld, 0 duplicate · keys: `date`, `year`, `district_name`
 
 **Groundwater page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Monthly Catchment Rainfall / Actual Evapotranspiration (mm) | `monthly-catchment-rainfall-actual-evapotranspiration-mm` | mm | monthly | bar | `monthly_catchment_rainfall_mm` ★, `actual_evapotranspiration_mm` ★ |
-| Vadose Zone Soil Moisture (m³/m³) | `vadose-zone-soil-moisture-m3-m3` | m³/m³ | monthly | line | `vadose_zone_soil_moisture_m3_m3` ★ |
-| River Baseflow Proxy (m³/day) | `river-baseflow-proxy-m3-day` | m³/day | monthly | bar | `river_baseflow_proxy_m3_day` ★ |
-| Urban Agricultural Land Use (%) | `urban-agricultural-land-use-pct` | % | monthly | line | `urban_agricultural_land_use_pct` ★ |
-| Water Table Rise WTF (m) | `water-table-rise-wtf-m` | m | monthly | line | `water_table_rise_wtf_m` ★ |
+| Chart group                                                 | id                                                        | Axis unit | Resolution | Chart | Columns (★ default)                                                 |
+| ----------------------------------------------------------- | --------------------------------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------- |
+| Monthly Catchment Rainfall / Actual Evapotranspiration (mm) | `monthly-catchment-rainfall-actual-evapotranspiration-mm` | mm        | monthly    | bar   | `monthly_catchment_rainfall_mm` ★, `actual_evapotranspiration_mm` ★ |
+| Vadose Zone Soil Moisture (m³/m³)                           | `vadose-zone-soil-moisture-m3-m3`                         | m³/m³     | monthly    | line  | `vadose_zone_soil_moisture_m3_m3` ★                                 |
+| River Baseflow Proxy (m³/day)                               | `river-baseflow-proxy-m3-day`                             | m³/day    | monthly    | bar   | `river_baseflow_proxy_m3_day` ★                                     |
+| Urban Agricultural Land Use (%)                             | `urban-agricultural-land-use-pct`                         | %         | monthly    | line  | `urban_agricultural_land_use_pct` ★                                 |
+| Water Table Rise WTF (m)                                    | `water-table-rise-wtf-m`                                  | m         | monthly    | line  | `water_table_rise_wtf_m` ★                                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `monthly_catchment_rainfall_mm` | Monthly Catchment Rainfall (mm) | mm | monthly | bar | groundwater: `monthly-catchment-rainfall-actual-evapotranspiration-mm` | live |
-| `vadose_zone_soil_moisture_m3_m3` | Vadose Zone Soil Moisture (m³/m³) | m³/m³ | monthly | line | groundwater: `vadose-zone-soil-moisture-m3-m3` | live |
-| `actual_evapotranspiration_mm` | Actual Evapotranspiration (mm) | mm | monthly | bar | groundwater: `monthly-catchment-rainfall-actual-evapotranspiration-mm` | live |
-| `river_baseflow_proxy_m3_day` | River Baseflow Proxy (m³/day) | m³/day | monthly | bar | groundwater: `river-baseflow-proxy-m3-day` | live |
-| `urban_agricultural_land_use_pct` | Urban Agricultural Land Use (%) | % | monthly | line | groundwater: `urban-agricultural-land-use-pct` | live |
-| `water_table_rise_wtf_m` | Water Table Rise WTF (m) | m | monthly | line | groundwater: `water-table-rise-wtf-m` | live |
+| Column                            | Label                             | Unit   | Resolution | Chart | Group                                                                  | Status |
+| --------------------------------- | --------------------------------- | ------ | ---------- | ----- | ---------------------------------------------------------------------- | ------ |
+| `monthly_catchment_rainfall_mm`   | Monthly Catchment Rainfall (mm)   | mm     | monthly    | bar   | groundwater: `monthly-catchment-rainfall-actual-evapotranspiration-mm` | live   |
+| `vadose_zone_soil_moisture_m3_m3` | Vadose Zone Soil Moisture (m³/m³) | m³/m³  | monthly    | line  | groundwater: `vadose-zone-soil-moisture-m3-m3`                         | live   |
+| `actual_evapotranspiration_mm`    | Actual Evapotranspiration (mm)    | mm     | monthly    | bar   | groundwater: `monthly-catchment-rainfall-actual-evapotranspiration-mm` | live   |
+| `river_baseflow_proxy_m3_day`     | River Baseflow Proxy (m³/day)     | m³/day | monthly    | bar   | groundwater: `river-baseflow-proxy-m3-day`                             | live   |
+| `urban_agricultural_land_use_pct` | Urban Agricultural Land Use (%)   | %      | monthly    | line  | groundwater: `urban-agricultural-land-use-pct`                         | live   |
+| `water_table_rise_wtf_m`          | Water Table Rise WTF (m)          | m      | monthly    | line  | groundwater: `water-table-rise-wtf-m`                                  | live   |
 
 <a id="hydrogeological"></a>
+
 ## Hydrogeological · §11.1
 
 Table `11_1_hydrogeological` · id `hydrogeological` · monthly · pages: groundwater-reserve · 11 live, 2 withheld, 0 duplicate · keys: `id`, `category`, `variable`, `district_name`, `province_name`, `year`, `month`, `date`, `value`, `unit`, `source`
 
 **Groundwater-reserve page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Aquifer Extent (map Area) (km²) | `aquifer-extent-map-area-km2` | km² | annual | line | `Aquifer extent (map area)` ★ |
-| Aquifer Saturated Thickness (m) | `aquifer-saturated-thickness-m` | m | annual | line | `Aquifer saturated thickness` ★ |
-| Depth to (m bgl) | `depth-to-m-bgl` | m bgl | monthly | line | `Depth to bedrock / aquifer base`, `Depth to water table` ★ |
-| Dynamic (renewable) Reserve (Mm³/year) | `dynamic-renewable-reserve-mm3-year` | Mm³/year | annual | line | `Dynamic (renewable) reserve` ★ |
-| Groundwater Storage Coefficient | `groundwater-storage-coefficient` | — | annual | line | `Groundwater storage coefficient` ★ |
-| Permeability / Hydraulic Conductivity (m/day) | `permeability-hydraulic-conductivity-m-day` | m/day | annual | line | `Permeability / hydraulic conductivity` ★ |
-| Porosity (total and Effective) (%) | `porosity-total-and-effective-pct` | % | annual | line | `Porosity (total and effective)` ★ |
-| Specific Storage / Specific Yield | `specific-storage-specific-yield` | — | annual | line | `Specific storage` ★, `Specific yield` ★ |
-| Static Reserve Volume (Mm³) | `static-reserve-volume-mm3` | Mm³ | annual | bar | `Static reserve volume` ★ |
-| Storage Coefficient / Storativity / Specific Yield | `storage-coefficient-storativity-specific-yield` | — | monthly | line | `Storage coefficient / storativity / specific yield` ★ |
-| Transmissivity (m²/day) | `transmissivity-m2-day` | m²/day | annual | line | `Transmissivity` ★ |
+| Chart group                                        | id                                               | Axis unit | Resolution | Chart | Columns (★ default)                                         |
+| -------------------------------------------------- | ------------------------------------------------ | --------- | ---------- | ----- | ----------------------------------------------------------- |
+| Aquifer Extent (map Area) (km²)                    | `aquifer-extent-map-area-km2`                    | km²       | annual     | line  | `Aquifer extent (map area)` ★                               |
+| Aquifer Saturated Thickness (m)                    | `aquifer-saturated-thickness-m`                  | m         | annual     | line  | `Aquifer saturated thickness` ★                             |
+| Depth to (m bgl)                                   | `depth-to-m-bgl`                                 | m bgl     | monthly    | line  | `Depth to bedrock / aquifer base`, `Depth to water table` ★ |
+| Dynamic (renewable) Reserve (Mm³/year)             | `dynamic-renewable-reserve-mm3-year`             | Mm³/year  | annual     | line  | `Dynamic (renewable) reserve` ★                             |
+| Groundwater Storage Coefficient                    | `groundwater-storage-coefficient`                | —         | annual     | line  | `Groundwater storage coefficient` ★                         |
+| Permeability / Hydraulic Conductivity (m/day)      | `permeability-hydraulic-conductivity-m-day`      | m/day     | annual     | line  | `Permeability / hydraulic conductivity` ★                   |
+| Porosity (total and Effective) (%)                 | `porosity-total-and-effective-pct`               | %         | annual     | line  | `Porosity (total and effective)` ★                          |
+| Specific Storage / Specific Yield                  | `specific-storage-specific-yield`                | —         | annual     | line  | `Specific storage` ★, `Specific yield` ★                    |
+| Static Reserve Volume (Mm³)                        | `static-reserve-volume-mm3`                      | Mm³       | annual     | bar   | `Static reserve volume` ★                                   |
+| Storage Coefficient / Storativity / Specific Yield | `storage-coefficient-storativity-specific-yield` | —         | monthly    | line  | `Storage coefficient / storativity / specific yield` ★      |
+| Transmissivity (m²/day)                            | `transmissivity-m2-day`                          | m²/day    | annual     | line  | `Transmissivity` ★                                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Aquifer extent (map area)` | Aquifer Extent (map Area) (km²) | km² ¹ | annual | line | groundwater-reserve: `aquifer-extent-map-area-km2` | live — = the district's area (r = 0.9993 with 9_2 catchment area) |
-| `Aquifer saturated thickness` | Aquifer Saturated Thickness (m) | m ¹ | annual | line | groundwater-reserve: `aquifer-saturated-thickness-m` | live |
-| `Depth to bedrock / aquifer base` | Depth to Bedrock / Aquifer Base (m bgl) | m bgl ¹ | monthly | line | groundwater-reserve: `depth-to-m-bgl` | withheld — shallower than the water table in 20 % of rows (the aquifer base cannot lie above the water table) |
-| `Dynamic (renewable) reserve` | Dynamic (renewable) Reserve (Mm³/year) | Mm³/year ¹ | annual | line | groundwater-reserve: `dynamic-renewable-reserve-mm3-year` | live |
-| `Groundwater storage coefficient` | Groundwater Storage Coefficient | — | annual | line | groundwater-reserve: `groundwater-storage-coefficient` | live |
-| `Permeability / hydraulic conductivity` | Permeability / Hydraulic Conductivity (m/day) | m/day ¹ | annual | line | groundwater-reserve: `permeability-hydraulic-conductivity-m-day` | live — with saturated thickness and transmissivity consistent with T = K × b (r = 0.83) |
-| `Porosity (total and effective)` | Porosity (total and Effective) (%) | % ¹ | annual | line | groundwater-reserve: `porosity-total-and-effective-pct` | live — r = 0.999 with specific yield (derived from it) |
-| `Specific storage` | Specific Storage | — | annual | line | groundwater-reserve: `specific-storage-specific-yield` | live |
-| `Specific yield` | Specific Yield | — | annual | line | groundwater-reserve: `specific-storage-specific-yield` | live |
-| `Static reserve volume` | Static Reserve Volume (Mm³) | Mm³ ¹ | annual | bar | groundwater-reserve: `static-reserve-volume-mm3` | live |
-| `Storage coefficient / storativity / specific yield` | Storage Coefficient / Storativity / Specific Yield | — | monthly | line | groundwater-reserve: `storage-coefficient-storativity-specific-yield` | withheld — an exact linear rescaling of the Specific yield column (r = 1.000) |
-| `Transmissivity` | Transmissivity (m²/day) | m²/day ¹ | annual | line | groundwater-reserve: `transmissivity-m2-day` | live |
-| `Depth to water table` | Depth to Water Table (m bgl) | m bgl ¹ | monthly | line | groundwater-reserve: `depth-to-m-bgl` | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series |
+| Column                                               | Label                                              | Unit       | Resolution | Chart | Group                                                                 | Status                                                                                                         |
+| ---------------------------------------------------- | -------------------------------------------------- | ---------- | ---------- | ----- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `Aquifer extent (map area)`                          | Aquifer Extent (map Area) (km²)                    | km² ¹      | annual     | line  | groundwater-reserve: `aquifer-extent-map-area-km2`                    | live — = the district's area (r = 0.9993 with 9_2 catchment area)                                              |
+| `Aquifer saturated thickness`                        | Aquifer Saturated Thickness (m)                    | m ¹        | annual     | line  | groundwater-reserve: `aquifer-saturated-thickness-m`                  | live                                                                                                           |
+| `Depth to bedrock / aquifer base`                    | Depth to Bedrock / Aquifer Base (m bgl)            | m bgl ¹    | monthly    | line  | groundwater-reserve: `depth-to-m-bgl`                                 | withheld — shallower than the water table in 20 % of rows (the aquifer base cannot lie above the water table)  |
+| `Dynamic (renewable) reserve`                        | Dynamic (renewable) Reserve (Mm³/year)             | Mm³/year ¹ | annual     | line  | groundwater-reserve: `dynamic-renewable-reserve-mm3-year`             | live                                                                                                           |
+| `Groundwater storage coefficient`                    | Groundwater Storage Coefficient                    | —          | annual     | line  | groundwater-reserve: `groundwater-storage-coefficient`                | live                                                                                                           |
+| `Permeability / hydraulic conductivity`              | Permeability / Hydraulic Conductivity (m/day)      | m/day ¹    | annual     | line  | groundwater-reserve: `permeability-hydraulic-conductivity-m-day`      | live — with saturated thickness and transmissivity consistent with T = K × b (r = 0.83)                        |
+| `Porosity (total and effective)`                     | Porosity (total and Effective) (%)                 | % ¹        | annual     | line  | groundwater-reserve: `porosity-total-and-effective-pct`               | live — r = 0.999 with specific yield (derived from it)                                                         |
+| `Specific storage`                                   | Specific Storage                                   | —          | annual     | line  | groundwater-reserve: `specific-storage-specific-yield`                | live                                                                                                           |
+| `Specific yield`                                     | Specific Yield                                     | —          | annual     | line  | groundwater-reserve: `specific-storage-specific-yield`                | live                                                                                                           |
+| `Static reserve volume`                              | Static Reserve Volume (Mm³)                        | Mm³ ¹      | annual     | bar   | groundwater-reserve: `static-reserve-volume-mm3`                      | live                                                                                                           |
+| `Storage coefficient / storativity / specific yield` | Storage Coefficient / Storativity / Specific Yield | —          | monthly    | line  | groundwater-reserve: `storage-coefficient-storativity-specific-yield` | withheld — an exact linear rescaling of the Specific yield column (r = 1.000)                                  |
+| `Transmissivity`                                     | Transmissivity (m²/day)                            | m²/day ¹   | annual     | line  | groundwater-reserve: `transmissivity-m2-day`                          | live                                                                                                           |
+| `Depth to water table`                               | Depth to Water Table (m bgl)                       | m bgl ¹    | monthly    | line  | groundwater-reserve: `depth-to-m-bgl`                                 | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series |
 
 <a id="recharge-and-discharge"></a>
+
 ## Recharge and Discharge · §11.2
 
 Table `11.2_recharge_and_discharge` · id `recharge-and-discharge` · monthly · pages: groundwater-reserve · 5 live, 1 withheld, 0 duplicate · keys: `id`, `district_name`, `province_name`, `year`, `month`, `date`
 
 **Groundwater-reserve page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Baseflow Discharge (m³/s) | `baseflow-discharge-m3-s` | m³/s | monthly | line | `Baseflow discharge` ★ |
-| Evapotranspiration (mm) | `evapotranspiration-mm` | mm | monthly | bar | `Evapotranspiration` ★ |
-| Spring Discharge (L/s) | `spring-discharge-l-s` | L/s | monthly | line | `Spring discharge` ★ |
-| Direct Recharge / Rainfall Infiltration (mm/year) | `direct-recharge-rainfall-infiltration-mm-year` | mm/year | annual | line | `Direct recharge` ★, `Rainfall infiltration` ★ |
-| Indirect Recharge (m³/year) | `indirect-recharge-m3-year` | m³/year | annual | bar | `Indirect recharge` ★ |
+| Chart group                                       | id                                              | Axis unit | Resolution | Chart | Columns (★ default)                            |
+| ------------------------------------------------- | ----------------------------------------------- | --------- | ---------- | ----- | ---------------------------------------------- |
+| Baseflow Discharge (m³/s)                         | `baseflow-discharge-m3-s`                       | m³/s      | monthly    | line  | `Baseflow discharge` ★                         |
+| Evapotranspiration (mm)                           | `evapotranspiration-mm`                         | mm        | monthly    | bar   | `Evapotranspiration` ★                         |
+| Spring Discharge (L/s)                            | `spring-discharge-l-s`                          | L/s       | monthly    | line  | `Spring discharge` ★                           |
+| Direct Recharge / Rainfall Infiltration (mm/year) | `direct-recharge-rainfall-infiltration-mm-year` | mm/year   | annual     | line  | `Direct recharge` ★, `Rainfall infiltration` ★ |
+| Indirect Recharge (m³/year)                       | `indirect-recharge-m3-year`                     | m³/year   | annual     | bar   | `Indirect recharge` ★                          |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Baseflow discharge` | Baseflow Discharge (m³/s) | m³/s ¹ | monthly | line | groundwater-reserve: `baseflow-discharge-m3-s` | withheld — impossible in its unit (m³/s, spec §11.2): City of Johannesburg averages 1 739 m³/s and Ekurhuleni 1 693 m³/s (rivers of a watershed); 321 district-months exceed 2 100 m³/s, the whole country's mean runoff (16_1 MAR ≈ 66 300 Mm³/year) |
-| `Evapotranspiration` | Evapotranspiration (mm) | mm ¹ | monthly | bar | groundwater-reserve: `evapotranspiration-mm` | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series |
-| `Spring discharge` | Spring Discharge (L/s) | L/s ¹ | monthly | line | groundwater-reserve: `spring-discharge-l-s` | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series |
-| `Direct recharge` | Direct Recharge (mm/year) | mm/year ¹ | annual | line | groundwater-reserve: `direct-recharge-rainfall-infiltration-mm-year` | live |
-| `Indirect recharge` | Indirect Recharge (m³/year) | m³/year ¹ | annual | bar | groundwater-reserve: `indirect-recharge-m3-year` | live |
-| `Rainfall infiltration` | Rainfall Infiltration (mm/year) | mm/year ¹ | annual | line | groundwater-reserve: `direct-recharge-rainfall-infiltration-mm-year` | live |
+| Column                  | Label                           | Unit      | Resolution | Chart | Group                                                                | Status                                                                                                                                                                                                                                                |
+| ----------------------- | ------------------------------- | --------- | ---------- | ----- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Baseflow discharge`    | Baseflow Discharge (m³/s)       | m³/s ¹    | monthly    | line  | groundwater-reserve: `baseflow-discharge-m3-s`                       | withheld — impossible in its unit (m³/s, spec §11.2): City of Johannesburg averages 1 739 m³/s and Ekurhuleni 1 693 m³/s (rivers of a watershed); 321 district-months exceed 2 100 m³/s, the whole country's mean runoff (16_1 MAR ≈ 66 300 Mm³/year) |
+| `Evapotranspiration`    | Evapotranspiration (mm)         | mm ¹      | monthly    | bar   | groundwater-reserve: `evapotranspiration-mm`                         | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series                                                                                                                                        |
+| `Spring discharge`      | Spring Discharge (L/s)          | L/s ¹     | monthly    | line  | groundwater-reserve: `spring-discharge-l-s`                          | live — City of Cape Town, Eden, iLembe, Nelson Mandela Bay, Overberg and West Coast share one identical series                                                                                                                                        |
+| `Direct recharge`       | Direct Recharge (mm/year)       | mm/year ¹ | annual     | line  | groundwater-reserve: `direct-recharge-rainfall-infiltration-mm-year` | live                                                                                                                                                                                                                                                  |
+| `Indirect recharge`     | Indirect Recharge (m³/year)     | m³/year ¹ | annual     | bar   | groundwater-reserve: `indirect-recharge-m3-year`                     | live                                                                                                                                                                                                                                                  |
+| `Rainfall infiltration` | Rainfall Infiltration (mm/year) | mm/year ¹ | annual     | line  | groundwater-reserve: `direct-recharge-rainfall-infiltration-mm-year` | live                                                                                                                                                                                                                                                  |
 
 <a id="aquifer-sustainability"></a>
+
 ## Aquifer Sustainability · §11.3
 
 Table `11.3_aquifer_sustainability` · id `aquifer-sustainability` · monthly · pages: groundwater-reserve · 6 live, 0 withheld, 0 duplicate · keys: `district_name`, `province_name`, `year`, `month`, `date`
 
 **Groundwater-reserve page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Water Quality For Use | `water-quality-for-use` | — | monthly | line | `Water quality for use` ★ |
-| Aquifer Depletion Rate (m/year) | `aquifer-depletion-rate-m-year` | m/year | annual | line | `Aquifer depletion rate` ★ |
-| Borehole Yield (m³/h) | `borehole-yield-m3-h` | m³/h | annual | line | `Borehole yield` ★ |
-| Exploitation Index (%) | `exploitation-index-pct` | % | annual | line | `Exploitation index` ★ |
-| Recharge Sensitivity | `recharge-sensitivity` | — | annual | line | `Recharge sensitivity` ★ |
-| Total Abstraction (m³/year) | `total-abstraction-m3-year` | m³/year | annual | bar | `Total abstraction` ★ |
+| Chart group                     | id                              | Axis unit | Resolution | Chart | Columns (★ default)        |
+| ------------------------------- | ------------------------------- | --------- | ---------- | ----- | -------------------------- |
+| Water Quality For Use           | `water-quality-for-use`         | —         | monthly    | line  | `Water quality for use` ★  |
+| Aquifer Depletion Rate (m/year) | `aquifer-depletion-rate-m-year` | m/year    | annual     | line  | `Aquifer depletion rate` ★ |
+| Borehole Yield (m³/h)           | `borehole-yield-m3-h`           | m³/h      | annual     | line  | `Borehole yield` ★         |
+| Exploitation Index (%)          | `exploitation-index-pct`        | %         | annual     | line  | `Exploitation index` ★     |
+| Recharge Sensitivity            | `recharge-sensitivity`          | —         | annual     | line  | `Recharge sensitivity` ★   |
+| Total Abstraction (m³/year)     | `total-abstraction-m3-year`     | m³/year   | annual     | bar   | `Total abstraction` ★      |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Water quality for use` | Water Quality For Use | — | monthly | line | groundwater-reserve: `water-quality-for-use` | live |
-| `Aquifer depletion rate` | Aquifer Depletion Rate (m/year) | m/year ¹ | annual | line | groundwater-reserve: `aquifer-depletion-rate-m-year` | live — three pairs of districts share one series (Nkangala = O.R.Tambo, Lejweleputswa = Xhariep, Umkhanyakude = Waterberg) |
-| `Borehole yield` | Borehole Yield (m³/h) | m³/h ¹ | annual | line | groundwater-reserve: `borehole-yield-m3-h` | live |
-| `Exploitation index` | Exploitation Index (%) | % ¹ | annual | line | groundwater-reserve: `exploitation-index-pct` | live — % (abstraction / recharge, spec §11.3); tracks Total abstraction / Indirect recharge (11.2) with r = 0.84 |
-| `Recharge sensitivity` | Recharge Sensitivity | — | annual | line | groundwater-reserve: `recharge-sensitivity` | live |
-| `Total abstraction` | Total Abstraction (m³/year) | m³/year ¹ | annual | bar | groundwater-reserve: `total-abstraction-m3-year` | live |
+| Column                   | Label                           | Unit      | Resolution | Chart | Group                                                | Status                                                                                                                     |
+| ------------------------ | ------------------------------- | --------- | ---------- | ----- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `Water quality for use`  | Water Quality For Use           | —         | monthly    | line  | groundwater-reserve: `water-quality-for-use`         | live                                                                                                                       |
+| `Aquifer depletion rate` | Aquifer Depletion Rate (m/year) | m/year ¹  | annual     | line  | groundwater-reserve: `aquifer-depletion-rate-m-year` | live — three pairs of districts share one series (Nkangala = O.R.Tambo, Lejweleputswa = Xhariep, Umkhanyakude = Waterberg) |
+| `Borehole yield`         | Borehole Yield (m³/h)           | m³/h ¹    | annual     | line  | groundwater-reserve: `borehole-yield-m3-h`           | live                                                                                                                       |
+| `Exploitation index`     | Exploitation Index (%)          | % ¹       | annual     | line  | groundwater-reserve: `exploitation-index-pct`        | live — % (abstraction / recharge, spec §11.3); tracks Total abstraction / Indirect recharge (11.2) with r = 0.84           |
+| `Recharge sensitivity`   | Recharge Sensitivity            | —         | annual     | line  | groundwater-reserve: `recharge-sensitivity`          | live                                                                                                                       |
+| `Total abstraction`      | Total Abstraction (m³/year)     | m³/year ¹ | annual     | bar   | groundwater-reserve: `total-abstraction-m3-year`     | live                                                                                                                       |
 
 <a id="physical-water-quality"></a>
+
 ## Physical Water Quality · §12.1
 
 Table `12.1_physical_water_quality_master` · id `physical-water-quality` · monthly · pages: water-quality · 7 live, 0 withheld, 0 duplicate · keys: `district_name`, `province_name`, `year`, `month`, `date`
 
 **Water-quality page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Temperature (°C) | `temperature-c` | °C | monthly | line | `Temperature` ★ |
-| Turbidity (NTU) | `turbidity-ntu` | NTU | monthly | line | `Turbidity` ★ |
-| Colour (Hazen) | `colour-hazen` | Hazen | monthly | line | `Colour` ★ |
-| Electrical Conductivity (EC) (mS/m) | `electrical-conductivity-ec-ms-m` | mS/m | monthly | line | `Electrical Conductivity (EC)` ★ |
-| Total (mg/L) | `total-mg-l` | mg/L | monthly | line | `Total Dissolved Solids (TDS)` ★, `Total Suspended Solids (TSS)` ★ |
-| Salinity (mg/L) | `salinity-mg-l` | mg/L | monthly | line | `Salinity` ★ |
+| Chart group                         | id                                | Axis unit | Resolution | Chart | Columns (★ default)                                                |
+| ----------------------------------- | --------------------------------- | --------- | ---------- | ----- | ------------------------------------------------------------------ |
+| Temperature (°C)                    | `temperature-c`                   | °C        | monthly    | line  | `Temperature` ★                                                    |
+| Turbidity (NTU)                     | `turbidity-ntu`                   | NTU       | monthly    | line  | `Turbidity` ★                                                      |
+| Colour (Hazen)                      | `colour-hazen`                    | Hazen     | monthly    | line  | `Colour` ★                                                         |
+| Electrical Conductivity (EC) (mS/m) | `electrical-conductivity-ec-ms-m` | mS/m      | monthly    | line  | `Electrical Conductivity (EC)` ★                                   |
+| Total (mg/L)                        | `total-mg-l`                      | mg/L      | monthly    | line  | `Total Dissolved Solids (TDS)` ★, `Total Suspended Solids (TSS)` ★ |
+| Salinity (mg/L)                     | `salinity-mg-l`                   | mg/L      | monthly    | line  | `Salinity` ★                                                       |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Temperature` | Temperature (°C) | °C ¹ | monthly | line | water-quality: `temperature-c` | live |
-| `Turbidity` | Turbidity (NTU) | NTU ¹ | monthly | line | water-quality: `turbidity-ntu` | live |
-| `Colour` | Colour (Hazen) | Hazen ¹ | monthly | line | water-quality: `colour-hazen` | live |
-| `Electrical Conductivity (EC)` | Electrical Conductivity (EC) (mS/m) | mS/m ¹ | monthly | line | water-quality: `electrical-conductivity-ec-ms-m` | live — TDS = 4.2–6.7 × EC in this table (r = 1.000), as expected for natural waters |
-| `Total Dissolved Solids (TDS)` | Total Dissolved Solids (TDS) (mg/L) | mg/L ¹ | monthly | line | water-quality: `total-mg-l` | live — = 4.2–6.7 × EC in this table (r = 1.000), as expected for natural waters |
-| `Total Suspended Solids (TSS)` | Total Suspended Solids (TSS) (mg/L) | mg/L ¹ | monthly | line | water-quality: `total-mg-l` | live |
-| `Salinity` | Salinity (mg/L) | mg/L ¹ | monthly | line | water-quality: `salinity-mg-l` | live |
+| Column                         | Label                               | Unit    | Resolution | Chart | Group                                            | Status                                                                              |
+| ------------------------------ | ----------------------------------- | ------- | ---------- | ----- | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| `Temperature`                  | Temperature (°C)                    | °C ¹    | monthly    | line  | water-quality: `temperature-c`                   | live                                                                                |
+| `Turbidity`                    | Turbidity (NTU)                     | NTU ¹   | monthly    | line  | water-quality: `turbidity-ntu`                   | live                                                                                |
+| `Colour`                       | Colour (Hazen)                      | Hazen ¹ | monthly    | line  | water-quality: `colour-hazen`                    | live                                                                                |
+| `Electrical Conductivity (EC)` | Electrical Conductivity (EC) (mS/m) | mS/m ¹  | monthly    | line  | water-quality: `electrical-conductivity-ec-ms-m` | live — TDS = 4.2–6.7 × EC in this table (r = 1.000), as expected for natural waters |
+| `Total Dissolved Solids (TDS)` | Total Dissolved Solids (TDS) (mg/L) | mg/L ¹  | monthly    | line  | water-quality: `total-mg-l`                      | live — = 4.2–6.7 × EC in this table (r = 1.000), as expected for natural waters     |
+| `Total Suspended Solids (TSS)` | Total Suspended Solids (TSS) (mg/L) | mg/L ¹  | monthly    | line  | water-quality: `total-mg-l`                      | live                                                                                |
+| `Salinity`                     | Salinity (mg/L)                     | mg/L ¹  | monthly    | line  | water-quality: `salinity-mg-l`                   | live                                                                                |
 
 <a id="chemical-water-quality"></a>
+
 ## Chemical Water Quality · §12.2
 
 Table `12.2_chemical_water_quality_master` · id `chemical-water-quality` · monthly · pages: water-quality · 16 live, 0 withheld, 0 duplicate · keys: `district_name`, `year`, `month`, `date`
 
 **Water-quality page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| pH | `ph` | — | monthly | line | `pH` ★ |
-| Dissolved Oxygen (DO) / BOD5 / COD / Ammonia (NH3-N) / Nitrate (NO3-N) / Nitrite (NO2-N) / Total Phosphorus (TP) / Orthophosphate (PO43-) / Iron/Manganese / TOC / Sulphate / Chloride / Fluoride (mg/L) | `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | mg/L | monthly | line | `Dissolved Oxygen (DO)` ★, `BOD5` ★, `COD` ★, `Ammonia (NH3-N)`, `Nitrate (NO3-N)`, `Nitrite (NO2-N)`, `Total Phosphorus (TP)`, `Orthophosphate (PO43-)`, `Iron/Manganese`, `TOC`, `Sulphate`, `Chloride`, `Fluoride` |
-| Lead/Cadmium/Chromium / Arsenic/Mercury (µg/L) | `lead-cadmium-chromium-arsenic-mercury-g-l` | µg/L | monthly | line | `Lead/Cadmium/Chromium` ★, `Arsenic/Mercury` ★ |
+| Chart group                                                                                                                                                                                              | id                                                                                                                                                                  | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                                                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| pH                                                                                                                                                                                                       | `ph`                                                                                                                                                                | —         | monthly    | line  | `pH` ★                                                                                                                                                                                                                |
+| Dissolved Oxygen (DO) / BOD5 / COD / Ammonia (NH3-N) / Nitrate (NO3-N) / Nitrite (NO2-N) / Total Phosphorus (TP) / Orthophosphate (PO43-) / Iron/Manganese / TOC / Sulphate / Chloride / Fluoride (mg/L) | `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | mg/L      | monthly    | line  | `Dissolved Oxygen (DO)` ★, `BOD5` ★, `COD` ★, `Ammonia (NH3-N)`, `Nitrate (NO3-N)`, `Nitrite (NO2-N)`, `Total Phosphorus (TP)`, `Orthophosphate (PO43-)`, `Iron/Manganese`, `TOC`, `Sulphate`, `Chloride`, `Fluoride` |
+| Lead/Cadmium/Chromium / Arsenic/Mercury (µg/L)                                                                                                                                                           | `lead-cadmium-chromium-arsenic-mercury-g-l`                                                                                                                         | µg/L      | monthly    | line  | `Lead/Cadmium/Chromium` ★, `Arsenic/Mercury` ★                                                                                                                                                                        |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `pH` | pH | — | monthly | line | water-quality: `ph` | live |
-| `Dissolved Oxygen (DO)` | Dissolved Oxygen (DO) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `BOD5` | BOD5 (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `COD` | COD (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Ammonia (NH3-N)` | Ammonia (NH3-N) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Nitrate (NO3-N)` | Nitrate (NO3-N) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Nitrite (NO2-N)` | Nitrite (NO2-N) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Total Phosphorus (TP)` | Total Phosphorus (TP) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Orthophosphate (PO43-)` | Orthophosphate (PO43-) (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Lead/Cadmium/Chromium` | Lead/Cadmium/Chromium (µg/L) | µg/L ¹ | monthly | line | water-quality: `lead-cadmium-chromium-arsenic-mercury-g-l` | live |
-| `Arsenic/Mercury` | Arsenic/Mercury (µg/L) | µg/L ¹ | monthly | line | water-quality: `lead-cadmium-chromium-arsenic-mercury-g-l` | live |
-| `Iron/Manganese` | Iron/Manganese (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `TOC` | TOC (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Sulphate` | Sulphate (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Chloride` | Chloride (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
-| `Fluoride` | Fluoride (mg/L) | mg/L ¹ | monthly | line | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live |
+| Column                   | Label                         | Unit   | Resolution | Chart | Group                                                                                                                                                                              | Status |
+| ------------------------ | ----------------------------- | ------ | ---------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| `pH`                     | pH                            | —      | monthly    | line  | water-quality: `ph`                                                                                                                                                                | live   |
+| `Dissolved Oxygen (DO)`  | Dissolved Oxygen (DO) (mg/L)  | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `BOD5`                   | BOD5 (mg/L)                   | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `COD`                    | COD (mg/L)                    | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Ammonia (NH3-N)`        | Ammonia (NH3-N) (mg/L)        | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Nitrate (NO3-N)`        | Nitrate (NO3-N) (mg/L)        | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Nitrite (NO2-N)`        | Nitrite (NO2-N) (mg/L)        | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Total Phosphorus (TP)`  | Total Phosphorus (TP) (mg/L)  | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Orthophosphate (PO43-)` | Orthophosphate (PO43-) (mg/L) | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Lead/Cadmium/Chromium`  | Lead/Cadmium/Chromium (µg/L)  | µg/L ¹ | monthly    | line  | water-quality: `lead-cadmium-chromium-arsenic-mercury-g-l`                                                                                                                         | live   |
+| `Arsenic/Mercury`        | Arsenic/Mercury (µg/L)        | µg/L ¹ | monthly    | line  | water-quality: `lead-cadmium-chromium-arsenic-mercury-g-l`                                                                                                                         | live   |
+| `Iron/Manganese`         | Iron/Manganese (mg/L)         | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `TOC`                    | TOC (mg/L)                    | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Sulphate`               | Sulphate (mg/L)               | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Chloride`               | Chloride (mg/L)               | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
+| `Fluoride`               | Fluoride (mg/L)               | mg/L ¹ | monthly    | line  | water-quality: `dissolved-oxygen-do-bod5-cod-ammonia-nh3-n-nitrate-no3-n-nitrite-no2-n-total-phosphorus-tp-orthophosphate-po43-iron-manganese-toc-sulphate-chloride-fluoride-mg-l` | live   |
 
 <a id="biological-water-quality"></a>
+
 ## Biological Water Quality · §12.3
 
 Table `12.3_biological_water_quality_master` · id `biological-water-quality` · monthly · pages: water-quality · 7 live, 0 withheld, 0 duplicate · keys: `district_name`, `year`, `month`, `date`
 
 **Water-quality page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| E. Coli / Total Coliforms (cfu/100 mL) | `e-coli-total-coliforms-cfu-100-ml` | cfu/100 mL | monthly | line | `E. coli` ★, `Total coliforms` ★ |
-| Chlorophyll-a / Microcystin (µg/L) | `chlorophyll-a-microcystin-g-l` | µg/L | monthly | line | `Chlorophyll-a` ★, `Microcystin` ★ |
-| Blue-green Algae (cells/mL) | `blue-green-algae-cells-ml` | cells/mL | monthly | line | `Blue-green algae` ★ |
-| Macroinvertebrate Index (SASS5) | `macroinvertebrate-index-sass5` | — | monthly | line | `Macroinvertebrate index (SASS5)` ★ |
-| Pathogens | `pathogens` | — | monthly | line | `Pathogens` ★ |
+| Chart group                            | id                                  | Axis unit  | Resolution | Chart | Columns (★ default)                 |
+| -------------------------------------- | ----------------------------------- | ---------- | ---------- | ----- | ----------------------------------- |
+| E. Coli / Total Coliforms (cfu/100 mL) | `e-coli-total-coliforms-cfu-100-ml` | cfu/100 mL | monthly    | line  | `E. coli` ★, `Total coliforms` ★    |
+| Chlorophyll-a / Microcystin (µg/L)     | `chlorophyll-a-microcystin-g-l`     | µg/L       | monthly    | line  | `Chlorophyll-a` ★, `Microcystin` ★  |
+| Blue-green Algae (cells/mL)            | `blue-green-algae-cells-ml`         | cells/mL   | monthly    | line  | `Blue-green algae` ★                |
+| Macroinvertebrate Index (SASS5)        | `macroinvertebrate-index-sass5`     | —          | monthly    | line  | `Macroinvertebrate index (SASS5)` ★ |
+| Pathogens                              | `pathogens`                         | —          | monthly    | line  | `Pathogens` ★                       |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `E. coli` | E. Coli (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | water-quality: `e-coli-total-coliforms-cfu-100-ml` | live |
-| `Total coliforms` | Total Coliforms (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | water-quality: `e-coli-total-coliforms-cfu-100-ml` | live |
-| `Chlorophyll-a` | Chlorophyll-a (µg/L) | µg/L ¹ | monthly | line | water-quality: `chlorophyll-a-microcystin-g-l` | live |
-| `Blue-green algae` | Blue-green Algae (cells/mL) | cells/mL ¹ | monthly | line | water-quality: `blue-green-algae-cells-ml` | live |
-| `Microcystin` | Microcystin (µg/L) | µg/L ¹ | monthly | line | water-quality: `chlorophyll-a-microcystin-g-l` | live |
-| `Macroinvertebrate index (SASS5)` | Macroinvertebrate Index (SASS5) | — | monthly | line | water-quality: `macroinvertebrate-index-sass5` | live |
-| `Pathogens` | Pathogens | — | monthly | line | water-quality: `pathogens` | live |
+| Column                            | Label                           | Unit         | Resolution | Chart | Group                                              | Status |
+| --------------------------------- | ------------------------------- | ------------ | ---------- | ----- | -------------------------------------------------- | ------ |
+| `E. coli`                         | E. Coli (cfu/100 mL)            | cfu/100 mL ¹ | monthly    | line  | water-quality: `e-coli-total-coliforms-cfu-100-ml` | live   |
+| `Total coliforms`                 | Total Coliforms (cfu/100 mL)    | cfu/100 mL ¹ | monthly    | line  | water-quality: `e-coli-total-coliforms-cfu-100-ml` | live   |
+| `Chlorophyll-a`                   | Chlorophyll-a (µg/L)            | µg/L ¹       | monthly    | line  | water-quality: `chlorophyll-a-microcystin-g-l`     | live   |
+| `Blue-green algae`                | Blue-green Algae (cells/mL)     | cells/mL ¹   | monthly    | line  | water-quality: `blue-green-algae-cells-ml`         | live   |
+| `Microcystin`                     | Microcystin (µg/L)              | µg/L ¹       | monthly    | line  | water-quality: `chlorophyll-a-microcystin-g-l`     | live   |
+| `Macroinvertebrate index (SASS5)` | Macroinvertebrate Index (SASS5) | —            | monthly    | line  | water-quality: `macroinvertebrate-index-sass5`     | live   |
+| `Pathogens`                       | Pathogens                       | —            | monthly    | line  | water-quality: `pathogens`                         | live   |
 
 <a id="sansa-water-quality"></a>
+
 ## SANSA Water Quality · §12.4
 
 Table `12.4_sansa_water_quality_master` · id `sansa-water-quality` · monthly · pages: water-quality · 5 live, 0 withheld, 0 duplicate · keys: `district_name`, `year`, `month`, `date`
 
 **Water-quality page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Turbidity | `turbidity` | — | monthly | line | `Turbidity` ★ |
-| Chlorophyll-a | `chlorophyll-a` | — | monthly | line | `Chlorophyll-a` ★ |
-| Cyanobacterial Bloom | `cyanobacterial-bloom` | — | monthly | line | `Cyanobacterial bloom` ★ |
-| CDOM | `cdom` | — | monthly | line | `CDOM` ★ |
-| Total Suspended Matter (TSM) | `total-suspended-matter-tsm` | — | monthly | line | `Total Suspended Matter (TSM)` ★ |
+| Chart group                  | id                           | Axis unit | Resolution | Chart | Columns (★ default)              |
+| ---------------------------- | ---------------------------- | --------- | ---------- | ----- | -------------------------------- |
+| Turbidity                    | `turbidity`                  | —         | monthly    | line  | `Turbidity` ★                    |
+| Chlorophyll-a                | `chlorophyll-a`              | —         | monthly    | line  | `Chlorophyll-a` ★                |
+| Cyanobacterial Bloom         | `cyanobacterial-bloom`       | —         | monthly    | line  | `Cyanobacterial bloom` ★         |
+| CDOM                         | `cdom`                       | —         | monthly    | line  | `CDOM` ★                         |
+| Total Suspended Matter (TSM) | `total-suspended-matter-tsm` | —         | monthly    | line  | `Total Suspended Matter (TSM)` ★ |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Turbidity` | Turbidity | — | monthly | line | water-quality: `turbidity` | live |
-| `Chlorophyll-a` | Chlorophyll-a | — | monthly | line | water-quality: `chlorophyll-a` | live |
-| `Cyanobacterial bloom` | Cyanobacterial Bloom | — | monthly | line | water-quality: `cyanobacterial-bloom` | live |
-| `CDOM` | CDOM | — | monthly | line | water-quality: `cdom` | live |
-| `Total Suspended Matter (TSM)` | Total Suspended Matter (TSM) | — | monthly | line | water-quality: `total-suspended-matter-tsm` | live |
+| Column                         | Label                        | Unit | Resolution | Chart | Group                                       | Status |
+| ------------------------------ | ---------------------------- | ---- | ---------- | ----- | ------------------------------------------- | ------ |
+| `Turbidity`                    | Turbidity                    | —    | monthly    | line  | water-quality: `turbidity`                  | live   |
+| `Chlorophyll-a`                | Chlorophyll-a                | —    | monthly    | line  | water-quality: `chlorophyll-a`              | live   |
+| `Cyanobacterial bloom`         | Cyanobacterial Bloom         | —    | monthly    | line  | water-quality: `cyanobacterial-bloom`       | live   |
+| `CDOM`                         | CDOM                         | —    | monthly    | line  | water-quality: `cdom`                       | live   |
+| `Total Suspended Matter (TSM)` | Total Suspended Matter (TSM) | —    | monthly    | line  | water-quality: `total-suspended-matter-tsm` | live   |
 
 <a id="wastewater-effluent-quality"></a>
+
 ## Wastewater Effluent Quality · §13.1
 
 Table `13.1_wastewater_effluent_quality_master` · id `wastewater-effluent-quality` · monthly · pages: green-drop · 11 live, 4 withheld, 0 duplicate · keys: `district_name`, `shapeID`, `year`, `month`
 
 **Green-drop page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Temperature (°C) | `temperature-c` | °C | monthly | line | `temperature` ★ |
-| Turbidity (NTU) | `turbidity-ntu` | NTU | monthly | line | `turbidity` ★ |
-| EC Salinity (mS/m) | `ec-salinity-ms-m` | mS/m | monthly | line | `ec_salinity` ★ |
-| TSS / DO / BOD5 / COD / Ammonia NH3 N (mg/L) | `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | mg/L | monthly | line | `tss` ★, `do`, `BOD5`, `COD`, `Ammonia_NH3_N` ★ |
-| pH | `ph` | — | monthly | line | `ph` ★ |
-| Total (mg/L) | `total-mg-l` | mg/L | monthly | line | `Total_Inorganic_Nitrogen` ★, `Total_Phosphorus` ★ |
-| Heavy Metals (µg/L) | `heavy-metals-g-l` | µg/L | monthly | line | `Heavy_Metals` ★ |
-| E Coli / Faecal Coliforms (cfu/100 mL) | `e-coli-faecal-coliforms-cfu-100-ml` | cfu/100 mL | monthly | line | `E_coli` ★, `Faecal_coliforms` ★ |
-| Helminth Eggs (eggs/L) | `helminth-eggs-eggs-l` | eggs/L | monthly | line | `Helminth_eggs` ★ |
+| Chart group                                  | id                                   | Axis unit  | Resolution | Chart | Columns (★ default)                                |
+| -------------------------------------------- | ------------------------------------ | ---------- | ---------- | ----- | -------------------------------------------------- |
+| Temperature (°C)                             | `temperature-c`                      | °C         | monthly    | line  | `temperature` ★                                    |
+| Turbidity (NTU)                              | `turbidity-ntu`                      | NTU        | monthly    | line  | `turbidity` ★                                      |
+| EC Salinity (mS/m)                           | `ec-salinity-ms-m`                   | mS/m       | monthly    | line  | `ec_salinity` ★                                    |
+| TSS / DO / BOD5 / COD / Ammonia NH3 N (mg/L) | `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | mg/L       | monthly    | line  | `tss` ★, `do`, `BOD5`, `COD`, `Ammonia_NH3_N` ★    |
+| pH                                           | `ph`                                 | —          | monthly    | line  | `ph` ★                                             |
+| Total (mg/L)                                 | `total-mg-l`                         | mg/L       | monthly    | line  | `Total_Inorganic_Nitrogen` ★, `Total_Phosphorus` ★ |
+| Heavy Metals (µg/L)                          | `heavy-metals-g-l`                   | µg/L       | monthly    | line  | `Heavy_Metals` ★                                   |
+| E Coli / Faecal Coliforms (cfu/100 mL)       | `e-coli-faecal-coliforms-cfu-100-ml` | cfu/100 mL | monthly    | line  | `E_coli` ★, `Faecal_coliforms` ★                   |
+| Helminth Eggs (eggs/L)                       | `helminth-eggs-eggs-l`               | eggs/L     | monthly    | line  | `Helminth_eggs` ★                                  |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `temperature` | Temperature (°C) | °C ¹ | monthly | line | green-drop: `temperature-c` | live |
-| `turbidity` | Turbidity (NTU) | NTU ¹ | monthly | line | green-drop: `turbidity-ntu` | live |
-| `ec_salinity` | EC Salinity (mS/m) | mS/m ¹ | monthly | line | green-drop: `ec-salinity-ms-m` | live |
-| `tss` | TSS (mg/L) | mg/L ¹ | monthly | line | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | live |
-| `ph` | pH | — | monthly | line | green-drop: `ph` | withheld — impossible values: pH below 4 in all 16 744 rows (−0.54 to 3.33, negative in 8), where treated effluent is pH 6–9 (SA general limit 5.5–9.5) |
-| `do` | DO (mg/L) | mg/L ¹ | monthly | line | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — impossible values: dissolved oxygen negative in 16 742 of 16 744 rows (−1.20 to 1.90 mg/L) |
-| `BOD5` | BOD5 (mg/L) | mg/L ¹ | monthly | line | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — COD is below BOD₅ in 16 727 of 16 744 rows; COD ≥ BOD₅ by definition, so at least one of the two is wrong |
-| `COD` | COD (mg/L) | mg/L ¹ | monthly | line | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — below BOD₅ in 16 727 of 16 744 rows; COD ≥ BOD₅ by definition, so at least one of the two is wrong |
-| `Ammonia_NH3_N` | Ammonia NH3 N (mg/L) | mg/L ¹ | monthly | line | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | live — Values below 0 are not served: a concentration cannot be negative (2 of 16 744 rows) |
-| `Total_Inorganic_Nitrogen` | Total Inorganic Nitrogen (mg/L) | mg/L ¹ | monthly | line | green-drop: `total-mg-l` | live |
-| `Total_Phosphorus` | Total Phosphorus (mg/L) | mg/L ¹ | monthly | line | green-drop: `total-mg-l` | live |
-| `Heavy_Metals` | Heavy Metals (µg/L) | µg/L ¹ | monthly | line | green-drop: `heavy-metals-g-l` | live |
-| `E_coli` | E Coli (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | green-drop: `e-coli-faecal-coliforms-cfu-100-ml` | live |
-| `Faecal_coliforms` | Faecal Coliforms (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | green-drop: `e-coli-faecal-coliforms-cfu-100-ml` | live |
-| `Helminth_eggs` | Helminth Eggs (eggs/L) | eggs/L ¹ | monthly | line | green-drop: `helminth-eggs-eggs-l` | live |
+| Column                     | Label                           | Unit         | Resolution | Chart | Group                                            | Status                                                                                                                                                  |
+| -------------------------- | ------------------------------- | ------------ | ---------- | ----- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `temperature`              | Temperature (°C)                | °C ¹         | monthly    | line  | green-drop: `temperature-c`                      | live                                                                                                                                                    |
+| `turbidity`                | Turbidity (NTU)                 | NTU ¹        | monthly    | line  | green-drop: `turbidity-ntu`                      | live                                                                                                                                                    |
+| `ec_salinity`              | EC Salinity (mS/m)              | mS/m ¹       | monthly    | line  | green-drop: `ec-salinity-ms-m`                   | live                                                                                                                                                    |
+| `tss`                      | TSS (mg/L)                      | mg/L ¹       | monthly    | line  | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | live                                                                                                                                                    |
+| `ph`                       | pH                              | —            | monthly    | line  | green-drop: `ph`                                 | withheld — impossible values: pH below 4 in all 16 744 rows (−0.54 to 3.33, negative in 8), where treated effluent is pH 6–9 (SA general limit 5.5–9.5) |
+| `do`                       | DO (mg/L)                       | mg/L ¹       | monthly    | line  | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — impossible values: dissolved oxygen negative in 16 742 of 16 744 rows (−1.20 to 1.90 mg/L)                                                   |
+| `BOD5`                     | BOD5 (mg/L)                     | mg/L ¹       | monthly    | line  | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — COD is below BOD₅ in 16 727 of 16 744 rows; COD ≥ BOD₅ by definition, so at least one of the two is wrong                                    |
+| `COD`                      | COD (mg/L)                      | mg/L ¹       | monthly    | line  | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | withheld — below BOD₅ in 16 727 of 16 744 rows; COD ≥ BOD₅ by definition, so at least one of the two is wrong                                           |
+| `Ammonia_NH3_N`            | Ammonia NH3 N (mg/L)            | mg/L ¹       | monthly    | line  | green-drop: `tss-do-bod5-cod-ammonia-nh3-n-mg-l` | live — Values below 0 are not served: a concentration cannot be negative (2 of 16 744 rows)                                                             |
+| `Total_Inorganic_Nitrogen` | Total Inorganic Nitrogen (mg/L) | mg/L ¹       | monthly    | line  | green-drop: `total-mg-l`                         | live                                                                                                                                                    |
+| `Total_Phosphorus`         | Total Phosphorus (mg/L)         | mg/L ¹       | monthly    | line  | green-drop: `total-mg-l`                         | live                                                                                                                                                    |
+| `Heavy_Metals`             | Heavy Metals (µg/L)             | µg/L ¹       | monthly    | line  | green-drop: `heavy-metals-g-l`                   | live                                                                                                                                                    |
+| `E_coli`                   | E Coli (cfu/100 mL)             | cfu/100 mL ¹ | monthly    | line  | green-drop: `e-coli-faecal-coliforms-cfu-100-ml` | live                                                                                                                                                    |
+| `Faecal_coliforms`         | Faecal Coliforms (cfu/100 mL)   | cfu/100 mL ¹ | monthly    | line  | green-drop: `e-coli-faecal-coliforms-cfu-100-ml` | live                                                                                                                                                    |
+| `Helminth_eggs`            | Helminth Eggs (eggs/L)          | eggs/L ¹     | monthly    | line  | green-drop: `helminth-eggs-eggs-l`               | live                                                                                                                                                    |
 
 <a id="wwtw-operational"></a>
+
 ## WWTW Operational · §13.2
 
 Table `13.2_WWTW_operational_master` · id `wwtw-operational` · monthly · pages: green-drop · 7 live, 1 withheld, 0 duplicate · keys: `district_name`, `shapeID`, `year`, `month`, `system:index`, `.geo`
 
 **Green-drop page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Chlorine Dosing (mg/L) | `chlorine-dosing-mg-l` | mg/L | monthly | line | `chlorine_dosing` ★ |
-| Design Capacity / Inflow Infiltration / Influent Flow Rate / Sludge Production (m³/day) | `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | m³/day | monthly | bar | `design_capacity` ★, `inflow_infiltration` ★, `influent_flow_rate` ★, `sludge_production` |
-| Hydraulic Loading Rate (%) | `hydraulic-loading-rate-pct` | % | monthly | line | `hydraulic_loading_rate` ★ |
-| Hydraulic Retention Time (h) | `hydraulic-retention-time-h` | h | monthly | line | `hydraulic_retention_time` ★ |
-| Power Consumption (kWh/day) | `power-consumption-kwh-day` | kWh/day | monthly | line | `power_consumption` ★ |
+| Chart group                                                                             | id                                                                                | Axis unit | Resolution | Chart | Columns (★ default)                                                                       |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- | ---------- | ----- | ----------------------------------------------------------------------------------------- |
+| Chlorine Dosing (mg/L)                                                                  | `chlorine-dosing-mg-l`                                                            | mg/L      | monthly    | line  | `chlorine_dosing` ★                                                                       |
+| Design Capacity / Inflow Infiltration / Influent Flow Rate / Sludge Production (m³/day) | `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | m³/day    | monthly    | bar   | `design_capacity` ★, `inflow_infiltration` ★, `influent_flow_rate` ★, `sludge_production` |
+| Hydraulic Loading Rate (%)                                                              | `hydraulic-loading-rate-pct`                                                      | %         | monthly    | line  | `hydraulic_loading_rate` ★                                                                |
+| Hydraulic Retention Time (h)                                                            | `hydraulic-retention-time-h`                                                      | h         | monthly    | line  | `hydraulic_retention_time` ★                                                              |
+| Power Consumption (kWh/day)                                                             | `power-consumption-kwh-day`                                                       | kWh/day   | monthly    | line  | `power_consumption` ★                                                                     |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `chlorine_dosing` | Chlorine Dosing (mg/L) | mg/L ¹ | monthly | line | green-drop: `chlorine-dosing-mg-l` | withheld — one value (2.5) in every row, identical in all 52 districts |
-| `design_capacity` | Design Capacity (m³/day) | m³/day ¹ | monthly | bar | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live |
-| `hydraulic_loading_rate` | Hydraulic Loading Rate (%) | % ¹ | monthly | line | green-drop: `hydraulic-loading-rate-pct` | live |
-| `hydraulic_retention_time` | Hydraulic Retention Time (h) | h ¹ | monthly | line | green-drop: `hydraulic-retention-time-h` | live |
-| `inflow_infiltration` | Inflow Infiltration (m³/day) | m³/day ¹ | monthly | bar | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live |
-| `influent_flow_rate` | Influent Flow Rate (m³/day) | m³/day ¹ | monthly | bar | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live |
-| `power_consumption` | Power Consumption (kWh/day) | kWh/day ¹ | monthly | line | green-drop: `power-consumption-kwh-day` | live |
-| `sludge_production` | Sludge Production (m³/day) | m³/day ¹ | monthly | bar | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live |
+| Column                     | Label                        | Unit      | Resolution | Chart | Group                                                                                         | Status                                                                 |
+| -------------------------- | ---------------------------- | --------- | ---------- | ----- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `chlorine_dosing`          | Chlorine Dosing (mg/L)       | mg/L ¹    | monthly    | line  | green-drop: `chlorine-dosing-mg-l`                                                            | withheld — one value (2.5) in every row, identical in all 52 districts |
+| `design_capacity`          | Design Capacity (m³/day)     | m³/day ¹  | monthly    | bar   | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live                                                                   |
+| `hydraulic_loading_rate`   | Hydraulic Loading Rate (%)   | % ¹       | monthly    | line  | green-drop: `hydraulic-loading-rate-pct`                                                      | live                                                                   |
+| `hydraulic_retention_time` | Hydraulic Retention Time (h) | h ¹       | monthly    | line  | green-drop: `hydraulic-retention-time-h`                                                      | live                                                                   |
+| `inflow_infiltration`      | Inflow Infiltration (m³/day) | m³/day ¹  | monthly    | bar   | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live                                                                   |
+| `influent_flow_rate`       | Influent Flow Rate (m³/day)  | m³/day ¹  | monthly    | bar   | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live                                                                   |
+| `power_consumption`        | Power Consumption (kWh/day)  | kWh/day ¹ | monthly    | line  | green-drop: `power-consumption-kwh-day`                                                       | live                                                                   |
+| `sludge_production`        | Sludge Production (m³/day)   | m³/day ¹  | monthly    | bar   | green-drop: `design-capacity-inflow-infiltration-influent-flow-rate-sludge-production-m3-day` | live                                                                   |
 
 <a id="meteorological-variables-saws-for-wwtw-compliance"></a>
+
 ## Meteorological Variables (SAWS) For WWTW Compliance · §13.3
 
 Table `13.3_meteorological_variables_(SAWS)_for_WWTW_Compliance_master` · id `meteorological-variables-saws-for-wwtw-compliance` · monthly · pages: green-drop · 0 live, 4 withheld, 0 duplicate · keys: `date`, `district_name`, `year`, `month`, `source`
 
 **Green-drop page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Rainfall / Evaporation (mm) | `rainfall-evaporation-mm` | mm | monthly | bar | `Rainfall_mm` ★, `Evaporation_mm` ★ |
-| Flood Events Proxy | `flood-events-proxy` | — | monthly | line | `Flood_events_proxy` ★ |
-| Temperature (°C) | `temperature-c` | °C | monthly | line | `Temperature_C` ★ |
+| Chart group                 | id                        | Axis unit | Resolution | Chart | Columns (★ default)                 |
+| --------------------------- | ------------------------- | --------- | ---------- | ----- | ----------------------------------- |
+| Rainfall / Evaporation (mm) | `rainfall-evaporation-mm` | mm        | monthly    | bar   | `Rainfall_mm` ★, `Evaporation_mm` ★ |
+| Flood Events Proxy          | `flood-events-proxy`      | —         | monthly    | line  | `Flood_events_proxy` ★              |
+| Temperature (°C)            | `temperature-c`           | °C        | monthly    | line  | `Temperature_C` ★                   |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Rainfall_mm` | Rainfall (mm) | mm | monthly | bar | green-drop: `rainfall-evaporation-mm` | withheld — one value (45 mm) in every row, identical in all 52 districts |
-| `Flood_events_proxy` | Flood Events Proxy | — | monthly | line | green-drop: `flood-events-proxy` | withheld — one value (5.4) in every row, identical in all 52 districts |
-| `Temperature_C` | Temperature (°C) | °C | monthly | line | green-drop: `temperature-c` | withheld — one value (20 °C) in every row, identical in all 52 districts |
-| `Evaporation_mm` | Evaporation (mm) | mm | monthly | bar | green-drop: `rainfall-evaporation-mm` | withheld — one value (100 mm) in every row, identical in all 52 districts |
+| Column               | Label              | Unit | Resolution | Chart | Group                                 | Status                                                                    |
+| -------------------- | ------------------ | ---- | ---------- | ----- | ------------------------------------- | ------------------------------------------------------------------------- |
+| `Rainfall_mm`        | Rainfall (mm)      | mm   | monthly    | bar   | green-drop: `rainfall-evaporation-mm` | withheld — one value (45 mm) in every row, identical in all 52 districts  |
+| `Flood_events_proxy` | Flood Events Proxy | —    | monthly    | line  | green-drop: `flood-events-proxy`      | withheld — one value (5.4) in every row, identical in all 52 districts    |
+| `Temperature_C`      | Temperature (°C)   | °C   | monthly    | line  | green-drop: `temperature-c`           | withheld — one value (20 °C) in every row, identical in all 52 districts  |
+| `Evaporation_mm`     | Evaporation (mm)   | mm   | monthly    | bar   | green-drop: `rainfall-evaporation-mm` | withheld — one value (100 mm) in every row, identical in all 52 districts |
 
 <a id="sans-241-compliance"></a>
+
 ## SANS 241 Compliance · §14.1
 
 Table `14.1_SANS_241_compliance_master` · id `sans-241-compliance` · monthly · pages: blue-drop · 6 live, 23 withheld, 0 duplicate · keys: `district_name`, `shapeID`, `year`, `month`, `Turbidity_Category`, `Turbidity_Parameter`, `Turbidity_Limit`, `Turbidity_Class`, `Turbidity_Source`, `Colour_Category`, `Colour_Parameter`, `Colour_Limit`, `Colour_Class`, `Colour_Source`, `Temperature_Category`, `Temperature_Parameter`, `Temperature_Limit`, `Temperature_Class`, `Temperature_Source`, `E_coli_Category`, `E_coli_Parameter`, `E_coli_Limit`, `E_coli_Class`, `E_coli_Source`, `Total_Coliforms_Category`, `Total_Coliforms_Parameter`, `Total_Coliforms_Limit`, `Total_Coliforms_Class`, `Total_Coliforms_Source`, `pH_Category`, `pH_Parameter`, `pH_Limit`, `pH_Class`, `pH_Source`, `EC_Category`, `EC_Parameter`, `EC_Limit`, `EC_Class`, `EC_Source`, `Free_Chlorine_Category`, `Free_Chlorine_Parameter`, `Free_Chlorine_Limit`, `Free_Chlorine_Class`, `Free_Chlorine_Source`, `Nitrate_Category`, `Nitrate_Parameter`, `Nitrate_Limit`, `Nitrate_Class`, `Nitrate_Source`, `Fluoride_Category`, `Fluoride_Parameter`, `Fluoride_Limit`, `Fluoride_Class`, `Fluoride_Source`, `Arsenic_Category`, `Arsenic_Parameter`, `Arsenic_Limit`, `Arsenic_Class`, `Arsenic_Source`, `Lead_Category`, `Lead_Parameter`, `Lead_Limit`, `Lead_Class`, `Lead_Source`, `Cyanide_Category`, `Cyanide_Parameter`, `Cyanide_Limit`, `Cyanide_Class`, `Cyanide_Source`, `Total_THMs_Category`, `Total_THMs_Parameter`, `Total_THMs_Limit`, `Total_THMs_Class`, `Total_THMs_Source`
 
 **Blue-drop page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Turbidity Value (NTU) | `turbidity-value-ntu` | NTU | monthly | line | `Turbidity_Value` ★ |
-| Turbidity Compliant / Colour Compliant / Temperature Compliant / E Coli Compliant / pH Compliant / EC Compliant / Free Chlorine Compliant / Nitrate Compliant / Fluoride Compliant / Arsenic Compliant / Lead Compliant / Cyanide Compliant (%) | `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | % | monthly | line | `Turbidity_Compliant` ★, `Colour_Compliant` ★, `Temperature_Compliant` ★, `E_coli_Compliant`, `pH_Compliant`, `EC_Compliant`, `Free_Chlorine_Compliant`, `Nitrate_Compliant`, `Fluoride_Compliant`, `Arsenic_Compliant`, `Lead_Compliant`, `Cyanide_Compliant` |
-| Colour Value (TCU) | `colour-value-tcu` | TCU | monthly | line | `Colour_Value` ★ |
-| Temperature Value (°C) | `temperature-value-c` | °C | monthly | line | `Temperature_Value` ★ |
-| E Coli Value / Total Coliforms Value (cfu/100 mL) | `e-coli-value-total-coliforms-value-cfu-100-ml` | cfu/100 mL | monthly | line | `E_coli_Value`, `Total_Coliforms_Value` ★ |
-| Total (%) | `total-pct` | % | monthly | line | `Total_Coliforms_Compliant` ★, `Total_THMs_Compliant` ★ |
-| pH Value | `ph-value` | — | monthly | line | `pH_Value` ★ |
-| EC Value (mS/m) | `ec-value-ms-m` | mS/m | monthly | line | `EC_Value` ★ |
-| Free Chlorine Value / Nitrate Value / Fluoride Value / Arsenic Value / Lead Value / Cyanide Value / Total THMs Value (mg/L) | `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | mg/L | monthly | line | `Free_Chlorine_Value`, `Nitrate_Value` ★, `Fluoride_Value` ★, `Arsenic_Value` ★, `Lead_Value`, `Cyanide_Value`, `Total_THMs_Value` |
-| SANS 241 Compliance Score | `sans-241-compliance-score` | — | monthly | line | `SANS_241_Compliance_Score` ★ |
+| Chart group                                                                                                                                                                                                                                     | id                                                                                                                                                                                                                          | Axis unit  | Resolution | Chart | Columns (★ default)                                                                                                                                                                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Turbidity Value (NTU)                                                                                                                                                                                                                           | `turbidity-value-ntu`                                                                                                                                                                                                       | NTU        | monthly    | line  | `Turbidity_Value` ★                                                                                                                                                                                                                                            |
+| Turbidity Compliant / Colour Compliant / Temperature Compliant / E Coli Compliant / pH Compliant / EC Compliant / Free Chlorine Compliant / Nitrate Compliant / Fluoride Compliant / Arsenic Compliant / Lead Compliant / Cyanide Compliant (%) | `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | %          | monthly    | line  | `Turbidity_Compliant` ★, `Colour_Compliant` ★, `Temperature_Compliant` ★, `E_coli_Compliant`, `pH_Compliant`, `EC_Compliant`, `Free_Chlorine_Compliant`, `Nitrate_Compliant`, `Fluoride_Compliant`, `Arsenic_Compliant`, `Lead_Compliant`, `Cyanide_Compliant` |
+| Colour Value (TCU)                                                                                                                                                                                                                              | `colour-value-tcu`                                                                                                                                                                                                          | TCU        | monthly    | line  | `Colour_Value` ★                                                                                                                                                                                                                                               |
+| Temperature Value (°C)                                                                                                                                                                                                                          | `temperature-value-c`                                                                                                                                                                                                       | °C         | monthly    | line  | `Temperature_Value` ★                                                                                                                                                                                                                                          |
+| E Coli Value / Total Coliforms Value (cfu/100 mL)                                                                                                                                                                                               | `e-coli-value-total-coliforms-value-cfu-100-ml`                                                                                                                                                                             | cfu/100 mL | monthly    | line  | `E_coli_Value`, `Total_Coliforms_Value` ★                                                                                                                                                                                                                      |
+| Total (%)                                                                                                                                                                                                                                       | `total-pct`                                                                                                                                                                                                                 | %          | monthly    | line  | `Total_Coliforms_Compliant` ★, `Total_THMs_Compliant` ★                                                                                                                                                                                                        |
+| pH Value                                                                                                                                                                                                                                        | `ph-value`                                                                                                                                                                                                                  | —          | monthly    | line  | `pH_Value` ★                                                                                                                                                                                                                                                   |
+| EC Value (mS/m)                                                                                                                                                                                                                                 | `ec-value-ms-m`                                                                                                                                                                                                             | mS/m       | monthly    | line  | `EC_Value` ★                                                                                                                                                                                                                                                   |
+| Free Chlorine Value / Nitrate Value / Fluoride Value / Arsenic Value / Lead Value / Cyanide Value / Total THMs Value (mg/L)                                                                                                                     | `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | mg/L       | monthly    | line  | `Free_Chlorine_Value`, `Nitrate_Value` ★, `Fluoride_Value` ★, `Arsenic_Value` ★, `Lead_Value`, `Cyanide_Value`, `Total_THMs_Value`                                                                                                                             |
+| SANS 241 Compliance Score                                                                                                                                                                                                                       | `sans-241-compliance-score`                                                                                                                                                                                                 | —          | monthly    | line  | `SANS_241_Compliance_Score` ★                                                                                                                                                                                                                                  |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Turbidity_Value` | Turbidity Value (NTU) | NTU ¹ | monthly | line | blue-drop: `turbidity-value-ntu` | withheld — identical to 13.1 turbidity (wastewater effluent) in all 16 744 district-months |
-| `Turbidity_Compliant` | Turbidity Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Colour_Value` | Colour Value (TCU) | TCU ¹ | monthly | line | blue-drop: `colour-value-tcu` | live |
-| `Colour_Compliant` | Colour Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Temperature_Value` | Temperature Value (°C) | °C ¹ | monthly | line | blue-drop: `temperature-value-c` | withheld — identical to 13.1 temperature (wastewater effluent) in all 16 744 district-months |
-| `Temperature_Compliant` | Temperature Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `E_coli_Value` | E Coli Value (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | blue-drop: `e-coli-value-total-coliforms-value-cfu-100-ml` | withheld — identical to 13.1 E_coli (wastewater effluent) in all 16 744 district-months |
-| `E_coli_Compliant` | E Coli Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Total_Coliforms_Value` | Total Coliforms Value (cfu/100 mL) | cfu/100 mL ¹ | monthly | line | blue-drop: `e-coli-value-total-coliforms-value-cfu-100-ml` | live |
-| `Total_Coliforms_Compliant` | Total Coliforms Compliant (%) | % ¹ | monthly | line | blue-drop: `total-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `pH_Value` | pH Value | — | monthly | line | blue-drop: `ph-value` | withheld — identical to 13.1 ph (wastewater effluent) in all 16 744 district-months; pH from −0.54 to 3.33 is impossible |
-| `pH_Compliant` | pH Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `EC_Value` | EC Value (mS/m) | mS/m ¹ | monthly | line | blue-drop: `ec-value-ms-m` | withheld — identical to 13.1 ec_salinity (wastewater effluent) in all 16 744 district-months |
-| `EC_Compliant` | EC Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Free_Chlorine_Value` | Free Chlorine Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | withheld — one value (1.8 mg/L) in every row, identical in all 52 districts |
-| `Free_Chlorine_Compliant` | Free Chlorine Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Nitrate_Value` | Nitrate Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | live |
-| `Nitrate_Compliant` | Nitrate Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Fluoride_Value` | Fluoride Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | live |
-| `Fluoride_Compliant` | Fluoride Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Arsenic_Value` | Arsenic Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | live |
-| `Arsenic_Compliant` | Arsenic Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Lead_Value` | Lead Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000) |
-| `Lead_Compliant` | Lead Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Cyanide_Value` | Cyanide Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000) |
-| `Cyanide_Compliant` | Cyanide Compliant (%) | % ¹ | monthly | line | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `Total_THMs_Value` | Total THMs Value (mg/L) | mg/L ¹ | monthly | line | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l` | live |
-| `Total_THMs_Compliant` | Total THMs Compliant (%) | % ¹ | monthly | line | blue-drop: `total-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included) |
-| `SANS_241_Compliance_Score` | SANS 241 Compliance Score | — | monthly | line | blue-drop: `sans-241-compliance-score` | withheld — a score computed from the compliance flags, which judge values copied from 13.1 wastewater effluent (impossible pH included) |
+| Column                      | Label                              | Unit         | Resolution | Chart | Group                                                                                                                                                                                                                                  | Status                                                                                                                                  |
+| --------------------------- | ---------------------------------- | ------------ | ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `Turbidity_Value`           | Turbidity Value (NTU)              | NTU ¹        | monthly    | line  | blue-drop: `turbidity-value-ntu`                                                                                                                                                                                                       | withheld — identical to 13.1 turbidity (wastewater effluent) in all 16 744 district-months                                              |
+| `Turbidity_Compliant`       | Turbidity Compliant (%)            | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Colour_Value`              | Colour Value (TCU)                 | TCU ¹        | monthly    | line  | blue-drop: `colour-value-tcu`                                                                                                                                                                                                          | live                                                                                                                                    |
+| `Colour_Compliant`          | Colour Compliant (%)               | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Temperature_Value`         | Temperature Value (°C)             | °C ¹         | monthly    | line  | blue-drop: `temperature-value-c`                                                                                                                                                                                                       | withheld — identical to 13.1 temperature (wastewater effluent) in all 16 744 district-months                                            |
+| `Temperature_Compliant`     | Temperature Compliant (%)          | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `E_coli_Value`              | E Coli Value (cfu/100 mL)          | cfu/100 mL ¹ | monthly    | line  | blue-drop: `e-coli-value-total-coliforms-value-cfu-100-ml`                                                                                                                                                                             | withheld — identical to 13.1 E_coli (wastewater effluent) in all 16 744 district-months                                                 |
+| `E_coli_Compliant`          | E Coli Compliant (%)               | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Total_Coliforms_Value`     | Total Coliforms Value (cfu/100 mL) | cfu/100 mL ¹ | monthly    | line  | blue-drop: `e-coli-value-total-coliforms-value-cfu-100-ml`                                                                                                                                                                             | live                                                                                                                                    |
+| `Total_Coliforms_Compliant` | Total Coliforms Compliant (%)      | % ¹          | monthly    | line  | blue-drop: `total-pct`                                                                                                                                                                                                                 | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `pH_Value`                  | pH Value                           | —            | monthly    | line  | blue-drop: `ph-value`                                                                                                                                                                                                                  | withheld — identical to 13.1 ph (wastewater effluent) in all 16 744 district-months; pH from −0.54 to 3.33 is impossible                |
+| `pH_Compliant`              | pH Compliant (%)                   | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `EC_Value`                  | EC Value (mS/m)                    | mS/m ¹       | monthly    | line  | blue-drop: `ec-value-ms-m`                                                                                                                                                                                                             | withheld — identical to 13.1 ec_salinity (wastewater effluent) in all 16 744 district-months                                            |
+| `EC_Compliant`              | EC Compliant (%)                   | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Free_Chlorine_Value`       | Free Chlorine Value (mg/L)         | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | withheld — one value (1.8 mg/L) in every row, identical in all 52 districts                                                             |
+| `Free_Chlorine_Compliant`   | Free Chlorine Compliant (%)        | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Nitrate_Value`             | Nitrate Value (mg/L)               | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | live                                                                                                                                    |
+| `Nitrate_Compliant`         | Nitrate Compliant (%)              | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Fluoride_Value`            | Fluoride Value (mg/L)              | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | live                                                                                                                                    |
+| `Fluoride_Compliant`        | Fluoride Compliant (%)             | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Arsenic_Value`             | Arsenic Value (mg/L)               | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | live                                                                                                                                    |
+| `Arsenic_Compliant`         | Arsenic Compliant (%)              | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Lead_Value`                | Lead Value (mg/L)                  | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000)                                        |
+| `Lead_Compliant`            | Lead Compliant (%)                 | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Cyanide_Value`             | Cyanide Value (mg/L)               | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000)                                        |
+| `Cyanide_Compliant`         | Cyanide Compliant (%)              | % ¹          | monthly    | line  | blue-drop: `turbidity-compliant-colour-compliant-temperature-compliant-e-coli-compliant-ph-compliant-ec-compliant-free-chlorine-compliant-nitrate-compliant-fluoride-compliant-arsenic-compliant-lead-compliant-cyanide-compliant-pct` | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `Total_THMs_Value`          | Total THMs Value (mg/L)            | mg/L ¹       | monthly    | line  | blue-drop: `free-chlorine-value-nitrate-value-fluoride-value-arsenic-value-lead-value-cyanide-value-total-thms-value-mg-l`                                                                                                             | live                                                                                                                                    |
+| `Total_THMs_Compliant`      | Total THMs Compliant (%)           | % ¹          | monthly    | line  | blue-drop: `total-pct`                                                                                                                                                                                                                 | withheld — compliance flag judged on values copied from 13.1 wastewater effluent (impossible pH included)                               |
+| `SANS_241_Compliance_Score` | SANS 241 Compliance Score          | —            | monthly    | line  | blue-drop: `sans-241-compliance-score`                                                                                                                                                                                                 | withheld — a score computed from the compliance flags, which judge values copied from 13.1 wastewater effluent (impossible pH included) |
 
 <a id="ecological-variables"></a>
+
 ## Ecological Variables · §15.1
 
 Table `15.1_ecological_variables_master` · id `ecological-variables` · monthly · pages: rwqo · 6 live, 0 withheld, 0 duplicate · keys: `district_name`, `shapeID`, `year`, `month`, `system:index`, `.geo`
 
 **Rwqo page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Aquatic Habitat Integrity | `aquatic-habitat-integrity` | — | monthly | line | `aquatic_habitat_integrity` ★ |
-| ASPT | `aspt` | — | monthly | line | `aspt` ★ |
-| Ecological Reserve Q (m³/s) | `ecological-reserve-q-m3-s` | m³/s | monthly | line | `ecological_reserve_q` ★ |
-| FIBI | `fibi` | — | monthly | line | `fibi` ★ |
-| Riparian Vegetation | `riparian-vegetation` | — | monthly | line | `riparian_vegetation` ★ |
-| SASS5 Score | `sass5-score` | — | monthly | line | `sass5_score` ★ |
+| Chart group                 | id                          | Axis unit | Resolution | Chart | Columns (★ default)           |
+| --------------------------- | --------------------------- | --------- | ---------- | ----- | ----------------------------- |
+| Aquatic Habitat Integrity   | `aquatic-habitat-integrity` | —         | monthly    | line  | `aquatic_habitat_integrity` ★ |
+| ASPT                        | `aspt`                      | —         | monthly    | line  | `aspt` ★                      |
+| Ecological Reserve Q (m³/s) | `ecological-reserve-q-m3-s` | m³/s      | monthly    | line  | `ecological_reserve_q` ★      |
+| FIBI                        | `fibi`                      | —         | monthly    | line  | `fibi` ★                      |
+| Riparian Vegetation         | `riparian-vegetation`       | —         | monthly    | line  | `riparian_vegetation` ★       |
+| SASS5 Score                 | `sass5-score`               | —         | monthly    | line  | `sass5_score` ★               |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `aquatic_habitat_integrity` | Aquatic Habitat Integrity | — | monthly | line | rwqo: `aquatic-habitat-integrity` | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
-| `aspt` | ASPT | — | monthly | line | rwqo: `aspt` | live — Values below 0 are not served: an average score per taxon cannot be negative (1 row in 16 744) |
-| `ecological_reserve_q` | Ecological Reserve Q (m³/s) | m³/s ¹ | monthly | line | rwqo: `ecological-reserve-q-m3-s` | live — Values below 0 are not served: a flow requirement cannot be negative (1 row in 16 744) |
-| `fibi` | FIBI | — | monthly | line | rwqo: `fibi` | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
-| `riparian_vegetation` | Riparian Vegetation | — | monthly | line | rwqo: `riparian-vegetation` | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
-| `sass5_score` | SASS5 Score | — | monthly | line | rwqo: `sass5-score` | live — Values below 0 are not served: a SASS5 score cannot be negative (1 row in 16 744) |
+| Column                      | Label                       | Unit   | Resolution | Chart | Group                             | Status                                                                                                         |
+| --------------------------- | --------------------------- | ------ | ---------- | ----- | --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `aquatic_habitat_integrity` | Aquatic Habitat Integrity   | —      | monthly    | line  | rwqo: `aquatic-habitat-integrity` | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
+| `aspt`                      | ASPT                        | —      | monthly    | line  | rwqo: `aspt`                      | live — Values below 0 are not served: an average score per taxon cannot be negative (1 row in 16 744)          |
+| `ecological_reserve_q`      | Ecological Reserve Q (m³/s) | m³/s ¹ | monthly    | line  | rwqo: `ecological-reserve-q-m3-s` | live — Values below 0 are not served: a flow requirement cannot be negative (1 row in 16 744)                  |
+| `fibi`                      | FIBI                        | —      | monthly    | line  | rwqo: `fibi`                      | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
+| `riparian_vegetation`       | Riparian Vegetation         | —      | monthly    | line  | rwqo: `riparian-vegetation`       | live — Values outside 0–100 are not served: a score on a 0–100 scale (1 row below 0 and 2 above 100 in 16 744) |
+| `sass5_score`               | SASS5 Score                 | —      | monthly    | line  | rwqo: `sass5-score`               | live — Values below 0 are not served: a SASS5 score cannot be negative (1 row in 16 744)                       |
 
 <a id="chemical-rwqo-variables"></a>
+
 ## Chemical RWQO Variables · §15.2
 
 Table `15.2_chemical_RWQO_variables_master` · id `chemical-rwqo-variables` · monthly · pages: rwqo · 4 live, 10 withheld, 0 duplicate · keys: `id`, `district_name`, `shapeID`, `year`, `month`, `DO_Category`, `DO_Parameter`, `DO_Limit`, `DO_Source`, `pH_Range_Category`, `pH_Range_Parameter`, `pH_Range_Limit`, `pH_Range_Source`, `EC_Target_Category`, `EC_Target_Parameter`, `EC_Target_Limit`, `EC_Target_Source`, `Nutrient_Category`, `Nutrient_Parameter`, `Nutrient_Limit`, `Nutrient_Source`, `Toxicant_Category`, `Toxicant_Parameter`, `Toxicant_Limit`, `Toxicant_Source`, `Salinity_Category`, `Salinity_Parameter`, `Salinity_Limit`, `Salinity_Source`, `created_at`
 
 **Rwqo page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| DO Value / Salinity Value TDS (mg/L) | `do-value-salinity-value-tds-mg-l` | mg/L | monthly | line | `DO_Value` ★, `Salinity_Value_TDS` ★ |
-| DO Compliant / pH Range Compliant / EC Target Compliant / Nutrient Compliant / Toxicant Compliant / Salinity Compliant (%) | `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | % | monthly | line | `DO_Compliant` ★, `pH_Range_Compliant` ★, `EC_Target_Compliant` ★, `Nutrient_Compliant`, `Toxicant_Compliant`, `Salinity_Compliant` |
-| pH Range Value | `ph-range-value` | — | monthly | line | `pH_Range_Value` ★ |
-| EC Target Value (mS/m) | `ec-target-value-ms-m` | mS/m | monthly | line | `EC_Target_Value` ★ |
-| Nutrient Value TN / Nutrient Value TP (mg/L) | `nutrient-value-tn-nutrient-value-tp-mg-l` | mg/L | monthly | line | `Nutrient_Value_TN` ★, `Nutrient_Value_TP` ★ |
-| Toxicant Value (µg/L) | `toxicant-value-g-l` | µg/L | monthly | line | `Toxicant_Value_ugL` ★ |
-| RWQO Compliance Score | `rwqo-compliance-score` | — | monthly | line | `RWQO_Compliance_Score` ★ |
+| Chart group                                                                                                                | id                                                                                                                 | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------- | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| DO Value / Salinity Value TDS (mg/L)                                                                                       | `do-value-salinity-value-tds-mg-l`                                                                                 | mg/L      | monthly    | line  | `DO_Value` ★, `Salinity_Value_TDS` ★                                                                                                |
+| DO Compliant / pH Range Compliant / EC Target Compliant / Nutrient Compliant / Toxicant Compliant / Salinity Compliant (%) | `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | %         | monthly    | line  | `DO_Compliant` ★, `pH_Range_Compliant` ★, `EC_Target_Compliant` ★, `Nutrient_Compliant`, `Toxicant_Compliant`, `Salinity_Compliant` |
+| pH Range Value                                                                                                             | `ph-range-value`                                                                                                   | —         | monthly    | line  | `pH_Range_Value` ★                                                                                                                  |
+| EC Target Value (mS/m)                                                                                                     | `ec-target-value-ms-m`                                                                                             | mS/m      | monthly    | line  | `EC_Target_Value` ★                                                                                                                 |
+| Nutrient Value TN / Nutrient Value TP (mg/L)                                                                               | `nutrient-value-tn-nutrient-value-tp-mg-l`                                                                         | mg/L      | monthly    | line  | `Nutrient_Value_TN` ★, `Nutrient_Value_TP` ★                                                                                        |
+| Toxicant Value (µg/L)                                                                                                      | `toxicant-value-g-l`                                                                                               | µg/L      | monthly    | line  | `Toxicant_Value_ugL` ★                                                                                                              |
+| RWQO Compliance Score                                                                                                      | `rwqo-compliance-score`                                                                                            | —         | monthly    | line  | `RWQO_Compliance_Score` ★                                                                                                           |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `DO_Value` | DO Value (mg/L) | mg/L ¹ | monthly | line | rwqo: `do-value-salinity-value-tds-mg-l` | live |
-| `DO_Compliant` | DO Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `pH_Range_Value` | pH Range Value | — | monthly | line | rwqo: `ph-range-value` | withheld — identical to 13.1 ph (wastewater effluent) in all 16 744 district-months; pH from −0.54 to 3.33 is impossible |
-| `pH_Range_Compliant` | pH Range Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `EC_Target_Value` | EC Target Value (mS/m) | mS/m ¹ | monthly | line | rwqo: `ec-target-value-ms-m` | withheld — not an independent value: an exact linear rescaling of 13.1 ec_salinity (r = 1.0000) |
-| `EC_Target_Compliant` | EC Target Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `Nutrient_Value_TN` | Nutrient Value TN (mg/L) | mg/L ¹ | monthly | line | rwqo: `nutrient-value-tn-nutrient-value-tp-mg-l` | live |
-| `Nutrient_Value_TP` | Nutrient Value TP (mg/L) | mg/L ¹ | monthly | line | rwqo: `nutrient-value-tn-nutrient-value-tp-mg-l` | live |
-| `Nutrient_Compliant` | Nutrient Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `Toxicant_Value_ugL` | Toxicant Value (µg/L) | µg/L | monthly | line | rwqo: `toxicant-value-g-l` | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000) |
-| `Toxicant_Compliant` | Toxicant Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `Salinity_Value_TDS` | Salinity Value TDS (mg/L) | mg/L ¹ | monthly | line | rwqo: `do-value-salinity-value-tds-mg-l` | live |
-| `Salinity_Compliant` | Salinity Compliant (%) | % ¹ | monthly | line | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values |
-| `RWQO_Compliance_Score` | RWQO Compliance Score | — | monthly | line | rwqo: `rwqo-compliance-score` | withheld — a score computed from compliance flags that include the copied pH, EC and toxicant values |
+| Column                  | Label                     | Unit   | Resolution | Chart | Group                                                                                                                    | Status                                                                                                                   |
+| ----------------------- | ------------------------- | ------ | ---------- | ----- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `DO_Value`              | DO Value (mg/L)           | mg/L ¹ | monthly    | line  | rwqo: `do-value-salinity-value-tds-mg-l`                                                                                 | live                                                                                                                     |
+| `DO_Compliant`          | DO Compliant (%)          | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `pH_Range_Value`        | pH Range Value            | —      | monthly    | line  | rwqo: `ph-range-value`                                                                                                   | withheld — identical to 13.1 ph (wastewater effluent) in all 16 744 district-months; pH from −0.54 to 3.33 is impossible |
+| `pH_Range_Compliant`    | pH Range Compliant (%)    | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `EC_Target_Value`       | EC Target Value (mS/m)    | mS/m ¹ | monthly    | line  | rwqo: `ec-target-value-ms-m`                                                                                             | withheld — not an independent value: an exact linear rescaling of 13.1 ec_salinity (r = 1.0000)                          |
+| `EC_Target_Compliant`   | EC Target Compliant (%)   | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `Nutrient_Value_TN`     | Nutrient Value TN (mg/L)  | mg/L ¹ | monthly    | line  | rwqo: `nutrient-value-tn-nutrient-value-tp-mg-l`                                                                         | live                                                                                                                     |
+| `Nutrient_Value_TP`     | Nutrient Value TP (mg/L)  | mg/L ¹ | monthly    | line  | rwqo: `nutrient-value-tn-nutrient-value-tp-mg-l`                                                                         | live                                                                                                                     |
+| `Nutrient_Compliant`    | Nutrient Compliant (%)    | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `Toxicant_Value_ugL`    | Toxicant Value (µg/L)     | µg/L   | monthly    | line  | rwqo: `toxicant-value-g-l`                                                                                               | withheld — not an independent value: an exact linear rescaling of 13.1 Heavy_Metals (r = 1.0000)                         |
+| `Toxicant_Compliant`    | Toxicant Compliant (%)    | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `Salinity_Value_TDS`    | Salinity Value TDS (mg/L) | mg/L ¹ | monthly    | line  | rwqo: `do-value-salinity-value-tds-mg-l`                                                                                 | live                                                                                                                     |
+| `Salinity_Compliant`    | Salinity Compliant (%)    | % ¹    | monthly    | line  | rwqo: `do-compliant-ph-range-compliant-ec-target-compliant-nutrient-compliant-toxicant-compliant-salinity-compliant-pct` | withheld — compliance flag; part of its inputs are copies of 13.1 wastewater effluent values                             |
+| `RWQO_Compliance_Score` | RWQO Compliance Score     | —      | monthly    | line  | rwqo: `rwqo-compliance-score`                                                                                            | withheld — a score computed from compliance flags that include the copied pH, EC and toxicant values                     |
 
 <a id="hydrological-rwqo-variables"></a>
+
 ## Hydrological RWQO Variables · §15.3
 
 Table `15.3_hydrological_RWQO_variables_master` · id `hydrological-rwqo-variables` · monthly · pages: rwqo · 3 live, 8 withheld, 0 duplicate · keys: `id`, `district_name`, `shapeID`, `year`, `month`, `Low_Flow_Category`, `Low_Flow_Parameter`, `Low_Flow_Limit`, `Low_Flow_Source`, `High_Flow_Category`, `High_Flow_Parameter`, `High_Flow_Limit`, `High_Flow_Source`, `Seasonality_Category`, `Seasonality_Parameter`, `Seasonality_Limit`, `Seasonality_Source`, `Dilution_Category`, `Dilution_Parameter`, `Dilution_Limit`, `Dilution_Source`, `Assimilation_Category`, `Assimilation_Parameter`, `Assimilation_Limit`, `Assimilation_Source`, `created_at`
 
 **Rwqo page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Low Flow Value / Dilution Value (m³/s) | `low-flow-value-dilution-value-m3-s` | m³/s | monthly | line | `Low_Flow_Value` ★, `Dilution_Value` ★ |
-| Low Flow Compliant / High Flow Compliant / Seasonality Compliant / Dilution Compliant / Assimilation Compliant (%) | `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | % | monthly | line | `Low_Flow_Compliant` ★, `High_Flow_Compliant` ★, `Seasonality_Compliant` ★, `Dilution_Compliant`, `Assimilation_Compliant` |
-| High Flow Value | `high-flow-value` | — | monthly | line | `High_Flow_Value` ★ |
-| Seasonality Value | `seasonality-value` | — | monthly | line | `Seasonality_Value` ★ |
-| Assimilation Value | `assimilation-value` | — | monthly | line | `Assimilation_Value` ★ |
-| Hydrological RWQO Score | `hydrological-rwqo-score` | — | monthly | line | `Hydrological_RWQO_Score` ★ |
+| Chart group                                                                                                        | id                                                                                                           | Axis unit | Resolution | Chart | Columns (★ default)                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | --------- | ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------- |
+| Low Flow Value / Dilution Value (m³/s)                                                                             | `low-flow-value-dilution-value-m3-s`                                                                         | m³/s      | monthly    | line  | `Low_Flow_Value` ★, `Dilution_Value` ★                                                                                     |
+| Low Flow Compliant / High Flow Compliant / Seasonality Compliant / Dilution Compliant / Assimilation Compliant (%) | `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | %         | monthly    | line  | `Low_Flow_Compliant` ★, `High_Flow_Compliant` ★, `Seasonality_Compliant` ★, `Dilution_Compliant`, `Assimilation_Compliant` |
+| High Flow Value                                                                                                    | `high-flow-value`                                                                                            | —         | monthly    | line  | `High_Flow_Value` ★                                                                                                        |
+| Seasonality Value                                                                                                  | `seasonality-value`                                                                                          | —         | monthly    | line  | `Seasonality_Value` ★                                                                                                      |
+| Assimilation Value                                                                                                 | `assimilation-value`                                                                                         | —         | monthly    | line  | `Assimilation_Value` ★                                                                                                     |
+| Hydrological RWQO Score                                                                                            | `hydrological-rwqo-score`                                                                                    | —         | monthly    | line  | `Hydrological_RWQO_Score` ★                                                                                                |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Low_Flow_Value` | Low Flow Value (m³/s) | m³/s ¹ | monthly | line | rwqo: `low-flow-value-dilution-value-m3-s` | live |
-| `Low_Flow_Compliant` | Low Flow Compliant (%) | % ¹ | monthly | line | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts |
-| `High_Flow_Value` | High Flow Value | — | monthly | line | rwqo: `high-flow-value` | withheld — two values (3.8 / 7.5), identical in all 52 districts in every month |
-| `High_Flow_Compliant` | High Flow Compliant (%) | % ¹ | monthly | line | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — judges the withheld high-flow value (identical in all districts) |
-| `Seasonality_Value` | Seasonality Value | — | monthly | line | rwqo: `seasonality-value` | withheld — one value (0.65) in every row, identical in all 52 districts |
-| `Seasonality_Compliant` | Seasonality Compliant (%) | % ¹ | monthly | line | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — judges the withheld constant seasonality value |
-| `Dilution_Value` | Dilution Value (m³/s) | m³/s ¹ | monthly | line | rwqo: `low-flow-value-dilution-value-m3-s` | live |
-| `Dilution_Compliant` | Dilution Compliant (%) | % ¹ | monthly | line | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts |
-| `Assimilation_Value` | Assimilation Value | — | monthly | line | rwqo: `assimilation-value` | live |
-| `Assimilation_Compliant` | Assimilation Compliant (%) | % ¹ | monthly | line | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts |
-| `Hydrological_RWQO_Score` | Hydrological RWQO Score | — | monthly | line | rwqo: `hydrological-rwqo-score` | withheld — two values (80 / 100), identical in all 52 districts in every month |
+| Column                    | Label                      | Unit   | Resolution | Chart | Group                                                                                                              | Status                                                                          |
+| ------------------------- | -------------------------- | ------ | ---------- | ----- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `Low_Flow_Value`          | Low Flow Value (m³/s)      | m³/s ¹ | monthly    | line  | rwqo: `low-flow-value-dilution-value-m3-s`                                                                         | live                                                                            |
+| `Low_Flow_Compliant`      | Low Flow Compliant (%)     | % ¹    | monthly    | line  | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts    |
+| `High_Flow_Value`         | High Flow Value            | —      | monthly    | line  | rwqo: `high-flow-value`                                                                                            | withheld — two values (3.8 / 7.5), identical in all 52 districts in every month |
+| `High_Flow_Compliant`     | High Flow Compliant (%)    | % ¹    | monthly    | line  | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — judges the withheld high-flow value (identical in all districts)     |
+| `Seasonality_Value`       | Seasonality Value          | —      | monthly    | line  | rwqo: `seasonality-value`                                                                                          | withheld — one value (0.65) in every row, identical in all 52 districts         |
+| `Seasonality_Compliant`   | Seasonality Compliant (%)  | % ¹    | monthly    | line  | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — judges the withheld constant seasonality value                       |
+| `Dilution_Value`          | Dilution Value (m³/s)      | m³/s ¹ | monthly    | line  | rwqo: `low-flow-value-dilution-value-m3-s`                                                                         | live                                                                            |
+| `Dilution_Compliant`      | Dilution Compliant (%)     | % ¹    | monthly    | line  | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts    |
+| `Assimilation_Value`      | Assimilation Value         | —      | monthly    | line  | rwqo: `assimilation-value`                                                                                         | live                                                                            |
+| `Assimilation_Compliant`  | Assimilation Compliant (%) | % ¹    | monthly    | line  | rwqo: `low-flow-compliant-high-flow-compliant-seasonality-compliant-dilution-compliant-assimilation-compliant-pct` | withheld — one value (compliant) in every row, identical in all 52 districts    |
+| `Hydrological_RWQO_Score` | Hydrological RWQO Score    | —      | monthly    | line  | rwqo: `hydrological-rwqo-score`                                                                                    | withheld — two values (80 / 100), identical in all 52 districts in every month  |
 
 <a id="complete-wrm-matrix"></a>
+
 ## Complete WRM Matrix · §16.1
 
 Table `16_1_complete_wrm_matrix_master` · id `complete-wrm-matrix` · annual · pages: iwrm · 16 live, 0 withheld, 0 duplicate · keys: `id`, `year`, `district_name`
 
 **Iwrm page**
 
-| Chart group | id | Axis unit | Resolution | Chart | Columns (★ default) |
-| --- | --- | --- | --- | --- | --- |
-| Mean Annual (mm/year) | `mean-annual-mm-year` | mm/year | annual | line | `Mean_Annual_Precipitation_MAP_mm_yr` ★, `Mean_Annual_Evapotranspiration_MAE_mm_yr` ★, `Mean_Annual_Groundwater_Recharge_mm_yr` ★ |
-| Climate Variability Index CV Rainfall | `climate-variability-index-cv-rainfall` | — | annual | line | `Climate_Variability_Index_CV_rainfall` ★ |
-| Mean Annual Runoff MAR / Inter Basin Transfer Volumes / National Water Balance / Return Flow Recycled Water (Mm³/year) | `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | Mm³/year | annual | line | `Mean_Annual_Runoff_MAR_million_m3_yr` ★, `Inter_Basin_Transfer_Volumes_million_m3_yr` ★, `National_Water_Balance_million_m3_yr` ★, `Return_Flow_Recycled_Water_million_m3_yr` |
-| Surface Water Availability Index Ratio | `surface-water-availability-index-ratio` | — | annual | line | `Surface_Water_Availability_Index_ratio` ★ |
-| Inter Annual Storage Efficiency / Groundwater Dependency Index / System Water Losses (%) | `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct` | % | annual | line | `Inter_Annual_Storage_Efficiency_pct` ★, `Groundwater_Dependency_Index_pct` ★, `System_Water_Losses_pct` ★ |
-| Municipal Water Demand (L/capita/day) | `municipal-water-demand-l-capita-day` | L/capita/day | annual | line | `Municipal_Water_Demand_L_cap_day` ★ |
-| Agricultural Water Demand (m³/ha/season) | `agricultural-water-demand-m3-ha-season` | m³/ha/season | annual | line | `Agricultural_Water_Demand_m3_ha_season` ★ |
-| Industrial Water Demand / Ecological Reserve Water Requirement (m³/year) | `industrial-water-demand-ecological-reserve-water-requirement-m3-year` | m³/year | annual | bar | `Industrial_Water_Demand_m3_yr` ★, `Ecological_Reserve_Water_Requirement_m3_yr` ★ |
+| Chart group                                                                                                            | id                                                                                                               | Axis unit    | Resolution | Chart | Columns (★ default)                                                                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------ | ---------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Mean Annual (mm/year)                                                                                                  | `mean-annual-mm-year`                                                                                            | mm/year      | annual     | line  | `Mean_Annual_Precipitation_MAP_mm_yr` ★, `Mean_Annual_Evapotranspiration_MAE_mm_yr` ★, `Mean_Annual_Groundwater_Recharge_mm_yr` ★                                              |
+| Climate Variability Index CV Rainfall                                                                                  | `climate-variability-index-cv-rainfall`                                                                          | —            | annual     | line  | `Climate_Variability_Index_CV_rainfall` ★                                                                                                                                      |
+| Mean Annual Runoff MAR / Inter Basin Transfer Volumes / National Water Balance / Return Flow Recycled Water (Mm³/year) | `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | Mm³/year     | annual     | line  | `Mean_Annual_Runoff_MAR_million_m3_yr` ★, `Inter_Basin_Transfer_Volumes_million_m3_yr` ★, `National_Water_Balance_million_m3_yr` ★, `Return_Flow_Recycled_Water_million_m3_yr` |
+| Surface Water Availability Index Ratio                                                                                 | `surface-water-availability-index-ratio`                                                                         | —            | annual     | line  | `Surface_Water_Availability_Index_ratio` ★                                                                                                                                     |
+| Inter Annual Storage Efficiency / Groundwater Dependency Index / System Water Losses (%)                               | `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct`                           | %            | annual     | line  | `Inter_Annual_Storage_Efficiency_pct` ★, `Groundwater_Dependency_Index_pct` ★, `System_Water_Losses_pct` ★                                                                     |
+| Municipal Water Demand (L/capita/day)                                                                                  | `municipal-water-demand-l-capita-day`                                                                            | L/capita/day | annual     | line  | `Municipal_Water_Demand_L_cap_day` ★                                                                                                                                           |
+| Agricultural Water Demand (m³/ha/season)                                                                               | `agricultural-water-demand-m3-ha-season`                                                                         | m³/ha/season | annual     | line  | `Agricultural_Water_Demand_m3_ha_season` ★                                                                                                                                     |
+| Industrial Water Demand / Ecological Reserve Water Requirement (m³/year)                                               | `industrial-water-demand-ecological-reserve-water-requirement-m3-year`                                           | m³/year      | annual     | bar   | `Industrial_Water_Demand_m3_yr` ★, `Ecological_Reserve_Water_Requirement_m3_yr` ★                                                                                              |
 
-| Column | Label | Unit | Resolution | Chart | Group | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Mean_Annual_Precipitation_MAP_mm_yr` | Mean Annual Precipitation MAP (mm/year) | mm/year | annual | line | iwrm: `mean-annual-mm-year` | live |
-| `Mean_Annual_Evapotranspiration_MAE_mm_yr` | Mean Annual Evapotranspiration MAE (mm/year) | mm/year | annual | line | iwrm: `mean-annual-mm-year` | live |
-| `Climate_Variability_Index_CV_rainfall` | Climate Variability Index CV Rainfall | — | annual | line | iwrm: `climate-variability-index-cv-rainfall` | live |
-| `Mean_Annual_Runoff_MAR_million_m3_yr` | Mean Annual Runoff MAR (Mm³/year) | Mm³/year | annual | line | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live |
-| `Surface_Water_Availability_Index_ratio` | Surface Water Availability Index Ratio | — | annual | line | iwrm: `surface-water-availability-index-ratio` | live |
-| `Inter_Annual_Storage_Efficiency_pct` | Inter Annual Storage Efficiency (%) | % | annual | line | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct` | live |
-| `Mean_Annual_Groundwater_Recharge_mm_yr` | Mean Annual Groundwater Recharge (mm/year) | mm/year | annual | line | iwrm: `mean-annual-mm-year` | live |
-| `Groundwater_Dependency_Index_pct` | Groundwater Dependency Index (%) | % | annual | line | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct` | live |
-| `Inter_Basin_Transfer_Volumes_million_m3_yr` | Inter Basin Transfer Volumes (Mm³/year) | Mm³/year | annual | line | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live |
-| `National_Water_Balance_million_m3_yr` | National Water Balance (Mm³/year) | Mm³/year | annual | line | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live — one value per district (the name says national) |
-| `Municipal_Water_Demand_L_cap_day` | Municipal Water Demand (L/capita/day) | L/capita/day | annual | line | iwrm: `municipal-water-demand-l-capita-day` | live |
-| `Agricultural_Water_Demand_m3_ha_season` | Agricultural Water Demand (m³/ha/season) | m³/ha/season | annual | line | iwrm: `agricultural-water-demand-m3-ha-season` | live |
-| `Industrial_Water_Demand_m3_yr` | Industrial Water Demand (m³/year) | m³/year | annual | bar | iwrm: `industrial-water-demand-ecological-reserve-water-requirement-m3-year` | live |
-| `System_Water_Losses_pct` | System Water Losses (%) | % | annual | line | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct` | live |
-| `Ecological_Reserve_Water_Requirement_m3_yr` | Ecological Reserve Water Requirement (m³/year) | m³/year | annual | bar | iwrm: `industrial-water-demand-ecological-reserve-water-requirement-m3-year` | live |
-| `Return_Flow_Recycled_Water_million_m3_yr` | Return Flow Recycled Water (Mm³/year) | Mm³/year | annual | line | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live |
+| Column                                       | Label                                          | Unit         | Resolution | Chart | Group                                                                                                                  | Status                                                 |
+| -------------------------------------------- | ---------------------------------------------- | ------------ | ---------- | ----- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `Mean_Annual_Precipitation_MAP_mm_yr`        | Mean Annual Precipitation MAP (mm/year)        | mm/year      | annual     | line  | iwrm: `mean-annual-mm-year`                                                                                            | live                                                   |
+| `Mean_Annual_Evapotranspiration_MAE_mm_yr`   | Mean Annual Evapotranspiration MAE (mm/year)   | mm/year      | annual     | line  | iwrm: `mean-annual-mm-year`                                                                                            | live                                                   |
+| `Climate_Variability_Index_CV_rainfall`      | Climate Variability Index CV Rainfall          | —            | annual     | line  | iwrm: `climate-variability-index-cv-rainfall`                                                                          | live                                                   |
+| `Mean_Annual_Runoff_MAR_million_m3_yr`       | Mean Annual Runoff MAR (Mm³/year)              | Mm³/year     | annual     | line  | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live                                                   |
+| `Surface_Water_Availability_Index_ratio`     | Surface Water Availability Index Ratio         | —            | annual     | line  | iwrm: `surface-water-availability-index-ratio`                                                                         | live                                                   |
+| `Inter_Annual_Storage_Efficiency_pct`        | Inter Annual Storage Efficiency (%)            | %            | annual     | line  | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct`                           | live                                                   |
+| `Mean_Annual_Groundwater_Recharge_mm_yr`     | Mean Annual Groundwater Recharge (mm/year)     | mm/year      | annual     | line  | iwrm: `mean-annual-mm-year`                                                                                            | live                                                   |
+| `Groundwater_Dependency_Index_pct`           | Groundwater Dependency Index (%)               | %            | annual     | line  | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct`                           | live                                                   |
+| `Inter_Basin_Transfer_Volumes_million_m3_yr` | Inter Basin Transfer Volumes (Mm³/year)        | Mm³/year     | annual     | line  | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live                                                   |
+| `National_Water_Balance_million_m3_yr`       | National Water Balance (Mm³/year)              | Mm³/year     | annual     | line  | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live — one value per district (the name says national) |
+| `Municipal_Water_Demand_L_cap_day`           | Municipal Water Demand (L/capita/day)          | L/capita/day | annual     | line  | iwrm: `municipal-water-demand-l-capita-day`                                                                            | live                                                   |
+| `Agricultural_Water_Demand_m3_ha_season`     | Agricultural Water Demand (m³/ha/season)       | m³/ha/season | annual     | line  | iwrm: `agricultural-water-demand-m3-ha-season`                                                                         | live                                                   |
+| `Industrial_Water_Demand_m3_yr`              | Industrial Water Demand (m³/year)              | m³/year      | annual     | bar   | iwrm: `industrial-water-demand-ecological-reserve-water-requirement-m3-year`                                           | live                                                   |
+| `System_Water_Losses_pct`                    | System Water Losses (%)                        | %            | annual     | line  | iwrm: `inter-annual-storage-efficiency-groundwater-dependency-index-system-water-losses-pct`                           | live                                                   |
+| `Ecological_Reserve_Water_Requirement_m3_yr` | Ecological Reserve Water Requirement (m³/year) | m³/year      | annual     | bar   | iwrm: `industrial-water-demand-ecological-reserve-water-requirement-m3-year`                                           | live                                                   |
+| `Return_Flow_Recycled_Water_million_m3_yr`   | Return Flow Recycled Water (Mm³/year)          | Mm³/year     | annual     | line  | iwrm: `mean-annual-runoff-mar-inter-basin-transfer-volumes-national-water-balance-return-flow-recycled-water-mm3-year` | live                                                   |
 
 ## Unit suffixes (app/core/units.py)
 
-| Suffix | Unit |
-| --- | --- |
-| `_million_m3_month` | Mm³/month |
-| `_percent_per_yr` | %/year |
-| `_mm_per_wet_day` | mm/wet day |
-| `_million_m3_yr` | Mm³/year |
-| `_dimensionless` | none (dimensionless) |
-| `_m3_ha_season` | m³/ha/season |
-| `_standardised` | none (dimensionless) |
-| `_million_m3` | Mm³ |
-| `_days_month` | days/month |
-| `_l_cap_day` | L/capita/day |
-| `_mm_season` | mm/season |
-| `_mm_dekad` | mm/dekad |
-| `_mm_month` | mm/month |
-| `_degrees` | ° |
-| `_m3_year` | m³/year |
-| `_pct_fsc` | % FSC |
-| `_percent` | % |
-| `_m2_day` | m²/day |
-| `_amsl_m` | m amsl |
-| `_m_amsl` | m amsl |
-| `_mm_day` | mm/day |
-| `_m3_day` | m³/day |
-| `_m3_m3` | m³/m³ |
-| `_m3_yr` | m³/year |
-| `_m_day` | m/day |
-| `_t_day` | t/day |
-| `_mg_m3` | mg/m³ |
-| `_hours` | h |
-| `_mm_yr` | mm/year |
-| `_m_bgl` | m bgl |
-| `_m3_h` | m³/h |
-| `_mm_h` | mm/h |
-| `_days` | days |
-| `_m3_s` | m³/s |
-| `_m3m3` | m³/m³ |
-| `_ugl` | µg/L |
-| `_m3s` | m³/s |
-| `_km2` | km² |
-| `_wm2` | W/m² |
-| `_kpa` | kPa |
-| `_pct` | % |
-| `_m3` | m³ |
-| `_mm` | mm |
-| `_ms` | m/s |
-| `_m` | m |
-| `_c` | °C |
+| Suffix              | Unit                 |
+| ------------------- | -------------------- |
+| `_million_m3_month` | Mm³/month            |
+| `_percent_per_yr`   | %/year               |
+| `_mm_per_wet_day`   | mm/wet day           |
+| `_million_m3_yr`    | Mm³/year             |
+| `_dimensionless`    | none (dimensionless) |
+| `_m3_ha_season`     | m³/ha/season         |
+| `_standardised`     | none (dimensionless) |
+| `_million_m3`       | Mm³                  |
+| `_days_month`       | days/month           |
+| `_l_cap_day`        | L/capita/day         |
+| `_mm_season`        | mm/season            |
+| `_mm_dekad`         | mm/dekad             |
+| `_mm_month`         | mm/month             |
+| `_degrees`          | °                    |
+| `_m3_year`          | m³/year              |
+| `_pct_fsc`          | % FSC                |
+| `_percent`          | %                    |
+| `_m2_day`           | m²/day               |
+| `_amsl_m`           | m amsl               |
+| `_m_amsl`           | m amsl               |
+| `_mm_day`           | mm/day               |
+| `_m3_day`           | m³/day               |
+| `_m3_m3`            | m³/m³                |
+| `_m3_yr`            | m³/year              |
+| `_m_day`            | m/day                |
+| `_t_day`            | t/day                |
+| `_mg_m3`            | mg/m³                |
+| `_hours`            | h                    |
+| `_mm_yr`            | mm/year              |
+| `_m_bgl`            | m bgl                |
+| `_m3_h`             | m³/h                 |
+| `_mm_h`             | mm/h                 |
+| `_days`             | days                 |
+| `_m3_s`             | m³/s                 |
+| `_m3m3`             | m³/m³                |
+| `_ugl`              | µg/L                 |
+| `_m3s`              | m³/s                 |
+| `_km2`              | km²                  |
+| `_wm2`              | W/m²                 |
+| `_kpa`              | kPa                  |
+| `_pct`              | %                    |
+| `_m3`               | m³                   |
+| `_mm`               | mm                   |
+| `_ms`               | m/s                  |
+| `_m`                | m                    |
+| `_c`                | °C                   |
 
 ## Unit overrides (¹)
 
 Only where the name carries no unit or the wrong one; never to rename a variable.
 
-| Table | Column | Unit | Why |
-| --- | --- | --- | --- |
-| `satellite_remote_sensing` | `lst` | °C | name has no unit suffix; spec §3.2 gives LST in °C |
-| `satellite_remote_sensing` | `vci` | % | name has no unit suffix; spec §3.2: VCI 0–100 % |
-| `satellite_remote_sensing` | `tci` | % | name has no unit suffix; spec §3.2: TCI 0–100 % |
-| `satellite_remote_sensing` | `vhi` | % | name has no unit suffix; spec §3.2: VHI 0–100 % |
-| `satellite_remote_sensing` | `rootzone_soil_moisture` | m³/m³ | name has no unit suffix; spec §3.2: root-zone soil moisture in m³/m³ |
-| `satellite_remote_sensing` | `surface_soil_moisture` | m³/m³ | name has no unit suffix; spec §3.2: surface soil moisture in m³/m³ |
-| `5.2_meteorological_drivers_saws_master` | `Growing_Degree_Days_GDD_C` | °C·days | suffix `_C` reads as °C, but the values are degree-day sums: Σ max(Tavg − 10 °C, 0), checked against the daily temperatures |
-| `9_1_hydrological_station_master` | `daily_mean_flow` | m³/day | name has no unit; spec §9.1 gives m³/day |
-| `9_1_hydrological_station_master` | `river_discharge_q` | m³/s | name has no unit; spec §9.1 gives m³/s |
-| `9_1_hydrological_station_master` | `flow_velocity` | m/s | name has no unit; spec §9.1 gives m/s |
-| `9_1_hydrological_station_master` | `stage_height` | m | name has no unit; spec §9.1 gives m |
-| `9_1_hydrological_station_master` | `monthly_mean_flow` | m³/month | name has no unit; spec §9.1 gives m³/month |
-| `9_1_hydrological_station_master` | `suspended_sediment_concentration` | mg/L | name has no unit; spec §9.1 gives mg/L |
-| `9_1_hydrological_station_master` | `peak_instantaneous_flow` | m³/s | name has no unit; spec §9.1 gives m³/s |
-| `11_1_hydrogeological` | `Depth to water table` | m bgl | name has no unit; spec §11.1 gives m bgl |
-| `11_1_hydrogeological` | `Aquifer extent (map area)` | km² | name has no unit; spec §11.1 gives km² |
-| `11_1_hydrogeological` | `Aquifer saturated thickness` | m | name has no unit; spec §11.1 gives m |
-| `11_1_hydrogeological` | `Depth to bedrock / aquifer base` | m bgl | name has no unit; spec §11.1 gives m bgl |
-| `11_1_hydrogeological` | `Dynamic (renewable) reserve` | Mm³/year | name has no unit; spec §11.1 gives Mm³/year |
-| `11_1_hydrogeological` | `Permeability / hydraulic conductivity` | m/day | name has no unit; spec §11.1 gives m/day |
-| `11_1_hydrogeological` | `Porosity (total and effective)` | % | name has no unit; spec §11.1 gives % |
-| `11_1_hydrogeological` | `Static reserve volume` | Mm³ | name has no unit; spec §11.1 gives Mm³ |
-| `11_1_hydrogeological` | `Transmissivity` | m²/day | name has no unit; spec §11.1 gives m²/day |
-| `11.2_recharge_and_discharge` | `Baseflow discharge` | m³/s | name has no unit; spec §11.2 gives m³/s |
-| `11.2_recharge_and_discharge` | `Evapotranspiration` | mm | name has no unit; spec §11.2 gives mm |
-| `11.2_recharge_and_discharge` | `Spring discharge` | L/s | name has no unit; spec §11.2 gives L/s |
-| `11.2_recharge_and_discharge` | `Direct recharge` | mm/year | name has no unit; spec §11.2 gives mm/year |
-| `11.2_recharge_and_discharge` | `Indirect recharge` | m³/year | name has no unit; spec §11.2 gives m³/year |
-| `11.2_recharge_and_discharge` | `Rainfall infiltration` | mm/year | name has no unit; spec §11.2 gives mm/year |
-| `11.3_aquifer_sustainability` | `Aquifer depletion rate` | m/year | name has no unit; spec §11.3 gives m/year |
-| `11.3_aquifer_sustainability` | `Borehole yield` | m³/h | name has no unit; spec §11.3 gives m³/h |
-| `11.3_aquifer_sustainability` | `Exploitation index` | % | name has no unit; spec §11.3 gives % |
-| `11.3_aquifer_sustainability` | `Total abstraction` | m³/year | name has no unit; spec §11.3 gives m³/year |
-| `12.1_physical_water_quality_master` | `Temperature` | °C | name has no unit; spec §12.1 gives °C |
-| `12.1_physical_water_quality_master` | `Turbidity` | NTU | name has no unit; spec §12.1 gives NTU |
-| `12.1_physical_water_quality_master` | `Colour` | Hazen | name has no unit; spec §12.1 gives Hazen |
-| `12.1_physical_water_quality_master` | `Electrical Conductivity (EC)` | mS/m | name has no unit; spec §12.1 gives mS/m |
-| `12.1_physical_water_quality_master` | `Total Dissolved Solids (TDS)` | mg/L | name has no unit; spec §12.1 gives mg/L |
-| `12.1_physical_water_quality_master` | `Total Suspended Solids (TSS)` | mg/L | name has no unit; spec §12.1 gives mg/L |
-| `12.1_physical_water_quality_master` | `Salinity` | mg/L | name has no unit; spec §12.1 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Dissolved Oxygen (DO)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `BOD5` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `COD` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Ammonia (NH3-N)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Nitrate (NO3-N)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Nitrite (NO2-N)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Total Phosphorus (TP)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Orthophosphate (PO43-)` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Lead/Cadmium/Chromium` | µg/L | name has no unit; spec §12.2 gives µg/L |
-| `12.2_chemical_water_quality_master` | `Arsenic/Mercury` | µg/L | name has no unit; spec §12.2 gives µg/L |
-| `12.2_chemical_water_quality_master` | `Iron/Manganese` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `TOC` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Sulphate` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Chloride` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.2_chemical_water_quality_master` | `Fluoride` | mg/L | name has no unit; spec §12.2 gives mg/L |
-| `12.3_biological_water_quality_master` | `E. coli` | cfu/100 mL | name has no unit; spec §12.3 gives cfu/100 mL |
-| `12.3_biological_water_quality_master` | `Total coliforms` | cfu/100 mL | name has no unit; spec §12.3 gives cfu/100 mL |
-| `12.3_biological_water_quality_master` | `Chlorophyll-a` | µg/L | name has no unit; spec §12.3 gives µg/L |
-| `12.3_biological_water_quality_master` | `Blue-green algae` | cells/mL | name has no unit; spec §12.3 gives cells/mL |
-| `12.3_biological_water_quality_master` | `Microcystin` | µg/L | name has no unit; spec §12.3 gives µg/L |
-| `13.1_wastewater_effluent_quality_master` | `temperature` | °C | name has no unit; spec §13.1 gives °C |
-| `13.1_wastewater_effluent_quality_master` | `turbidity` | NTU | name has no unit; spec §13.1 gives NTU |
-| `13.1_wastewater_effluent_quality_master` | `ec_salinity` | mS/m | name has no unit; spec §13.1 gives mS/m |
-| `13.1_wastewater_effluent_quality_master` | `tss` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `do` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `BOD5` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `COD` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `Ammonia_NH3_N` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `Total_Inorganic_Nitrogen` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `Total_Phosphorus` | mg/L | name has no unit; spec §13.1 gives mg/L |
-| `13.1_wastewater_effluent_quality_master` | `Heavy_Metals` | µg/L | name has no unit; spec §13.1 gives µg/L |
-| `13.1_wastewater_effluent_quality_master` | `E_coli` | cfu/100 mL | name has no unit; spec §13.1 gives cfu/100 mL |
-| `13.1_wastewater_effluent_quality_master` | `Faecal_coliforms` | cfu/100 mL | name has no unit; spec §13.1 gives cfu/100 mL |
-| `13.1_wastewater_effluent_quality_master` | `Helminth_eggs` | eggs/L | name has no unit; spec §13.1 gives eggs/L |
-| `13.2_WWTW_operational_master` | `chlorine_dosing` | mg/L | name has no unit; spec §13.2 gives mg/L |
-| `13.2_WWTW_operational_master` | `design_capacity` | m³/day | name has no unit; spec §13.2 gives m³/day |
-| `13.2_WWTW_operational_master` | `hydraulic_loading_rate` | % | name has no unit; spec §13.2 gives % |
-| `13.2_WWTW_operational_master` | `hydraulic_retention_time` | h | name has no unit; spec §13.2 gives h |
-| `13.2_WWTW_operational_master` | `inflow_infiltration` | m³/day | name has no unit; spec §13.2 gives m³/day |
-| `13.2_WWTW_operational_master` | `influent_flow_rate` | m³/day | name has no unit; spec §13.2 gives m³/day |
-| `13.2_WWTW_operational_master` | `power_consumption` | kWh/day | name has no unit; spec §13.2 gives kWh/day |
-| `13.2_WWTW_operational_master` | `sludge_production` | m³/day | name has no unit; spec §13.2 gives m³/day |
-| `14.1_SANS_241_compliance_master` | `Turbidity_Value` | NTU | name has no unit; spec §14.1 gives NTU |
-| `14.1_SANS_241_compliance_master` | `Colour_Value` | TCU | name has no unit; spec §14.1 gives TCU |
-| `14.1_SANS_241_compliance_master` | `Temperature_Value` | °C | name has no unit; spec §14.1 gives °C |
-| `14.1_SANS_241_compliance_master` | `E_coli_Value` | cfu/100 mL | name has no unit; spec §14.1 gives cfu/100 mL |
-| `14.1_SANS_241_compliance_master` | `Total_Coliforms_Value` | cfu/100 mL | name has no unit; spec §14.1 gives cfu/100 mL |
-| `14.1_SANS_241_compliance_master` | `EC_Value` | mS/m | name has no unit; spec §14.1 gives mS/m |
-| `14.1_SANS_241_compliance_master` | `Free_Chlorine_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Nitrate_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Fluoride_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Arsenic_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Lead_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Cyanide_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `14.1_SANS_241_compliance_master` | `Total_THMs_Value` | mg/L | name has no unit; spec §14.1 gives mg/L |
-| `15.2_chemical_RWQO_variables_master` | `DO_Value` | mg/L | name has no unit; spec §15.2 gives mg/L |
-| `15.2_chemical_RWQO_variables_master` | `EC_Target_Value` | mS/m | name has no unit; spec §15.2 gives mS/m |
-| `15.2_chemical_RWQO_variables_master` | `Nutrient_Value_TN` | mg/L | name has no unit; spec §15.2 gives mg/L |
-| `15.2_chemical_RWQO_variables_master` | `Nutrient_Value_TP` | mg/L | name has no unit; spec §15.2 gives mg/L |
-| `15.2_chemical_RWQO_variables_master` | `Salinity_Value_TDS` | mg/L | name has no unit; spec §15.2 gives mg/L |
-| `15.3_hydrological_RWQO_variables_master` | `Low_Flow_Value` | m³/s | name has no unit; spec §15.3 gives m³/s |
-| `15.3_hydrological_RWQO_variables_master` | `Dilution_Value` | m³/s | name has no unit; spec §15.3 gives m³/s |
-| `15.1_ecological_variables_master` | `ecological_reserve_q` | m³/s | name has no unit; spec §15.1 gives m³/s |
-| `8_1_reservoir_operational_master` | `pct_fsc` | % FSC | the name is the unit itself (`pct_fsc`); spec §8.1 gives % of full supply capacity |
-| `10_1_borehole_and_aquifer_master` | `seasonal_water_table_fluctuation_m` | m/season | suffix `_m` reads as m; the unit column and spec §10.1 give m/season |
-| `10_1_borehole_and_aquifer_master` | `hydraulic_head_m_amsl` | m amsl | the unit column says 'm bgl', but the values (448–1 638 m) are elevations, as the name says: a water level 1 638 m below ground is impossible in South Africa's aquifers |
+| Table                                     | Column                                  | Unit       | Why                                                                                                                                                                      |
+| ----------------------------------------- | --------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `satellite_remote_sensing`                | `lst`                                   | °C         | name has no unit suffix; spec §3.2 gives LST in °C                                                                                                                       |
+| `satellite_remote_sensing`                | `vci`                                   | %          | name has no unit suffix; spec §3.2: VCI 0–100 %                                                                                                                          |
+| `satellite_remote_sensing`                | `tci`                                   | %          | name has no unit suffix; spec §3.2: TCI 0–100 %                                                                                                                          |
+| `satellite_remote_sensing`                | `vhi`                                   | %          | name has no unit suffix; spec §3.2: VHI 0–100 %                                                                                                                          |
+| `satellite_remote_sensing`                | `rootzone_soil_moisture`                | m³/m³      | name has no unit suffix; spec §3.2: root-zone soil moisture in m³/m³                                                                                                     |
+| `satellite_remote_sensing`                | `surface_soil_moisture`                 | m³/m³      | name has no unit suffix; spec §3.2: surface soil moisture in m³/m³                                                                                                       |
+| `5.2_meteorological_drivers_saws_master`  | `Growing_Degree_Days_GDD_C`             | °C·days    | suffix `_C` reads as °C, but the values are degree-day sums: Σ max(Tavg − 10 °C, 0), checked against the daily temperatures                                              |
+| `9_1_hydrological_station_master`         | `daily_mean_flow`                       | m³/day     | name has no unit; spec §9.1 gives m³/day                                                                                                                                 |
+| `9_1_hydrological_station_master`         | `river_discharge_q`                     | m³/s       | name has no unit; spec §9.1 gives m³/s                                                                                                                                   |
+| `9_1_hydrological_station_master`         | `flow_velocity`                         | m/s        | name has no unit; spec §9.1 gives m/s                                                                                                                                    |
+| `9_1_hydrological_station_master`         | `stage_height`                          | m          | name has no unit; spec §9.1 gives m                                                                                                                                      |
+| `9_1_hydrological_station_master`         | `monthly_mean_flow`                     | m³/month   | name has no unit; spec §9.1 gives m³/month                                                                                                                               |
+| `9_1_hydrological_station_master`         | `suspended_sediment_concentration`      | mg/L       | name has no unit; spec §9.1 gives mg/L                                                                                                                                   |
+| `9_1_hydrological_station_master`         | `peak_instantaneous_flow`               | m³/s       | name has no unit; spec §9.1 gives m³/s                                                                                                                                   |
+| `11_1_hydrogeological`                    | `Depth to water table`                  | m bgl      | name has no unit; spec §11.1 gives m bgl                                                                                                                                 |
+| `11_1_hydrogeological`                    | `Aquifer extent (map area)`             | km²        | name has no unit; spec §11.1 gives km²                                                                                                                                   |
+| `11_1_hydrogeological`                    | `Aquifer saturated thickness`           | m          | name has no unit; spec §11.1 gives m                                                                                                                                     |
+| `11_1_hydrogeological`                    | `Depth to bedrock / aquifer base`       | m bgl      | name has no unit; spec §11.1 gives m bgl                                                                                                                                 |
+| `11_1_hydrogeological`                    | `Dynamic (renewable) reserve`           | Mm³/year   | name has no unit; spec §11.1 gives Mm³/year                                                                                                                              |
+| `11_1_hydrogeological`                    | `Permeability / hydraulic conductivity` | m/day      | name has no unit; spec §11.1 gives m/day                                                                                                                                 |
+| `11_1_hydrogeological`                    | `Porosity (total and effective)`        | %          | name has no unit; spec §11.1 gives %                                                                                                                                     |
+| `11_1_hydrogeological`                    | `Static reserve volume`                 | Mm³        | name has no unit; spec §11.1 gives Mm³                                                                                                                                   |
+| `11_1_hydrogeological`                    | `Transmissivity`                        | m²/day     | name has no unit; spec §11.1 gives m²/day                                                                                                                                |
+| `11.2_recharge_and_discharge`             | `Baseflow discharge`                    | m³/s       | name has no unit; spec §11.2 gives m³/s                                                                                                                                  |
+| `11.2_recharge_and_discharge`             | `Evapotranspiration`                    | mm         | name has no unit; spec §11.2 gives mm                                                                                                                                    |
+| `11.2_recharge_and_discharge`             | `Spring discharge`                      | L/s        | name has no unit; spec §11.2 gives L/s                                                                                                                                   |
+| `11.2_recharge_and_discharge`             | `Direct recharge`                       | mm/year    | name has no unit; spec §11.2 gives mm/year                                                                                                                               |
+| `11.2_recharge_and_discharge`             | `Indirect recharge`                     | m³/year    | name has no unit; spec §11.2 gives m³/year                                                                                                                               |
+| `11.2_recharge_and_discharge`             | `Rainfall infiltration`                 | mm/year    | name has no unit; spec §11.2 gives mm/year                                                                                                                               |
+| `11.3_aquifer_sustainability`             | `Aquifer depletion rate`                | m/year     | name has no unit; spec §11.3 gives m/year                                                                                                                                |
+| `11.3_aquifer_sustainability`             | `Borehole yield`                        | m³/h       | name has no unit; spec §11.3 gives m³/h                                                                                                                                  |
+| `11.3_aquifer_sustainability`             | `Exploitation index`                    | %          | name has no unit; spec §11.3 gives %                                                                                                                                     |
+| `11.3_aquifer_sustainability`             | `Total abstraction`                     | m³/year    | name has no unit; spec §11.3 gives m³/year                                                                                                                               |
+| `12.1_physical_water_quality_master`      | `Temperature`                           | °C         | name has no unit; spec §12.1 gives °C                                                                                                                                    |
+| `12.1_physical_water_quality_master`      | `Turbidity`                             | NTU        | name has no unit; spec §12.1 gives NTU                                                                                                                                   |
+| `12.1_physical_water_quality_master`      | `Colour`                                | Hazen      | name has no unit; spec §12.1 gives Hazen                                                                                                                                 |
+| `12.1_physical_water_quality_master`      | `Electrical Conductivity (EC)`          | mS/m       | name has no unit; spec §12.1 gives mS/m                                                                                                                                  |
+| `12.1_physical_water_quality_master`      | `Total Dissolved Solids (TDS)`          | mg/L       | name has no unit; spec §12.1 gives mg/L                                                                                                                                  |
+| `12.1_physical_water_quality_master`      | `Total Suspended Solids (TSS)`          | mg/L       | name has no unit; spec §12.1 gives mg/L                                                                                                                                  |
+| `12.1_physical_water_quality_master`      | `Salinity`                              | mg/L       | name has no unit; spec §12.1 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Dissolved Oxygen (DO)`                 | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `BOD5`                                  | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `COD`                                   | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Ammonia (NH3-N)`                       | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Nitrate (NO3-N)`                       | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Nitrite (NO2-N)`                       | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Total Phosphorus (TP)`                 | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Orthophosphate (PO43-)`                | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Lead/Cadmium/Chromium`                 | µg/L       | name has no unit; spec §12.2 gives µg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Arsenic/Mercury`                       | µg/L       | name has no unit; spec §12.2 gives µg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Iron/Manganese`                        | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `TOC`                                   | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Sulphate`                              | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Chloride`                              | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.2_chemical_water_quality_master`      | `Fluoride`                              | mg/L       | name has no unit; spec §12.2 gives mg/L                                                                                                                                  |
+| `12.3_biological_water_quality_master`    | `E. coli`                               | cfu/100 mL | name has no unit; spec §12.3 gives cfu/100 mL                                                                                                                            |
+| `12.3_biological_water_quality_master`    | `Total coliforms`                       | cfu/100 mL | name has no unit; spec §12.3 gives cfu/100 mL                                                                                                                            |
+| `12.3_biological_water_quality_master`    | `Chlorophyll-a`                         | µg/L       | name has no unit; spec §12.3 gives µg/L                                                                                                                                  |
+| `12.3_biological_water_quality_master`    | `Blue-green algae`                      | cells/mL   | name has no unit; spec §12.3 gives cells/mL                                                                                                                              |
+| `12.3_biological_water_quality_master`    | `Microcystin`                           | µg/L       | name has no unit; spec §12.3 gives µg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `temperature`                           | °C         | name has no unit; spec §13.1 gives °C                                                                                                                                    |
+| `13.1_wastewater_effluent_quality_master` | `turbidity`                             | NTU        | name has no unit; spec §13.1 gives NTU                                                                                                                                   |
+| `13.1_wastewater_effluent_quality_master` | `ec_salinity`                           | mS/m       | name has no unit; spec §13.1 gives mS/m                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `tss`                                   | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `do`                                    | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `BOD5`                                  | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `COD`                                   | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `Ammonia_NH3_N`                         | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `Total_Inorganic_Nitrogen`              | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `Total_Phosphorus`                      | mg/L       | name has no unit; spec §13.1 gives mg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `Heavy_Metals`                          | µg/L       | name has no unit; spec §13.1 gives µg/L                                                                                                                                  |
+| `13.1_wastewater_effluent_quality_master` | `E_coli`                                | cfu/100 mL | name has no unit; spec §13.1 gives cfu/100 mL                                                                                                                            |
+| `13.1_wastewater_effluent_quality_master` | `Faecal_coliforms`                      | cfu/100 mL | name has no unit; spec §13.1 gives cfu/100 mL                                                                                                                            |
+| `13.1_wastewater_effluent_quality_master` | `Helminth_eggs`                         | eggs/L     | name has no unit; spec §13.1 gives eggs/L                                                                                                                                |
+| `13.2_WWTW_operational_master`            | `chlorine_dosing`                       | mg/L       | name has no unit; spec §13.2 gives mg/L                                                                                                                                  |
+| `13.2_WWTW_operational_master`            | `design_capacity`                       | m³/day     | name has no unit; spec §13.2 gives m³/day                                                                                                                                |
+| `13.2_WWTW_operational_master`            | `hydraulic_loading_rate`                | %          | name has no unit; spec §13.2 gives %                                                                                                                                     |
+| `13.2_WWTW_operational_master`            | `hydraulic_retention_time`              | h          | name has no unit; spec §13.2 gives h                                                                                                                                     |
+| `13.2_WWTW_operational_master`            | `inflow_infiltration`                   | m³/day     | name has no unit; spec §13.2 gives m³/day                                                                                                                                |
+| `13.2_WWTW_operational_master`            | `influent_flow_rate`                    | m³/day     | name has no unit; spec §13.2 gives m³/day                                                                                                                                |
+| `13.2_WWTW_operational_master`            | `power_consumption`                     | kWh/day    | name has no unit; spec §13.2 gives kWh/day                                                                                                                               |
+| `13.2_WWTW_operational_master`            | `sludge_production`                     | m³/day     | name has no unit; spec §13.2 gives m³/day                                                                                                                                |
+| `14.1_SANS_241_compliance_master`         | `Turbidity_Value`                       | NTU        | name has no unit; spec §14.1 gives NTU                                                                                                                                   |
+| `14.1_SANS_241_compliance_master`         | `Colour_Value`                          | TCU        | name has no unit; spec §14.1 gives TCU                                                                                                                                   |
+| `14.1_SANS_241_compliance_master`         | `Temperature_Value`                     | °C         | name has no unit; spec §14.1 gives °C                                                                                                                                    |
+| `14.1_SANS_241_compliance_master`         | `E_coli_Value`                          | cfu/100 mL | name has no unit; spec §14.1 gives cfu/100 mL                                                                                                                            |
+| `14.1_SANS_241_compliance_master`         | `Total_Coliforms_Value`                 | cfu/100 mL | name has no unit; spec §14.1 gives cfu/100 mL                                                                                                                            |
+| `14.1_SANS_241_compliance_master`         | `EC_Value`                              | mS/m       | name has no unit; spec §14.1 gives mS/m                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Free_Chlorine_Value`                   | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Nitrate_Value`                         | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Fluoride_Value`                        | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Arsenic_Value`                         | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Lead_Value`                            | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Cyanide_Value`                         | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `14.1_SANS_241_compliance_master`         | `Total_THMs_Value`                      | mg/L       | name has no unit; spec §14.1 gives mg/L                                                                                                                                  |
+| `15.2_chemical_RWQO_variables_master`     | `DO_Value`                              | mg/L       | name has no unit; spec §15.2 gives mg/L                                                                                                                                  |
+| `15.2_chemical_RWQO_variables_master`     | `EC_Target_Value`                       | mS/m       | name has no unit; spec §15.2 gives mS/m                                                                                                                                  |
+| `15.2_chemical_RWQO_variables_master`     | `Nutrient_Value_TN`                     | mg/L       | name has no unit; spec §15.2 gives mg/L                                                                                                                                  |
+| `15.2_chemical_RWQO_variables_master`     | `Nutrient_Value_TP`                     | mg/L       | name has no unit; spec §15.2 gives mg/L                                                                                                                                  |
+| `15.2_chemical_RWQO_variables_master`     | `Salinity_Value_TDS`                    | mg/L       | name has no unit; spec §15.2 gives mg/L                                                                                                                                  |
+| `15.3_hydrological_RWQO_variables_master` | `Low_Flow_Value`                        | m³/s       | name has no unit; spec §15.3 gives m³/s                                                                                                                                  |
+| `15.3_hydrological_RWQO_variables_master` | `Dilution_Value`                        | m³/s       | name has no unit; spec §15.3 gives m³/s                                                                                                                                  |
+| `15.1_ecological_variables_master`        | `ecological_reserve_q`                  | m³/s       | name has no unit; spec §15.1 gives m³/s                                                                                                                                  |
+| `8_1_reservoir_operational_master`        | `pct_fsc`                               | % FSC      | the name is the unit itself (`pct_fsc`); spec §8.1 gives % of full supply capacity                                                                                       |
+| `10_1_borehole_and_aquifer_master`        | `seasonal_water_table_fluctuation_m`    | m/season   | suffix `_m` reads as m; the unit column and spec §10.1 give m/season                                                                                                     |
+| `10_1_borehole_and_aquifer_master`        | `hydraulic_head_m_amsl`                 | m amsl     | the unit column says 'm bgl', but the values (448–1 638 m) are elevations, as the name says: a water level 1 638 m below ground is impossible in South Africa's aquifers |
 
 ## Tables in the database that are not registered
 
 Present in the database but not served yet: each needs a module page, its key and time columns registered in
 `app/registry/datasets.yaml`, and a plausibility check (docs/DATA_GAPS.md §16). Their columns:
 
-| Table | Columns |
-| --- | --- |
+| Table                                             | Columns                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `17_1_water_quantity_assessment_transfers_master` | `id`, `district_name`, `year`, `month`, `date`, `Katse_to_Vaal_Daily_Transfer_m3_day`, `Tugela_Vaal_Daily_Transfer_m3_day`, `Orange_River_System_Transfer_m3_day`, `Thukela_Vaal_Emergency_Regular_Transfer_m3_day`, `Transfer_Loss_Seepage_Evaporation_m3_day`, `Transfer_Pumping_Energy_kWh_Ml`, `Donor_Basin_Storage_FSC_pct`, `Receiving_System_Demand_Deficit_m3_day` |
-| `17_2_national_water_balance_master` | `id`, `Year`, `Month`, `Date`, `MAP_Mm3`, `AET_Mm3`, `MAR_Mm3`, `Groundwater_Recharge_Mm3`, `Surface_Storage_Mm3`, `Net_IBT_Mm3`, `Municipal_Demand_Mm3`, `Agricultural_Demand_Mm3`, `Industrial_Demand_Mm3`, `Environmental_Reserve_Mm3`, `Total_Demand_Mm3`, `Net_Water_Balance_Mm3` |
+| `17_2_national_water_balance_master`              | `id`, `Year`, `Month`, `Date`, `MAP_Mm3`, `AET_Mm3`, `MAR_Mm3`, `Groundwater_Recharge_Mm3`, `Surface_Storage_Mm3`, `Net_IBT_Mm3`, `Municipal_Demand_Mm3`, `Agricultural_Demand_Mm3`, `Industrial_Demand_Mm3`, `Environmental_Reserve_Mm3`, `Total_Demand_Mm3`, `Net_Water_Balance_Mm3`                                                                                     |

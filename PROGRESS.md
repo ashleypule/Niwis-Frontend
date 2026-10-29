@@ -36,6 +36,32 @@
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
 
+## Forecasting Studio and forecast tabs (2026-10-29)
+
+Backend: `../Niwis Backend/docs/DECISIONS.md` D29–D39, `docs/backend/CONTRACT_CHANGES.md` §15,
+`docs/backend/FRONTEND_INTEGRATION.md` §10.
+
+- `/ai` is the **Forecasting Studio** (module label renamed; the "Run Scenario" modal is gone): variable (module →
+  table → column from `GET /forecast/targets`, with history and aggregation shown), area (South Africa / province /
+  district / WMA), model (grouped from `GET /forecast/models`, Auto default, experimental marked), horizon (monthly
+  1–24, daily 1–30 for daily columns), input variables for models that take them, Run → `POST /forecast/runs` and a
+  polled progress bar; results: the dashboard's forecast chart (observed, one dashed series per backtest origin, median,
+  10–90 % band, Historical | Forecast divider), metrics, sortable model comparison with the winner and baselines,
+  SPI D0–D4 class probabilities, plain-language warnings, CSV (forecast + metrics) and PNG (chart menu); the request
+  lives in the URL (`?table=…&run=1` re-runs or loads from the server cache; "Copy link").
+- `apiPost` in the client (400 / 422 / 429 / 503 keep the server's message); `src/types/forecast.ts`;
+  `src/api/queries/forecast.ts`; `ForecastInfo` in the shared provenance fields.
+- Forecast tabs: every panel whose response carries `forecast` shows "Statistical forecast · model · skill vs
+  climatology · data to Mon YYYY · Open in Forecasting Studio", the sentence "This model does not beat the long-term
+  average for this variable" when it does not, and the disclaimer in its info tooltip
+  (`src/components/provenance/ForecastNote.tsx`). Rainfall (SPI-3 / SPI-1 tabs), climate (temperature anomaly, hot
+  days), vegetation (NDVI / VCI), runoff (depth / anomaly), surface water (discharge by province) and the Overview
+  (drought SPI / area) use the live keys; panels without a forecast product keep "Not yet available".
+- Fixtures: the recorder also POSTs the Studio's default run and a shared-link run and saves the finished runs
+  (keyed by the request body); MSW answers POSTs from fixtures. New manifest kind `forecast-api` (models, targets).
+- Tests: `tests/unit/studio-url.test.ts`; `tests/e2e/hybrid/studio.spec.ts` (default run, shared link, forecast-tab
+  note).
+
 ## Backend integration (October 2026)
 
 Plan: `PLAN.md` §7. Backend docs, findings and reports: `docs/backend/`.

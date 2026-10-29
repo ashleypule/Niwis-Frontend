@@ -11,28 +11,28 @@
 All NIWIS tables are keyed by the **52 district / metro municipalities**; there are no stations, coordinates or grid
 cells in the database.
 
-| Contract item | What the backend returns |
-| --- | --- |
-| `GET /{module}/entities` (rainfall: 213 stations, runoff: 1 842 stations) | 52 entities with `type: "district"`, `id` = MDB code (`DC44`, `CPT`, …), `province` set; no `lat`/`lon` |
-| `GET /{module}/entities/{id}` | Card for the district; `image: "municipality"` |
-| `MapLayer` with `kind: "grid"` | `kind: "choropleth"`, `level: "municipality"`, `values` keyed by **district MDB code**, plus `geometry: "districts"` (new optional field naming the boundary set) |
-| `MapLayer` with `kind: "points"` (stations, dams, boreholes) | 501 `DATA_UNAVAILABLE` (no coordinates) |
-| Province-level layers (`province-class` …) | `kind: "choropleth"`, `level: "province"`, keys = province codes (unchanged meaning) |
+| Contract item                                                             | What the backend returns                                                                                                                                          |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /{module}/entities` (rainfall: 213 stations, runoff: 1 842 stations) | 52 entities with `type: "district"`, `id` = MDB code (`DC44`, `CPT`, …), `province` set; no `lat`/`lon`                                                           |
+| `GET /{module}/entities/{id}`                                             | Card for the district; `image: "municipality"`                                                                                                                    |
+| `MapLayer` with `kind: "grid"`                                            | `kind: "choropleth"`, `level: "municipality"`, `values` keyed by **district MDB code**, plus `geometry: "districts"` (new optional field naming the boundary set) |
+| `MapLayer` with `kind: "points"` (stations, dams, boreholes)              | 501 `DATA_UNAVAILABLE` (no coordinates)                                                                                                                           |
+| Province-level layers (`province-class` …)                                | `kind: "choropleth"`, `level: "province"`, keys = province codes (unchanged meaning)                                                                              |
 
 **Frontend impact:** the map needs district polygons keyed by MDB code. The frontend's `public/geo/municipalities.json`
-has 213 *local* municipalities (ids `LM001…`, no district code), so it cannot draw these layers. Copy the backend's
+has 213 _local_ municipalities (ids `LM001…`, no district code), so it cannot draw these layers. Copy the backend's
 `reference/geo/districts.json` (52 features, `properties.id` = MDB code, 0.8 MB) into `public/geo/` — it is the same
 boundary set the backend uses for area weights.
 
 ## 2. Filters
 
-| Param | Behaviour |
-| --- | --- |
-| `municipality` | District / metro MDB codes (`/reference/municipalities` lists them). A **local** municipality code (e.g. `EC101`) → `400` with a message pointing to the parent district. |
-| `province` | Area-weighted aggregate of the province's districts. |
-| `wma` | Aggregate of districts weighted by their **area of overlap** with the WMA. Approximate: responses carry `"aggregation": "district-overlap"`. |
-| `catchment` | `501 DATA_UNAVAILABLE` — districts are far coarser than catchments. |
-| `period`, `from`, `to`, `compare`, `entityId` | As in the contract. Bad values → `400`. |
+| Param                                         | Behaviour                                                                                                                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `municipality`                                | District / metro MDB codes (`/reference/municipalities` lists them). A **local** municipality code (e.g. `EC101`) → `400` with a message pointing to the parent district. |
+| `province`                                    | Area-weighted aggregate of the province's districts.                                                                                                                      |
+| `wma`                                         | Aggregate of districts weighted by their **area of overlap** with the WMA. Approximate: responses carry `"aggregation": "district-overlap"`.                              |
+| `catchment`                                   | `501 DATA_UNAVAILABLE` — districts are far coarser than catchments.                                                                                                       |
+| `period`, `from`, `to`, `compare`, `entityId` | As in the contract. Bad values → `400`.                                                                                                                                   |
 
 `GET /reference/municipalities` returns the 52 districts (`parent` = province). `GET /reference/catchments` returns
 `501 DATA_UNAVAILABLE`.
@@ -63,10 +63,15 @@ Only where the contract allows `null` (`Kpi.value`, `CategorySet` values, table 
 ```json
 {
   "kpis": [
-    {"id": "stations", "metric": "activeStations", "label": "Active Rainfall Stations", "value": null,
-     "unavailableReason": "No station data in the database"}
+    {
+      "id": "stations",
+      "metric": "activeStations",
+      "label": "Active Rainfall Stations",
+      "value": null,
+      "unavailableReason": "No station data in the database"
+    }
   ],
-  "unavailable": [{"field": "kpis.stations", "reason": "No station data in the database"}]
+  "unavailable": [{ "field": "kpis.stations", "reason": "No station data in the database" }]
 }
 ```
 
@@ -91,17 +96,17 @@ Rules, checked on every response (`app/core/response_checks.py`; 2026-10-15, BAC
 Optional fields added to every top-level response (`KpiSet`, `SeriesSet`, `CategorySet`, `TableSet`, `MatrixSet`,
 `MapLayer`, `EntityList`):
 
-| Field | Type | Meaning |
-| --- | --- | --- |
-| `asOf` | string (ISO date) | Date of the newest record actually used. Already in `KpiSet` / `SeriesSet`; **added** to `CategorySet`, `TableSet`, `MatrixSet`, `MapLayer`, `EntityDetail`. Monthly data are stamped `YYYY-MM-01`. |
-| `source` | string[] | Database tables the values came from. |
-| `isStale` | boolean | `true` when the value's period **ended** more than **90 days** (configurable: `STALE_AFTER_DAYS`) before the newest date in the database. The latest complete period is never stale (with data to 2026-09-06: August 2026, and the year 2025). Changed 2026-10-15 (BACKEND_ISSUES #7): it used to be measured from the stamped date, so annual values for the last complete year were flagged stale. |
-| `periodEnd` | string (ISO date) | **Added 2026-10-15.** Last day of the `asOf` period for monthly (`YYYY-MM-31`) and annual (`YYYY-12-31`) values; absent for daily values. `asOf` keeps the period-start stamp. |
-| `components` | `{key, asOf, source, isStale}[]` | Per-component dates for panels that combine sources (drought cascade, headline drought class, mixed KPI sets). |
-| `baseline` | string | Reference period of anomalies / normals, e.g. `"2000–2026 monthly mean"`. |
-| `baselineNote` | string | `"Baseline shorter than the WMO 30-year standard (1981–2010 data not available)."` |
-| `aggregation` | `"district"` \| `"district-area-weighted"` \| `"district-overlap"` | How values were aggregated to the requested scope. |
-| `unavailable` | `{field, reason}[]` | See §3. |
+| Field          | Type                                                               | Meaning                                                                                                                                                                                                                                                                                                                                                                                              |
+| -------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `asOf`         | string (ISO date)                                                  | Date of the newest record actually used. Already in `KpiSet` / `SeriesSet`; **added** to `CategorySet`, `TableSet`, `MatrixSet`, `MapLayer`, `EntityDetail`. Monthly data are stamped `YYYY-MM-01`.                                                                                                                                                                                                  |
+| `source`       | string[]                                                           | Database tables the values came from.                                                                                                                                                                                                                                                                                                                                                                |
+| `isStale`      | boolean                                                            | `true` when the value's period **ended** more than **90 days** (configurable: `STALE_AFTER_DAYS`) before the newest date in the database. The latest complete period is never stale (with data to 2026-09-06: August 2026, and the year 2025). Changed 2026-10-15 (BACKEND_ISSUES #7): it used to be measured from the stamped date, so annual values for the last complete year were flagged stale. |
+| `periodEnd`    | string (ISO date)                                                  | **Added 2026-10-15.** Last day of the `asOf` period for monthly (`YYYY-MM-31`) and annual (`YYYY-12-31`) values; absent for daily values. `asOf` keeps the period-start stamp.                                                                                                                                                                                                                       |
+| `components`   | `{key, asOf, source, isStale}[]`                                   | Per-component dates for panels that combine sources (drought cascade, headline drought class, mixed KPI sets).                                                                                                                                                                                                                                                                                       |
+| `baseline`     | string                                                             | Reference period of anomalies / normals, e.g. `"2000–2026 monthly mean"`.                                                                                                                                                                                                                                                                                                                            |
+| `baselineNote` | string                                                             | `"Baseline shorter than the WMO 30-year standard (1981–2010 data not available)."`                                                                                                                                                                                                                                                                                                                   |
+| `aggregation`  | `"district"` \| `"district-area-weighted"` \| `"district-overlap"` | How values were aggregated to the requested scope.                                                                                                                                                                                                                                                                                                                                                   |
+| `unavailable`  | `{field, reason}[]`                                                | See §3.                                                                                                                                                                                                                                                                                                                                                                                              |
 
 Per value: `Kpi` gains optional `asOf`, `source`, `isStale`, `periodEnd` (each KPI may come from a different table,
 e.g. SPI to 2026-09, VCI to 2025-12); `components[]` entries carry `periodEnd` too. `EntityDetail.fields[]` gains optional `asOf`, `isStale`. Table rows may carry an `asOf`
@@ -112,13 +117,13 @@ and a `note`; the backend does not pretend the data cover 1981–2010.
 
 ## 5. Errors
 
-| Status | Body | When |
-| --- | --- | --- |
-| 400 | `{"error", "code": "BAD_REQUEST", "issues": [...]}` | Bad query parameter (FastAPI's 422 is mapped to 400); unknown selector value (§10): `issues[0] = {param, value, allowed}` |
-| 404 | `{"error", "code"?: "NOT_FOUND", "issues"?}` | Unknown module, metric, layer, entity or reference list |
-| 429 | `{"error": "Too many requests", "code": "RATE_LIMITED"}` + `Retry-After` | Per-IP rate limit, default **600/min** (was 120; `RATE_LIMIT_PER_MINUTE`). `/api/v1/health` and `RATE_LIMIT_TRUSTED_CIDRS` networks are exempt; `X-Forwarded-For` is used only with `TRUST_PROXY_HEADERS=true` |
-| 501 | `DATA_UNAVAILABLE` body (§3) | Data not in the database |
-| 500 | `{"error": "Internal server error", "requestId"}` | Unexpected error; details only in server logs |
+| Status | Body                                                                     | When                                                                                                                                                                                                           |
+| ------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 400    | `{"error", "code": "BAD_REQUEST", "issues": [...]}`                      | Bad query parameter (FastAPI's 422 is mapped to 400); unknown selector value (§10): `issues[0] = {param, value, allowed}`                                                                                      |
+| 404    | `{"error", "code"?: "NOT_FOUND", "issues"?}`                             | Unknown module, metric, layer, entity or reference list                                                                                                                                                        |
+| 429    | `{"error": "Too many requests", "code": "RATE_LIMITED"}` + `Retry-After` | Per-IP rate limit, default **600/min** (was 120; `RATE_LIMIT_PER_MINUTE`). `/api/v1/health` and `RATE_LIMIT_TRUSTED_CIDRS` networks are exempt; `X-Forwarded-For` is used only with `TRUST_PROXY_HEADERS=true` |
+| 501    | `DATA_UNAVAILABLE` body (§3)                                             | Data not in the database                                                                                                                                                                                       |
+| 500    | `{"error": "Internal server error", "requestId"}`                        | Unexpected error; details only in server logs                                                                                                                                                                  |
 
 `code` is an optional addition to the contract's `{error, issues?}` body. Every response carries an `X-Request-Id`
 header.
@@ -130,12 +135,12 @@ and `GET /api/v1/search`.
 
 New:
 
-| Endpoint | Purpose |
-| --- | --- |
-| `GET /api/v1/health` | Database reachability, read-only session check, registry and boundary status, per-module `live` / `unavailable` with reason |
-| `GET /api/v1/meta/sources` | Per table: rows, districts, first date, `asOf`, `coveredTo`, `isStale`, completeness %, size, canonical / duplicate / withheld columns, known issues |
-| `GET /api/v1/meta/coverage` | Per module roll-up of the above (for the Data Integration and Governance pages) |
-| `GET /api/v1/meta/variables` | Every variable: canonical source, duplicates, or why it is unavailable |
+| Endpoint                     | Purpose                                                                                                                                              |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/v1/health`         | Database reachability, read-only session check, registry and boundary status, per-module `live` / `unavailable` with reason                          |
+| `GET /api/v1/meta/sources`   | Per table: rows, districts, first date, `asOf`, `coveredTo`, `isStale`, completeness %, size, canonical / duplicate / withheld columns, known issues |
+| `GET /api/v1/meta/coverage`  | Per module roll-up of the above (for the Data Integration and Governance pages)                                                                      |
+| `GET /api/v1/meta/variables` | Every variable: canonical source, duplicates, or why it is unavailable                                                                               |
 
 ## 7. Module notes
 
@@ -170,26 +175,26 @@ severity `null` + `unavailable`; station maps, by-province station counts, catch
 
 ## 8. Derived values
 
-| Value | Derivation |
-| --- | --- |
-| Runoff volume (Mm³) | runoff depth (mm) × **real district area** (km²) / 1000. Labelled derived. The table's own volumes use a constant 6 500 km² for every district and are not served. |
-| Mean daily flow (m³/s) | derived volume / 86 400 s. Peak flows from the table (scaled to 6 500 km²) are withheld. |
-| Province / national / WMA values | Area-weighted from districts (§2); never plain means. |
+| Value                            | Derivation                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Runoff volume (Mm³)              | runoff depth (mm) × **real district area** (km²) / 1000. Labelled derived. The table's own volumes use a constant 6 500 km² for every district and are not served. |
+| Mean daily flow (m³/s)           | derived volume / 86 400 s. Peak flows from the table (scaled to 6 500 km²) are withheld.                                                                           |
+| Province / national / WMA values | Area-weighted from districts (§2); never plain means.                                                                                                              |
 
 ## 9. Cascade tables (2026-10-15, BACKEND_ISSUES #2, #3)
 
 `drought/table?metric=cascade` and `climate/table?metric=signal-chain` rows carry the contract's cascade keys **in
 addition to** their own, and the contract's columns are added next to the existing ones:
 
-| Key | Drought cascade | Climate signal chain |
-| --- | --- | --- |
-| `stage` | stage label (as before) | = `signal` |
-| `metric` | `spi`, `vhi`, `storagePct`, `settlementsAtRisk` | `tmean`, `et0`, `rainfall`, `runoff` |
-| `value` | **text** with unit: `SPI-6 -1.23`, `VHI 45 %`, `63.6 % FSC` | = `change` (text) |
-| `valueNum` | the number (**new**; it was `value`) | — |
-| `cls` | class id on `scale`: drought `D0`…`D4` / `No drought`, VCI classes (`Healthy` …), storage bands (`low` …) | `null` + `unavailable` |
-| `scale` | `drought`, `vci`, `storage`, `risk` (palettes in thresholds.json / the frontend) | `risk` |
-| `bar` | 0–100 from the class rank on its scale (least severe 0, most severe 100, evenly spaced: drought None…D4 = 0, 20 … 100; VCI classes and storage bands = 0, 25, 50, 75, 100) | `null` + `unavailable` |
+| Key        | Drought cascade                                                                                                                                                            | Climate signal chain                 |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `stage`    | stage label (as before)                                                                                                                                                    | = `signal`                           |
+| `metric`   | `spi`, `vhi`, `storagePct`, `settlementsAtRisk`                                                                                                                            | `tmean`, `et0`, `rainfall`, `runoff` |
+| `value`    | **text** with unit: `SPI-6 -1.23`, `VHI 45 %`, `63.6 % FSC`                                                                                                                | = `change` (text)                    |
+| `valueNum` | the number (**new**; it was `value`)                                                                                                                                       | —                                    |
+| `cls`      | class id on `scale`: drought `D0`…`D4` / `No drought`, VCI classes (`Healthy` …), storage bands (`low` …)                                                                  | `null` + `unavailable`               |
+| `scale`    | `drought`, `vci`, `storage`, `risk` (palettes in thresholds.json / the frontend)                                                                                           | `risk`                               |
+| `bar`      | 0–100 from the class rank on its scale (least severe 0, most severe 100, evenly spaced: drought None…D4 = 0, 20 … 100; VCI classes and storage bands = 0, 25, 50, 75, 100) | `null` + `unavailable`               |
 
 Kept: drought `class` (label), `severity` (% area in drought / under stress, 100 − storage %), `asOf`; climate
 `signal`, `change`, `severity` (`null` + `unavailable`). **One retype:** the drought cascade's `value` was the number
@@ -201,24 +206,24 @@ without data has `value`, `valueNum`, `cls`, `bar`, `severity` = `null` (it used
 
 Panel selectors are validated and honoured (they were all ignored). An unknown value → 400 listing the valid ones.
 
-| Endpoint | Selector | Values (default first) |
-| --- | --- | --- |
-| `rainfall/timeseries?metric=anomaly`, `drought/timeseries?metric=rain-anomaly` | `window` | `1`, `3`, `6`, `12` months summed before comparing with the normal |
-| `rainfall/table?metric=extremes` | `kind` | `wettest`, `driest` |
-| `rainfall/breakdown?metric=events` | `kind` | `count` (events > 50 mm/day), `max` (highest daily rainfall, mm) |
-| `drought/timeseries?metric=spi` | `scale` | `3`, `1`, `6`, `12`, `24` |
-| `drought/timeseries?metric=drought-area` | `scale` | `6`, `1`, `3`, `12`, `24` (SPI used for the classes) |
-| `drought/table?metric=affected` | `level` | `province`, `catchment` (→ 501) |
-| `climate/timeseries?metric=national-trend` | `var` | `temperature` (°C), `rainfall`, `et` (ET₀), `streamflow` (modelled runoff depth) — annual totals in mm |
-| `climate/breakdown?metric=seasonal-change` | `var` | `temperature` (°C), `rainfall` (mm) |
-| `climate/timeseries?metric=heat-days` | `kind` | `hot` (Tmax > 35 °C), `cold` (frost nights, Tmin < 0 °C) |
-| `climate/timeseries?metric=extreme-rain` | `kind` | `r20` (days ≥ 20 mm), `rx1` (Rx1day, mm) |
-| `climate/timeseries?metric=indicator-trends` | `scenario` | absent / `observed`; `rcp45`, `rcp85` → 501 |
-| `vegetation/timeseries?metric=indices` | `set` | comma-separated: `ndvi`, `vci`, `vhi`, `tci`, `ndwi`, `lst`, `sm` (live); `evi`, `savi`, `msavi2`, `vpi`, `asi`, `svi`, `ndii` (null + `unavailable`); default `ndvi,evi,savi,msavi2`; at most two units |
-| `vegetation/timeseries?metric=index-trend` | `index` | as `set`, one value; withheld indices → 501 |
-| `vegetation/timeseries?metric=drivers` | `var` | `rain` (mm), `temp` (Tmax °C), `pet` (ET₀, mm/day), `sm` (m³/m³) |
-| `runoff/timeseries?metric=drivers` | `var` | `rain`, `aet` (mm, complete months), `sm` |
-| `runoff/table?metric=top-stations` | `order` | `highest`, `lowest` |
+| Endpoint                                                                       | Selector   | Values (default first)                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rainfall/timeseries?metric=anomaly`, `drought/timeseries?metric=rain-anomaly` | `window`   | `1`, `3`, `6`, `12` months summed before comparing with the normal                                                                                                                                       |
+| `rainfall/table?metric=extremes`                                               | `kind`     | `wettest`, `driest`                                                                                                                                                                                      |
+| `rainfall/breakdown?metric=events`                                             | `kind`     | `count` (events > 50 mm/day), `max` (highest daily rainfall, mm)                                                                                                                                         |
+| `drought/timeseries?metric=spi`                                                | `scale`    | `3`, `1`, `6`, `12`, `24`                                                                                                                                                                                |
+| `drought/timeseries?metric=drought-area`                                       | `scale`    | `6`, `1`, `3`, `12`, `24` (SPI used for the classes)                                                                                                                                                     |
+| `drought/table?metric=affected`                                                | `level`    | `province`, `catchment` (→ 501)                                                                                                                                                                          |
+| `climate/timeseries?metric=national-trend`                                     | `var`      | `temperature` (°C), `rainfall`, `et` (ET₀), `streamflow` (modelled runoff depth) — annual totals in mm                                                                                                   |
+| `climate/breakdown?metric=seasonal-change`                                     | `var`      | `temperature` (°C), `rainfall` (mm)                                                                                                                                                                      |
+| `climate/timeseries?metric=heat-days`                                          | `kind`     | `hot` (Tmax > 35 °C), `cold` (frost nights, Tmin < 0 °C)                                                                                                                                                 |
+| `climate/timeseries?metric=extreme-rain`                                       | `kind`     | `r20` (days ≥ 20 mm), `rx1` (Rx1day, mm)                                                                                                                                                                 |
+| `climate/timeseries?metric=indicator-trends`                                   | `scenario` | absent / `observed`; `rcp45`, `rcp85` → 501                                                                                                                                                              |
+| `vegetation/timeseries?metric=indices`                                         | `set`      | comma-separated: `ndvi`, `vci`, `vhi`, `tci`, `ndwi`, `lst`, `sm` (live); `evi`, `savi`, `msavi2`, `vpi`, `asi`, `svi`, `ndii` (null + `unavailable`); default `ndvi,evi,savi,msavi2`; at most two units |
+| `vegetation/timeseries?metric=index-trend`                                     | `index`    | as `set`, one value; withheld indices → 501                                                                                                                                                              |
+| `vegetation/timeseries?metric=drivers`                                         | `var`      | `rain` (mm), `temp` (Tmax °C), `pet` (ET₀, mm/day), `sm` (m³/m³)                                                                                                                                         |
+| `runoff/timeseries?metric=drivers`                                             | `var`      | `rain`, `aet` (mm, complete months), `sm`                                                                                                                                                                |
+| `runoff/table?metric=top-stations`                                             | `order`    | `highest`, `lowest`                                                                                                                                                                                      |
 
 ## 11. Database category charts (2026-10-15) — new endpoints, additions only
 
@@ -226,16 +231,17 @@ The database view: every registered table is a **category**, every column a **va
 column name (docs/CATEGORY_CATALOGUE.md). Two new endpoints per module (`rainfall`, `drought`, `climate`,
 `vegetation`, `runoff`); nothing existing changes.
 
-| Endpoint | Response | Notes |
-| --- | --- | --- |
-| `GET /api/v1/{module}/categories` | `CategoryList` (new) | The module's tables (table → module mapping: `category_modules` in `app/registry/datasets.yaml`), each with `id`, `table`, `label`, `spec` / `specTag` (`"§3.1"`), `resolution`, `asOf` / `isStale`, `counts` (live / withheld / duplicate), `groups` (chart groups: `id`, `label`, `unit`, `resolution`, `columns`, `defaultVisible`, `path`) and `variables` (every column: `column`, `label`, `name`, `unit`, `kind`, `resolution`, `status`, `reason`, `duplicateOf`, `group`, `defaultVisible`, `asOf` / `isStale` / `periodEnd`, `source` = `table.column`, `note`, `unitOverride`). |
-| `GET /api/v1/{module}/category/{tableId}/{groupId}` | `SeriesSet` | One series per requested column: `vars=col1,col2` (exact column names), `vars=all`, default the group's `defaultVisible`. Global filters as everywhere (`province`, `wma`, `municipality`, `period`, `from`, `to`); `entityId` selects one district. Unknown table / group → 404 (lists the valid ids); unknown column → 400 (lists the group's columns). |
+| Endpoint                                            | Response             | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET /api/v1/{module}/categories`                   | `CategoryList` (new) | The module's tables (table → module mapping: `category_modules` in `app/registry/datasets.yaml`), each with `id`, `table`, `label`, `spec` / `specTag` (`"§3.1"`), `resolution`, `asOf` / `isStale`, `counts` (live / withheld / duplicate), `groups` (chart groups: `id`, `label`, `unit`, `resolution`, `columns`, `defaultVisible`, `path`) and `variables` (every column: `column`, `label`, `name`, `unit`, `kind`, `resolution`, `status`, `reason`, `duplicateOf`, `group`, `defaultVisible`, `asOf` / `isStale` / `periodEnd`, `source` = `table.column`, `note`, `unitOverride`). |
+| `GET /api/v1/{module}/category/{tableId}/{groupId}` | `SeriesSet`          | One series per requested column: `vars=col1,col2` (exact column names), `vars=all`, default the group's `defaultVisible`. Global filters as everywhere (`province`, `wma`, `municipality`, `period`, `from`, `to`); `entityId` selects one district. Unknown table / group → 404 (lists the valid ids); unknown column → 400 (lists the group's columns).                                                                                                                                                                                                                                  |
 
 Additions to `Series` (all optional, set on category series): `unit` (the column's unit; absent for unitless
 indices), `asOf`, `isStale`, `periodEnd`, `source` (`["table.column"]`), `resolution` (`daily` / `monthly` /
 `annual`), `status` (`live` / `withheld`). `key` = the exact column name, `name` = the catalogue label.
 
 Rules the frontend can rely on:
+
 - **Axis rule:** a group never mixes units, so a category chart always has **one** axis (`axes[0].unit` = the
   group's unit; `index` for unitless SPI/SPEI/SSI/SGI/RAI/SVI or NDVI/NDWI/… groups, which are separate groups).
 - **Withheld** columns are all-null series with an `unavailable` entry (`series.<column>`, the reason). Duplicates are
@@ -411,6 +417,7 @@ All columns of a group are now read in one table scan, so uncached scopes are fa
 
 SGI repeats its Aug 2024 value in every district from Sep 2024, so it is served for May 2002 – Aug 2024 only (registry
 `valid_from` / `valid_until`; a new `valid_until` sits next to `valid_from`):
+
 - `drought/timeseries?metric=gw-sgi` is **200 again** (was 501 in 13.x): the `sgi` series covers the page period
   ending Aug 2024, with `asOf` 2024-08-01, `isStale: true`, `periodEnd` 2024-08-31 and `source`; the response has the
   same `asOf` / `isStale` / `periodEnd` and `note` "Values after Aug 2024 repeat Aug 2024 and are withheld." The
@@ -436,6 +443,7 @@ national, province=WC, municipality=DC32, wma=WMA5 — the frontend's test scope
 ### 13.9 Runoff anomaly from `7.2_derived_runoff_indicators_master`; `testing_table` ignored
 
 Additions only; values change slightly.
+
 - `runoff/summary` KPI `anomaly`, `runoff/timeseries?metric=runoff-anomaly`, `runoff/map?layer=runoff-anomaly`,
   `runoff/breakdown?metric=by-wma` (`lt`) and the runoff entity card use the same-month means stored in 7.2 instead of
   the API's 2000–2025 means (DATA_GAPS §20). For one district the monthly anomaly is 7.2's `Runoff_Anomaly_percent`.
@@ -586,7 +594,7 @@ Guidelines, compliance, ratios and the CCME WQI: DECISIONS D20.
 - `Cache-Control: public, max-age=<s>` on 200 and 501 responses (summary / map 900, other module endpoints 3600,
   meta / reference / categories 3600); `no-store` on `/health` and other errors.
 - New errors: 413 `{"error": "Request body too large", "code": "PAYLOAD_TOO_LARGE"}`, 414 `{"error": "Query string too
-  long", "code": "URI_TOO_LONG"}`. Only GET (and CORS preflight) is allowed.
+long", "code": "URI_TOO_LONG"}`. Only GET (and CORS preflight) is allowed.
 - CORS: `Access-Control-Allow-Origin: *` unless `CORS_ORIGINS` names origins; never credentials.
 
 ## 15. Forecasting Studio and page forecasts (2026-10-23 / 29) — new endpoints, additions, forecast keys now 200
@@ -596,13 +604,13 @@ NIWIS makes its own statistical forecasts from the database (DECISIONS D29–D39
 
 ### 15.1 Forecasting Studio API (`/api/v1/forecast/*`, new)
 
-| Request | Returns |
-| --- | --- |
-| `GET /forecast/models` | `{choices: [auto, compare], groups, models: [{id, label, group, groupLabel, description, minHistoryMonths, minHistoryDays, supportsInputs, requiresInputs, resolutions, experimental, nativeInterval}], limits: {monthlyHorizon, dailyHorizon, minHistoryMonths, minHistoryMonthsDeep, minHistoryDays, maxInputs, runsPerHour, timeoutSeconds, retentionHours}, disclaimer}` |
-| `GET /forecast/targets?module=` | the live numeric daily / monthly catalogue columns, per table: `{table, column, label, name, unit, monthlyUnit, resolution, resolutions, aggregate (sum \| mean), classified, firstDate, lastDate, historyMonths, enoughHistory, note?}` |
+| Request                                                                                                                                                                             | Returns                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /forecast/models`                                                                                                                                                              | `{choices: [auto, compare], groups, models: [{id, label, group, groupLabel, description, minHistoryMonths, minHistoryDays, supportsInputs, requiresInputs, resolutions, experimental, nativeInterval}], limits: {monthlyHorizon, dailyHorizon, minHistoryMonths, minHistoryMonthsDeep, minHistoryDays, maxInputs, runsPerHour, timeoutSeconds, retentionHours}, disclaimer}`                                                                                                                                          |
+| `GET /forecast/targets?module=`                                                                                                                                                     | the live numeric daily / monthly catalogue columns, per table: `{table, column, label, name, unit, monthlyUnit, resolution, resolutions, aggregate (sum \| mean), classified, firstDate, lastDate, historyMonths, enoughHistory, note?}`                                                                                                                                                                                                                                                                              |
 | `POST /forecast/runs` body `{table, column, scope: {level: national \| province \| district \| wma, id?}, model, horizon, inputs: [{table, column}], resolution: monthly \| daily}` | **202** `{runId, status, cached, statusUrl}` + `Location`. Errors: 400 (unknown table / column / model / scope, horizon out of range, withheld or duplicate column), **422 `UNPROCESSABLE`** (`{error, code, issues}`: fewer than 36 months, constant series, more than 20 % missing, an input ending before the target), **429 `RATE_LIMITED`** with `Retry-After` (10 new runs per hour per address; cached results are free), **503 `BUSY`** with `Retry-After` (queue full). The API's only POST; CORS allows it. |
-| `GET /forecast/runs/{runId}` | `{runId, status: queued \| running \| done \| failed, progress 0–1, message, queuePosition?, request, createdAt, startedAt?, finishedAt?, expiresAt?, result?, error?: {code, detail}}`, `Cache-Control: no-store`. 404 after `retentionHours` (24 h). |
-| `GET /forecast/pages` | status of the precomputed page forecasts (variable, scope, status, model, skill, data date). |
+| `GET /forecast/runs/{runId}`                                                                                                                                                        | `{runId, status: queued \| running \| done \| failed, progress 0–1, message, queuePosition?, request, createdAt, startedAt?, finishedAt?, expiresAt?, result?, error?: {code, detail}}`, `Cache-Control: no-store`. 404 after `retentionHours` (24 h).                                                                                                                                                                                                                                                                |
+| `GET /forecast/pages`                                                                                                                                                               | status of the precomputed page forecasts (variable, scope, status, model, skill, data date).                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 `result` (when `done`): `label` "Statistical forecast", `disclaimer`, `target {table, column, label, unit, resolution,
 aggregate, classified, note}`, `scope {level, id, name}`, `inputs[]`, `sources[]`, `dataAsOf`, `model {id, label,
@@ -633,24 +641,24 @@ other scopes (district, WMA) answer 501 pointing to the Studio. Forecast `Series
 last observation), `obs` (last 36 months), `median` (dashed), `asOf` = the last observed month (the divider),
 `horizon` query parameter 3 / 6 / 12 / 24 (default 12), `note` with model, skill and data date.
 
-| Module | Key | Series | Notes |
-| --- | --- | --- | --- |
-| drought | `forecast?metric=spi` | SPI-3 (`scale=3`, default) or SPI-6 (`scale=6`) | `scale` selector, 400 for other values |
-| drought | `forecast?metric=spei` (new key) | SPEI-3 | |
-| drought | `forecast?metric=area` | % of the area in D1–D4 (district SPI-6) | 0–100 % |
-| drought | `table?metric=forecast-indicators`, `forecast-kpis` | rows `spi-3`, `spi-6`, `spei-3`, `drought-area`: `indicator, unit, current, h3, h6, h12, h24, model, skill` | a row without a forecast is null + `unavailable` |
-| drought | `breakdown?metric=class-probability` | categories 1–6 months, series `None, D0 … D4` (%) stacked | from the SPI-3 forecast |
-| drought | `matrix?metric=province-risk` | provinces × 3 / 6 / 12 / 24 months, P(D2+) 0–1, `scale: index01` | from each province's SPI-3 forecast |
-| rainfall | `forecast?metric=rainfall` | monthly rainfall (mm) | ≥ 0 |
-| rainfall | `forecast?metric=spi` | SPI-3 (`scale=3`, default) or SPI-1 (`scale=1`) | was documented as SPI-6 |
-| climate | `forecast?metric=temp-anomaly`, `hot-days` (new keys) | monthly temperature anomaly (°C); hot days (Tmax > 35 °C) per month | |
-| vegetation | `forecast?metric=ndvi`, `vci` (new key) | NDVI; VCI (%) | `table?metric=forecast-indicators`: rows `ndvi`, `vci` |
-| runoff | `forecast?metric=runoff`, `runoff-anomaly` (new key) | runoff depth (mm/month); 7.2 runoff anomaly (%) | `flow` → 501 (modelled per district; the gauged forecast is on surface water) |
-| surface-water | `forecast?metric=flow`, `runoff` | river discharge (m³/s, 9_1); runoff depth | `flow` no longer needs `entityId` |
-| groundwater | `forecast?metric=level` | depth to groundwater (m bgl) | 501 while the telemetry has too many unsampled months (38 % nationally) |
-| ai | `forecast?metric=drought`, `streamflow`, `groundwater` | SPI-3; river discharge; depth to groundwater | `reservoir`, `demand`, `quality`, `scenario` → 501 with reasons |
-| ai | `table?metric=models` | the page forecasts' models and backtest scores (`variable, pages, model, mae, rmse, mase, skill, coverage, dataAsOf, status`) | |
-| overview | `forecast?metric=ai` | SPI-3 | |
+| Module        | Key                                                    | Series                                                                                                                        | Notes                                                                         |
+| ------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| drought       | `forecast?metric=spi`                                  | SPI-3 (`scale=3`, default) or SPI-6 (`scale=6`)                                                                               | `scale` selector, 400 for other values                                        |
+| drought       | `forecast?metric=spei` (new key)                       | SPEI-3                                                                                                                        |                                                                               |
+| drought       | `forecast?metric=area`                                 | % of the area in D1–D4 (district SPI-6)                                                                                       | 0–100 %                                                                       |
+| drought       | `table?metric=forecast-indicators`, `forecast-kpis`    | rows `spi-3`, `spi-6`, `spei-3`, `drought-area`: `indicator, unit, current, h3, h6, h12, h24, model, skill`                   | a row without a forecast is null + `unavailable`                              |
+| drought       | `breakdown?metric=class-probability`                   | categories 1–6 months, series `None, D0 … D4` (%) stacked                                                                     | from the SPI-3 forecast                                                       |
+| drought       | `matrix?metric=province-risk`                          | provinces × 3 / 6 / 12 / 24 months, P(D2+) 0–1, `scale: index01`                                                              | from each province's SPI-3 forecast                                           |
+| rainfall      | `forecast?metric=rainfall`                             | monthly rainfall (mm)                                                                                                         | ≥ 0                                                                           |
+| rainfall      | `forecast?metric=spi`                                  | SPI-3 (`scale=3`, default) or SPI-1 (`scale=1`)                                                                               | was documented as SPI-6                                                       |
+| climate       | `forecast?metric=temp-anomaly`, `hot-days` (new keys)  | monthly temperature anomaly (°C); hot days (Tmax > 35 °C) per month                                                           |                                                                               |
+| vegetation    | `forecast?metric=ndvi`, `vci` (new key)                | NDVI; VCI (%)                                                                                                                 | `table?metric=forecast-indicators`: rows `ndvi`, `vci`                        |
+| runoff        | `forecast?metric=runoff`, `runoff-anomaly` (new key)   | runoff depth (mm/month); 7.2 runoff anomaly (%)                                                                               | `flow` → 501 (modelled per district; the gauged forecast is on surface water) |
+| surface-water | `forecast?metric=flow`, `runoff`                       | river discharge (m³/s, 9_1); runoff depth                                                                                     | `flow` no longer needs `entityId`                                             |
+| groundwater   | `forecast?metric=level`                                | depth to groundwater (m bgl)                                                                                                  | 501 while the telemetry has too many unsampled months (38 % nationally)       |
+| ai            | `forecast?metric=drought`, `streamflow`, `groundwater` | SPI-3; river discharge; depth to groundwater                                                                                  | `reservoir`, `demand`, `quality`, `scenario` → 501 with reasons               |
+| ai            | `table?metric=models`                                  | the page forecasts' models and backtest scores (`variable, pages, model, mae, rmse, mase, skill, coverage, dataAsOf, status`) |                                                                               |
+| overview      | `forecast?metric=ai`                                   | SPI-3                                                                                                                         |                                                                               |
 
 Still 501, with the reason: district outlook maps (`outlook-*`, `forecast-6`, `forecast-1/2/3`, `forecast-ndvi`,
 `forecast-anomaly`, `forecast-12`, `forecast-wqi`), settlements / population, recovery, flood probability, reservoir
