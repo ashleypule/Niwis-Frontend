@@ -441,10 +441,8 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   { page: AI, kind: 'forecast-api', key: 'models', scoped: false },
   { page: AI, kind: 'forecast-api', key: 'targets', scoped: false },
   sum(AI, 'ai'),
-  ...many(
-    (k) => fc(AI, 'ai', k),
-    ['drought', 'streamflow', 'groundwater', 'reservoir', 'demand', 'quality', 'scenario'],
-  ),
+  ...many((k) => fc(AI, 'ai', k), ['drought', 'streamflow', 'groundwater', 'reservoir', 'demand', 'quality']),
+  ...many((t) => fc(AI, 'ai', 'scenario', { target: t }), ['reservoir', 'drought', 'groundwater']),
   tb(AI, 'ai', 'models'),
   tb(AI, 'ai', 'early-warning'),
   bd(AI, 'ai', 'importance'),

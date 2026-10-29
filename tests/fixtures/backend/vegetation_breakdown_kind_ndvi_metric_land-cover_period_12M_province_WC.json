@@ -1,1 +1,1 @@
-{"status":501,"requestId":"4b79c5f916df4627","body":{"error":"No land-cover data per district in the database","code":"DATA_UNAVAILABLE","detail":"No land-cover data per district in the database","missing":["land_cover"]}}
+{"status":501,"requestId":"23ab6decb4804804","body":{"error":"No land-cover data per district in the database","code":"DATA_UNAVAILABLE","detail":"No land-cover data per district in the database","missing":["land_cover"]}}

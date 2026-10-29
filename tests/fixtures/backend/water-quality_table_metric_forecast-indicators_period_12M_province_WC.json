@@ -1,1 +1,1 @@
-{"status":501,"requestId":"f23146788d6545a3","body":{"error":"Water-quality outlooks need a forecast model","code":"DATA_UNAVAILABLE","detail":"Water-quality outlooks need a forecast model","missing":["table:water-quality:forecast-indicators"]}}
+{"status":501,"requestId":"051cf085d1cc4a46","body":{"error":"Water-quality outlooks need a forecast model","code":"DATA_UNAVAILABLE","detail":"Water-quality outlooks need a forecast model","missing":["table:water-quality:forecast-indicators"]}}

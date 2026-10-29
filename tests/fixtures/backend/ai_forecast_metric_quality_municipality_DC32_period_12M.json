@@ -1,0 +1,1 @@
+{"status":501,"requestId":"e4608d8074d4403a","body":{"error":"The water-quality index is computed per district over 12 months; it is not forecast yet.","code":"DATA_UNAVAILABLE","detail":"The water-quality index is computed per district over 12 months; it is not forecast yet.","missing":["forecast:ai:quality"]}}

@@ -1,1 +1,1 @@
-{"status":501,"requestId":"19da46e1abe846ab","body":{"error":"No aquifer units or aquifer codes in the database (districts only)","code":"DATA_UNAVAILABLE","detail":"No aquifer units or aquifer codes in the database (districts only)","missing":["table:groundwater:aquifers"]}}
+{"status":501,"requestId":"ac639831db9c4ba0","body":{"error":"No aquifer units or aquifer codes in the database (districts only)","code":"DATA_UNAVAILABLE","detail":"No aquifer units or aquifer codes in the database (districts only)","missing":["table:groundwater:aquifers"]}}

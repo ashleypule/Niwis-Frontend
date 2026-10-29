@@ -1,0 +1,1 @@
+{"status":501,"requestId":"2ffb59efe6ec44a8","body":{"error":"Reservoir storage is withheld (the 8_1 storage values are a placeholder, DECISIONS D2), so it is not forecast.","code":"DATA_UNAVAILABLE","detail":"Reservoir storage is withheld (the 8_1 storage values are a placeholder, DECISIONS D2), so it is not forecast.","missing":["forecast:ai:reservoir"]}}

@@ -1,0 +1,1 @@
+{"status":501,"requestId":"fb0cec95d9b54e6f","body":{"error":"Early-warning signals need alert rules, which are not defined yet","code":"DATA_UNAVAILABLE","detail":"Early-warning signals need alert rules, which are not defined yet","missing":["table:ai:early-warning"]}}

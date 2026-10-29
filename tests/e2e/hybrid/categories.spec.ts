@@ -15,7 +15,8 @@ const MODULES = (
   ''
 )
   .split(',')
-  .filter(Boolean);
+  .filter(Boolean)
+  .filter((m) => m !== 'ai'); // the Forecasting Studio has no database tables, hence no catalogue
 
 interface Variable {
   column: string;

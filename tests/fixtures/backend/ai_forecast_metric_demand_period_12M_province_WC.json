@@ -1,0 +1,1 @@
+{"status":501,"requestId":"b76fe472498b4f21","body":{"error":"No water-demand data are in the database.","code":"DATA_UNAVAILABLE","detail":"No water-demand data are in the database.","missing":["forecast:ai:demand"]}}

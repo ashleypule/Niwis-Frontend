@@ -80,7 +80,9 @@ for (const vp of VIEWPORTS) {
         await sampleAlwaysMarked(page);
         // live data never fails silently into an error state with recorded responses
         await expect(page.locator('[data-state="error"]')).toHaveCount(0);
-        await expect(page.getByTestId('live-summary')).toContainText(`${LIVE.length} of 24 modules live`);
+        // the Forecasting Studio (ai) is live but has no database tables, so /health does not count it
+        const dataModules = LIVE.filter((m) => m !== 'ai').length;
+        await expect(page.getByTestId('live-summary')).toContainText(`${dataModules} of 24 modules live`);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
         expect(overflow, 'horizontal overflow (px)').toBeLessThanOrEqual(1);
         await page.screenshot({ path: `tests/screenshots/hybrid/${vp.width}/${slug(route)}.png`, fullPage: true });

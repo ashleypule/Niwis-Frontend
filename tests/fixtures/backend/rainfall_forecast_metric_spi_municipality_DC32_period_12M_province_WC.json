@@ -1,1 +1,0 @@
-{"status":400,"requestId":"e1225a332419430e","body":{"error":"Municipality DC32 is in MP, not WC","code":"BAD_REQUEST","issues":[{"param":"municipality","value":"DC32","province":"MP"}]}}

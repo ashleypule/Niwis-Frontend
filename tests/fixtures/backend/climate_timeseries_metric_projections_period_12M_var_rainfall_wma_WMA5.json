@@ -1,1 +1,1 @@
-{"status":501,"requestId":"ade1eb76c0dd402d","body":{"error":"No climate projections (RCP scenarios) in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections (RCP scenarios) in the database","missing":["projections"]}}
+{"status":501,"requestId":"04ff3637071b4bc1","body":{"error":"No climate projections (RCP scenarios) in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections (RCP scenarios) in the database","missing":["projections"]}}

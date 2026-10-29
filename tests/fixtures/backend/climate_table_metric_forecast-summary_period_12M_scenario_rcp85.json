@@ -1,1 +1,1 @@
-{"status":501,"requestId":"90e20178f10f4fa8","body":{"error":"No climate projections in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections in the database","missing":["forecast-summary"]}}
+{"status":501,"requestId":"0d3d2cbe631b4921","body":{"error":"No climate projections in the database","code":"DATA_UNAVAILABLE","detail":"No climate projections in the database","missing":["forecast-summary"]}}
