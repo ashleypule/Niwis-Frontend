@@ -10,6 +10,7 @@ import { tableMissing } from '@/lib/provenance';
 import { panelProvenance } from '@/components/provenance/provenance';
 import { useUi } from '@/store/filters';
 import { DataTable } from './DataTable';
+import { ForecastNote, forecastInfoText } from '@/components/provenance/ForecastNote';
 import type { Blocker, PanelTab } from '@/components/charts/panels';
 
 export function TablePanel({
@@ -59,7 +60,7 @@ export function TablePanel({
     <Card
       title={title}
       context={context}
-      info={info}
+      info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
       className={className}
       provenance={panelProvenance(q, module)}
       sectionRef={box}
@@ -92,6 +93,7 @@ export function TablePanel({
               }
             />
             <MissingNote items={tableMissing(q.data!)} />
+            {q.data!.forecast && <ForecastNote f={q.data!.forecast} />}
           </>
         )}
     </Card>

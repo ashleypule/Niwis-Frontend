@@ -11,9 +11,24 @@ export interface Fixture {
   body: unknown;
 }
 
-/** "rainfall/timeseries?metric=anomaly&period=12M&window=1" — path below /api/v1 + sorted query. */
-export function fixtureKey(url: URL): string {
+/** JSON with object keys sorted at every level: the same request body always gives the same fixture key. */
+export function stableJson(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(stableJson).join(',')}]`;
+  if (v && typeof v === 'object')
+    return `{${Object.keys(v as Record<string, unknown>)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${stableJson((v as Record<string, unknown>)[k])}`)
+      .join(',')}}`;
+  return JSON.stringify(v);
+}
+
+/**
+ * "rainfall/timeseries?metric=anomaly&period=12M&window=1" — path below /api/v1 + sorted query; a POST (the
+ * Forecasting Studio's runs) adds its body: "forecast/runs?body={…}".
+ */
+export function fixtureKey(url: URL, body?: unknown): string {
   const sp = new URLSearchParams([...url.searchParams].sort(([a], [b]) => a.localeCompare(b)));
+  if (body !== undefined) sp.set('body', stableJson(body));
   const q = sp.toString();
   return `${url.pathname.replace(/^.*\/api\/v1\//, '')}${q ? `?${q}` : ''}`;
 }
@@ -39,9 +54,9 @@ export const fixtureFile = (key: string) => {
 
 let index: Promise<Record<string, string>> | null = null;
 
-export async function fixtureResponse(url: URL): Promise<Response> {
+export async function fixtureResponse(url: URL, body?: unknown): Promise<Response> {
   index ??= fetch('/__fixtures/index.json').then((r) => r.json() as Promise<Record<string, string>>);
-  const key = fixtureKey(url);
+  const key = fixtureKey(url, body);
   const file = (await index)[key];
   if (!file) {
     console.warn(`[fixtures] missing ${key} (add it to src/api/liveManifest.ts and re-record)`);

@@ -22,7 +22,9 @@ export type ManifestKind =
   /** the module's database catalogue */
   | 'categories'
   /** one catalogue chart group (key = "tableId/groupId"); expanded from the catalogue by expandCategories() */
-  | 'category';
+  | 'category'
+  /** the Forecasting Studio's lists: key = models | targets */
+  | 'forecast-api';
 
 export interface ManifestEntry {
   page: string;
@@ -116,6 +118,7 @@ const GW = '/groundwater';
 const GWR = '/groundwater-reserve';
 const WQ = '/water-quality';
 const WQF = '/water-quality/forecast';
+const AI = '/ai';
 
 export const LIVE_REQUESTS: ManifestEntry[] = [
   // ---------------------------------------------------------------- rainfall
@@ -142,7 +145,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   bd(R, 'rainfall', 'events', { kind: 'count' }),
   bd(R, 'rainfall', 'events', { kind: 'max' }),
   ...many((p) => fc(RF, 'rainfall', 'rainfall', p ? { province: p } : {}), PROVINCE_TAB_IDS.slice(0, 2)),
-  ...many((p) => fc(RF, 'rainfall', 'spi', p ? { province: p } : {}), PROVINCE_TAB_IDS.slice(0, 2)),
+  ...many((k) => fc(RF, 'rainfall', 'spi', { scale: k }), [3, 1]),
   tb(RF, 'drought', 'early-warning'),
 
   // ---------------------------------------------------------------- drought
@@ -188,7 +191,8 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   tb(DF, 'drought', 'forecast-indicators'),
   mp(DF, 'drought', 'forecast-6'),
   fc(DF, 'drought', 'area'),
-  ...many((k) => fc(DF, 'drought', 'spi', { horizon: k }), [3]),
+  ...many((k) => fc(DF, 'drought', 'spi', { horizon: k }), [3, 6, 12, 24]),
+  fc(DF, 'drought', 'spei'),
   fc(DF, 'drought', 'settlements'),
   fc(DF, 'drought', 'population'),
   mx(DF, 'drought', 'province-risk'),
@@ -218,6 +222,8 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   tb(C, 'climate', 'signal-chain'),
   tb(C, 'climate', 'provinces'),
   bd(C, 'climate', 'risk-index'),
+  fc(CF, 'climate', 'temp-anomaly'),
+  fc(CF, 'climate', 'hot-days'),
   tb(CF, 'climate', 'forecast-summary', { scenario: 'rcp85' }),
   tb(CF, 'climate', 'risk-outlook', { scenario: 'rcp85' }),
   ts(CF, 'climate', 'indicator-trends', { scenario: 'rcp85' }),
@@ -263,6 +269,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   tb(V, 'vegetation', 'hotspots'),
   ...many((k) => mp(VF, 'vegetation', k), ['forecast-ndvi', 'forecast-anomaly']),
   fc(VF, 'vegetation', 'ndvi'),
+  fc(VF, 'vegetation', 'vci'),
   fc(VF, 'vegetation', 'recovery-probability'),
   tb(VF, 'vegetation', 'forecast-indicators'),
 
@@ -297,6 +304,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   ...many((k) => tb(RO, 'runoff', 'top-stations', { order: k }), ['highest', 'lowest']),
   tb(RO, 'runoff', 'events'),
   fc(ROF, 'runoff', 'runoff'),
+  fc(ROF, 'runoff', 'runoff-anomaly'),
   fc(ROF, 'runoff', 'flow', { entityId: SAMPLE_DISTRICT }),
   fc(ROF, 'runoff', 'flood-probability'),
 
@@ -344,7 +352,7 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   tb(SW, 'surface-water', 'alerts'),
   tb(SWF, 'surface-water', 'statistics', { entityId: SAMPLE_DISTRICT }),
   fc(SWF, 'surface-water', 'runoff'),
-  fc(SWF, 'surface-water', 'flow', { entityId: SAMPLE_DISTRICT }),
+  fc(SWF, 'surface-water', 'flow'),
   fc(SWF, 'surface-water', 'flood-probability'),
 
   // ---------------------------------------------------------------- groundwater
@@ -429,7 +437,23 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
     ] as const
   ).map(([page, module]): ManifestEntry => ({ page, kind: 'categories', module, scoped: false })),
 
+  // ---------------------------------------------------------------- forecasting studio (ai) and page forecasts
+  { page: AI, kind: 'forecast-api', key: 'models', scoped: false },
+  { page: AI, kind: 'forecast-api', key: 'targets', scoped: false },
+  sum(AI, 'ai'),
+  ...many(
+    (k) => fc(AI, 'ai', k),
+    ['drought', 'streamflow', 'groundwater', 'reservoir', 'demand', 'quality', 'scenario'],
+  ),
+  tb(AI, 'ai', 'models'),
+  tb(AI, 'ai', 'early-warning'),
+  bd(AI, 'ai', 'importance'),
+
   // ---------------------------------------------------------------- overview (live panels)
+  fc('/', 'drought', 'spi'),
+  fc('/', 'drought', 'area'),
+  fc('/', 'ai', 'reservoir'),
+  fc('/', 'drought', 'settlements'),
   ts('/', 'drought', 'drought-area', { period: '24M' }),
   ...many((k) => mp('/', 'drought', k), ['municipal-class', 'rain-anomaly', 'vci']),
   ...many((m) => sum('/', m), ['dams', 'runoff', 'groundwater', 'water-quality']),
@@ -468,6 +492,8 @@ export function manifestPath(e: ManifestEntry): string {
       return `/api/v1/${e.module}/categories`;
     case 'category':
       return `/api/v1/${e.module}/category/${e.key}`;
+    case 'forecast-api':
+      return `/api/v1/forecast/${e.key}`;
     case 'entities':
     case 'summary':
       return `/api/v1/${e.module}/${e.kind}`;

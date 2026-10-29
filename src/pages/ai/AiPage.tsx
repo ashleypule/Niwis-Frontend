@@ -1,96 +1,19 @@
-import { useState } from 'react';
-import {
-  BrainCircuit,
-  CloudRain,
-  Cpu,
-  Database,
-  Gauge,
-  Leaf,
-  Play,
-  ShieldCheck,
-  Sun,
-  Waves,
-  Wrench,
-  Droplets,
-  FlaskConical,
-  Landmark,
-  LineChart,
-} from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import { BrainCircuit, Cpu, Database, LineChart, ShieldCheck } from 'lucide-react';
 import { KpiStrip } from '@/components/kpi/KpiStrip';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Row } from '@/components/layout/Grid';
 import { FlowDiagram } from '@/components/viz/FlowDiagram';
-import { useEntities } from '@/api/queries/core';
-import { ScenarioModal } from './ScenarioModal';
-
-const MODULE_CARDS = [
-  {
-    icon: Sun,
-    title: 'Drought forecast',
-    model: 'LSTM + Transformer ensemble',
-    out: '1–6 month drought class (D0–D4)',
-    color: '#C74300',
-  },
-  {
-    icon: Waves,
-    title: 'Streamflow forecast',
-    model: 'CNN-LSTM spatio-temporal',
-    out: '7–90 day river flow',
-    color: '#1565C0',
-  },
-  {
-    icon: Landmark,
-    title: 'Reservoir forecast',
-    model: 'Random Forest + LSTM',
-    out: '30–180 day dam level',
-    color: '#0FA3B1',
-  },
-  {
-    icon: FlaskConical,
-    title: 'Water quality',
-    model: 'Gradient Boosting + LSTM',
-    out: 'Exceedance probability',
-    color: '#8E44AD',
-  },
-  {
-    icon: Leaf,
-    title: 'Vegetation forecast',
-    model: 'CNN + LSTM',
-    out: '30-day vegetation health map',
-    color: '#2E7D32',
-  },
-  {
-    icon: Wrench,
-    title: 'Infrastructure failure',
-    model: 'Isolation Forest + LSTM',
-    out: 'Pipe break prediction score',
-    color: '#6D4C41',
-  },
-  {
-    icon: Gauge,
-    title: 'Demand forecast',
-    model: 'XGBoost + regression',
-    out: 'Monthly demand by WSA',
-    color: '#F2A900',
-  },
-  {
-    icon: Droplets,
-    title: 'Groundwater level',
-    model: 'LSTM autoregressive',
-    out: '6–12 month level forecast',
-    color: '#00838F',
-  },
-  {
-    icon: CloudRain,
-    title: 'Flood early warning',
-    model: 'Hydrological model + GBM',
-    out: '1–7 day flood exceedance',
-    color: '#C62828',
-  },
-];
+import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
+import { isLive } from '@/config/app';
+import { useForecastModels, useForecastTargets, useRun, useStartRun } from '@/api/queries/forecast';
+import type { ApiError } from '@/api/client';
+import { StudioForm } from './studio/StudioForm';
+import { StudioProgress, StudioResults } from './studio/StudioResults';
+import { DEFAULT_STATE, paramsFromState, requestOf, stateFromParams, type StudioState } from './studio/studioUrl';
 
 const FRAMEWORK = [
   {
@@ -98,30 +21,28 @@ const FRAMEWORK = [
     color: '#1565C0',
     icon: Database,
     items: [
-      { title: 'Climate & weather', lines: ['SAWS stations, CHIRPS, ERA5'] },
-      { title: 'Hydrology & storage', lines: ['DWS gauges, dams, NGA boreholes'] },
-      { title: 'Earth observation', lines: ['SANSA NDVI, LST, soil moisture, GRACE-FO'] },
-      { title: 'Socio-economic', lines: ['Stats SA, municipal returns, tariffs'] },
+      { title: 'Database catalogue', lines: ['Any live numeric column, with its label and unit'] },
+      { title: 'Area', lines: ['South Africa, a province, a district or a WMA'] },
     ],
   },
   {
-    title: 'Pre-processing',
+    title: 'Series',
     color: '#00838F',
     icon: Cpu,
     items: [
-      { title: 'Quality control', lines: ['Range / spike / spatial checks'] },
-      { title: 'Gap filling', lines: ['Kriging, LSTM imputation (< 10% missing)'] },
-      { title: 'Feature engineering', lines: ['Lags 1–24 m, rolling means, anomalies'] },
+      { title: 'Monthly values', lines: ['Amounts summed, states averaged'] },
+      { title: 'Dashboard weighting', lines: ['Area-weighted, or summed for volumes'] },
+      { title: 'Gap filling', lines: ['Inside each training window only'] },
     ],
   },
   {
-    title: 'AI / ML models',
+    title: 'Models',
     color: '#7B1FA2',
     icon: BrainCircuit,
     items: [
-      { title: 'Deep learning', lines: ['LSTM, CNN-LSTM, Transformer'] },
-      { title: 'Ensembles', lines: ['Random Forest, XGBoost, GBM'] },
-      { title: 'Anomaly detection', lines: ['Isolation Forest'] },
+      { title: 'Baselines', lines: ['Naive, seasonal naive, climatology'] },
+      { title: 'Statistical / ML', lines: ['ETS, SARIMA(X), Prophet, RF, LightGBM, VAR'] },
+      { title: 'Deep (experimental)', lines: ['LSTM, Transformer'] },
     ],
   },
   {
@@ -129,9 +50,8 @@ const FRAMEWORK = [
     color: '#C74300',
     icon: ShieldCheck,
     items: [
-      { title: 'Hold-out 2019–2024', lines: ['RMSE, NSE, MAE, R²'] },
-      { title: 'Expert review', lines: ['DWS / SAWS drought labels'] },
-      { title: 'Uncertainty', lines: ['Quantile p10 / p50 / p90'] },
+      { title: 'Rolling-origin backtest', lines: ['Never sees data after its origin'] },
+      { title: 'Scores', lines: ['MAE, RMSE, MASE, skill vs climatology, coverage'] },
     ],
   },
   {
@@ -139,61 +59,182 @@ const FRAMEWORK = [
     color: '#2E7D32',
     icon: LineChart,
     items: [
-      { title: 'Forecasts & maps', lines: ['Module forecast tabs, API'] },
-      { title: 'Early warnings', lines: ['Alerts, SMS / e-mail'] },
-      { title: 'Scenario analysis', lines: ['Baseline, RCP 2.6, RCP 8.5'] },
+      { title: 'Forecast', lines: ['Median with a 10–90 % band'] },
+      { title: 'Page forecast tabs', lines: ['Recomputed when new data arrive'] },
     ],
   },
 ];
 
+function useStudio() {
+  const [sp, setSp] = useSearchParams();
+  const [state, setState] = useState<StudioState>(() => ({ ...DEFAULT_STATE, ...stateFromParams(sp) }));
+  const [runId, setRunId] = useState<string>();
+  const [shared, setShared] = useState(false);
+  const start = useStartRun();
+  const run = useRun(runId);
+  const autoRan = useRef(false);
+
+  const go = (s: StudioState = state) => {
+    const req = requestOf(s);
+    if (!req) return;
+    setSp(paramsFromState(s, sp, true), { replace: true });
+    start.mutate(req, { onSuccess: (a) => setRunId(a.runId) });
+  };
+  // a shared link (run=1) re-runs on open: the server answers from its cache when nothing changed
+  useEffect(() => {
+    if (!autoRan.current && sp.get('run') === '1' && requestOf(state)) {
+      autoRan.current = true;
+      go(state);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const change = (s: StudioState) => {
+    setState(s);
+    setShared(false);
+    setSp(paramsFromState(s, sp, false), { replace: true });
+  };
+  const share = () => {
+    const url = new URL(window.location.href);
+    url.search = paramsFromState(state, sp, true).toString();
+    void navigator.clipboard?.writeText(url.toString()).then(() => setShared(true));
+  };
+  return { state, change, go, share, shared, start, run };
+}
+
+function Studio() {
+  const models = useForecastModels();
+  const targets = useForecastTargets();
+  const { state, change, go, share, shared, start, run } = useStudio();
+  const status = run.data;
+  const busy = start.isPending || status?.status === 'queued' || status?.status === 'running';
+  const startError = start.error as ApiError | null;
+  const failed = status?.status === 'failed' ? status.error : undefined;
+  const shown = useMemo(() => {
+    // first visit: preselect SPI-3 when it exists, so Run works in one click
+    if (state.table || !targets.data) return state;
+    const t = targets.data.tables.find((x) => x.columns.some((c) => c.column.startsWith('SPI_3')));
+    const c = t?.columns.find((x) => x.column.startsWith('SPI_3'));
+    return t && c ? { ...state, table: t.table, column: c.column } : state;
+  }, [state, targets.data]);
+
+  if (models.isError || targets.isError)
+    return (
+      <ErrorState
+        error={models.error ?? targets.error}
+        onRetry={() => {
+          void models.refetch();
+          void targets.refetch();
+        }}
+      />
+    );
+  if (!models.data || !targets.data) return <Skeleton height={220} />;
+  return (
+    <div className="space-y-3">
+      <StudioForm
+        models={models.data}
+        targets={targets.data}
+        state={shown}
+        onChange={change}
+        onRun={() => go(shown)}
+        onShare={share}
+        busy={busy}
+        shared={shared}
+      />
+      <p className="text-[12px] text-muted">
+        {models.data.disclaimer} Each run trains on the database&apos;s own history, validates on held-back recent data,
+        then refits on all of it. Up to {models.data.limits.runsPerHour} new runs per hour per address; results are kept{' '}
+        {models.data.limits.retentionHours} h and shared by identical requests.
+      </p>
+      {startError && (
+        <p
+          role="alert"
+          className="rounded-lg border border-bad bg-bad-soft p-3 text-sm text-ink"
+          data-testid="run-error"
+        >
+          {startError.message}
+        </p>
+      )}
+      {failed && (
+        <p
+          role="alert"
+          className="rounded-lg border border-bad bg-bad-soft p-3 text-sm text-ink"
+          data-testid="run-error"
+        >
+          The forecast did not finish: {failed.detail}
+        </p>
+      )}
+      {status && (status.status === 'queued' || status.status === 'running') && <StudioProgress run={status} />}
+      {status?.status === 'done' && status.result && <StudioResults result={status.result} />}
+    </div>
+  );
+}
+
+function ModelList() {
+  const models = useForecastModels();
+  if (!models.data) return null;
+  return (
+    <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 desk:grid-cols-4" data-testid="model-list">
+      {models.data.models.map((m) => (
+        <li key={m.id} className="rounded-xl border border-line p-3">
+          <p className="text-[11px] uppercase tracking-wide text-muted">{m.groupLabel}</p>
+          <p className="text-[13px] font-semibold leading-tight text-ink">
+            {m.label}
+            {m.experimental && (
+              <span className="ml-1 rounded bg-warn-soft px-1 text-[10px] font-medium">experimental</span>
+            )}
+          </p>
+          <p className="mt-1 text-[11.5px] leading-snug text-ink-2">{m.description}</p>
+          <p className="mt-1 text-[11px] text-muted">
+            ≥ {m.minHistoryMonths} months{m.supportsInputs ? ' · uses input variables' : ''}
+            {m.resolutions.includes('daily') ? ' · daily too' : ''}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function AiPage() {
-  const [open, setOpen] = useState(false);
-  const dams = useEntities('dams', { limit: 500 });
+  const live = isLive('ai');
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-ink-2">
-          Prediction engine (Module 10, spec §22) — forecasts across all water-system components.
-        </p>
-        <Button onClick={() => setOpen(true)}>
-          <Play className="h-4 w-4" /> Run Scenario
-        </Button>
-      </div>
+      <p className="mb-3 text-sm text-ink-2">
+        Forecasting Studio (spec §22): statistical forecasts of any variable in the national database, for any area,
+        validated on held-back data and compared with simple baselines.
+      </p>
       <KpiStrip module="ai" count={6} />
       <Row>
-        <Card title="AI Analytics Modules" context="Spec §22.1 predictive model requirements">
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 desk:grid-cols-5 wide:grid-cols-9">
-            {MODULE_CARDS.map((m) => {
-              const Icon = m.icon;
-              return (
-                <li
-                  key={m.title}
-                  className="rounded-xl border border-line p-3"
-                  style={{ borderTop: `3px solid ${m.color}` }}
-                >
-                  <Icon className="h-6 w-6" style={{ color: m.color }} aria-hidden="true" />
-                  <p className="mt-1.5 text-[13px] font-semibold leading-tight text-ink">{m.title}</p>
-                  <p className="mt-1 text-[11px] text-muted">{m.model}</p>
-                  <p className="mt-1 text-[11px] text-ink-2">→ {m.out}</p>
-                </li>
-              );
-            })}
-          </ul>
+        <Card
+          title="Forecasting Studio"
+          context="Choose a variable, an area, a model and a horizon, then Run"
+          info="Statistical forecast from historical data; not an official SAWS / DWS outlook."
+        >
+          {live ? (
+            <Studio />
+          ) : (
+            <p className="py-8 text-center text-sm text-muted">
+              The Forecasting Studio trains models on the national database, so it needs the NIWIS backend. It is not
+              available with sample data.
+            </p>
+          )}
         </Card>
       </Row>
+      {live && (
+        <Row>
+          <Card title="Models available" context="From the forecasting engine (GET /api/v1/forecast/models)">
+            <ModelList />
+          </Card>
+        </Row>
+      )}
       <Row>
-        <Card title="AI Modelling Framework">
+        <Card title="How a forecast is made">
           <FlowDiagram columns={FRAMEWORK} />
         </Card>
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">
-        <SeriesPanel
-          module="ai"
-          metric="streamflow"
-          forecast
-          title="Streamflow Forecast (Main-stem Station)"
-          height={230}
-        />
+        <SeriesPanel module="ai" metric="drought" forecast title="Drought Forecast (SPI-3)" height={230} />
+        <SeriesPanel module="ai" metric="streamflow" forecast title="River Discharge Forecast" height={230} />
+        <SeriesPanel module="ai" metric="groundwater" forecast title="Groundwater Level Forecast" height={230} />
         <SeriesPanel
           module="ai"
           metric="reservoir"
@@ -201,11 +242,9 @@ export default function AiPage() {
           title="Reservoir Storage Forecast (National)"
           height={230}
         />
-        <SeriesPanel module="ai" metric="groundwater" forecast title="Groundwater Level Forecast" height={230} />
-        <SeriesPanel module="ai" metric="demand" forecast title="Water Demand Forecast (Municipal)" height={230} />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.4fr_1fr]">
-        <TablePanel module="ai" metric="models" title="Model Performance (Validation 2019–2024)" />
+        <TablePanel module="ai" metric="models" title="Page Forecast Models (Backtest Scores)" />
         <CategoryPanel
           module="ai"
           metric="importance"
@@ -229,7 +268,6 @@ export default function AiPage() {
         />
         <TablePanel module="ai" metric="early-warning" title="AI Early Warning Signals" />
       </Row>
-      {open && <ScenarioModal onClose={() => setOpen(false)} dams={dams.data?.items ?? []} />}
     </div>
   );
 }

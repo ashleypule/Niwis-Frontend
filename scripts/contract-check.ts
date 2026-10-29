@@ -31,6 +31,7 @@ import { MODULE_HANDLERS } from '@/mocks/handlers/modules';
 import { ctxFromParams } from '@/mocks/handlers/router';
 import { referenceHandler } from '@/mocks/handlers/reference';
 import { getPaced, withCategoryGroups } from './lib/paced';
+import { ForecastModelsSchema, ForecastTargetsSchema } from '@/types/forecast';
 
 const BASE = (process.env.BACKEND_URL ?? 'http://localhost:8000').replace(/\/$/, '');
 const filter = process.argv.find((a) => a.startsWith('--filter='))?.slice(9);
@@ -52,6 +53,7 @@ const SCHEMA: Record<ManifestEntry['kind'], ZodTypeAny | ((e: ManifestEntry) => 
   category: SeriesSetSchema,
   meta: (e) =>
     e.key === 'sources' ? MetaSourcesSchema : e.key === 'coverage' ? MetaCoverageSchema : MetaVariablesSchema,
+  'forecast-api': (e) => (e.key === 'models' ? ForecastModelsSchema : ForecastTargetsSchema),
 };
 
 type Any = Record<string, unknown>;
@@ -68,6 +70,7 @@ interface Result {
 function mockFor(e: ManifestEntry, qs: URLSearchParams): Any | undefined {
   try {
     const ctx = ctxFromParams(qs);
+    if (e.kind === 'forecast-api') return undefined; // no sample version: the Studio needs the backend
     if (e.kind === 'reference') return (referenceHandler(e.key!, ctx) ?? undefined) as Any | undefined;
     const mod = MODULE_HANDLERS[e.module ?? ''];
     if (!mod) return undefined;
@@ -187,7 +190,7 @@ function categoryRules(e: ManifestEntry, live: Any): string[] {
 
 async function run(e: ManifestEntry): Promise<Result> {
   const params = new URLSearchParams();
-  if (!['entity', 'reference', 'health', 'meta', 'categories'].includes(e.kind) && !e.params?.from)
+  if (!['entity', 'reference', 'health', 'meta', 'categories', 'forecast-api'].includes(e.kind) && !e.params?.from)
     params.set('period', '12M');
   for (const [k, v] of Object.entries(manifestParams(e))) if (v !== '') params.set(k, String(v));
   params.sort();

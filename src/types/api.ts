@@ -20,7 +20,35 @@ export type Component = z.infer<typeof ComponentSchema>;
 export const UnavailableSchema = z.object({ field: z.string(), reason: z.string() });
 export type Unavailable = z.infer<typeof UnavailableSchema>;
 
+/**
+ * A forecast response's model and skill (docs/backend/CONTRACT_CHANGES.md §15): always a statistical forecast from the
+ * database's own history, never an official outlook.
+ */
+export const ForecastInfoSchema = z.object({
+  label: z.string(),
+  model: z.string(),
+  modelLabel: z.string(),
+  why: z.string().optional(),
+  /** backtest skill against the same-month climatology: > 0 beats the long-term average */
+  skill: z.number().nullable().optional(),
+  mase: z.number().nullable().optional(),
+  coverage: z.number().nullable().optional(),
+  beatsClimatology: z.boolean().nullable().optional(),
+  skillNote: z.string().nullable().optional(),
+  /** last observed month: the "Historical | Forecast" divider */
+  dataAsOf: z.string(),
+  forecastStart: z.string(),
+  horizon: z.number(),
+  generatedAt: z.string(),
+  disclaimer: z.string(),
+  /** Forecasting Studio link that reopens this forecast */
+  studio: z.string().nullable().optional(),
+});
+export type ForecastInfo = z.infer<typeof ForecastInfoSchema>;
+
 export const ProvenanceFields = {
+  /** forecast responses: model, skill, data date, disclaimer */
+  forecast: ForecastInfoSchema.optional(),
   /** date of the newest record used (monthly data are stamped YYYY-MM-01) */
   asOf: z.string().optional(),
   /** database tables the values came from */

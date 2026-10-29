@@ -22,20 +22,38 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
           metric="runoff"
           forecast
           title="Runoff Forecast (Next 12 Months)"
-          tabs={PROVINCE_TABS}
+          tabs={
+            module === 'runoff'
+              ? [
+                  { value: 'runoff', label: 'Runoff depth', metric: 'runoff' },
+                  { value: 'anomaly', label: 'Runoff anomaly', metric: 'runoff-anomaly' },
+                ]
+              : PROVINCE_TABS
+          }
           height={280}
         />
-        <SeriesPanel
-          module={module}
-          metric="flow"
-          forecast
-          title={`Streamflow Forecast (Selected ${entityNoun(module)})`}
-          context={st.name}
-          extra={{ entityId: st.id }}
-          enabled={!!st.id}
-          blockedBy={st.list}
-          height={280}
-        />
+        {module === 'surface-water' ? (
+          <SeriesPanel
+            module={module}
+            metric="flow"
+            forecast
+            title="River Discharge Forecast (Next 12 Months)"
+            tabs={PROVINCE_TABS}
+            height={280}
+          />
+        ) : (
+          <SeriesPanel
+            module={module}
+            metric="flow"
+            forecast
+            title={`Streamflow Forecast (Selected ${entityNoun(module)})`}
+            context={st.name}
+            extra={{ entityId: st.id }}
+            enabled={!!st.id}
+            blockedBy={st.list}
+            height={280}
+          />
+        )}
         <SeriesPanel
           module={module}
           metric="flood-probability"

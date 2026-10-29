@@ -15,7 +15,17 @@ import { ApiErrorBodySchema, type ApiErrorBody } from '@/types/api';
 import { liveParams } from './scope';
 
 export type ApiErrorKind =
-  'network' | 'timeout' | 'http' | 'schema' | 'auth' | 'not-found' | 'bad-request' | 'rate-limited' | 'unavailable';
+  | 'network'
+  | 'timeout'
+  | 'http'
+  | 'schema'
+  | 'auth'
+  | 'not-found'
+  | 'bad-request'
+  | 'unprocessable'
+  | 'rate-limited'
+  | 'busy'
+  | 'unavailable';
 
 export class ApiError extends Error {
   constructor(
@@ -107,6 +117,7 @@ const MESSAGES: Record<number, string> = {
   401: 'The data service refused the request.',
   403: 'You do not have access to this data.',
   404: 'This dataset is not available.',
+  422: 'The data cannot support this request.',
   429: 'Too many requests. Please wait a moment.',
   500: 'The data service returned an error.',
   502: 'The data service is unavailable.',
@@ -248,4 +259,66 @@ async function fetchSample<T>(
     if (signal?.aborted) throw e;
     return undefined;
   }
+}
+
+/**
+ * POST a JSON body (the Forecasting Studio's runs: the API's only POST). Errors map as in `apiGet`; a 400 / 422 / 429 /
+ * 503 keeps the server's own message (it says what to change), and a 429 / 503 is not retried here: the Studio shows
+ * the wait the server asks for.
+ */
+export async function apiPost<T>(
+  path: string,
+  body: unknown,
+  schema: ZodType<T, ZodTypeDef, unknown>,
+  signal?: AbortSignal,
+): Promise<T> {
+  const url = buildUrl(path, {}, isLivePath(path));
+  const headers: Record<string, string> = { Accept: 'application/json', 'Content-Type': 'application/json' };
+  const token = tokenProvider ? await tokenProvider() : null;
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetchWithTimeout(
+    url,
+    { method: 'POST', headers, body: JSON.stringify(body) },
+    signal,
+    APP.requestTimeoutMs,
+  );
+  const requestId = res.headers.get('x-request-id') ?? undefined;
+  if (!res.ok) {
+    const err = await readBody(res);
+    const kind: ApiErrorKind =
+      res.status === 400
+        ? 'bad-request'
+        : res.status === 404
+          ? 'not-found'
+          : res.status === 422
+            ? 'unprocessable'
+            : res.status === 429
+              ? 'rate-limited'
+              : res.status === 503
+                ? 'busy'
+                : 'http';
+    const msg = err?.error ?? MESSAGES[res.status] ?? `Request failed (${res.status}).`;
+    const wait = res.headers.get('retry-after');
+    throw new ApiError(
+      kind,
+      wait ? `${msg} (retry in ${wait} s)` : msg,
+      res.status,
+      err,
+      requestId ?? err?.requestId,
+      url,
+    );
+  }
+  const parsed = schema.safeParse(await res.json());
+  if (!parsed.success) {
+    console.error('[api] schema validation failed', url, parsed.error.issues.slice(0, 5));
+    throw new ApiError(
+      'schema',
+      'The data received did not match the expected format.',
+      res.status,
+      parsed.error.issues,
+      requestId,
+      url,
+    );
+  }
+  return parsed.data;
 }

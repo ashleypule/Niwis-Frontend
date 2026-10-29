@@ -7,6 +7,7 @@ import { Tabs } from '@/components/ui/Card';
 import { Row } from '@/components/layout/Grid';
 import { ForecastKpis } from '@/components/kpi/ForecastKpis';
 import { YearMap } from '@/components/map/YearMap';
+import { PROVINCE_TABS } from '@/pages/_shared/tabs';
 
 const mod = moduleById('climate');
 
@@ -30,6 +31,24 @@ export default function ClimateForecastPage() {
         />
       </div>
       <ForecastKpis module="climate" metric="forecast-summary" extra={p} />
+      <Row className="md:grid-cols-2">
+        <SeriesPanel
+          module="climate"
+          metric="temp-anomaly"
+          forecast
+          title="Temperature Anomaly Forecast (Next 12 Months)"
+          tabs={PROVINCE_TABS}
+          height={280}
+        />
+        <SeriesPanel
+          module="climate"
+          metric="hot-days"
+          forecast
+          title="Hot Days Forecast (Tmax > 35 °C, Next 12 Months)"
+          tabs={PROVINCE_TABS}
+          height={280}
+        />
+      </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-3">
         <YearMap module="climate" layer="proj-temp" title="Projected Temperature Change (°C)" params={p} />
         <YearMap module="climate" layer="proj-rain" title="Projected Annual Rainfall Change (%)" params={p} />

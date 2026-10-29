@@ -93,12 +93,12 @@ export default function OverviewPage() {
           module="overview"
           metric="ai"
           forecast
-          title="AI Forecasts (Next 3–12 Months)"
+          title="Forecasts (Next 12 Months)"
           tabs={[
-            { value: 'drought', label: 'Drought (SPI)', params: { tab: 'drought' } },
-            { value: 'reservoir', label: 'Reservoir', params: { tab: 'reservoir' } },
-            { value: 'area', label: 'Drought area', params: { tab: 'area' } },
-            { value: 'settlements', label: 'Settlements', params: { tab: 'settlements' } },
+            { value: 'drought', label: 'Drought (SPI-3)', module: 'drought', metric: 'spi' },
+            { value: 'area', label: 'Drought area', module: 'drought', metric: 'area' },
+            { value: 'reservoir', label: 'Reservoir', module: 'ai', metric: 'reservoir' },
+            { value: 'settlements', label: 'Settlements', module: 'drought', metric: 'settlements' },
           ]}
           height={230}
         />

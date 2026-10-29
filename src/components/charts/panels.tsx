@@ -20,8 +20,9 @@ import { splitNullCategories, splitNullSeries } from '@/lib/provenance';
 import { panelProvenance, withBaseline, type PanelProvenance } from '@/components/provenance/provenance';
 import { isLive } from '@/config/app';
 import { provenanceOf } from '@/api/client';
-import type { SeriesSet } from '@/types/api';
+import type { ForecastInfo, SeriesSet } from '@/types/api';
 import { UnavailableState } from '@/components/feedback/PanelBoundary';
+import { ForecastNote, forecastInfoText } from '@/components/provenance/ForecastNote';
 
 /** A query another panel waits for (see SeriesPanel `blockedBy`). */
 export interface Blocker {
@@ -125,7 +126,7 @@ export function SeriesPanel({
       <ChartCard
         title={title}
         context={context}
-        info={info}
+        info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
         height={height}
         className={className}
         band={band}
@@ -139,8 +140,8 @@ export function SeriesPanel({
   return (
     <ChartCard
       title={split ? recordTitle(title, split.set) : liveTitle(title, mod)}
-      context={context ?? q.data?.note}
-      info={info}
+      context={context ?? (q.data?.forecast ? undefined : q.data?.note)}
+      info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
       height={height}
       className={className}
       band={band}
@@ -154,7 +155,7 @@ export function SeriesPanel({
       empty={!!split && split.set.series.every((s) => !s.data.length)}
       option={option}
       rows={rows}
-      footer={footer}
+      footer={withForecast(footer, q.data?.forecast)}
       controls={
         tabRow || controls ? (
           <>
@@ -164,6 +165,17 @@ export function SeriesPanel({
         ) : undefined
       }
     />
+  );
+}
+
+/** A forecast panel's footer: the model / skill / data-date note under any footer the page passes. */
+function withForecast(footer: ReactNode, f: ForecastInfo | undefined): ReactNode {
+  if (!f) return footer;
+  return (
+    <>
+      {footer}
+      <ForecastNote f={f} />
+    </>
   );
 }
 
@@ -217,7 +229,7 @@ export function CategoryPanel({
       <ChartCard
         title={title}
         context={context}
-        info={info}
+        info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
         className={className}
         band={band}
         sectionRef={box}
@@ -241,7 +253,7 @@ export function CategoryPanel({
     <ChartCard
       title={title}
       context={context}
-      info={info}
+      info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
       height={height}
       className={className}
       band={band}
@@ -255,7 +267,7 @@ export function CategoryPanel({
       empty={!!split && (!split.set.categories.length || !split.set.series.length)}
       option={option}
       rows={rows}
-      footer={footer}
+      footer={withForecast(footer, q.data?.forecast)}
       controls={
         tabRow || controls ? (
           <>
@@ -294,7 +306,7 @@ export function MatrixPanel({
     <ChartCard
       title={title}
       context={context}
-      info={info}
+      info={q.data?.forecast ? forecastInfoText(q.data.forecast, info) : info}
       height={height}
       className={className}
       band={band}
@@ -306,7 +318,7 @@ export function MatrixPanel({
       onRetry={() => q.refetch()}
       option={option}
       rows={rows}
-      footer={q.data ? <MatrixLegend scale={q.data.scale} /> : undefined}
+      footer={q.data ? withForecast(<MatrixLegend scale={q.data.scale} />, q.data.forecast) : undefined}
       controls={
         tabRow || controls ? (
           <>

@@ -24,11 +24,21 @@ export default function RainfallForecastPage() {
           module="rainfall"
           metric="rainfall"
           forecast
-          title="Monthly Rainfall Forecast (Next 6 Months)"
+          title="Monthly Rainfall Forecast (Next 12 Months)"
           tabs={PROVINCE_TABS}
           height={280}
         />
-        <SeriesPanel module="rainfall" metric="spi" forecast title="SPI-6 Forecast" tabs={PROVINCE_TABS} height={280} />
+        <SeriesPanel
+          module="rainfall"
+          metric="spi"
+          forecast
+          title="SPI Forecast (Next 12 Months)"
+          tabs={[
+            { value: '3', label: 'SPI-3', params: { scale: 3 } },
+            { value: '1', label: 'SPI-1', params: { scale: 1 } },
+          ]}
+          height={280}
+        />
       </Row>
       <Row className="md:grid-cols-2">
         <TablePanel module="drought" metric="early-warning" title="Rainfall-related Early Warning (Next 3 Months)" />

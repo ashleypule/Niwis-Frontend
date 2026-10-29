@@ -101,6 +101,8 @@ export function isLivePath(pathname: string): boolean {
   if (APP.dataSource === 'api') return true;
   if (first === 'health' || first === 'meta') return APP.liveMeta;
   if (first === 'reference') return LIVE_REFERENCE.includes(second ?? '');
+  // the Forecasting Studio API belongs to the Forecasting Studio page (module id 'ai')
+  if (first === 'forecast') return isLive('ai');
   return isLive(first);
 }
 

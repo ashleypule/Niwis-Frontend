@@ -6,7 +6,6 @@ import { MiniMap } from '@/components/map/MiniMap';
 import { SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Row } from '@/components/layout/Grid';
-import { PROVINCE_TABS } from '@/pages/_shared/tabs';
 
 const mod = moduleById('vegetation');
 
@@ -31,8 +30,11 @@ export default function VegetationForecastPage() {
           module="vegetation"
           metric="ndvi"
           forecast
-          title="NDVI Forecast (Next 12 Months)"
-          tabs={PROVINCE_TABS}
+          title="NDVI / VCI Forecast (Next 12 Months)"
+          tabs={[
+            { value: 'ndvi', label: 'NDVI', metric: 'ndvi' },
+            { value: 'vci', label: 'VCI', metric: 'vci' },
+          ]}
           height={300}
         />
         <SeriesPanel

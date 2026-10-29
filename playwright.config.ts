@@ -27,7 +27,7 @@ export default defineConfig({
     },
     {
       name: 'hybrid',
-      testMatch: ['hybrid/hybrid.spec.ts', 'hybrid/categories.spec.ts'],
+      testMatch: ['hybrid/hybrid.spec.ts', 'hybrid/categories.spec.ts', 'hybrid/studio.spec.ts'],
       use: { baseURL: 'http://localhost:4174' },
     },
     {
