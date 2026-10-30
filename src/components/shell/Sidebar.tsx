@@ -1,11 +1,33 @@
 import { NavLink } from 'react-router';
 import clsx from 'clsx';
 import { ChevronsLeft, ChevronsRight, X } from 'lucide-react';
+import { useHealth } from '@/api/queries/core';
 import { MODULES, NAV_GROUPS } from '@/config/modules';
 import { useUi } from '@/store/filters';
 import { DwsLogo } from './Brand';
 
+/** A module /health does not report as live: red dot = not served (no table), amber = partial. */
+function StatusDot({ status, reason, collapsed }: { status: string; reason?: string | null; collapsed: boolean }) {
+  const label = status === 'partial' ? 'Partly live' : 'Not live';
+  return (
+    <span
+      className={clsx(
+        'h-2 w-2 shrink-0 rounded-full ring-2 ring-navy',
+        status === 'partial' ? 'bg-amber-400' : 'bg-red-500',
+        collapsed ? 'absolute right-3 top-1.5' : 'ml-auto',
+      )}
+      title={reason ? `${label}: ${reason}` : label}
+      aria-label={label}
+      data-testid={`nav-status-${status}`}
+    />
+  );
+}
+
 function NavBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
+  const health = useHealth();
+  const notLive = new Map(
+    (health.data?.modules ?? []).filter((m) => m.status !== 'live').map((m) => [m.module, m] as const),
+  );
   return (
     <nav aria-label="Modules" className="flex-1 overflow-y-auto overflow-x-hidden px-2 pb-4">
       {NAV_GROUPS.map((g) => {
@@ -21,6 +43,7 @@ function NavBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
             <ul className="space-y-0.5">
               {items.map((m) => {
                 const Icon = m.icon;
+                const h = notLive.get(m.id);
                 return (
                   <li key={m.id}>
                     <NavLink
@@ -41,6 +64,7 @@ function NavBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
                     >
                       <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
                       {!collapsed && <span className="line-clamp-2">{m.label}</span>}
+                      {h && <StatusDot status={h.status} reason={h.reason} collapsed={collapsed} />}
                       {collapsed && (
                         <span className="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-md bg-navy-2 px-2 py-1 text-xs text-white shadow-pop group-hover:block group-focus-visible:block">
                           {m.label}

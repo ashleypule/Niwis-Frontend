@@ -155,7 +155,7 @@ export function SeriesPanel({
       empty={!!split && split.set.series.every((s) => !s.data.length)}
       option={option}
       rows={rows}
-      footer={withForecast(footer, q.data?.forecast)}
+      footer={withForecast(withNote(footer, context ? q.data?.note : undefined), q.data?.forecast)}
       controls={
         tabRow || controls ? (
           <>
@@ -165,6 +165,18 @@ export function SeriesPanel({
         ) : undefined
       }
     />
+  );
+}
+
+/** The backend's note under the page's own footer when the page's context replaced it above the chart (the
+ * compliance pages: the note says the scores are district compliance rates, not official assessments). */
+function withNote(footer: ReactNode, note: string | undefined): ReactNode {
+  if (!note) return footer;
+  return (
+    <>
+      {footer}
+      <p className="text-xs text-muted">{note}</p>
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
-import { AlertTriangle, DatabaseZap } from 'lucide-react';
-import { isUnavailable, type ApiError } from '@/api/client';
+import { AlertTriangle, DatabaseZap, Loader2 } from 'lucide-react';
+import { isComputing, isUnavailable, type ApiError } from '@/api/client';
 
 /** Per-panel error boundary: one failing chart never blanks the page. */
 export class PanelBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -59,8 +59,28 @@ export function ErrorState({
   );
 }
 
+/** The backend is computing this answer (a page forecast made on demand): the query asks again in a minute. */
+export function ComputingState({ detail, height, compact }: { detail?: string; height?: number; compact?: boolean }) {
+  return (
+    <div
+      data-state="computing"
+      role="status"
+      className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-line bg-surface-2/50 p-4 text-center"
+      style={{ minHeight: height }}
+    >
+      <Loader2 className="h-5 w-5 animate-spin text-muted" aria-hidden="true" />
+      <p className="text-sm font-semibold text-ink-2">Computing this forecast…</p>
+      <p className={compact ? 'line-clamp-2 text-xs text-muted' : 'max-w-sm text-xs text-muted'}>
+        {detail ?? 'The backend is computing this answer.'} This panel checks again in a minute.
+      </p>
+    </div>
+  );
+}
+
 /** The database does not hold this data yet (501 DATA_UNAVAILABLE in `empty` mode): a calm state, no numbers. */
 export function UnavailableState({ detail, height, compact }: { detail?: string; height?: number; compact?: boolean }) {
+  if (detail && /being computed/i.test(detail))
+    return <ComputingState detail={detail} height={height} compact={compact} />;
   return (
     <div
       data-state="unavailable"
@@ -138,6 +158,8 @@ interface QueryLike {
  * → loading. Returns null when the data can be rendered.
  */
 export function queryStatus(q: QueryLike, height?: number, opts: { compact?: boolean } = {}): ReactNode | null {
+  if (q.isError && isComputing(q.error))
+    return <ComputingState detail={(q.error as { detail?: string }).detail} height={height} compact={opts.compact} />;
   if (q.isError && isUnavailable(q.error))
     return <UnavailableState detail={(q.error as { detail?: string }).detail} height={height} compact={opts.compact} />;
   if (q.isError) return <ErrorState error={q.error} onRetry={() => void q.refetch()} height={height} />;

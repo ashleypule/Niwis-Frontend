@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { BrainCircuit, Cpu, Database, LineChart, ShieldCheck } from 'lucide-react';
 import { KpiStrip } from '@/components/kpi/KpiStrip';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Card } from '@/components/ui/Card';
 import { Row } from '@/components/layout/Grid';
-import { FlowDiagram } from '@/components/viz/FlowDiagram';
 import { ErrorState, Skeleton } from '@/components/feedback/PanelBoundary';
 import { isLive } from '@/config/app';
 import { useForecastModels, useForecastTargets, useRun, useStartRun } from '@/api/queries/forecast';
@@ -14,56 +12,6 @@ import type { ApiError } from '@/api/client';
 import { StudioForm } from './studio/StudioForm';
 import { StudioProgress, StudioResults } from './studio/StudioResults';
 import { DEFAULT_STATE, paramsFromState, requestOf, stateFromParams, type StudioState } from './studio/studioUrl';
-
-const FRAMEWORK = [
-  {
-    title: 'Input data',
-    color: '#1565C0',
-    icon: Database,
-    items: [
-      { title: 'Database catalogue', lines: ['Any live numeric column, with its label and unit'] },
-      { title: 'Area', lines: ['South Africa, a province, a district or a WMA'] },
-    ],
-  },
-  {
-    title: 'Series',
-    color: '#00838F',
-    icon: Cpu,
-    items: [
-      { title: 'Monthly values', lines: ['Amounts summed, states averaged'] },
-      { title: 'Dashboard weighting', lines: ['Area-weighted, or summed for volumes'] },
-      { title: 'Gap filling', lines: ['Inside each training window only'] },
-    ],
-  },
-  {
-    title: 'Models',
-    color: '#7B1FA2',
-    icon: BrainCircuit,
-    items: [
-      { title: 'Baselines', lines: ['Naive, seasonal naive, climatology'] },
-      { title: 'Statistical / ML', lines: ['ETS, SARIMA(X), Prophet, RF, LightGBM, VAR'] },
-      { title: 'Deep (experimental)', lines: ['LSTM, Transformer'] },
-    ],
-  },
-  {
-    title: 'Validation',
-    color: '#C74300',
-    icon: ShieldCheck,
-    items: [
-      { title: 'Rolling-origin backtest', lines: ['Never sees data after its origin'] },
-      { title: 'Scores', lines: ['MAE, RMSE, MASE, skill vs climatology, coverage'] },
-    ],
-  },
-  {
-    title: 'Outputs',
-    color: '#2E7D32',
-    icon: LineChart,
-    items: [
-      { title: 'Forecast', lines: ['Median with a 10–90 % band'] },
-      { title: 'Page forecast tabs', lines: ['Recomputed when new data arrive'] },
-    ],
-  },
-];
 
 function useStudio() {
   const [sp, setSp] = useSearchParams();
@@ -169,31 +117,6 @@ function Studio() {
   );
 }
 
-function ModelList() {
-  const models = useForecastModels();
-  if (!models.data) return null;
-  return (
-    <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 desk:grid-cols-4" data-testid="model-list">
-      {models.data.models.map((m) => (
-        <li key={m.id} className="rounded-xl border border-line p-3">
-          <p className="text-[11px] uppercase tracking-wide text-muted">{m.groupLabel}</p>
-          <p className="text-[13px] font-semibold leading-tight text-ink">
-            {m.label}
-            {m.experimental && (
-              <span className="ml-1 rounded bg-warn-soft px-1 text-[10px] font-medium">experimental</span>
-            )}
-          </p>
-          <p className="mt-1 text-[11.5px] leading-snug text-ink-2">{m.description}</p>
-          <p className="mt-1 text-[11px] text-muted">
-            ≥ {m.minHistoryMonths} months{m.supportsInputs ? ' · uses input variables' : ''}
-            {m.resolutions.includes('daily') ? ' · daily too' : ''}
-          </p>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function AiPage() {
   const live = isLive('ai');
   return (
@@ -217,18 +140,6 @@ export default function AiPage() {
               available with sample data.
             </p>
           )}
-        </Card>
-      </Row>
-      {live && (
-        <Row>
-          <Card title="Models available" context="From the forecasting engine (GET /api/v1/forecast/models)">
-            <ModelList />
-          </Card>
-        </Row>
-      )}
-      <Row>
-        <Card title="How a forecast is made">
-          <FlowDiagram columns={FRAMEWORK} />
         </Card>
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-4">

@@ -45,17 +45,17 @@ Node ≥ 20. No backend, database or API key is needed for development.
 
 ## Configuration (`.env`)
 
-| Variable                | Default                                             |                                                                                                                              |
-| ----------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_DATA_SOURCE`      | `hybrid` if `VITE_LIVE_MODULES` is set, else `mock` | `mock` = all sample data; `hybrid` = live modules from the backend, sample for the rest; `api` = everything from the backend |
-| `VITE_LIVE_MODULES`     | —                                                   | Modules the backend serves: `rainfall,drought,climate,vegetation,runoff`                                                     |
-| `VITE_LIVE_META`        | `true`                                              | `/health` and `/meta/*` from the backend (header summary, Data Integration, Governance)                                      |
-| `VITE_API_BASE_URL`     | —                                                   | Backend origin for production builds; empty in development (the Vite proxy forwards `/api`)                                  |
-| `VITE_API_PROXY_TARGET` | `http://localhost:8000`                             | Where the dev / preview server proxies `/api`                                                                                |
-| `VITE_UNAVAILABLE_MODE` | `sample` (dev), `empty` (production builds)         | What a panel shows when the database has no data for it (501): marked sample data, or "Not yet available"                    |
-| `VITE_LIVE_LABEL`       | `Live`                                              | Marker text for backend data (e.g. `Database` until the data team confirms the values are measured)                          |
-| `VITE_MOCK_LATENCY_MS`  | `300`                                               | Simulated network latency in mock mode                                                                                       |
-| `VITE_AS_OF`            | today                                               | Pin the "data as of" date (`YYYY-MM-DD`) for reproducible screenshots                                                        |
+| Variable                | Default                                             |                                                                                                                                             |
+| ----------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_DATA_SOURCE`      | `hybrid` if `VITE_LIVE_MODULES` is set, else `mock` | `mock` = all sample data; `hybrid` = live modules from the backend, sample for the rest; `api` = everything from the backend                |
+| `VITE_LIVE_MODULES`     | —                                                   | Modules the backend serves (19 on 2026-10-29, see `.env.example`); `alerts`, `data-integration`, `governance` have no tables but are served |
+| `VITE_LIVE_META`        | `true`                                              | `/health` and `/meta/*` from the backend (header summary, Data Integration, Governance)                                                     |
+| `VITE_API_BASE_URL`     | —                                                   | Backend origin for production builds; empty in development (the Vite proxy forwards `/api`)                                                 |
+| `VITE_API_PROXY_TARGET` | `http://localhost:8000`                             | Where the dev / preview server proxies `/api`                                                                                               |
+| `VITE_UNAVAILABLE_MODE` | `sample` (dev), `empty` (production builds)         | What a panel shows when the database has no data for it (501): marked sample data, or "Not yet available"                                   |
+| `VITE_LIVE_LABEL`       | `Live`                                              | Marker text for backend data (e.g. `Database` until the data team confirms the values are measured)                                         |
+| `VITE_MOCK_LATENCY_MS`  | `300`                                               | Simulated network latency in mock mode                                                                                                      |
+| `VITE_AS_OF`            | today                                               | Pin the "data as of" date (`YYYY-MM-DD`) for reproducible screenshots                                                                       |
 
 `npm run dev` uses `.env` (mock). `npm run dev:live` uses `--mode live` (`.env.live`: hybrid against `localhost:8000`). The
 Playwright hybrid project builds with `--mode fixtures` (`.env.fixtures`).
@@ -73,7 +73,7 @@ Playwright hybrid project builds with `--mode fixtures` (`.env.fixtures`).
 
 **What the user sees.** Every panel carries a marker: **Live · as of Sep 2026** (source tables in the tooltip), an amber
 **Data to Dec 2025** when the source is stale, **Modelled** on runoff, **Approximate (district-based)** under a WMA filter, or
-a violet, hatched **Sample** when the numbers are generated. The header shows "5 of 24 modules live". Anomaly titles show the
+a violet, hatched **Sample** when the numbers are generated. The header shows "21 of 24 modules live" (from `/health`, which lists every contract module). Anomaly titles show the
 backend's real baseline (e.g. "vs 2000–2026 mean"), never 1981–2010 over live data.
 
 **How the client handles the backend** (`src/api/client.ts`):

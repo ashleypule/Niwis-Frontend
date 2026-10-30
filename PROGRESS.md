@@ -36,6 +36,29 @@
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
 
+## Services and tariffs live (2026-10-29, later the same day)
+
+The backend registered the §18 / §19 tables (keyed by local municipality) and serves `services` and `tariffs`
+(backend DECISIONS D46, CONTRACT_CHANGES §18). `VITE_LIVE_MODULES` lists both; their entities are the 213 local
+municipalities (`LM001` … `LM213`), which the pages' municipality selectors already expect.
+
+## Eight more backend modules and transient forecasts (2026-10-29)
+
+Backend DECISIONS D41–D45 (`docs/backend/`): every forecast tab, water quantity, IWRM, green / blue drop, RWQO,
+alerts, data integration and governance are served.
+
+- `VITE_LIVE_MODULES` (`.env`, `.env.example`, `.env.live`) lists the 19 served modules; the pages switch to live
+  data with no page code change. `.env.fixtures` keeps the recorded set until the fixtures are re-recorded.
+- A 501 whose detail says "being computed" (a page forecast made on demand for a district or WMA, `no-store`) is
+  transient: `DataUnavailable.computing`, never the sample version; the query hooks ask again every minute
+  (`refetchInterval`) and panels show "Computing this forecast…" (`ComputingState`) instead of "Not yet available".
+  Unit test in `tests/unit/backend-client.test.ts`.
+- Series panels show the backend's `note` under the chart when the page's own context replaced it above (the
+  compliance pages: the scores are district compliance rates against published limits, not official Green Drop /
+  Blue Drop assessments); KPI sublabels carry the same wording.
+- Checked in the browser against the local backend: the eight pages render with live panels and no error states;
+  `contract:check` 486 ok · 0 schema failures (the backend no longer sends `null` for optional fields).
+
 ## Forecasting Studio and forecast tabs (2026-10-29)
 
 Backend: `../Niwis Backend/docs/DECISIONS.md` D29–D39, `docs/backend/CONTRACT_CHANGES.md` §15,

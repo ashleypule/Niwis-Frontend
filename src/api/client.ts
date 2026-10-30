@@ -44,6 +44,8 @@ export class ApiError extends Error {
 
 /** 501 DATA_UNAVAILABLE: the database does not hold this data yet. Not a failure; panels show "Not yet available". */
 export class DataUnavailable extends ApiError {
+  /** A transient 501: the backend is computing this answer (a page forecast made on demand) and says to reload */
+  public computing: boolean;
   constructor(
     public detail: string,
     public missing: string[],
@@ -52,11 +54,21 @@ export class DataUnavailable extends ApiError {
   ) {
     super('unavailable', detail, 501, undefined, requestId, url);
     this.name = 'DataUnavailable';
+    this.computing = COMPUTING.test(detail);
   }
 }
 
+/** The backend's wording for a forecast still being computed (CONTRACT_CHANGES §16.1: `no-store`, reload shortly). */
+const COMPUTING = /being computed/i;
+
 export const isUnavailable = (e: unknown): e is DataUnavailable =>
   e instanceof DataUnavailable || (e as ApiError | null)?.kind === 'unavailable';
+
+/** A 501 the backend will turn into 200 by itself: the panel shows "Computing…" and the query asks again later. */
+export const isComputing = (e: unknown): boolean => isUnavailable(e) && !!(e as DataUnavailable).computing;
+
+/** How long a panel waits before asking again for an answer that is being computed. */
+export const COMPUTING_RECHECK_MS = 60_000;
 
 /** Network errors, timeouts and 5xx are worth retrying; 4xx and 501 are answers. */
 export function isRetryable(e: unknown): boolean {
@@ -202,7 +214,8 @@ export async function apiGet<T>(
     if (res.status === 501 && (body?.code === 'DATA_UNAVAILABLE' || live)) {
       const detail = body?.detail ?? body?.error ?? 'This data is not available yet.';
       const missing = body?.missing ?? [];
-      if (APP.unavailableMode === 'sample' && usesMsw) {
+      // a transient answer ("being computed"): never the sample version, the panel re-asks in a minute
+      if (APP.unavailableMode === 'sample' && usesMsw && !COMPUTING.test(detail)) {
         const sample = await fetchSample(path, params, schema, signal);
         if (sample !== undefined) return stamp(sample, { kind: 'sample', detail, missing, requestId: rid });
       }

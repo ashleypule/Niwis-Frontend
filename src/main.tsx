@@ -10,7 +10,8 @@ import './index.css';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // no retry for answers (4xx, 501 DATA_UNAVAILABLE, schema drift); twice with backoff for network errors and 5xx
+      // no retry for answers (4xx, 501 DATA_UNAVAILABLE, schema drift); twice with backoff for network errors and 5xx.
+      // A 501 "being computed" is re-asked every minute by the query hooks (refetchInterval), not retried here.
       retry: (count, err) => count < 2 && isRetryable(err),
       retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
       refetchOnWindowFocus: false,

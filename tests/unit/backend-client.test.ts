@@ -101,6 +101,26 @@ describe('501 DATA_UNAVAILABLE', () => {
     expect((sampleInit.headers as Record<string, string>)[SAMPLE_HEADER]).toBe('1');
   });
 
+  it('"being computed" → DataUnavailable flagged computing, never the sample version', async () => {
+    const { apiGet, isComputing, isUnavailable, COMPUTING_RECHECK_MS } = await load({
+      ...HYBRID,
+      VITE_UNAVAILABLE_MODE: 'sample',
+    });
+    const computing = {
+      ...UNAVAILABLE,
+      detail: 'The SPI-3 forecast for Alfred Nzo is being computed (about a minute); reload shortly.',
+    };
+    fetchMock.mockResolvedValueOnce(json(501, computing, { 'cache-control': 'no-store' }));
+    const err = await apiGet('/api/v1/drought/forecast', { metric: 'spi' }, Body).catch((e: unknown) => e);
+    expect(isUnavailable(err)).toBe(true);
+    expect(isComputing(err)).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1); // no sample request for a transient answer
+    expect(COMPUTING_RECHECK_MS).toBe(60_000);
+    fetchMock.mockResolvedValueOnce(json(501, UNAVAILABLE)).mockResolvedValueOnce(json(404, { error: 'Not found' }));
+    const final = await apiGet('/api/v1/rainfall/forecast', {}, Body).catch((e: unknown) => e);
+    expect(isComputing(final)).toBe(false);
+  });
+
   it('sample mode without a sample version → DataUnavailable', async () => {
     const { apiGet, isUnavailable } = await load({ ...HYBRID, VITE_UNAVAILABLE_MODE: 'sample' });
     fetchMock.mockResolvedValueOnce(json(501, UNAVAILABLE)).mockResolvedValueOnce(json(404, { error: 'Not found' }));
