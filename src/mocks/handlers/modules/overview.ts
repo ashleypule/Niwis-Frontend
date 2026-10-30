@@ -102,11 +102,11 @@ export const overview: ModuleHandlers = {
         deltaUnit: ' pp',
         deltaLabel: 'vs last year (GHS)',
       }),
-      kpi('demand', 'demand', demandBn, {
+      kpi('demand', 'demand', demandBn * 1000, {
         label: 'Water Demand',
         sublabel: s.level === 'national' ? 'National, all sectors' : 'Municipal + agricultural',
-        unit: 'bn m³/yr',
-        decimals: 1,
+        unit: 'Mm³/year',
+        decimals: 0,
         delta: 1.4,
         deltaUnit: '%',
         deltaLabel: 'vs last year',
@@ -183,7 +183,7 @@ export const overview: ModuleHandlers = {
         const base = svc.reduce((a, x) => a + x.productionMld, 0);
         return seriesSet(
           'ki-demand',
-          [{ unit: 'Ml/day', label: 'Municipal production' }],
+          [{ unit: 'ML/day', label: 'Municipal production' }],
           [
             bar(
               'p',

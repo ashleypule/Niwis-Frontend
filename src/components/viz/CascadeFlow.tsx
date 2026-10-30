@@ -129,7 +129,7 @@ export function CascadeFlow({
                     <Icon className="h-5 w-5" />
                   </span>
                   <div className={clsx('min-w-0', vertical ? 'flex-1' : 'mt-1')}>
-                    <p className="text-[12px] font-semibold leading-tight text-ink">
+                    <p className="text-[12px] font-semibold leading-tight text-ink" data-stage={r.id}>
                       {i + 1}. {r.stage}
                     </p>
                     <p className="num text-base font-bold leading-tight text-ink">{r.value}</p>

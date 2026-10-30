@@ -245,8 +245,9 @@ export function categoryChartData(
   }
   const spi = shown.some((v) => variableKind(v) === 'spi');
   // every axis names its unit; a column without one says so
+  // every axis names its unit; a column without one gets the "index" axis (options.ts axisName)
   const axes = (plan.units.length ? plan.units : [unitOf(vars[0] ?? ({} as CategoryVariable), group)]).map((u) => ({
-    unit: u || (group.unit && group.unit !== '—' && group.unit !== '-' ? group.unit : 'no unit'),
+    unit: u || (group.unit && group.unit !== '—' && group.unit !== '-' ? group.unit : ''),
   }));
   const res = group.resolution ?? table.resolution;
   const xs = series.flatMap((s) => s.data.map((p) => p[0]));

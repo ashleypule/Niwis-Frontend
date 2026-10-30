@@ -62,7 +62,7 @@ function waterfall(id: string, b: Balance, withLosses: boolean) {
   ];
   return categories(
     id,
-    'Mm³/yr',
+    'Mm³/year',
     cats.map((c) => c[0]),
     [
       { key: 'v', name: 'Volume', values: cats.map((c) => round(c[1], 0)) },
@@ -100,7 +100,7 @@ export const iwrm: ModuleHandlers = {
     return [
       kpi('avail', 'availability', b.utilisable, {
         label: 'Utilisable Water Availability',
-        sublabel: `of ${Math.round(b.renewable).toLocaleString('en-ZA').replace(/,/g, ' ')} Mm³/yr renewable`,
+        sublabel: `of ${Math.round(b.renewable).toLocaleString('en-ZA').replace(/,/g, ' ')} Mm³/year renewable`,
         delta: ((b.utilisable - prev.utilisable) / prev.utilisable) * 100,
         deltaUnit: '%',
         deltaLabel: 'vs 5 years ago',
@@ -160,15 +160,18 @@ export const iwrm: ModuleHandlers = {
       const b = waterBalance(ctx.scope);
       const cats = ['Agricultural', 'Municipal', 'Industrial', 'Mining & power'];
       const v = [b.agricultural, b.municipal, b.industrial, b.miningPower];
-      return categories('iwrm-sector', 'Mm³/yr', cats, [{ key: 'v', name: 'Demand', values: v }], {
+      return categories('iwrm-sector', 'Mm³/year', cats, [{ key: 'v', name: 'Demand', values: v }], {
         colors: ['#2E9E5B', '#1565C0', '#F2A900', '#8E44AD'],
-        center: { value: `${Math.round(b.demand).toLocaleString('en-ZA').replace(/,/g, ' ')}`, label: 'Mm³/yr demand' },
+        center: {
+          value: `${Math.round(b.demand).toLocaleString('en-ZA').replace(/,/g, ' ')}`,
+          label: 'Mm³/year demand',
+        },
       });
     },
     transfers: () =>
       categories(
         'transfers',
-        'Mm³/yr',
+        'Mm³/year',
         TRANSFERS.map((t) => t.name.replace(/ \(.*\)$/, '')),
         [{ key: 'v', name: 'Transfer volume (last 12 months)', values: TRANSFERS.map((t) => transferVolume(t)) }],
         {
@@ -191,7 +194,7 @@ export const iwrm: ModuleHandlers = {
       );
       return categories(
         'reserve-compliance',
-        'Mm³/yr',
+        'Mm³/year',
         ys.map(String),
         [
           { key: 'r', name: 'Ecological reserve requirement', values: req, color: '#1565C0' },
@@ -210,7 +213,7 @@ export const iwrm: ModuleHandlers = {
     },
     recycled: (ctx) => {
       const ys = years(ctx);
-      return categories('recycled', 'Mm³/yr', ys.map(String), [
+      return categories('recycled', 'Mm³/year', ys.map(String), [
         {
           key: 'r',
           name: 'Recycled water use',
@@ -233,7 +236,7 @@ export const iwrm: ModuleHandlers = {
       const x = (y: number) => `${y}-07-01`;
       return seriesSet(
         'availability',
-        [{ unit: 'Mm³/yr', label: 'Volume' }],
+        [{ unit: 'Mm³/year', label: 'Volume' }],
         [
           line(
             't',
@@ -300,9 +303,9 @@ export const iwrm: ModuleHandlers = {
         [
           col.rank(),
           col.text('name', 'Catchment'),
-          col.num('mar', 'MAR', 'Mm³/yr'),
-          col.num('demand', 'Demand', 'Mm³/yr'),
-          col.num('reserve', 'Ecological reserve', 'Mm³/yr'),
+          col.num('mar', 'MAR', 'Mm³/year'),
+          col.num('demand', 'Demand', 'Mm³/year'),
+          col.num('reserve', 'Ecological reserve', 'Mm³/year'),
           col.num('wsi', 'WSI', '', 2, { scale: 'stress' }),
           col.cls('status', 'Status', 'risk'),
         ],
@@ -317,9 +320,9 @@ export const iwrm: ModuleHandlers = {
         'wmas',
         [
           col.text('name', 'Water Management Area'),
-          col.num('avail', 'Utilisable yield', 'Mm³/yr'),
-          col.num('demand', 'Demand', 'Mm³/yr'),
-          col.num('balance', 'Balance', 'Mm³/yr'),
+          col.num('avail', 'Utilisable yield', 'Mm³/year'),
+          col.num('demand', 'Demand', 'Mm³/year'),
+          col.num('balance', 'Balance', 'Mm³/year'),
           col.num('wsi', 'WSI', '', 2, { scale: 'stress' }),
         ],
         WMAS.map((w) => {
@@ -391,17 +394,17 @@ export const iwrm: ModuleHandlers = {
     availability: () =>
       choropleth(
         'availability',
-        'Utilisable yield per catchment (Mm³/yr)',
+        'Utilisable yield per catchment (Mm³/year)',
         'catchment',
         'runoff',
-        'Mm³/yr',
+        'Mm³/year',
         (id) => waterBalance(resolveScope({ catchment: id })).utilisable,
         0,
       ),
     transfers: () =>
       pointsLayer(
         'transfers',
-        'Inter-basin transfer schemes (Mm³/yr)',
+        'Inter-basin transfer schemes (Mm³/year)',
         'percent',
         '% of capacity',
         TRANSFERS.map((t) => ({
@@ -443,7 +446,7 @@ export const waterQuantity: ModuleHandlers = {
       }),
       kpi('allocation', 'allocationUse', (abstraction / licensed) * 100, {
         label: 'Licensed Allocation Utilised',
-        sublabel: `${Math.round(licensed).toLocaleString('en-ZA').replace(/,/g, ' ')} Mm³/yr licensed`,
+        sublabel: `${Math.round(licensed).toLocaleString('en-ZA').replace(/,/g, ' ')} Mm³/year licensed`,
         goodDirection: 'neutral',
       }),
       kpi('transfers', 'transfers', ctx.scope.level === 'national' ? tr : b.ibt, {
@@ -468,7 +471,7 @@ export const waterQuantity: ModuleHandlers = {
     sector: (ctx) => {
       const ys = years(ctx, 6);
       const b = ys.map((y) => waterBalance(ctx.scope, yEnd(y, ctx)));
-      return categories('sector', 'Mm³/yr', ys.map(String), [
+      return categories('sector', 'Mm³/year', ys.map(String), [
         { key: 'm', name: 'Municipal', values: b.map((x) => x.municipal), color: '#1565C0', stack: 's' },
         { key: 'a', name: 'Agricultural', values: b.map((x) => x.agricultural), color: '#2E9E5B', stack: 's' },
         { key: 'i', name: 'Industrial', values: b.map((x) => x.industrial), color: '#F2A900', stack: 's' },
@@ -480,7 +483,7 @@ export const waterQuantity: ModuleHandlers = {
       const b = ys.map((y) => waterBalance(ctx.scope, yEnd(y, ctx)));
       return categories(
         'allocation',
-        'Mm³/yr',
+        'Mm³/year',
         ys.map(String),
         [
           { key: 'l', name: 'Licensed allocation', values: b.map((x) => x.demand * 1.08), color: '#94A3B8' },
@@ -571,7 +574,7 @@ export const waterQuantity: ModuleHandlers = {
         'quantity-storage',
         [
           { unit: 'Mm³', label: 'Storage' },
-          { unit: '%', label: '% FSC', min: 0, max: 100 },
+          { unit: '% FSC', label: 'Storage level', min: 0, max: 100 },
         ],
         [
           bar(
@@ -600,7 +603,7 @@ export const waterQuantity: ModuleHandlers = {
         'Municipal water demand (Ml/day)',
         'municipality',
         'rainfall',
-        'Ml/day',
+        'ML/day',
         (id) => muniServiceById.get(id)?.productionMld ?? null,
         0,
       ),
@@ -637,7 +640,7 @@ function muniEntity(m: MuniServices) {
       { label: 'Water supply systems / WWTWs', value: `${wtps.length} / ${ww.length}` },
       { label: 'Reservoirs / pump stations', value: `${m.reservoirs} / ${m.pumpStations}` },
       { label: 'Pipeline network', value: m.pipelineKm, unit: 'km' },
-      { label: 'Daily production', value: m.productionMld, unit: 'Ml/day' },
+      { label: 'Daily production', value: m.productionMld, unit: 'ML/day' },
       { label: 'Non-revenue water', value: m.nrw, unit: '%', scale: 'nrw' },
       { label: 'Supply reliability', value: m.reliability, unit: '%' },
       { label: 'Pipe failure rate', value: m.breaksPer100km, unit: 'breaks/100 km/yr' },
@@ -654,11 +657,11 @@ export const services: ModuleHandlers = {
     const a = accessSummary(l);
     const pop = l.reduce((s, m) => s + m.population, 0);
     return [
-      kpi('pop', 'populationServed', (pop * a.rdp) / 100 / 1e6, {
+      kpi('pop', 'populationServed', (pop * a.rdp) / 100, {
         label: 'Population Served',
         sublabel: 'At least basic (RDP) level',
-        unit: 'million',
-        decimals: 1,
+        unit: 'people',
+        decimals: 0,
         delta: 1.5,
         deltaUnit: '%',
         deltaLabel: 'vs last year',
@@ -754,7 +757,7 @@ export const services: ModuleHandlers = {
         id: 'plant-performance',
         xType: 'category',
         axes: [
-          { unit: 'Ml/day', label: 'Flow' },
+          { unit: 'ML/day', label: 'Flow' },
           { unit: '%', label: 'Utilisation', min: 0 },
         ],
         series: [
@@ -912,8 +915,8 @@ export const services: ModuleHandlers = {
           col.rank(),
           col.text('name', 'Treatment works'),
           col.text('municipality', 'Municipality'),
-          col.num('cap', 'Capacity', 'Ml/day', 1),
-          col.num('flow', 'Flow', 'Ml/day', 1),
+          col.num('cap', 'Capacity', 'ML/day', 1),
+          col.num('flow', 'Flow', 'ML/day', 1),
           col.num('util', 'Utilisation', '%'),
           col.num('score', 'Blue Drop', '%', 0, { scale: 'blueDrop' }),
         ],
@@ -1125,7 +1128,7 @@ export const services: ModuleHandlers = {
       const f = forecastSeries(hist, fc);
       return seriesSet(
         'demand-forecast',
-        [{ unit: 'Ml/day', label: 'Municipal water demand' }],
+        [{ unit: 'ML/day', label: 'Municipal water demand' }],
         [
           band('band', f.names.band, f.band, { color: '#BBDEFB' }),
           line('obs', 'Historical', f.observed, { color: '#13233A' }),
@@ -1362,7 +1365,7 @@ export const tariffs: ModuleHandlers = {
       const vol = (m.productionMld * 365) / 1000;
       return categories(
         'muni-nrw',
-        'Mm³/yr',
+        'Mm³/year',
         ys.map(String),
         [
           {
@@ -1641,7 +1644,7 @@ export const settlements: ModuleHandlers = {
         deltaUnit: '%',
         deltaLabel: 'vs last year',
       }),
-      kpi('pop', 'populationAtRisk', pop / 1e6, { label: 'Population Affected', unit: 'million', decimals: 2 }),
+      kpi('pop', 'populationAtRisk', pop, { label: 'Population Affected', unit: 'people', decimals: 0 }),
       kpi('vuln', 'damsBelow', l.filter((x) => x.vulnerability >= 0.65).length, {
         label: 'High-Vulnerability Settlements',
         sublabel: 'Vulnerability index ≥ 0.65',
@@ -1655,12 +1658,10 @@ export const settlements: ModuleHandlers = {
         label: 'Drought Exposure Index',
         sublabel: '0 = none, 1 = extreme',
       }),
-      kpi(
-        'resp',
-        'programmeProgress',
-        n.filter((x) => x.status === 'Intervention' || x.status === 'In progress').length,
-        { label: 'Active Interventions', sublabel: 'Tankering, boreholes, storage', unit: '' },
-      ),
+      kpi('resp', 'interventions', n.filter((x) => x.status === 'Intervention' || x.status === 'In progress').length, {
+        label: 'Active Interventions',
+        sublabel: 'Tankering, boreholes, storage',
+      }),
     ];
   },
   timeseries: {
@@ -1691,18 +1692,18 @@ export const settlements: ModuleHandlers = {
       const from = ctx.last - 11;
       return seriesSet(
         'settlement-pop',
-        [{ unit: 'million', label: 'Population affected', min: 0 }],
+        [{ unit: 'people', label: 'Population affected', min: 0 }],
         [
           bar(
             'cur',
             'Current year',
-            monthly(from, ctx.last, (mi) => affected(l, mi).reduce((s, x) => s + x.population, 0) / 1e6),
+            monthly(from, ctx.last, (mi) => affected(l, mi).reduce((s, x) => s + x.population, 0)),
             { color: '#E53935' },
           ),
           bar(
             'prev',
             'Previous year',
-            monthly(from, ctx.last, (mi) => affected(l, mi - 12).reduce((s, x) => s + x.population, 0) / 1e6),
+            monthly(from, ctx.last, (mi) => affected(l, mi - 12).reduce((s, x) => s + x.population, 0)),
             { color: '#1565C0' },
           ),
         ],
@@ -2068,7 +2069,7 @@ export const settlements: ModuleHandlers = {
       lat: x.lat,
       lon: x.lon,
       image: 'settlement',
-      status: { scale: 'risk', id: n.risk, label: `${n.risk} risk` },
+      status: { scale: 'risk', id: n.risk, label: n.risk },
       fields: [
         { label: 'Settlement type', value: x.type },
         { label: 'Municipality', value: municipalityById.get(x.municipality)?.name ?? '—' },
@@ -2126,13 +2127,13 @@ export const settlements: ModuleHandlers = {
       const l = setIn(ctx);
       const hist: [number, number | null][] = Array.from({ length: 12 }, (_, k) => [
         ctx.last - 11 + k,
-        affected(l, ctx.last - 11 + k).reduce((s, x) => s + x.population, 0) / 1e6,
+        affected(l, ctx.last - 11 + k).reduce((s, x) => s + x.population, 0),
       ]);
       const x0 = hist[11][1] ?? 0;
       const fc = dampedForecast(`setpf-${ctx.scope.key}`, x0, {
         mu: x0 * 0.85,
         phi: 0.9,
-        sigma: Math.max(0.05, x0 * 0.12),
+        sigma: Math.max(50_000, x0 * 0.12),
         horizon: 12,
         startMi: ctx.last,
         outlook: -outlookShift(ctx.scope.key) * x0 * 0.06,
@@ -2141,7 +2142,7 @@ export const settlements: ModuleHandlers = {
       const f = forecastSeries(hist, fc);
       return seriesSet(
         'pop-forecast',
-        [{ unit: 'million', label: 'Population affected', min: 0 }],
+        [{ unit: 'people', label: 'Population affected', min: 0 }],
         [
           band('band', f.names.band, f.band, { color: '#BBDEFB' }),
           line('obs', 'Historical', f.observed, { color: '#13233A', symbol: true }),

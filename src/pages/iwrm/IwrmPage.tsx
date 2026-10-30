@@ -33,8 +33,8 @@ export default function IwrmPage() {
           <CategoryPanel
             module="iwrm"
             metric="waterfall"
-            title="Water Balance (Mm³/yr)"
-            info="Spec §17.2 anchors: MAR ≈ 49 000, recharge ≈ 19 000, municipal 4 200, agricultural 11 000, industrial 1 800, ecological reserve 2 800 Mm³/yr. Only part of the natural resource is utilisable."
+            title="Water Balance (Mm³/year)"
+            info="Spec §17.2 anchors: MAR ≈ 49 000, recharge ≈ 19 000, municipal 4 200, agricultural 11 000, industrial 1 800, ecological reserve 2 800 Mm³/year. Only part of the natural resource is utilisable."
             variant="waterfall"
             height={300}
           />

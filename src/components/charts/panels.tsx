@@ -8,6 +8,7 @@ import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useBreakdown, useColumnCatalogue, useForecast, useMatrix, useSeries } from '@/api/queries/core';
 import { applyColumnLabels } from '@/lib/categories';
+import { registerNames } from '@/lib/registerNames';
 import { categoryRows, matrixRows, seriesRows } from '@/lib/exporter';
 import { Tabs } from '@/components/ui/Card';
 import { ChartCard } from './ChartCard';
@@ -115,7 +116,7 @@ export function SeriesPanel({
   const hasSource = !!q.data?.series.some((s) => s.source?.length === 1);
   const lookup = useColumnCatalogue(hasSource && isLive(mod));
   const split = useMemo(
-    () => (q.data && !wrongSet ? splitNullSeries(applyColumnLabels(q.data, lookup)) : undefined),
+    () => (q.data && !wrongSet ? splitNullSeries(registerNames(applyColumnLabels(q.data, lookup))) : undefined),
     [q.data, wrongSet, lookup],
   );
   const prov: PanelProvenance = wrongSet ? { kind: 'unavailable', detail: wrongSet } : panelProvenance(q, mod);
@@ -229,7 +230,7 @@ export function CategoryPanel({
   const waiting = !enabled && !q.data;
   const pending = !q.data && !q.isError && !near;
   const t = useChartTheme();
-  const split = useMemo(() => (q.data ? splitNullCategories(q.data) : undefined), [q.data]);
+  const split = useMemo(() => (q.data ? splitNullCategories(registerNames(q.data)) : undefined), [q.data]);
   const prov = panelProvenance(q, mod);
   const option = useMemo(
     () => (split ? categoryOption(split.set, t, variant, { labels, log, legend }) : undefined),

@@ -77,7 +77,7 @@ export function Card({
         >
           <div className="min-w-0 flex-1">
             <h2
-              className={clsx('line-clamp-2 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
+              className={clsx('line-clamp-3 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
             >
               {shownTitle}
               {shownInfo && (
@@ -87,7 +87,12 @@ export function Card({
               )}
             </h2>
             {shownContext && (
-              <div className={clsx('truncate text-xs', band ? 'text-white/75' : 'text-muted')}>{shownContext}</div>
+              <div
+                className={clsx('line-clamp-2 text-xs leading-snug', band ? 'text-white/75' : 'text-muted')}
+                title={typeof shownContext === 'string' ? shownContext : undefined}
+              >
+                {shownContext}
+              </div>
             )}
             {chips}
           </div>

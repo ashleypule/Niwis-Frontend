@@ -5,6 +5,7 @@
 import type { CategorySet, MatrixSet, Series, SeriesSet } from '@/types/api';
 import { binInk, classify, getScale } from '@/config/palettes';
 import { formatDate, formatNumber, withUnit } from '@/lib/format';
+import { canonLabel, canonUnit, unitInLabel } from '@/config/naming';
 import type { ChartTheme } from './theme';
 import type { EChartsOption } from './echarts';
 
@@ -83,9 +84,27 @@ export function logRange(values: unknown[]): { min: number; max: number } | unde
   return { min, max: max === min ? min * 10 : max };
 }
 
+/** A label's trailing "(…)" when it is a unit, not a range like "(0–100)". */
+const TRAILING_UNIT = /\s*\(([^()]*)\)\s*$/;
+
+/**
+ * What a value axis is called: "<label> (<unit>)", the unit alone, or "index" for a unitless axis — in the
+ * register's unit spelling. A backend label that already ends in a unit ("Monthly rainfall (mm)") is not doubled, and
+ * "mixed" (one unit per category, e.g. the water-quality range chart) says so.
+ */
+export function axisName(rawUnit: string | undefined, rawLabel?: string): string {
+  const unit = canonUnit(rawUnit);
+  let label = canonLabel((rawLabel ?? '').trim());
+  const m = TRAILING_UNIT.exec(label);
+  if (m && rawUnit && !/^[\d.,–\s%-]+$/.test(m[1])) label = label.slice(0, m.index).trim();
+  if (rawUnit === 'mixed') return label ? `${label} (unit per parameter)` : 'value (unit per parameter)';
+  if (!unit) return label || 'index';
+  return label ? `${label} (${unit})` : unit;
+}
+
 function valueAxis(
   t: ChartTheme,
-  unit: string,
+  rawUnit: string,
   o: {
     label?: string;
     min?: number;
@@ -100,7 +119,8 @@ function valueAxis(
     logValues?: unknown[];
   } = {},
 ): Obj {
-  const name = o.label ? `${o.label}${unit ? ` (${unit})` : ''}` : unit;
+  const unit = canonUnit(rawUnit);
+  const name = axisName(rawUnit, o.label);
   const range = o.log ? logRange(o.logValues ?? []) : undefined;
   const bars = !!o.bars && !o.log;
   let min = o.min;
@@ -266,6 +286,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
       id: s.key,
       name: s.name,
       yAxisIndex,
+      niwisCat: s.source?.length === 1,
       data: s.data.filter(keepX).map((p) => [p[0], plotY(s, p[1])]),
       itemStyle: { color },
       emphasis: { focus: 'series' },
@@ -767,12 +788,15 @@ export function categoryOption(
           : undefined,
     };
   });
+  // a series on axis 1 always has its axis: the set's axis2Unit, else the unit its name carries ("Cost recovery (%)")
+  const second = set.series.filter((s) => s.axis === 1);
+  const axis2Unit = set.axis2Unit ?? (second.length ? (unitInLabel(second[0].name) ?? '') : undefined);
   const yAxes = horizontal
     ? undefined
-    : set.axis2Unit
+    : axis2Unit != null
       ? [
           valAxis,
-          valueAxis(t, set.axis2Unit, {
+          valueAxis(t, axis2Unit, {
             position: 'right',
             showGrid: false,
             bars: set.series.some((s) => s.axis === 1 && (s.kind ?? 'bar') === 'bar'),
@@ -818,7 +842,7 @@ export function categoryOption(
         const rows = ps.map((p) => {
           const raw = set.series[p.seriesIndex]?.values[p.dataIndex];
           const v = typeof p.value === 'object' && p.value ? (p.value as { value: number }).value : p.value;
-          const u = set.series[p.seriesIndex]?.axis === 1 ? set.axis2Unit : unit;
+          const u = set.series[p.seriesIndex]?.axis === 1 ? axis2Unit : unit;
           return `${p.marker}${p.seriesName}: <b>${is100 ? `${fmt(v, '%')} (${fmt(raw, unit)})` : fmt(v, u)}</b>`;
         });
         return `<b>${ps[0]?.name ?? ''}</b><br/>${rows.join('<br/>')}`;

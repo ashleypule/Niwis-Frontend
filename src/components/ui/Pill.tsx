@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { AlertOctagon, AlertTriangle, CircleCheck, Info, TriangleAlert } from 'lucide-react';
 import { binInk, classify, type ScaleBin } from '@/config/palettes';
+import { classOfLabel } from '@/config/naming';
 import type { Severity } from '@/types/api';
 
 /**
@@ -25,6 +26,8 @@ export function Pill({
     label ?? (typeof value === 'string' ? (bin?.id === value ? shortLabel(bin) : value) : bin ? shortLabel(bin) : '—');
   return (
     <span
+      data-pill={scale}
+      data-class={bin?.id ?? (typeof value === 'string' ? value : undefined)}
       className={clsx(
         'inline-flex items-center justify-center whitespace-nowrap rounded-md font-semibold',
         size === 'sm' ? 'px-1.5 py-0.5 text-[11px]' : 'px-2 py-0.5 text-xs',
@@ -41,10 +44,9 @@ export function Pill({
   );
 }
 
+/** The class part of a bin label: "Excellent (90–100)" → "Excellent"; "−1.6 to −1.3 D2 Severe Drought" → "D2 Severe Drought". */
 function shortLabel(bin: ScaleBin): string {
-  // "D2 – Severe drought" → "D2 Severe"; "Excellent (90–100)" → "Excellent"
-  if (/^D\d/.test(bin.label)) return bin.label.replace(' – ', ' ').replace(/ drought$/i, '');
-  return bin.label.replace(/\s*\(.*\)$/, '').replace(/^[<≥>≤]?\s?[\d.–\s%-]+\s/, '');
+  return classOfLabel(bin.label);
 }
 
 const SEV_ICON = {

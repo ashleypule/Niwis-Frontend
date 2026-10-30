@@ -3,6 +3,7 @@
  * NIWIS mockups), R prefix for rand, SI-style unit spacing (e.g. "482 mm", "1 250 Mm³").
  */
 import { metric } from '@/config/metrics';
+import { canonUnit } from '@/config/naming';
 
 const NBSP = ' ';
 
@@ -28,7 +29,8 @@ export function formatCompact(value: number | null | undefined, decimals = 1): s
 
 const UNIT_NO_SPACE = new Set(['%', '°', '']);
 
-export function withUnit(text: string, unit?: string): string {
+export function withUnit(text: string, rawUnit?: string): string {
+  const unit = canonUnit(rawUnit);
   if (!unit) return text;
   if (unit === 'R' || unit.startsWith('R ') || unit === 'R million') {
     if (unit === 'R million') return `R${NBSP}${text}${NBSP}m`;

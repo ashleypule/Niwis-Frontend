@@ -7,6 +7,7 @@ import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { Row } from '@/components/layout/Grid';
 import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { isLive } from '@/config/app';
 import { DatabaseVariables } from '@/components/charts/DatabaseVariables';
 
 const mod = moduleById('water-quality');
@@ -51,7 +52,11 @@ export default function WaterQualityPage() {
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel
           module="water-quality"
-          title="Water Quality Index (WQI) – Monitoring Stations"
+          title={
+            isLive('water-quality')
+              ? 'Water Quality Index (WQI) by District'
+              : 'Water Quality Index (WQI) – Monitoring Stations'
+          }
           layers={WQ_LAYERS}
           height={520}
         />
@@ -80,7 +85,7 @@ export default function WaterQualityPage() {
           <TablePanel
             module="water-quality"
             metric="ranking"
-            title="Top / Poorest Stations by WQI"
+            title={`Top / Poorest ${noun}s by WQI`}
             selectEntity
             tabs={[
               { value: 'p', label: 'Poorest', params: { order: 'poorest' } },
@@ -177,7 +182,7 @@ export default function WaterQualityPage() {
           <CategoryPanel
             module="water-quality"
             metric="by-type"
-            title="Monitoring Stations by Water Body Type"
+            title={`Monitoring ${noun}s by Water Body Type`}
             variant="donut"
             height={170}
           />

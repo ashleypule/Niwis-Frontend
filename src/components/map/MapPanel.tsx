@@ -75,7 +75,12 @@ export function Legend({ layer, collapsible = false }: { layer?: MapLayer; colla
   if (!layer) return null;
   const sc = getScale(layer.scale);
   return (
-    <div className="rounded-lg border border-line bg-surface/95 p-2 text-[11px] shadow-card">
+    <div
+      className="rounded-lg border border-line bg-surface/95 p-2 text-[11px] shadow-card"
+      data-testid="map-legend"
+      data-scale={layer.scale}
+      data-unit={layer.unit}
+    >
       <button
         type="button"
         className="mb-1 flex w-full items-center justify-between gap-2 text-left font-semibold text-ink"

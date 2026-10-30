@@ -6,14 +6,16 @@ import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 
 const mod = moduleById('rwqo');
 
 export default function RwqoPage() {
   const site = useSelectedEntity('rwqo');
   const p = { entityId: site.id };
-  const ctx = site.name ? `[Site: ${site.name}]` : undefined;
+  // live: one record per district (no monitoring sites in the database)
+  const noun = entityNoun('rwqo', 'Site');
+  const ctx = site.name ? `[${noun}: ${site.name}]` : undefined;
   const tabs = (keys: [string, string][]) => keys.map(([v, l]) => ({ value: v, label: l, params: { param: v } }));
   return (
     <div>
@@ -22,7 +24,11 @@ export default function RwqoPage() {
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel
           module="rwqo"
-          title="RWQO Monitoring Sites – Ecological Condition"
+          title={
+            noun === 'District'
+              ? 'RWQO Ecological Condition by District'
+              : 'RWQO Monitoring Sites – Ecological Condition'
+          }
           layers={[
             { id: 'pes', label: 'Present Ecological State' },
             { id: 'compliance', label: 'RWQO compliance' },
@@ -105,14 +111,14 @@ export default function RwqoPage() {
           variant="donut"
           height={180}
         />
-        <TablePanel module="rwqo" metric="results" title="Results vs RWQO Objectives (Selected Site)" extra={p} />
+        <TablePanel module="rwqo" metric="results" title={`Results vs RWQO Objectives (Selected ${noun})`} extra={p} />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr]">
-        <EntityInfoCard module="rwqo" id={site.id} title="Site Information (Selected Site)" />
+        <EntityInfoCard module="rwqo" id={site.id} title={`${noun} Information (Selected ${noun})`} />
         <TablePanel
           module="rwqo"
           metric="ranking"
-          title="Lowest / Highest Ecological Condition Sites"
+          title={`Lowest / Highest Ecological Condition ${noun}s`}
           selectEntity
           tabs={[
             { value: 'l', label: 'Lowest SASS5', params: { order: 'lowest' } },

@@ -513,10 +513,10 @@ export const drought: ModuleHandlers = {
           const pop = municipalPopulation.get(m.id) ?? 0;
           const uf = pop > 700_000 ? 0.92 : 0.38;
           return s + pop * (urban ? uf : 1 - uf) * (DROUGHT_RANK[c] >= DROUGHT_RANK.D2 ? 1 : 0.4);
-        }, 0) / 1e6;
+        }, 0);
       return seriesSet(
         'population-at-risk',
-        [{ unit: 'million', label: 'Population' }],
+        [{ unit: 'people', label: 'Population' }],
         [
           bar(
             'urban',

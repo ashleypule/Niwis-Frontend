@@ -110,7 +110,7 @@ export const AI_MODELS = [
     nse: 0.86,
     mae: 14.8,
     r2: 0.88,
-    unit: 'Ml/day',
+    unit: 'ML/day',
   },
   {
     id: 'groundwater',

@@ -722,10 +722,10 @@ function plantEntity(p: Plant) {
       { label: 'Municipality (WSA)', value: p.municipalityName },
       { label: 'Province', value: provinceName(p.province) },
       { label: 'Coordinates', value: `${Math.abs(p.lat).toFixed(2)}° S, ${p.lon.toFixed(2)}° E` },
-      { label: 'Design capacity', value: p.capacityMld, unit: 'Ml/day' },
+      { label: 'Design capacity', value: p.capacityMld, unit: 'ML/day' },
       {
         label: wwtw ? 'Current treated flow' : 'Current production',
-        value: `${p.flowMld} Ml/day (${Math.round((p.flowMld / p.capacityMld) * 100)}%)`,
+        value: `${p.flowMld} ML/day (${Math.round((p.flowMld / p.capacityMld) * 100)}%)`,
       },
       { label: 'Treatment process', value: p.process },
       ...(wwtw
@@ -793,10 +793,10 @@ export const greenDrop: ModuleHandlers = {
         label: 'Non-compliant (Poor / Critical)',
         sublabel: `${Math.round(((cnt('Poor') + cnt('Critical')) / Math.max(1, list.length)) * 100)}% of plants`,
       }),
-      kpi('cap', 'capacity', cap, { label: 'Total Design Capacity', unit: 'Ml/day' }),
+      kpi('cap', 'capacity', cap, { label: 'Total Design Capacity', unit: 'ML/day' }),
       kpi('flow', 'inflow', flow, {
         label: 'Total Treated Flow',
-        unit: 'Ml/day',
+        unit: 'ML/day',
         sublabel: `${Math.round((flow / cap) * 100)}% utilisation`,
       }),
       kpi('impact', 'wqi', null, {
@@ -860,7 +860,7 @@ export const greenDrop: ModuleHandlers = {
       return seriesSet(
         'gd-capacity',
         [
-          { unit: 'Ml/day', label: 'Flow' },
+          { unit: 'ML/day', label: 'Flow' },
           { unit: '%', label: 'Utilisation', min: 0 },
         ],
         [
@@ -1176,7 +1176,7 @@ export const blueDrop: ModuleHandlers = {
         (list.filter((p) => drinking(p.id).ecoli[ct(ctx.last)] === 0).length / Math.max(1, list.length)) * 100,
         { label: 'Microbiological Compliance', sublabel: 'E. coli = 0 cfu/100 mL' },
       ),
-      kpi('pop', 'populationServed', pop / 1e6, { label: 'Population Served', unit: 'million', decimals: 1 }),
+      kpi('pop', 'populationServed', pop, { label: 'Population Served', unit: 'people', decimals: 0 }),
       kpi('status', 'wqi', null, {
         label: 'Overall Drinking Water Status',
         text: rate >= 85 ? 'Good' : rate >= 70 ? 'Fair' : 'Poor',
@@ -1285,7 +1285,7 @@ export const blueDrop: ModuleHandlers = {
       return seriesSet(
         'bd-perf',
         [
-          { unit: 'Ml/day', label: 'Flow' },
+          { unit: 'ML/day', label: 'Flow' },
           { unit: '%', label: 'Utilisation', min: 0 },
         ],
         [

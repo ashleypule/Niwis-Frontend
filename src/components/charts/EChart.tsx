@@ -26,7 +26,15 @@ export function optionSummary(option: EChartsOption): string {
     y: list(o.yAxis).map((a) => ({ name: a.name ?? '', type: a.type, min: a.min ?? null, scale: !!a.scale })),
     s: series
       .filter((s) => typeof s.name === 'string' && !(s.name as string).startsWith('__'))
-      .map((s) => ({ name: s.name, type: s.type, axis: (s.yAxisIndex as number | undefined) ?? 0 })),
+      // a band is two stacked series under one name: the invisible lower bound is left out
+      .filter((s) => !(typeof s.id === 'string' && (s.id as string).endsWith('-lo')))
+      .map((s) => ({
+        name: s.name,
+        type: s.type,
+        axis: (s.yAxisIndex as number | undefined) ?? 0,
+        // a database column drawn under its catalogue label (never renamed by the frontend)
+        ...(s.niwisCat ? { cat: true } : {}),
+      })),
     divider,
   });
 }

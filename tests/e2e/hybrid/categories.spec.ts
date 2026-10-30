@@ -137,7 +137,7 @@ for (const module of MODULES) {
         const summary = await chartSummary(chart);
         if (!summary) continue; // every visible column empty in this scope: listed under the chart instead
         expect(summary.y.length, `${t.id}/${g.id} axes`).toBe(Math.max(1, units.length));
-        units.forEach((u, i) => expect(summary.y[i].name, `${t.id}/${g.id} axis ${i}`).toBe(u || 'no unit'));
+        units.forEach((u, i) => expect(summary.y[i].name, `${t.id}/${g.id} axis ${i}`).toBe(u || 'index'));
         // chart types are the catalogue's: bar / diverging-bar → bars, line → lines, the band pair as one band
         const band = g.band?.length === 2 && g.band.every((c) => visible.includes(c)) ? g.band : [];
         if (band.length)

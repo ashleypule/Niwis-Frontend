@@ -51,7 +51,7 @@ export default function RunoffPage() {
             blockedBy={st.list}
             height={210}
           />
-          <SeriesPanel module="runoff" metric="ssi" title="Standardized Streamflow Index (SSI)" height={200} />
+          <SeriesPanel module="runoff" metric="ssi" title="Standardised Streamflow Index (SSI)" height={200} />
         </div>
         <div className="grid content-start gap-3">
           <SeriesPanel

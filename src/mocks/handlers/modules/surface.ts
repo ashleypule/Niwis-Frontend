@@ -1125,7 +1125,7 @@ export const surfaceWater: ModuleHandlers = {
       const rows = [...by.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
       return categories(
         'abstraction',
-        'Mm³/yr',
+        'Mm³/year',
         rows.map((r) => r[0]),
         [{ key: 'v', name: 'Licensed abstraction', values: rows.map((r) => r[1]) }],
         {

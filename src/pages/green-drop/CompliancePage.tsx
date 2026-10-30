@@ -7,7 +7,7 @@ import { TablePanel } from '@/components/table/TablePanel';
 import { EntityInfoCard } from '@/components/entity/EntityInfoCard';
 import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 
 /** Shared layout for Green Drop (wastewater) and Blue Drop (drinking water) compliance pages. */
 export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-drop' | 'blue-drop'> }) {
@@ -15,8 +15,11 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
   const green = module === 'green-drop';
   const sel = useSelectedEntity(module);
   const p = { entityId: sel.id };
-  const ctx = sel.name ? `[${green ? 'WWTW' : 'System'}: ${sel.name}]` : undefined;
-  const noun = green ? 'WWTW' : 'Water Supply System';
+  // live: one monthly record per district (no WWTW or water-supply-system register in the database)
+  const noun = entityNoun(module, green ? 'WWTW' : 'Water Supply System');
+  const short = noun === 'District' ? 'District' : green ? 'WWTW' : 'System';
+  const plural = noun === 'District' ? 'Districts' : green ? 'WWTWs' : 'Systems';
+  const ctx = sel.name ? `[${short}: ${sel.name}]` : undefined;
   return (
     <div>
       <PageTabs mod={mod} />
@@ -24,7 +27,11 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
       <div className="mt-3 grid gap-3 desk:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <MapPanel
           module={module}
-          title={green ? 'WWTW Compliance Status Map – South Africa' : 'Drinking Water Compliance Map – South Africa'}
+          title={
+            green
+              ? `${short === 'District' ? 'Wastewater Effluent' : 'WWTW'} Compliance Status Map – South Africa`
+              : 'Drinking Water Compliance Map – South Africa'
+          }
           layers={
             green
               ? [
@@ -51,7 +58,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="capacity"
-              title="Treatment Capacity and Utilisation (Selected WWTW)"
+              title={`Treatment Capacity and Utilisation (Selected ${short})`}
               context={ctx}
               extra={p}
               height={200}
@@ -72,7 +79,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="effluent"
-              title="Key Effluent Quality Parameters (Selected WWTW)"
+              title={`Key Effluent Quality Parameters (Selected ${short})`}
               context={ctx}
               extra={p}
               height={210}
@@ -81,7 +88,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="params"
-              title="Microbiological Parameters (Selected System)"
+              title={`Microbiological Parameters (Selected ${short})`}
               context={ctx}
               extra={{ ...p, group: 'micro' }}
               height={210}
@@ -102,7 +109,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="micro"
-              title="Microbiological Quality (Selected WWTW)"
+              title={`Microbiological Quality (Selected ${short})`}
               context={ctx}
               extra={p}
               height={220}
@@ -121,7 +128,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="params"
-              title="Nutrients and Salts (Selected System)"
+              title={`Nutrients and Salts (Selected ${short})`}
               context={ctx}
               extra={{ ...p, group: 'nutrients' }}
               height={220}
@@ -129,7 +136,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
             <SeriesPanel
               module={module}
               metric="params"
-              title="Metals and Trace Elements (Selected System)"
+              title={`Metals and Trace Elements (Selected ${short})`}
               context={ctx}
               extra={{ ...p, group: 'metals' }}
               height={220}
@@ -145,7 +152,13 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
           height={220}
         />
         {green ? (
-          <CategoryPanel module="green-drop" metric="breakdown" title="WWTWs by Band" variant="bar" height={220} />
+          <CategoryPanel
+            module="green-drop"
+            metric="breakdown"
+            title={`${plural} by Band`}
+            variant="bar"
+            height={220}
+          />
         ) : (
           <SeriesPanel
             module={module}
@@ -162,7 +175,7 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
           <CategoryPanel
             module={module}
             metric="param-compliance"
-            title="SANS 241 Compliance by Determinand (All Systems)"
+            title={`SANS 241 Compliance by Determinand (All ${plural})`}
             variant="bar"
             labels
             height={220}
@@ -170,25 +183,25 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
         </Row>
       )}
       <Row className="md:grid-cols-2 xl:grid-cols-[1.15fr_1fr_1fr_1fr]">
-        <EntityInfoCard module={module} id={sel.id} title={`${noun} Information (Selected)`} />
+        <EntityInfoCard module={module} id={sel.id} title={`${noun} Information (Selected ${short})`} />
         <TablePanel
           module={module}
           metric="latest"
-          title={green ? 'Latest Effluent Results (Selected Plant)' : 'Latest Water Quality Results vs SANS 241'}
+          title={green ? `Latest Effluent Results (Selected ${short})` : 'Latest Water Quality Results vs SANS 241'}
           extra={p}
         />
         <div className="grid content-start gap-3">
           <TablePanel
             module={module}
             metric="ranking"
-            title={`Top 5 ${green ? 'WWTWs' : 'Systems'} (Highest Compliance)`}
+            title={`Top 5 ${plural} (Highest Compliance)`}
             extra={{ order: 'top' }}
             selectEntity
           />
           <TablePanel
             module={module}
             metric="ranking"
-            title={`Bottom 5 ${green ? 'WWTWs' : 'Systems'} (Lowest Compliance)`}
+            title={`Bottom 5 ${plural} (Lowest Compliance)`}
             extra={{ order: 'bottom' }}
             selectEntity
           />

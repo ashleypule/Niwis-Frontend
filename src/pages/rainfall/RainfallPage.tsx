@@ -22,7 +22,7 @@ export const RAIN_LAYERS = [
   { id: 'spi6', label: 'SPI-6' },
   { id: 'spi12', label: 'SPI-12' },
   { id: 'spei6', label: 'SPEI-6' },
-  { id: 'r20', label: 'R20mm days' },
+  { id: 'r20', label: 'Heavy rain days (R20mm)' },
   { id: 'cdd', label: 'Consecutive dry days' },
   { id: 'municipal-total', label: 'By municipality' },
 ];

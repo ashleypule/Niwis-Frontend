@@ -31,7 +31,7 @@ export default function GroundwaterReservePage() {
           title="Aquifer Reserve Status Map – South Africa"
           layers={[
             { id: 'ei', label: 'Exploitation index (EI)' },
-            { id: 'recharge', label: 'Recharge (mm/yr)' },
+            { id: 'recharge', label: 'Recharge (mm/year)' },
             { id: 'gw-level', label: 'Groundwater level' },
             { id: 'sgi', label: 'SGI' },
           ]}

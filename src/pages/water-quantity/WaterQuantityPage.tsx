@@ -31,7 +31,7 @@ export default function WaterQuantityPage() {
           <CategoryPanel
             module="water-quantity"
             metric="waterfall"
-            title="National Water Balance incl. Transfers and System Losses (Mm³/yr)"
+            title="National Water Balance incl. Transfers and System Losses (Mm³/year)"
             variant="waterfall"
             height={300}
           />

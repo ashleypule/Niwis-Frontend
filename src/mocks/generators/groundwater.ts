@@ -301,7 +301,7 @@ export interface AquiferUnit {
   recharge: number; // Mm³/yr
   abstraction: number; // Mm³/yr
   ecologicalReserve: number; // Mm³/yr
-  dynamicReserve: number; // Mm³/yr (renewable = recharge − ecological reserve)
+  dynamicReserve: number; // Mm³/year (renewable = recharge − ecological reserve)
   staticReserve: number; // Mm³
   ei: number;
   eiClass: ReturnType<typeof exploitationClass>;

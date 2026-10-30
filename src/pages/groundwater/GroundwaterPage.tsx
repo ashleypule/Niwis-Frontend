@@ -145,7 +145,7 @@ export default function GroundwaterPage() {
         />
       </Row>
       <Row className="md:grid-cols-2 xl:grid-cols-[1.2fr_1fr_1fr]">
-        <EntityInfoCard module="groundwater" id={bh.id} title={`Borehole Information (Selected ${noun})`} />
+        <EntityInfoCard module="groundwater" id={bh.id} title={`${noun} Information (Selected ${noun})`} />
         <TablePanel module="groundwater" metric="aquifers" title="Aquifer Status (Selected Region)" />
         <div className="grid content-start gap-3">
           <TablePanel

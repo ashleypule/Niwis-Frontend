@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { ArrowDown, ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight, ChevronsUpDown } from 'lucide-react';
 import type { Column, TableSet } from '@/types/api';
 import { formatDate, formatNumber, withUnit } from '@/lib/format';
+import { canonLabel, canonUnit, clampDecimals } from '@/config/naming';
 import { classify } from '@/config/palettes';
 import { Pill } from '@/components/ui/Pill';
 import { registerExport, tableRows } from '@/lib/exporter';
@@ -32,8 +33,7 @@ function TrendCell({
     >
       <Arrow className="h-3.5 w-3.5" aria-hidden="true" />
       {v > 0 ? '+' : ''}
-      {formatNumber(v, decimals)}
-      {unit === '%' ? '%' : unit ? ` ${unit}` : ''}
+      {withUnit(formatNumber(v, decimals), unit)}
       <span className="sr-only">{tone === 'good' ? '(improving)' : tone === 'bad' ? '(worsening)' : ''}</span>
     </span>
   );
@@ -44,12 +44,21 @@ function TrendCell({
  * Trend columns (a rate: "/decade", "/yr") use the row's `trendDecimals`; the row's `decimals` is for its values.
  */
 export function cellFormat(c: Column, row?: Record<string, Val>): Column {
-  if (!row) return c;
   const trend = /trend|slope/i.test(c.key) || /\//.test(c.unit ?? '');
   const num = (v: Val) => (typeof v === 'number' ? v : undefined);
-  const decimals = trend ? (num(row.trendDecimals) ?? c.decimals) : (num(row.decimals) ?? c.decimals);
-  const unit = !trend && !c.unit && typeof row.unit === 'string' ? row.unit : c.unit;
+  const rowDecimals = row ? (trend ? num(row.trendDecimals) : num(row.decimals)) : undefined;
+  const rowUnit = row && !trend && !c.unit && typeof row.unit === 'string' ? row.unit : undefined;
+  // the register's spelling of the unit, and decimals inside the register's range for that unit
+  const unit = canonUnit(rowUnit ?? c.unit) || undefined;
+  const decimals = clampDecimals(unit, rowDecimals ?? c.decimals);
   return decimals === c.decimals && unit === c.unit ? c : { ...c, decimals, unit };
+}
+
+/** A column's unit as the header prints it: "(mm)", or "(per decade)" for a rate suffix like "/decade". */
+export function headerUnit(unit: string | undefined): string | undefined {
+  const u = canonUnit(unit);
+  if (!u || u === '%') return undefined;
+  return u;
 }
 
 export function renderCell(col: Column, v: Val, rowIndex: number, row?: Record<string, Val>): ReactNode {
@@ -69,7 +78,7 @@ export function renderCell(col: Column, v: Val, rowIndex: number, row?: Record<s
     case 'number': {
       if (typeof v !== 'number') return String(v);
       // a column's unit is in its header; a row's own unit (mixed tables) is printed with the value
-      const rowUnit = c.unit !== col.unit;
+      const rowUnit = c.unit !== canonUnit(col.unit);
       const txt = withUnit(formatNumber(v, c.decimals ?? 0), c.unit === '%' || rowUnit ? c.unit : undefined);
       if (c.scale) {
         const bin = classify(c.scale, v);
@@ -200,6 +209,12 @@ export function DataTable({
                     <th
                       key={c.key}
                       scope="col"
+                      data-col={c.key}
+                      data-col-type={c.type}
+                      data-col-unit={headerUnit(c.unit) ?? (c.unit === '%' ? '%' : undefined)}
+                      data-col-decimals={cellFormat(c).decimals}
+                      data-col-good={c.goodDirection}
+                      data-col-scale={c.scale}
                       aria-sort={active ? (sort!.dir === 1 ? 'ascending' : 'descending') : undefined}
                       className={clsx(
                         'border-b border-line px-2 py-2 align-bottom text-[12px] font-semibold leading-tight text-ink-2',
@@ -224,9 +239,9 @@ export function DataTable({
                         >
                           {/* one text run, so a long label and its unit wrap together */}
                           <span>
-                            {c.label}
-                            {c.unit && c.type === 'number' && c.unit !== '%' && (
-                              <span className="font-normal text-muted"> ({c.unit})</span>
+                            {canonLabel(c.label)}
+                            {c.type === 'number' && headerUnit(c.unit) && (
+                              <span className="font-normal text-muted"> ({headerUnit(c.unit)})</span>
                             )}
                           </span>
                           {active ? (
@@ -240,7 +255,7 @@ export function DataTable({
                           )}
                         </button>
                       ) : (
-                        c.label
+                        canonLabel(c.label)
                       )}
                     </th>
                   );
@@ -277,6 +292,8 @@ export function DataTable({
                             (String(r[c.key] ?? '').length <= 14
                               ? 'whitespace-nowrap'
                               : 'min-w-[6rem] max-w-[260px] whitespace-normal leading-snug'),
+                          // a long token (a table or column id) breaks inside the cell instead of overflowing it
+                          c.type === 'text' && /\S{19,}/.test(String(r[c.key] ?? '')) && '[overflow-wrap:anywhere]',
                         )}
                       >
                         {renderCell(c, r[c.key], start + i, r)}

@@ -109,7 +109,7 @@ export const climate: ModuleHandlers = {
       kpi('et0', 'et0', recent(eAnn), {
         label: 'Reference ET₀ (annual)',
         sublabel: 'Last-decade mean',
-        unit: 'mm/yr',
+        unit: 'mm/year',
         delta: pctChange(eAnn),
         deltaUnit: '%',
         deltaLabel: 'vs 1981–2010',
@@ -392,7 +392,7 @@ export const climate: ModuleHandlers = {
       return seriesSet(
         'evaporation',
         [
-          { unit: 'mm/yr', label: 'Evaporation' },
+          { unit: 'mm/year', label: 'Evaporation' },
           { unit: 'kPa', label: 'VPD' },
         ],
         [
@@ -437,7 +437,7 @@ export const climate: ModuleHandlers = {
       const sm = annualMeans(regionSeries(s, 'sm'), 1960, ly);
       return seriesSet(
         'irrigation',
-        [{ unit: 'mm/yr', label: 'Depth' }],
+        [{ unit: 'mm/year', label: 'Depth' }],
         [
           line(
             'cwr',
@@ -474,7 +474,7 @@ export const climate: ModuleHandlers = {
       return seriesSet(
         'streamflow-linkage',
         [
-          { unit: 'mm/yr', label: 'Runoff' },
+          { unit: 'mm/year', label: 'Runoff' },
           { unit: '%', label: 'Anomaly' },
         ],
         [
@@ -907,7 +907,7 @@ export const climate: ModuleHandlers = {
     et0: () =>
       gridLayer(
         'et0',
-        'Reference ET₀ (mm/yr, 1981–2010)',
+        'Reference ET₀ (mm/year, 1981–2010)',
         'rainfall',
         'mm',
         (i) =>

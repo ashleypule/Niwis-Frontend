@@ -123,12 +123,12 @@ export function Header() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/85 hover:bg-white/15 md:w-72"
+            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/85 hover:bg-white/15 md:w-80"
             aria-label="Search locations, dams, stations and pages (Ctrl+K)"
           >
             <Search className="h-4 w-4" aria-hidden="true" />
             <span className="hidden flex-1 truncate whitespace-nowrap text-left md:inline">
-              Search location, dam, station…
+              Search place, dam or station…
             </span>
             <kbd className="hidden rounded border border-white/25 px-1.5 text-[11px] text-white/70 md:inline">
               Ctrl K

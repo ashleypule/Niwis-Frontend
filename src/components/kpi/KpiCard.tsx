@@ -3,6 +3,7 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { metric, type GoodDirection } from '@/config/metrics';
 import { metricIcon } from '@/config/icons';
 import { formatNumber, withUnit } from '@/lib/format';
+import { canonLabel, canonUnit, registerDecimals } from '@/config/naming';
 import type { Kpi } from '@/types/api';
 import { Pill } from '@/components/ui/Pill';
 import { SampleChip, StaleChip } from '@/components/provenance/Markers';
@@ -68,6 +69,22 @@ export function kpiLabel(kpi: Kpi): string {
   return kpi.label;
 }
 
+/**
+ * The value as the register shows it: the register's unit spelling, decimals within the unit's range (a backend
+ * `decimals` outside it is clamped), and the exploitation index as the ratio the spec, the map and the tables use
+ * when the backend sends it in % (17.2 % → 0.17).
+ */
+export function registerValue(kpi: Kpi, metricUnit: string): { value: number | null; unit: string; decimals: number } {
+  const md = metric(kpi.metric);
+  let unit = canonUnit(kpi.unit ?? metricUnit);
+  let value = kpi.value;
+  if (kpi.metric === 'exploitationIndex' && unit === '%' && value != null) {
+    value = value / 100;
+    unit = '';
+  }
+  return { value, unit, decimals: registerDecimals(kpi.metric, unit, kpi.decimals ?? md.decimals) };
+}
+
 export function KpiCard({
   kpi,
   compact = false,
@@ -83,16 +100,18 @@ export function KpiCard({
 }) {
   const sample = provenance?.kind === 'sample';
   const sublabel = kpiSublabel(kpi);
-  const label = kpiLabel(kpi);
+  const label = canonLabel(kpiLabel(kpi));
   const md = metric(kpi.metric);
   const good = kpi.goodDirection ?? md.goodDirection;
   const { icon: Icon, tint } = metricIcon(kpi.metric);
   const tone = deltaTone(kpi.delta, good);
-  const decimals = kpi.decimals ?? md.decimals;
-  const unit = kpi.unit ?? md.unit;
+  const shown = registerValue(kpi, md.unit);
+  const unit = shown.unit;
+  const decimals = shown.decimals;
   const deltaUnit = kpi.deltaUnit ?? (unit === '%' || unit === '% FSC' ? ' pp' : unit ? ` ${unit}` : '');
   const Arrow = kpi.delta == null || kpi.delta === 0 ? ArrowRight : kpi.delta > 0 ? ArrowUpRight : ArrowDownRight;
-  const valueText = kpi.text ?? formatNumber(kpi.value, decimals);
+  const valueText = kpi.text ?? formatNumber(shown.value, decimals);
+  const asOf = kpi.periodEnd ?? kpi.asOf;
   // value null + reason: "—" with the reason as tooltip (docs/backend/CONTRACT_CHANGES.md §3)
   const missing = kpi.value == null && !kpi.text && !kpi.status;
   const sparkTone = good === 'neutral' ? 'neutral' : tone;
@@ -104,6 +123,12 @@ export function KpiCard({
         sample && 'prov-sample',
       )}
       data-provenance={provenance?.kind}
+      data-kpi={kpi.id}
+      data-metric={kpi.metric}
+      data-unit={unit}
+      data-decimals={decimals}
+      data-good={good}
+      data-delta-tone={kpi.delta != null ? tone : undefined}
       aria-label={`${label}: ${missing ? `not available${kpi.unavailableReason ? ` (${kpi.unavailableReason})` : ''}` : (kpi.text ?? withUnit(valueText, unit))}`}
     >
       <div className="flex items-start gap-2.5">
@@ -115,12 +140,12 @@ export function KpiCard({
           <Icon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-ink" title={label}>
+          <h3 className="line-clamp-3 text-[13px] font-semibold leading-tight text-ink" title={label}>
             {label}
           </h3>
           {sublabel && (
-            // two lines: the drought class sub-value ("85 % of area in D1–D4 · …") must stay readable
-            <p className="line-clamp-2 text-[11px] leading-tight text-muted" title={sublabel}>
+            // three lines: the drought class sub-value ("85 % of area in D1–D4 · …") and the backend's method notes
+            <p className="line-clamp-3 text-[11px] leading-tight text-muted" title={sublabel}>
               {sublabel}
             </p>
           )}
@@ -149,11 +174,7 @@ export function KpiCard({
         ) : (
           <p className="num min-w-0 whitespace-nowrap font-bold leading-none tracking-tight text-ink">
             <span className={compact ? 'text-xl' : 'text-[26px]'}>{valueText}</span>
-            {unit && !kpi.text && (
-              <span className="ml-1 text-sm font-semibold text-ink-2">
-                {unit === 'people' || unit === 'records' ? '' : unit}
-              </span>
-            )}
+            {unit && !kpi.text && <span className="ml-1 text-sm font-semibold text-ink-2">{unit}</span>}
           </p>
         )}
         {kpi.delta != null && (
@@ -180,9 +201,9 @@ export function KpiCard({
         </div>
       )}
       <div className="mt-0.5 flex items-center justify-between gap-2 text-[11px] text-muted">
-        {/* a reason gets two lines ("Latest valid SGI is Aug 2024 (more than 90 days old)"); a delta label one */}
+        {/* a reason wraps to three lines ("Latest valid SGI is Aug 2024 (more than 90 days old)"); a delta label one */}
         <span
-          className={missing ? 'line-clamp-2 leading-snug' : 'truncate'}
+          className={missing ? 'line-clamp-3 leading-snug' : 'truncate'}
           title={missing ? kpi.unavailableReason : undefined}
         >
           {missing ? (kpi.unavailableReason ?? 'Not available') : kpi.deltaLabel}
@@ -199,10 +220,10 @@ export function KpiCard({
             >
               <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
               {APP.liveLabel}
-              {kpi.asOf && <span className="font-medium"> · {monthYear(kpi.asOf)}</span>}
+              {asOf && <span className="font-medium"> · {monthYear(asOf)}</span>}
             </span>
           )}
-          {kpi.isStale && <StaleChip asOf={kpi.asOf} />}
+          {kpi.isStale && <StaleChip asOf={asOf} />}
         </div>
       )}
       {kpi.spark && kpi.spark.length > 1 && (

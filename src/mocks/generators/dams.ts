@@ -21,7 +21,7 @@ export interface Dam extends DamRef {
   wma: string;
   municipality: string;
   catchmentKm2: number;
-  /** firm demand, Mm³/yr */
+  /** firm demand, Mm³/year */
   demand: number;
   fsl: number;
   wallHeight: number;

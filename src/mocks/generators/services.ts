@@ -169,7 +169,7 @@ export const nrwHistory = memo((key: string, current: number, months: number) =>
   return Array.from({ length: months }, (_, k) => round(current + (months - 1 - k) * 0.03 + r.normal(0, 0.6), 1));
 });
 
-/** Water demand (Mm³/yr) by sector anchored to spec §17.2. */
+/** Water demand (Mm³/year) by sector anchored to spec §17.2. */
 export const DEMAND_ANCHORS = {
   municipal: 4200,
   agricultural: 11000,

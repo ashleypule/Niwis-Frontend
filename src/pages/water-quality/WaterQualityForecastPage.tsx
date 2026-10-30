@@ -5,7 +5,7 @@ import { MapPanel } from '@/components/map/MapPanel';
 import { CategoryPanel, SeriesPanel } from '@/components/charts/panels';
 import { TablePanel } from '@/components/table/TablePanel';
 import { Row } from '@/components/layout/Grid';
-import { useSelectedEntity } from '@/components/entity/useSelectedEntity';
+import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 import { PROVINCE_TABS } from '@/pages/_shared/tabs';
 
 const mod = moduleById('water-quality');
@@ -65,7 +65,7 @@ export default function WaterQualityForecastPage() {
           module="water-quality"
           metric="ecoli-catchment"
           forecast
-          title="E. coli Forecast (Selected Station)"
+          title={`E. coli Forecast (Selected ${entityNoun('water-quality')})`}
           context={st.name}
           extra={{ entityId: st.id }}
           height={260}

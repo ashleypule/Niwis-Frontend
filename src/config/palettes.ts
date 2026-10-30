@@ -68,21 +68,21 @@ export const SCALES = {
   // US Drought Monitor convention, spec §3.4
   drought: c('drought', 'Drought classification (D0–D4)', [
     { id: 'None', label: 'No drought', color: '#DCEFD8' },
-    { id: 'D0', label: 'D0 – Abnormally dry', color: '#FFF06A' },
-    { id: 'D1', label: 'D1 – Moderate drought', color: '#FCD37F' },
-    { id: 'D2', label: 'D2 – Severe drought', color: '#FFAA00' },
-    { id: 'D3', label: 'D3 – Extreme drought', color: '#E60000', ink: '#fff' },
-    { id: 'D4', label: 'D4 – Exceptional drought', color: '#730000', ink: '#fff' },
+    { id: 'D0', label: 'D0 Abnormally Dry', color: '#FFF06A' },
+    { id: 'D1', label: 'D1 Moderate Drought', color: '#FCD37F' },
+    { id: 'D2', label: 'D2 Severe Drought', color: '#FFAA00' },
+    { id: 'D3', label: 'D3 Extreme Drought', color: '#E60000', ink: '#fff' },
+    { id: 'D4', label: 'D4 Exceptional Drought', color: '#730000', ink: '#fff' },
   ]),
   // Dry side = the drought classes of spec §3.4 on the value rounded to 2 dp (thresholds.ts droughtClassFromSpi: D4 ≤ −2.0,
   // D3 ≤ −1.6, D2 ≤ −1.3, D1 ≤ −0.8, D0 ≤ −0.5), so the bin edges sit between the 2-dp values; wet side McKee 1993.
   spi: {
     ...s('spi', 'SPI / SPEI', undefined, [
-      { id: 'D4', label: '≤ −2.0 D4 Exceptional drought', color: '#730000', max: -1.995, ink: '#fff' },
-      { id: 'D3', label: '−2.0 to −1.6 D3 Extreme drought', color: '#E60000', min: -1.995, max: -1.595, ink: '#fff' },
-      { id: 'D2', label: '−1.6 to −1.3 D2 Severe drought', color: '#FFAA00', min: -1.595, max: -1.295 },
-      { id: 'D1', label: '−1.3 to −0.8 D1 Moderate drought', color: '#FCD37F', min: -1.295, max: -0.795 },
-      { id: 'D0', label: '−0.8 to −0.5 D0 Abnormally dry', color: '#FFF06A', min: -0.795, max: -0.495 },
+      { id: 'D4', label: '≤ −2.0 D4 Exceptional Drought', color: '#730000', max: -1.995, ink: '#fff' },
+      { id: 'D3', label: '−2.0 to −1.6 D3 Extreme Drought', color: '#E60000', min: -1.995, max: -1.595, ink: '#fff' },
+      { id: 'D2', label: '−1.6 to −1.3 D2 Severe Drought', color: '#FFAA00', min: -1.595, max: -1.295 },
+      { id: 'D1', label: '−1.3 to −0.8 D1 Moderate Drought', color: '#FCD37F', min: -1.295, max: -0.795 },
+      { id: 'D0', label: '−0.8 to −0.5 D0 Abnormally Dry', color: '#FFF06A', min: -0.795, max: -0.495 },
       { id: 'None', label: '−0.5 to 1.0 Near normal', color: '#B8E0A8', min: -0.495, max: 1.0 },
       { label: '1.0 to 1.5 Moderately wet', color: '#74B4E0', min: 1.0, max: 1.5 },
       { label: '1.5 to 2.0 Very wet', color: '#2F7BC1', min: 1.5, max: 2.0, ink: '#fff' },
@@ -98,7 +98,7 @@ export const SCALES = {
     { id: 'very-high', label: '≥ 90% Very high', color: '#1F6FD1', min: 90, ink: '#fff' },
   ]),
   wqi: s('wqi', 'Water Quality Index', undefined, [
-    { id: 'Very Poor', label: 'Very poor (0–25)', color: '#D7301F', max: 25, ink: '#fff' },
+    { id: 'Very Poor', label: 'Very Poor (0–25)', color: '#D7301F', max: 25, ink: '#fff' },
     { id: 'Poor', label: 'Poor (25–50)', color: '#F28C28', min: 25, max: 50 },
     { id: 'Fair', label: 'Fair (50–70)', color: '#F6CF3E', min: 50, max: 70 },
     { id: 'Good', label: 'Good (70–90)', color: '#4CAF50', min: 70, max: 90 },
@@ -248,11 +248,11 @@ export const SCALES = {
     { label: '> 100', color: '#A63603', min: 100, ink: '#fff' },
   ]),
   exploitation: s('exploitation', 'Exploitation index (abstraction / recharge)', undefined, [
-    { id: 'Very Low', label: '< 0.1 Very low', color: '#1F6FD1', max: 0.1, ink: '#fff' },
+    { id: 'Very Low', label: '< 0.1 Very Low', color: '#1F6FD1', max: 0.1, ink: '#fff' },
     { id: 'Low', label: '0.1–0.3 Low', color: '#74B4E0', min: 0.1, max: 0.3 },
     { id: 'Moderate', label: '0.3–0.5 Moderate', color: '#B8E0A8', min: 0.3, max: 0.5 },
     { id: 'High', label: '0.5–0.7 High', color: '#F6CF3E', min: 0.5, max: 0.7 },
-    { id: 'Very High', label: '0.7–1.0 Very high', color: '#F28C28', min: 0.7, max: 1.0 },
+    { id: 'Very High', label: '0.7–1.0 Very High', color: '#F28C28', min: 0.7, max: 1.0 },
     { id: 'Over-exploited', label: '> 1.0 Over-exploited', color: '#B2182B', min: 1.0, ink: '#fff' },
   ]),
   soilMoisture: s('soilMoisture', 'Soil moisture (m³/m³)', 'm³/m³', [
@@ -394,12 +394,12 @@ export const SCALES = {
     { id: 'Poor', label: 'Poor', color: '#C62828', ink: '#fff' },
   ]),
   ecological: c('ecological', 'Ecological category (PES)', [
-    { id: 'A', label: 'A – Natural', color: '#1F6FD1', ink: '#fff' },
-    { id: 'B', label: 'B – Largely natural', color: '#4CAF50' },
-    { id: 'C', label: 'C – Moderately modified', color: '#F6CF3E' },
-    { id: 'D', label: 'D – Largely modified', color: '#F28C28' },
-    { id: 'E', label: 'E – Seriously modified', color: '#D7301F', ink: '#fff' },
-    { id: 'F', label: 'F – Critically modified', color: '#7F0000', ink: '#fff' },
+    { id: 'A', label: 'A Natural', color: '#1F6FD1', ink: '#fff' },
+    { id: 'B', label: 'B Largely natural', color: '#4CAF50' },
+    { id: 'C', label: 'C Moderately modified', color: '#F6CF3E' },
+    { id: 'D', label: 'D Largely modified', color: '#F28C28' },
+    { id: 'E', label: 'E Seriously modified', color: '#D7301F', ink: '#fff' },
+    { id: 'F', label: 'F Critically modified', color: '#7F0000', ink: '#fff' },
   ]),
   vegetationCover: c('vegetationCover', 'Land cover', [
     { id: 'Natural vegetation', label: 'Natural vegetation', color: '#2E9E5B' },

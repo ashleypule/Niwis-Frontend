@@ -327,7 +327,7 @@ describe('chart presets (audit fixes)', () => {
     const value = { key: 'value', label: 'Value', type: 'number' as const, decimals: 1 };
     const trend = { key: 'trend', label: 'Trend', type: 'number' as const, unit: '/decade', decimals: 2 };
     expect(cellFormat(value, { unit: 'mm', decimals: 0 })).toMatchObject({ unit: 'mm', decimals: 0 });
-    expect(cellFormat(trend, { unit: 'mm', decimals: 0 })).toMatchObject({ unit: '/decade', decimals: 2 });
+    expect(cellFormat(trend, { unit: 'mm', decimals: 0 })).toMatchObject({ unit: 'per decade', decimals: 2 });
     expect(cellFormat(trend, { trendDecimals: 4 })).toMatchObject({ decimals: 4 });
   });
 });

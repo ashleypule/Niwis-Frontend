@@ -322,7 +322,7 @@ export const groundwater: ModuleHandlers = {
       return {
         id: 'recharge-abstraction',
         xType: 'category',
-        axes: [{ unit: 'Mm³/yr', label: 'Volume' }],
+        axes: [{ unit: 'Mm³/year', label: 'Volume' }],
         series: [
           bar(
             'r',
@@ -434,7 +434,7 @@ export const groundwater: ModuleHandlers = {
         );
       return categories(
         'sector',
-        'Mm³/yr',
+        'Mm³/year',
         [...uses],
         [{ key: 'v', name: 'Abstraction', values: v.map((x) => x * scale) }],
         { colors: ['#2E9E5B', '#1565C0', '#F2A900', '#E95F35'] },
@@ -780,7 +780,7 @@ export const groundwaterReserve: ModuleHandlers = {
       return {
         id: 'unit-ra',
         xType: 'category',
-        axes: [{ unit: 'Mm³/yr', label: 'Volume' }],
+        axes: [{ unit: 'Mm³/year', label: 'Volume' }],
         series: [
           bar(
             'r',
@@ -806,7 +806,7 @@ export const groundwaterReserve: ModuleHandlers = {
         id: 'yield-ei',
         xType: 'category',
         axes: [
-          { unit: 'Mm³/yr', label: 'Sustainable yield' },
+          { unit: 'Mm³/year', label: 'Sustainable yield' },
           { unit: '', label: 'Exploitation index', min: 0 },
         ],
         series: [
@@ -833,7 +833,7 @@ export const groundwaterReserve: ModuleHandlers = {
       const yrs = ['Current', '2030 (forecast)', '2040 (forecast)', '2050 (forecast)'];
       const growth = [1, 1.18, 1.38, 1.6];
       const rech = [1, 0.97, 0.94, 0.9];
-      return categories('components', 'Mm³/yr', yrs, [
+      return categories('components', 'Mm³/year', yrs, [
         {
           key: 'dyn',
           name: 'Dynamic reserve',
@@ -882,8 +882,8 @@ export const groundwaterReserve: ModuleHandlers = {
         'aquifers',
         [
           col.text('name', 'Aquifer unit'),
-          col.num('recharge', 'Recharge', 'Mm³/yr'),
-          col.num('abstraction', 'Abstraction', 'Mm³/yr'),
+          col.num('recharge', 'Recharge', 'Mm³/year'),
+          col.num('abstraction', 'Abstraction', 'Mm³/year'),
           col.num('ei', 'EI', '', 2, { scale: 'exploitation' }),
           col.num('static', 'Static reserve', 'Mm³'),
           col.cls('cls', 'Status', 'exploitation'),
@@ -909,7 +909,7 @@ export const groundwaterReserve: ModuleHandlers = {
     recharge: () =>
       choropleth(
         'recharge',
-        'Recharge (mm/yr)',
+        'Recharge (mm/year)',
         'municipality',
         'runoff',
         'mm',
@@ -950,14 +950,14 @@ export const groundwaterReserve: ModuleHandlers = {
           value: `${u.aquifer.transmissivity[0]} – ${u.aquifer.transmissivity[1]} m²/day`,
         },
         { label: 'Storativity / specific yield', value: u.aquifer.storativity },
-        { label: 'Mean annual recharge', value: u.recharge, unit: 'Mm³/yr' },
-        { label: 'Recharge rate', value: u.rechargeMm, unit: 'mm/yr' },
-        { label: 'Dynamic reserve', value: u.dynamicReserve, unit: 'Mm³/yr' },
+        { label: 'Mean annual recharge', value: u.recharge, unit: 'Mm³/year' },
+        { label: 'Recharge rate', value: u.rechargeMm, unit: 'mm/year' },
+        { label: 'Dynamic reserve', value: u.dynamicReserve, unit: 'Mm³/year' },
         { label: 'Static reserve', value: u.staticReserve, unit: 'Mm³' },
-        { label: 'Ecological reserve', value: u.ecologicalReserve, unit: 'Mm³/yr' },
-        { label: 'Current abstraction', value: u.abstraction, unit: 'Mm³/yr' },
+        { label: 'Ecological reserve', value: u.ecologicalReserve, unit: 'Mm³/year' },
+        { label: 'Current abstraction', value: u.abstraction, unit: 'Mm³/year' },
         { label: 'Exploitation index', value: u.ei, scale: 'exploitation' },
-        { label: 'Sustainable yield', value: u.sustainableYield, unit: 'Mm³/yr' },
+        { label: 'Sustainable yield', value: u.sustainableYield, unit: 'Mm³/year' },
         { label: 'Monitoring boreholes', value: u.boreholes },
         { label: 'Data source', value: 'DWS NGA, SAWS, SANSA, CGS' },
       ],

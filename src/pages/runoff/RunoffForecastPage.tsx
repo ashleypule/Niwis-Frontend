@@ -12,6 +12,9 @@ import { PROVINCE_TABS } from '@/pages/_shared/tabs';
 export function StreamflowForecast({ module }: { module: ModuleId }) {
   const mod = moduleById(module);
   const st = useSelectedEntity(module);
+  // live: one modelled flow per district (no gauging stations in the database)
+  const noun = entityNoun(module);
+  const plural = noun === 'District' ? 'Districts' : 'Stations';
   return (
     <div>
       <PageTabs mod={mod} />
@@ -58,7 +61,7 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
           module={module}
           metric="flood-probability"
           forecast
-          title="Flood Probability (Stations above Q10)"
+          title={`Flood Probability (${plural} above Q10)`}
           height={280}
         />
       </Row>
@@ -72,7 +75,7 @@ export function StreamflowForecast({ module }: { module: ModuleId }) {
         <TablePanel
           module={module}
           metric="top-stations"
-          title="Stations to Watch (Lowest Flow Percentile)"
+          title={`${plural} to Watch (Lowest Flow Percentile)`}
           extra={{ order: 'lowest' }}
           selectEntity
         />

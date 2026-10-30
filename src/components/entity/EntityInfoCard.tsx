@@ -6,6 +6,7 @@ import { Pill } from '@/components/ui/Pill';
 import { queryStatus } from '@/components/feedback/PanelBoundary';
 import { panelProvenance } from '@/components/provenance/provenance';
 import { formatNumber, withUnit } from '@/lib/format';
+import { canonUnit, fieldDecimals } from '@/config/naming';
 import type { EntityDetail } from '@/types/api';
 import { EntityIllustration } from './EntityIllustration';
 
@@ -65,7 +66,12 @@ export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean 
           )}
           {e.fields.map((f) => (
             <div key={f.label} className="contents">
-              <dt className="border-b border-line py-1 leading-snug text-muted" title={f.label}>
+              <dt
+                className="border-b border-line py-1 leading-snug text-muted"
+                title={f.label}
+                data-field
+                data-unit={canonUnit(f.unit) || undefined}
+              >
                 {f.label}
               </dt>
               <dd
@@ -75,13 +81,7 @@ export function EntityBody({ e, compact }: { e: EntityDetail; compact?: boolean 
                 {f.scale && f.value != null ? (
                   <Pill scale={f.scale} value={f.value} size="sm" />
                 ) : typeof f.value === 'number' ? (
-                  withUnit(
-                    formatNumber(
-                      f.value,
-                      Math.abs(f.value) < 10 && !Number.isInteger(f.value) ? 2 : Number.isInteger(f.value) ? 0 : 1,
-                    ),
-                    f.unit,
-                  )
+                  withUnit(formatNumber(f.value, fieldDecimals(f.label, f.unit, f.value)), f.unit)
                 ) : f.value == null && reasons.has(f.label) ? (
                   <span title={reasons.get(f.label)} data-state="unavailable">
                     —<span className="sr-only"> (not available)</span>
