@@ -3,6 +3,7 @@
  * Scales are chosen to be colour-blind safe (ColorBrewer / USDM derived; sequential scales vary in lightness,
  * diverging scales pivot on a light neutral). Where meaning is carried by colour, UI also shows a label/icon.
  */
+import { roundHalfAway } from './thresholds';
 
 export interface ScaleBin {
   /** class id (categorical scales) */
@@ -26,6 +27,11 @@ export interface ScaleDef {
   bins: ScaleBin[];
   /** colour for null / no data */
   noData?: string;
+  /**
+   * Threshold scales of published values: round to this many decimals (the backend's decimal rounding, halves away
+   * from zero) before binning, so −1.295 falls in the −1.3 bin like the class it is shown with (thresholds.ts).
+   */
+  round?: number;
 }
 
 const NO_DATA = '#C9D3DE';
@@ -68,17 +74,22 @@ export const SCALES = {
     { id: 'D3', label: 'D3 – Extreme drought', color: '#E60000', ink: '#fff' },
     { id: 'D4', label: 'D4 – Exceptional drought', color: '#730000', ink: '#fff' },
   ]),
-  spi: s('spi', 'SPI / SPEI', undefined, [
-    { label: '≤ −2.0 Exceptional drought', color: '#730000', max: -1.995, ink: '#fff' },
-    { label: '−2.0 to −1.6 Extreme', color: '#E60000', min: -1.995, max: -1.595, ink: '#fff' },
-    { label: '−1.6 to −1.3 Severe', color: '#FFAA00', min: -1.595, max: -1.295 },
-    { label: '−1.3 to −0.8 Moderate', color: '#FCD37F', min: -1.295, max: -0.795 },
-    { label: '−0.8 to −0.5 Abnormally dry', color: '#FFF06A', min: -0.795, max: -0.495 },
-    { label: '−0.5 to 1.0 Near normal', color: '#B8E0A8', min: -0.495, max: 1.0 },
-    { label: '1.0 to 1.5 Moderately wet', color: '#74B4E0', min: 1.0, max: 1.5 },
-    { label: '1.5 to 2.0 Very wet', color: '#2F7BC1', min: 1.5, max: 2.0, ink: '#fff' },
-    { label: '≥ 2.0 Extremely wet', color: '#123F8C', min: 2.0, ink: '#fff' },
-  ]),
+  // Dry side = the drought classes of spec §3.4 on the value rounded to 2 dp (thresholds.ts droughtClassFromSpi: D4 ≤ −2.0,
+  // D3 ≤ −1.6, D2 ≤ −1.3, D1 ≤ −0.8, D0 ≤ −0.5), so the bin edges sit between the 2-dp values; wet side McKee 1993.
+  spi: {
+    ...s('spi', 'SPI / SPEI', undefined, [
+      { id: 'D4', label: '≤ −2.0 D4 Exceptional drought', color: '#730000', max: -1.995, ink: '#fff' },
+      { id: 'D3', label: '−2.0 to −1.6 D3 Extreme drought', color: '#E60000', min: -1.995, max: -1.595, ink: '#fff' },
+      { id: 'D2', label: '−1.6 to −1.3 D2 Severe drought', color: '#FFAA00', min: -1.595, max: -1.295 },
+      { id: 'D1', label: '−1.3 to −0.8 D1 Moderate drought', color: '#FCD37F', min: -1.295, max: -0.795 },
+      { id: 'D0', label: '−0.8 to −0.5 D0 Abnormally dry', color: '#FFF06A', min: -0.795, max: -0.495 },
+      { id: 'None', label: '−0.5 to 1.0 Near normal', color: '#B8E0A8', min: -0.495, max: 1.0 },
+      { label: '1.0 to 1.5 Moderately wet', color: '#74B4E0', min: 1.0, max: 1.5 },
+      { label: '1.5 to 2.0 Very wet', color: '#2F7BC1', min: 1.5, max: 2.0, ink: '#fff' },
+      { label: '≥ 2.0 Extremely wet', color: '#123F8C', min: 2.0, ink: '#fff' },
+    ]),
+    round: 2,
+  },
   storage: s('storage', 'Storage level (% FSC)', '%', [
     { id: 'very-low', label: '< 25% Very low', color: '#D7301F', max: 25, ink: '#fff' },
     { id: 'low', label: '25–50% Low', color: '#F28C28', min: 25, max: 50 },
@@ -419,10 +430,12 @@ export function classify(
   if (typeof value === 'string' || sc.kind === 'category') {
     return sc.bins.find((b) => b.id === value || b.label === value) ?? null;
   }
+  // published values are binned as published: the decimal rounding of thresholds.ts, never the binary float
+  const v = sc.round != null ? roundHalfAway(value, sc.round) : value;
   for (const b of sc.bins) {
-    if ((b.min == null || value >= b.min) && (b.max == null || value < b.max)) return b;
+    if ((b.min == null || v >= b.min) && (b.max == null || v < b.max)) return b;
   }
-  return value < (sc.bins[0].max ?? -Infinity) ? sc.bins[0] : sc.bins[sc.bins.length - 1];
+  return v < (sc.bins[0].max ?? -Infinity) ? sc.bins[0] : sc.bins[sc.bins.length - 1];
 }
 
 export function colorFor(scale: ScaleId | string | ScaleDef, value: number | string | null | undefined): string {

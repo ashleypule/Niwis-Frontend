@@ -1,6 +1,6 @@
 /** Groundwater Level Monitoring (spec §10) and Groundwater Reserve Assessment (spec §11). */
 import { SCALES } from '@/config/palettes';
-import { exploitationClass } from '@/config/thresholds';
+import { boreholeStatus, exploitationClass } from '@/config/thresholds';
 import { MONTH_NAMES } from '@/lib/format';
 import { Rng } from '@/lib/prng';
 import { clamp, mean, round, sensSlope } from '@/lib/stats';
@@ -528,7 +528,7 @@ export const groundwater: ModuleHandlers = {
           level: mean(n.map((x) => x.level)),
           trend: -mean(n.map((x) => x.trendPerYear)),
           sgi,
-          status: sgi <= -1.3 ? 'Critical' : sgi <= -0.8 ? 'Low' : sgi <= -0.4 ? 'Watch' : 'Normal',
+          status: boreholeStatus(sgi),
         };
       }).filter((r): r is NonNullable<typeof r> => !!r);
       return table(

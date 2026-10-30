@@ -3,10 +3,12 @@ import {
   blueDropBand,
   droughtClassFromSpi,
   greenDropBand,
+  roundHalfAway,
   sans241Pass,
   storageAlertLevel,
   wqiClass,
 } from '@/config/thresholds';
+import { classify, SCALES } from '@/config/palettes';
 
 describe('SPI → drought class (spec §3.4)', () => {
   it.each([
@@ -24,9 +26,58 @@ describe('SPI → drought class (spec §3.4)', () => {
     [-3.1, 'D4'],
   ])('SPI %s → %s', (spi, cls) => expect(droughtClassFromSpi(spi)).toBe(cls));
 
+  // the database stores 3-dp values as doubles: −1.295 is −1.29499999…; the published 2-dp value is −1.30 (D2).
+  // Audit step 1: the backend rounds the decimal digits half away from zero; the frontend must agree.
+  it.each([
+    [-0.495, 'D0'],
+    [-0.795, 'D1'],
+    [-1.295, 'D2'],
+    [-1.595, 'D3'],
+    [-1.995, 'D4'],
+    [-1.294, 'D1'],
+    [-0.494, 'None'],
+  ])('rounding tie %s → %s (decimal rounding, half away from zero)', (spi, cls) =>
+    expect(droughtClassFromSpi(spi)).toBe(cls),
+  );
+
   it('treats missing values as no drought', () => {
     expect(droughtClassFromSpi(null)).toBe('None');
     expect(droughtClassFromSpi(Number.NaN)).toBe('None');
+  });
+});
+
+describe('roundHalfAway (the backend rnd rule)', () => {
+  it.each([
+    [-1.295, 2, -1.3],
+    [1.295, 2, 1.3],
+    [-1.294, 2, -1.29],
+    [0.125, 2, 0.13],
+    [-0.5, 0, -1],
+    [2.5, 0, 3],
+    [1.005, 2, 1.01],
+    [1.055, 2, 1.06],
+    [12.3, 2, 12.3],
+    [-7, 2, -7],
+  ])('%s to %s dp → %s', (x, dp, r) => expect(roundHalfAway(x, dp)).toBe(r));
+  it('leaves non-finite values alone', () => {
+    expect(roundHalfAway(Number.NaN, 2)).toBeNaN();
+    expect(roundHalfAway(Infinity, 2)).toBe(Infinity);
+  });
+});
+
+describe('the spi palette scale bins values like the classifier', () => {
+  it('every dry-side bin agrees with droughtClassFromSpi, ties included', () => {
+    for (let i = -3000; i < 995; i++) {
+      const v = i / 1000; // −3.000 … 0.994 in 3-dp steps, as stored (the wet side has no class)
+      const cls = droughtClassFromSpi(v);
+      const bin = classify('spi', v);
+      expect(bin?.id, `SPI ${v}`).toBe(cls);
+    }
+  });
+  it('legend breakpoints are the spec thresholds between 2-dp values', () => {
+    const dry = SCALES.spi.bins.filter((b) => b.id && b.id !== 'None').map((b) => b.max);
+    expect(dry).toEqual([-1.995, -1.595, -1.295, -0.795, -0.495]);
+    expect(SCALES.spi.round).toBe(2);
   });
 });
 

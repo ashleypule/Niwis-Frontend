@@ -56,10 +56,35 @@ export const DROUGHT_CLASSES: {
   },
 ];
 
-/** SPI (or SPEI / SSI / SGI) → drought class, spec §3.4. Values are rounded to 2 dp first, as published. */
+/** Decimal places the drought classifier rounds to before comparing (spec §3.4: the published 2-dp value). */
+export const DROUGHT_ROUND_DP = 2;
+
+/**
+ * Round the value *as published* (its shortest decimal representation) to `dp` places, halves away from zero — the
+ * backend's rule (`app/core/thresholds.py`, `app/core/stats.py rnd`). The database stores SPI / SPEI with 3 decimals as
+ * doubles: −1.295 is held as −1.29499999…, so `Math.round(x * 100) / 100` gives −1.29 (D1) where the published −1.30 is
+ * D2 (audit step 1: 127 SPI and 38 SPEI values sit on such ties). Rounding the decimal digits gives −1.30.
+ */
+export function roundHalfAway(x: number, dp: number): number {
+  if (!Number.isFinite(x)) return x;
+  const s = String(Math.abs(x));
+  if (s.includes('e')) return (Math.sign(x) * Math.round(Math.abs(x) * 10 ** dp)) / 10 ** dp;
+  const [int, frac = ''] = s.split('.');
+  if (frac.length <= dp) return x;
+  let units = Number(int + frac.slice(0, dp));
+  if (Number(frac[dp]) >= 5) units += 1;
+  const r = units / 10 ** dp;
+  return x < 0 ? -r : r;
+}
+
+/**
+ * SPI (or SPEI / SSI / SGI) → drought class, spec §3.4: the value rounded to 2 dp as published (roundHalfAway, the
+ * backend's rounding), then `<=` against the class bounds. The only classifier of SPI-like values in the frontend: the
+ * `spi` palette scale rounds the same way (palettes.ts `round`), so a map colour, a pill and a class never disagree.
+ */
 export function droughtClassFromSpi(spi: number | null | undefined): DroughtClass {
   if (spi == null || Number.isNaN(spi)) return 'None';
-  const v = Math.round(spi * 100) / 100;
+  const v = roundHalfAway(spi, DROUGHT_ROUND_DP);
   if (v <= -2.0) return 'D4';
   if (v <= -1.6) return 'D3';
   if (v <= -1.3) return 'D2';
