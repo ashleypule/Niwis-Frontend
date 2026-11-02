@@ -36,6 +36,50 @@
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
 
+## System audit step 2 — naming, units and presentation (2026-10-30 to 2026-11-02)
+
+Brief: `docs/NAMING_REGISTER.md` (the register), `src/config/naming.ts` (its source and the check),
+`scripts/naming-check.ts` / `tests/e2e/hybrid/naming.spec.ts` (the walk), `scripts/audit-screens.ts`,
+`scripts/audit-tiles.ts`, `scripts/audit-print.ts` (part C), `tests/screenshots/audit/` (37 pages × 1440 / 1024 /
+390 px × light / dark, the print views and `layout-report.json`). Backend items: `docs/backend/BACKEND_ISSUES.md` §15.
+
+| Commit    | Scope                                                                                                    |
+| --------- | -------------------------------------------------------------------------------------------------------- |
+| `f49f978` | Part A: drought classes at rounding ties round the decimal digits half away from zero (the backend rule) |
+| `b6637b2` | Part B: the register, the check, canonical units / names / decimals / class labels on every page         |
+| `f40f4fa` | Part C: layout fixes from the screenshot review                                                          |
+| `f0316e5` | Register decimals per metric on KPIs and tables; legends one entry per colour; backend items             |
+| `7329f93` | Title / context / reason wrapping; print capture                                                         |
+
+- **Part A.** `droughtClassFromSpi` used `Math.round(spi * 100) / 100`, so a stored −1.295 (held as −1.29499…) was
+  D1 where the published −1.30 is D2. `roundHalfAway` rounds the shortest decimal representation half away from zero
+  (`app/core/thresholds.py`, `rnd`); the `spi` palette scale rounds the same way before binning and a test sweeps every
+  3-dp value from −3.000 to 0.994 against the classifier. No page classified SPI itself; the mock borehole status used
+  its own thresholds and now calls `boreholeStatus`.
+- **Part B.** 5 697 labels on 37 pages were collected (titles, context, KPI labels, axis names, series, table headers,
+  map and scale legends, chips, tabs, layers, pills, entity fields, cascade stages, markers). First check: 365 findings
+  (unit 93, class 61, retired spellings 39, decimals 2, plus 170 titles that name no variable — a rule dropped as
+  structural titles are legitimate). After the fixes: 0 on the final walk. What changed is presentation only:
+  `Mm³/year` / `mm/year` (the catalogue spelling) instead of `/yr`, `ML/day`, `°C/decade`, "per decade" column rates,
+  axis names never doubled ("Monthly rainfall (mm) (mm)") and "index" for unitless axes, SPI-3 / SPEI-3 (not "SPI 3",
+  "SPI-3 month"), Heavy rain days (R20mm), Standardised, Mm³ volumes at 0 dp, the exploitation index as the ratio the
+  map and tables use, D0 Abnormally Dry … D4 Exceptional Drought on every legend / pill / table, Very Low / Very High,
+  A Natural … F Critically modified, Very Poor; live titles no longer say stations / gauges / boreholes / WWTWs over
+  district data; population and demand in people and Mm³/year; one axis per unit (RWQO % series split off the score
+  axis). Catalogue labels and series drawn from one stored column are never renamed (`cat` flag in `data-chart`).
+- **Part C.** Found and fixed: the drought map left a blank band beside the cascade; depth-axis names sat on the date
+  labels; two axis names collided; "D0" legend entries; series that end months before the page period showed 4 points
+  (now "Data ends Dec 2025" with the last 12 months on offer, as the database charts do); forecast KPI strips headlined
+  the skill / p-value column; the tariffs mixed charts threw in ECharts (axis 1 without `axis2Unit`); page titles,
+  card titles, context lines and KPI reasons truncated; long table ids overflowed cells; chips scrolled on phones; tab
+  rows widened phone pages by 15 px; the light warning text was 4.2:1 (now 5.5:1); risk legends listed synonyms twice.
+  Dark mode: every text colour measured ≥ 5.2:1 on its surface. Print: the three report views capture without cut
+  panels (`print-*.png` / `.pdf`). Remaining by design: KPI sub-labels clamp at three lines with the full text in the
+  tooltip (the backend's method notes run to 200 characters).
+- **Part D.** District and province names: the backend reference lists, `public/geo/*.json` and the page tabs agree
+  (0 differences). "As of" dates per source table differ across panels only where the panels use different periods of
+  the same table (annual vs monthly columns) — listed in the report, no presentation change.
+
 ## Services and tariffs live (2026-10-29, later the same day)
 
 The backend registered the §18 / §19 tables (keyed by local municipality) and serves `services` and `tariffs`
