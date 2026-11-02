@@ -40,8 +40,12 @@ import { damsIn } from './dams';
 const yearOf = (ctx: Ctx) => miYear(ctx.last);
 const years = (ctx: Ctx, n = 9) => Array.from({ length: n }, (_, k) => yearOf(ctx) - n + 1 + k);
 const yEnd = (y: number, ctx: Ctx) => Math.min(monthIndex(y, 11), ctx.last);
+/** The stress scale's class label (palettes.ts): Low / Low–medium / Medium / High / Extremely high. */
 const stressLabel = (x: number) =>
-  x >= 1 ? 'Extreme' : x >= 0.8 ? 'Very High' : x >= 0.6 ? 'High' : x >= 0.4 ? 'Moderate' : 'Low';
+  x >= 0.8 ? 'Extremely high' : x >= 0.6 ? 'High' : x >= 0.4 ? 'Medium' : x >= 0.2 ? 'Low–medium' : 'Low';
+/** The stress scale's class id for a table cell (the pill shows the class label). */
+const stressId = (x: number) =>
+  x >= 0.8 ? 'Extreme' : x >= 0.6 ? 'High' : x >= 0.4 ? 'Medium' : x >= 0.2 ? 'Low-medium' : 'Low';
 
 function waterfall(id: string, b: Balance, withLosses: boolean) {
   const cats: [string, number, boolean][] = [
@@ -87,7 +91,7 @@ function catchmentRows(ctx: Ctx) {
       demand: b.demand + b.losses,
       reserve: b.reserve,
       wsi: b.stress,
-      status: stressLabel(b.stress),
+      status: stressId(b.stress),
     };
   });
 }
@@ -145,11 +149,11 @@ export const iwrm: ModuleHandlers = {
       }),
       kpi('status', 'programmeProgress', null, {
         label: 'IWRM Sustainability Status',
-        text: b.balance > 0 ? 'On Track' : 'At Risk',
+        text: b.balance > 0 ? 'On track' : 'At risk',
         status: {
           scale: 'progress',
           id: b.balance > 0 ? 'On Track' : 'At Risk',
-          label: b.balance > 0 ? 'On Track' : 'At Risk',
+          label: b.balance > 0 ? 'On track' : 'At risk',
         },
       }),
     ];
@@ -307,12 +311,11 @@ export const iwrm: ModuleHandlers = {
           col.num('demand', 'Demand', 'Mm³/year'),
           col.num('reserve', 'Ecological reserve', 'Mm³/year'),
           col.num('wsi', 'WSI', '', 2, { scale: 'stress' }),
-          col.cls('status', 'Status', 'risk'),
+          col.cls('status', 'Status', 'stress'),
         ],
         catchmentRows(ctx)
           .sort((a, b) => b.wsi - a.wsi)
-          .slice(0, Number(ctx.q('limit') ?? 10))
-          .map((r) => ({ ...r, status: r.status === 'Extreme' ? 'Extreme' : r.status })),
+          .slice(0, Number(ctx.q('limit') ?? 10)),
         { rowKey: 'id' },
       ),
     wmas: () =>

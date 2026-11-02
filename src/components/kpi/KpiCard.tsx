@@ -141,12 +141,12 @@ export function KpiCard({
           <Icon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-3 text-[13px] font-semibold leading-tight text-ink" title={label}>
+          <h3 className="line-clamp-4 text-[13px] font-semibold leading-tight text-ink" title={label}>
             {label}
           </h3>
           {sublabel && (
             // three lines: the drought class sub-value ("85 % of area in D1–D4 · …") and the backend's method notes
-            <p className="line-clamp-3 text-[11px] leading-tight text-muted" title={sublabel}>
+            <p className="text-[11px] leading-tight text-muted [overflow-wrap:anywhere]">
               {sublabel}
             </p>
           )}

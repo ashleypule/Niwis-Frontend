@@ -99,7 +99,7 @@ export function Legend({ layer, collapsible = false }: { layer?: MapLayer; colla
         {collapsible && <span className="text-muted">{open ? '−' : '+'}</span>}
       </button>
       {open && (
-        <ul className="max-h-[190px] space-y-0.5 overflow-y-auto">
+        <ul className="max-h-[240px] space-y-0.5 overflow-y-auto" tabIndex={0} aria-label="Legend classes">
           {legendBins(sc).map((b) => (
             <li key={b.label} className="flex items-center gap-1.5 text-ink-2">
               <span

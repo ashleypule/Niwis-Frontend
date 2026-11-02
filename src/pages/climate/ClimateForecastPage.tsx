@@ -82,7 +82,7 @@ export default function ClimateForecastPage() {
         <CategoryPanel
           module="climate"
           metric="projection-bars"
-          title="Extreme Rainfall Events (% change)"
+          title="Extreme Rainfall Events (projected % change)"
           extra={{ ...p, kind: 'extreme' }}
           variant="bar"
           labels

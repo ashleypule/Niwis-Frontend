@@ -88,7 +88,7 @@ export function Card({
             </h2>
             {shownContext && (
               <div
-                className={clsx('line-clamp-3 text-xs leading-snug', band ? 'text-white/75' : 'text-muted')}
+                className={clsx('line-clamp-4 text-xs leading-snug', band ? 'text-white/75' : 'text-muted')}
                 title={typeof shownContext === 'string' ? shownContext : undefined}
               >
                 {shownContext}

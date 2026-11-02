@@ -60,6 +60,16 @@ import {
 import { choropleth, pointsLayer } from '../common';
 import { outlookShift } from './drought';
 
+/** Present ecological state classes as the ecological scale labels them (palettes.ts). */
+const PES_LABEL: Record<string, string> = {
+  A: 'A Natural',
+  B: 'B Largely natural',
+  C: 'C Moderately modified',
+  D: 'D Largely modified',
+  E: 'E Seriously modified',
+  F: 'F Critically modified',
+};
+
 const LASTC = () => END_MI - 1;
 const ct = (mi: number) => mi - C_START;
 
@@ -805,7 +815,8 @@ export const greenDrop: ModuleHandlers = {
         status: {
           scale: 'risk',
           id: mean(list.map((p) => p.score)) >= 60 ? 'Low' : mean(list.map((p) => p.score)) >= 45 ? 'Moderate' : 'High',
-          label: mean(list.map((p) => p.score)) >= 60 ? 'Low' : mean(list.map((p) => p.score)) >= 45 ? 'Moderate' : 'High',
+          label:
+            mean(list.map((p) => p.score)) >= 60 ? 'Low' : mean(list.map((p) => p.score)) >= 45 ? 'Moderate' : 'High',
         },
       }),
     ];
@@ -1180,7 +1191,11 @@ export const blueDrop: ModuleHandlers = {
       kpi('status', 'wqi', null, {
         label: 'Overall Drinking Water Status',
         text: rate >= 85 ? 'Good' : rate >= 70 ? 'Fair' : 'Poor',
-        status: { scale: 'wq', id: rate >= 85 ? 'Good' : rate >= 70 ? 'Fair' : 'Poor', label: s(ctx) },
+        status: {
+          scale: 'wq',
+          id: rate >= 85 ? 'Good' : rate >= 70 ? 'Fair' : 'Poor',
+          label: rate >= 85 ? 'Good' : rate >= 70 ? 'Fair' : 'Poor',
+        },
       }),
     ];
   },
@@ -1575,19 +1590,19 @@ export const rwqo: ModuleHandlers = {
             'fibi',
             'FIBI (%)',
             ys.map((y, k) => [String(y), clamp(x.fibi + drift(k) + r.normal(0, 4), 5, 100)]),
-            { color: '#2E9E5B', symbol: true },
+            { axis: 1, color: '#2E9E5B', symbol: true },
           ),
           line(
             'ihi',
             'IHI (%)',
             ys.map((y, k) => [String(y), clamp(x.ihi + drift(k) + r.normal(0, 4), 5, 100)]),
-            { color: '#8E44AD', symbol: true },
+            { axis: 1, color: '#8E44AD', symbol: true },
           ),
           line(
             'aspt',
             'ASPT',
             ys.map((y, k) => [String(y), clamp(x.aspt + drift(k) * 0.05 + r.normal(0, 0.3), 2, 9)]),
-            { axis: 1, color: '#F2A900', symbol: true },
+            { color: '#F2A900', symbol: true },
           ),
         ],
         note: x.name,
@@ -1797,7 +1812,7 @@ export const rwqo: ModuleHandlers = {
       lat: x.station.lat,
       lon: x.station.lon,
       image: x.waterBody === 'Dam' ? 'dam' : 'river',
-      status: { scale: 'ecological', id: x.pes, label: x.pes },
+      status: { scale: 'ecological', id: x.pes, label: PES_LABEL[x.pes] ?? x.pes },
       fields: [
         { label: 'Water body', value: x.waterBody },
         { label: 'River / system', value: x.station.river },

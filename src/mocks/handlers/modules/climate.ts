@@ -1,10 +1,11 @@
 /** Climate Change Indicators (spec §4) — trends from the generated 1960→present record + RCP projections. */
 import { clamp, linearFit, mannKendall, mean, pearson, round, sensSlope, cv as coefVar } from '@/lib/stats';
-import { miMonth, miYear, monthIndex, season } from '@/lib/time';
+import { miMonth, miToIso, miYear, monthIndex, season } from '@/lib/time';
 import { PROVINCE_ORDER, provinceName } from '../../reference/regions';
 import { CELLS, END_MI, NINO34, START_MI, cellRain, cellTemp, cellPet } from '../../generators/climate';
 import { annualMeans, annualTotals, regionClimatology, regionSeries, regionSpi, tOf } from '../../generators/hydromet';
 import { cellEtccdi, scopeEtccdi } from '../../generators/daily';
+import { dampedForecast, forecastSeries } from '../../generators/forecast';
 import { resolveScope, type ResolvedScope } from '../../generators/scope';
 import { MUNI_SERVICES } from '../../generators/services';
 import { band, bar, categories, col, kpi, line, seriesSet, table, type Ctx, type ModuleHandlers } from '../build';
@@ -562,6 +563,66 @@ export const climate: ModuleHandlers = {
     },
   },
 
+  forecast: {
+    /** Monthly temperature anomaly (vs the 1981–2010 month mean), 24 months of history and a 12-month outlook. */
+    'temp-anomaly': (ctx) => {
+      const t = regionSeries(ctx.scope, 'tmean');
+      const clim = regionClimatology(ctx.scope, 'tmean');
+      const anom = (mi: number) => round(t[tOf(mi)] - clim[miMonth(mi)], 2);
+      const hist: [number, number | null][] = [];
+      for (let mi = ctx.last - 23; mi <= ctx.last; mi++) hist.push([mi, anom(mi)]);
+      const fc = dampedForecast(`tanom-${ctx.scope.key}`, anom(ctx.last), {
+        mu: 0.6,
+        phi: 0.7,
+        sigma: 0.8,
+        horizon: Number(ctx.q('horizon') ?? 12),
+        startMi: ctx.last,
+      });
+      const f = forecastSeries(hist, fc);
+      return seriesSet(
+        'temp-anomaly-forecast',
+        [{ unit: '°C', label: 'Temperature anomaly' }],
+        [
+          band('band', f.names.band, f.band, { color: '#FFAB91' }),
+          line('obs', 'Observed anomaly', f.observed, { color: '#13233A', symbol: true }),
+          line('median', f.names.median, f.median, { color: '#E53935', dash: true, symbol: true }),
+        ],
+        { asOf: miToIso(ctx.last), note: 'Anomaly vs the 1981–2010 month mean (sample data)' },
+      );
+    },
+    /** Days with Tmax > 35 °C per month: the year's count spread over the months by how warm each month is. */
+    'hot-days': (ctx) => {
+      const clim = regionClimatology(ctx.scope, 'tmean');
+      const floor = Math.min(...clim);
+      const w = clim.map((c) => Math.pow(c - floor, 2));
+      const wSum = w.reduce((a, b) => a + b, 0) || 1;
+      const perMonth = (mi: number) =>
+        Math.round((scopeEtccdi(ctx.scope.cells, miYear(mi)).hotDays * w[miMonth(mi)]) / wSum);
+      const hist: [number, number | null][] = [];
+      for (let mi = ctx.last - 23; mi <= ctx.last; mi++) hist.push([mi, perMonth(mi)]);
+      const fc = dampedForecast(`hotdays-${ctx.scope.key}`, perMonth(ctx.last), {
+        mu: 2,
+        phi: 0.5,
+        sigma: 2.5,
+        horizon: Number(ctx.q('horizon') ?? 12),
+        startMi: ctx.last,
+        min: 0,
+        max: 31,
+        seasonal: (mi) => (scopeEtccdi(ctx.scope.cells, miYear(mi) - 1).hotDays * w[miMonth(mi)]) / wSum - 2,
+      }).map((p) => ({ ...p, median: Math.round(p.median), p10: Math.round(p.p10), p90: Math.round(p.p90) }));
+      const f = forecastSeries(hist, fc);
+      return seriesSet(
+        'hot-days-forecast',
+        [{ unit: 'days', label: 'Hot days', min: 0 }],
+        [
+          band('band', f.names.band, f.band, { color: '#FFCC80' }),
+          line('obs', 'Observed hot days', f.observed, { color: '#13233A', symbol: true }),
+          line('median', f.names.median, f.median, { color: '#E53935', dash: true, symbol: true }),
+        ],
+        { asOf: miToIso(ctx.last), note: 'Days with Tmax > 35 °C per month (sample data)' },
+      );
+    },
+  },
   breakdown: {
     'seasonal-change': (ctx) => {
       const v = ctx.q('var') ?? 'temperature';
@@ -668,7 +729,7 @@ export const climate: ModuleHandlers = {
             : dt(y) * 7;
       return categories(
         'projection-bars',
-        kind === 'heat' ? 'days/yr' : kind === 'drought' ? 'events/decade' : '% change',
+        kind === 'heat' ? 'days/year' : kind === 'drought' ? 'events/decade' : '%',
         [`1991–${ly}`, ...years.map(String)],
         [
           {
@@ -813,7 +874,7 @@ export const climate: ModuleHandlers = {
       const rows = [
         { ind: 'Mean temperature (°C)', base: round(base, 1), f: (y: number) => `+${round(t(y), 1)}`, dir: 1 },
         { ind: 'Annual rainfall (%)', base: '—', f: (y: number) => `${round(p(y), 0)}%`, dir: -1 },
-        { ind: 'Extreme heat days (days/yr)', base: '—', f: (y: number) => `+${round(t(y) * 13, 0)}`, dir: 1 },
+        { ind: 'Extreme heat days (days/year)', base: '—', f: (y: number) => `+${round(t(y) * 13, 0)}`, dir: 1 },
         { ind: 'Drought frequency (%)', base: '—', f: (y: number) => `+${round(t(y) * 18 - p(y) * 2, 0)}%`, dir: 1 },
         { ind: 'Runoff (mean, %)', base: '—', f: (y: number) => `${round(p(y) * 2.2 - t(y) * 4, 0)}%`, dir: -1 },
         { ind: 'Dam inflows (mean, %)', base: '—', f: (y: number) => `${round(p(y) * 2.4 - t(y) * 5, 0)}%`, dir: -1 },

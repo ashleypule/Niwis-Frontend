@@ -50,6 +50,7 @@ Brief: `docs/NAMING_REGISTER.md` (the register), `src/config/naming.ts` (its sou
 | `f40f4fa` | Part C: layout fixes from the screenshot review                                                          |
 | `f0316e5` | Register decimals per metric on KPIs and tables; legends one entry per colour; backend items             |
 | `7329f93` | Title / context / reason wrapping; print capture                                                         |
+| `5f7f78f` | Sample-data labels on the register (class pills, people / records counts, units per axis)                |
 
 - **Part A.** `droughtClassFromSpi` used `Math.round(spi * 100) / 100`, so a stored −1.295 (held as −1.29499…) was
   D1 where the published −1.30 is D2. `roundHalfAway` rounds the shortest decimal representation half away from zero
@@ -74,8 +75,9 @@ Brief: `docs/NAMING_REGISTER.md` (the register), `src/config/naming.ts` (its sou
   card titles, context lines and KPI reasons truncated; long table ids overflowed cells; chips scrolled on phones; tab
   rows widened phone pages by 15 px; the light warning text was 4.2:1 (now 5.5:1); risk legends listed synonyms twice.
   Dark mode: every text colour measured ≥ 5.2:1 on its surface. Print: the three report views capture without cut
-  panels (`print-*.png` / `.pdf`). Remaining by design: KPI sub-labels clamp at three lines with the full text in the
-  tooltip (the backend's method notes run to 200 characters).
+  panels (`print-*.png` / `.pdf`). KPI sub-labels, reasons and the compact "being computed" / "not available" notes wrap in full; KPI titles take up to four lines; the page title takes up to four
+  lines on phones. Remaining by design: a card's context line (the backend's method note, up to 200 characters) clamps
+  at four lines with the full text in the tooltip.
 - **Part D.** District and province names: the backend reference lists, `public/geo/*.json` and the page tabs agree
   (0 differences). "As of" dates per source table differ across panels only where the panels use different periods of
   the same table (annual vs monthly columns) — listed in the report, no presentation change.

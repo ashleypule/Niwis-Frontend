@@ -113,7 +113,7 @@ export function Header() {
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h1 className="line-clamp-3 text-xl font-bold leading-tight tracking-tight sm:text-2xl lg:line-clamp-2">
+            <h1 className="line-clamp-4 text-xl font-bold leading-tight tracking-tight sm:line-clamp-3 sm:text-2xl xl:line-clamp-2">
               {title}
             </h1>
             <SampleDataBadge />
