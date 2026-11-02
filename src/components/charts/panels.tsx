@@ -7,8 +7,8 @@ import { useInView } from '@/lib/useInView';
 import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useBreakdown, useColumnCatalogue, useForecast, useMatrix, useSeries } from '@/api/queries/core';
-import { applyColumnLabels } from '@/lib/categories';
-import { registerNames } from '@/lib/registerNames';
+import { applyColumnLabels, lastMonths, periodMonths } from '@/lib/categories';
+import { pruneEmptyAxes, registerNames } from '@/lib/registerNames';
 import { categoryRows, matrixRows, seriesRows } from '@/lib/exporter';
 import { Tabs } from '@/components/ui/Card';
 import { ChartCard } from './ChartCard';
@@ -18,7 +18,9 @@ import { formatNumber } from '@/lib/format';
 import { useChartTheme } from './theme';
 import { MatrixLegend } from './MatrixLegend';
 import { splitNullCategories, splitNullSeries } from '@/lib/provenance';
-import { panelProvenance, withBaseline, type PanelProvenance } from '@/components/provenance/provenance';
+import { monthYear, panelProvenance, withBaseline, type PanelProvenance } from '@/components/provenance/provenance';
+import { APP } from '@/config/app';
+import { toParams, useFilters } from '@/store/filters';
 import { isLive } from '@/config/app';
 import { provenanceOf } from '@/api/client';
 import type { ForecastInfo, SeriesSet } from '@/types/api';
@@ -100,7 +102,13 @@ export function SeriesPanel({
   blockedBy?: Blocker;
 }) {
   const { active, tabRow } = useTabs(tabs);
-  const params = { ...extra, ...active?.params };
+  // this panel's own period ("show the last available months" of a series that ends before the page period), kept
+  // only while the page filters stay as they were — as the database charts do (CategoryChart)
+  const filters = useFilters();
+  const filterKey = JSON.stringify(toParams(filters));
+  const [own, setOwn] = useState<{ from: string; to: string; key: string } | null>(null);
+  const ownPeriod = own && own.key === filterKey ? { from: own.from, to: own.to } : undefined;
+  const params = { ...extra, ...active?.params, ...(ownPeriod ?? {}) };
   const m = active?.metric ?? metric;
   const mod = active?.module ?? module;
   // data load when the panel nears the viewport: the first screen's requests are not queued behind every panel's
@@ -116,11 +124,44 @@ export function SeriesPanel({
   const hasSource = !!q.data?.series.some((s) => s.source?.length === 1);
   const lookup = useColumnCatalogue(hasSource && isLive(mod));
   const split = useMemo(
-    () => (q.data && !wrongSet ? splitNullSeries(registerNames(applyColumnLabels(q.data, lookup))) : undefined),
+    () => (q.data && !wrongSet ? pruned(splitNullSeries(registerNames(applyColumnLabels(q.data, lookup)))) : undefined),
     [q.data, wrongSet, lookup],
   );
   const prov: PanelProvenance = wrongSet ? { kind: 'unavailable', detail: wrongSet } : panelProvenance(q, mod);
   const option = useMemo(() => (split ? seriesOption(split.set, t, opts) : undefined), [split, t, opts]);
+  // a live series that ends months before today (satellite data to Dec 2025) shows only a few points of the page
+  // period: say where it ends and offer its last available months
+  const months = periodMonths(filters.period);
+  const ended = !forecast && !ownPeriod && split ? endsEarly(split.set, months) : undefined;
+  const offer = ended ? lastMonths(ended, months) : undefined;
+  const endedBanner =
+    ended && offer ? (
+      <div
+        className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border border-stale/30 bg-stale-soft px-3 py-2 text-[12px] text-ink"
+        data-testid="data-ends"
+      >
+        <span>
+          <b>Data ends {monthYear(ended)}</b>: only part of the selected period has values.
+        </span>
+        <button
+          type="button"
+          className="rounded-md border border-primary/40 bg-surface px-2 py-1 font-semibold text-primary hover:bg-primary-soft"
+          onClick={() => setOwn({ ...offer, key: filterKey })}
+        >
+          Show last available {months} months ({monthYear(offer.from)} – {monthYear(offer.to)})
+        </button>
+      </div>
+    ) : null;
+  const windowNote = ownPeriod ? (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-ink-2" data-testid="chart-own-period">
+      <span>
+        This chart only: {monthYear(ownPeriod.from)} – {monthYear(ownPeriod.to)}, the last {months} months with data.
+      </span>
+      <button type="button" className="font-semibold text-primary hover:underline" onClick={() => setOwn(null)}>
+        Back to the page period
+      </button>
+    </div>
+  ) : null;
   const rows = useMemo(() => (q.data ? seriesRows(q.data) : undefined), [q.data]);
   if (wrongSet)
     return (
@@ -158,15 +199,40 @@ export function SeriesPanel({
       rows={rows}
       footer={withForecast(withNote(footer, context ? q.data?.note : undefined), q.data?.forecast)}
       controls={
-        tabRow || controls ? (
+        tabRow || controls || endedBanner || windowNote ? (
           <>
             {tabRow}
             {controls}
+            {windowNote}
+            {endedBanner}
           </>
         ) : undefined
       }
     />
   );
+}
+
+/**
+ * The last month a live monthly series has a value, when that is three or more months before the data date and the
+ * response holds fewer than half the page period's months (the rest of the window is empty): the series ended early.
+ */
+function endsEarly(set: SeriesSet, months: number): string | undefined {
+  if (provenanceOf(set)?.kind !== 'live' || set.xType !== 'time') return undefined;
+  const xs = set.series
+    .flatMap((s) => s.data.filter((p) => p.slice(1).some((v) => v != null)).map((p) => String(p[0]).slice(0, 10)))
+    .sort();
+  if (!xs.length) return undefined;
+  const last = xs[xs.length - 1];
+  const end = set.periodEnd ?? last;
+  const [y, mo] = end.split('-').map(Number);
+  const lag = (APP.asOf.getUTCFullYear() - y) * 12 + (APP.asOf.getUTCMonth() + 1 - mo);
+  const distinct = new Set(xs.map((x) => x.slice(0, 7))).size;
+  return lag >= 3 && distinct < months / 2 ? end : undefined;
+}
+
+/** The split result with the axes no remaining series uses dropped (a withheld series took its axis with it). */
+function pruned<T extends { set: SeriesSet }>(r: T): T {
+  return { ...r, set: pruneEmptyAxes(r.set) };
 }
 
 /** The backend's note under the page's own footer when the page's context replaced it above the chart (the

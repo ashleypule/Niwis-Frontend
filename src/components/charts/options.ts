@@ -92,13 +92,20 @@ const TRAILING_UNIT = /\s*\(([^()]*)\)\s*$/;
  * register's unit spelling. A backend label that already ends in a unit ("Monthly rainfall (mm)") is not doubled, and
  * "mixed" (one unit per category, e.g. the water-quality range chart) says so.
  */
-export function axisName(rawUnit: string | undefined, rawLabel?: string): string {
+export function axisName(rawUnit0: string | undefined, rawLabel?: string): string {
+  // the backend names some unitless axes after the index ("WQI", "score", "—"): no unit
+  const rawUnit = rawUnit0 && /^(WQI|score|—|-|no unit)$/i.test(rawUnit0.trim()) ? '' : rawUnit0;
   const unit = canonUnit(rawUnit);
+  if (!unit && rawLabel && /^index( value)?$/i.test(rawLabel.trim())) return 'index';
   let label = canonLabel((rawLabel ?? '').trim());
+  // a trailing parenthesis that is a unit or an explanation ("(% of area, mean of months)") goes: the unit follows,
+  // the explanation is in the panel's note; a range like "(0–100)" stays
   const m = TRAILING_UNIT.exec(label);
   if (m && rawUnit && !/^[\d.,–\s%-]+$/.test(m[1])) label = label.slice(0, m.index).trim();
   if (rawUnit === 'mixed') return label ? `${label} (unit per parameter)` : 'value (unit per parameter)';
   if (!unit) return label || 'index';
+  // "District-months in D2 or worse" + "district-months": the unit is already the label's noun
+  if (label.toLowerCase().includes(unit.toLowerCase()) && /[a-z]{3,}/i.test(unit)) return label;
   return label ? `${label} (${unit})` : unit;
 }
 
@@ -117,6 +124,8 @@ function valueAxis(
     bars?: boolean;
     /** values plotted on a log axis (sets the range to whole decades) */
     logValues?: unknown[];
+    /** the chart has two value axes (names are kept short) */
+    twoAxes?: boolean;
   } = {},
 ): Obj {
   const unit = canonUnit(rawUnit);
@@ -137,7 +146,8 @@ function valueAxis(
     logBase: o.log ? 10 : undefined,
     name,
     // the unit sits above the axis: a rotated name beside it is not counted by containLabel and gets clipped
-    nameLocation: 'end',
+    // (an inverted axis runs downwards, so its "start" is the top)
+    nameLocation: o.inverse ? 'start' : 'end',
     nameGap: 10,
     nameTextStyle: {
       color: t.axis,
@@ -145,6 +155,8 @@ function valueAxis(
       align: o.position === 'right' ? 'right' : 'left',
       padding: o.position === 'right' ? [0, -4, 0, 0] : [0, 0, 0, -4],
     },
+    // two axis names share the chart's top edge: each keeps to its half (the full name is in the data table / CSV)
+    nameTruncate: { maxWidth: o.position === 'right' || o.twoAxes ? 150 : 300 },
     position: o.position,
     min,
     max,
@@ -442,6 +454,7 @@ export function seriesOption(set: SeriesSet, t: ChartTheme, o: SeriesOpts = {}):
         max: a.max,
         inverse: a.inverse,
         log: a.log,
+        twoAxes: axes.length > 1,
         position: i === 0 ? 'left' : 'right',
         showGrid: i === 0,
         bars: onAxis.some((s) => s.kind === 'bar'),
@@ -783,7 +796,8 @@ export function categoryOption(
               position: horizontal ? 'right' : 'top',
               color: t.text2,
               fontSize: 11,
-              formatter: (p: { value: number }) => fmt(p.value, is100 ? '%' : unit),
+              // a count's noun is in the axis name: the label is the number
+              formatter: (p: { value: number }) => fmt(p.value, is100 ? '%' : /^[a-z]+$/.test(unit) ? '' : unit),
             }
           : undefined,
     };

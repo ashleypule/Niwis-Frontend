@@ -43,7 +43,13 @@ export function AlertsList({
     <Card
       title={title}
       className={className}
-      provenance={q.isError && isUnavailable(q.error) ? panelProvenance(q) : undefined}
+      provenance={
+        q.isError && isUnavailable(q.error)
+          ? panelProvenance(q)
+          : isLivePath(endpoints.alerts())
+            ? panelProvenance(q)
+            : undefined
+      }
       actions={
         <Link
           to={module ? `/alerts?module=${module}` : '/alerts'}

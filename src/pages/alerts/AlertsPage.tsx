@@ -11,6 +11,8 @@ import { ErrorState, Skeleton, UnavailableState } from '@/components/feedback/Pa
 import { isUnavailable } from '@/api/client';
 import { panelProvenance } from '@/components/provenance/provenance';
 import { formatDate } from '@/lib/format';
+import { isLivePath } from '@/config/app';
+import { endpoints } from '@/api/endpoints';
 import { registerExport } from '@/lib/exporter';
 
 /** Alerts are read-only: the system is public with no login, so there is no acknowledge / assign workflow. */
@@ -54,7 +56,13 @@ export default function AlertsPage() {
         <Card
           title="Alerts & Early Warnings (All Modules)"
           context={q.data ? `${items.length} alerts shown` : undefined}
-          provenance={q.isError && isUnavailable(q.error) ? panelProvenance(q) : undefined}
+          provenance={
+            q.isError && isUnavailable(q.error)
+              ? panelProvenance(q)
+              : isLivePath(endpoints.alerts())
+                ? panelProvenance(q)
+                : undefined
+          }
         >
           <div className="mb-3 grid grid-cols-2 gap-2 md:grid-cols-5">
             <Select
@@ -132,7 +140,10 @@ export default function AlertsPage() {
                     const mod = MODULES.find((m) => m.id === a.module);
                     return (
                       <tr key={a.id} className="border-t border-line align-top">
-                        <td className="whitespace-nowrap px-2 py-2 text-muted">{formatDate(a.date, 'datetime')}</td>
+                        <td className="whitespace-nowrap px-2 py-2 text-muted">
+                          {/* an alert derived from a period (a year, a month) is dated, not timed */}
+                          {formatDate(a.date, /T00:00(:00)?(\.\d+)?(Z|\+00:00)?$/.test(a.date) ? 'day' : 'datetime')}
+                        </td>
                         <td className="px-2 py-2">
                           <div className="flex gap-2">
                             <SeverityIcon severity={a.severity} className="mt-0.5" />

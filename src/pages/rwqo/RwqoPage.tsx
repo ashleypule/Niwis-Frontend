@@ -16,7 +16,21 @@ export default function RwqoPage() {
   // live: one record per district (no monitoring sites in the database)
   const noun = entityNoun('rwqo', 'Site');
   const ctx = site.name ? `[${noun}: ${site.name}]` : undefined;
-  const tabs = (keys: [string, string][]) => keys.map(([v, l]) => ({ value: v, label: l, params: { param: v } }));
+  // `expect`: the series keys a tab must get back (BACKEND_ISSUES: `param` is not honoured yet, DO comes back for every
+  // parameter), so a tab never shows another parameter's values under its own name
+  const EXPECT: Record<string, string[]> = {
+    do: ['do'],
+    ph: ['ph'],
+    ec: ['ec', 'tds'],
+    turbidity: ['turbidity'],
+    phosphate: ['phosphate', 'tp', 'po4'],
+    nitrate: ['nitrate', 'tn', 'tin'],
+    ammonia: ['ammonia', 'nh3', 'nh4'],
+    lead: ['lead', 'pb'],
+    arsenic: ['arsenic', 'as'],
+  };
+  const tabs = (keys: [string, string][]) =>
+    keys.map(([v, l]) => ({ value: v, label: l, params: { param: v }, expect: EXPECT[v] }));
   return (
     <div>
       <PageTabs mod={mod} />

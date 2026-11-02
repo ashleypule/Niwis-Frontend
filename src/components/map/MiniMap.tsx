@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { MatrixLegend } from '@/components/charts/MatrixLegend';
 import { MapPanel } from './MapPanel';
 import { panelProvenance } from '@/components/provenance/provenance';
+import { legendTitle, scaleOf } from './scale';
 
 /** Small single-layer map card (small multiples). */
 export function MiniMap({
@@ -27,7 +28,12 @@ export function MiniMap({
   const near = useInView(box, '300px', { afterLoad: true });
   const q = useMapLayer(module, layer, params, near);
   return (
-    <Card title={title} context={q.data?.title} provenance={panelProvenance(q, module)} sectionRef={box}>
+    <Card
+      title={title}
+      context={q.data ? legendTitle(q.data) : undefined}
+      provenance={panelProvenance(q, module)}
+      sectionRef={box}
+    >
       <MapPanel
         module={module}
         title={title}
@@ -36,7 +42,7 @@ export function MiniMap({
         mini
         height={height}
       />
-      {q.data && <MatrixLegend scale={q.data.scale} />}
+      {q.data && <MatrixLegend scale={scaleOf(q.data)} />}
     </Card>
   );
 }

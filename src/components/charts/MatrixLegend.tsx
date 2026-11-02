@@ -1,8 +1,8 @@
-import { getScale } from '@/config/palettes';
+import { getScale, type ScaleDef } from '@/config/palettes';
 
 /** Inline legend for a palette scale (used under heatmaps and in map legends). */
-export function MatrixLegend({ scale, compact = true }: { scale: string; compact?: boolean }) {
-  const sc = getScale(scale);
+export function MatrixLegend({ scale, compact = true }: { scale: string | ScaleDef; compact?: boolean }) {
+  const sc = typeof scale === 'string' ? getScale(scale) : scale;
   return (
     <ul
       className={compact ? 'mt-1 flex flex-wrap gap-x-3 gap-y-1' : 'space-y-1'}

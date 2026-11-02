@@ -3,6 +3,7 @@
  * filter bar can export everything visible on the page (one CSV, or a zip when there are several).
  */
 import type { CategorySet, MatrixSet, SeriesSet, TableSet } from '@/types/api';
+import { canonLabel, canonUnit } from '@/config/naming';
 
 export type Row = Record<string, string | number | null>;
 export interface ExportItem {
@@ -91,8 +92,10 @@ export function seriesRows(s: SeriesSet): Row[] {
     for (const p of ser.data) {
       const x = String(p[0]);
       const r = xs.get(x) ?? { [s.xType === 'time' ? 'date' : 'x']: x };
-      const unit = s.axes[ser.axis ?? 0]?.unit;
-      const name = unit ? `${ser.name} (${unit})` : ser.name;
+      // headers carry the register's unit spelling; a catalogue column keeps its own label
+      const unit = canonUnit(s.axes[ser.axis ?? 0]?.unit);
+      const label = ser.source?.length === 1 ? ser.name : canonLabel(ser.name);
+      const name = unit && !label.endsWith(`(${unit})`) ? `${label} (${unit})` : label;
       if (ser.kind === 'band') {
         r[`${name} low`] = p[1] as number | null;
         r[`${name} high`] = p[2] as number | null;
@@ -106,7 +109,8 @@ export function seriesRows(s: SeriesSet): Row[] {
 export function categoryRows(c: CategorySet): Row[] {
   return c.categories.map((cat, i) => {
     const r: Row = { category: cat };
-    c.series.forEach((s) => (r[c.unit ? `${s.name} (${c.unit})` : s.name] = s.values[i]));
+    const unit = canonUnit(c.unit === 'mixed' ? '' : c.unit);
+    c.series.forEach((s) => (r[unit ? `${canonLabel(s.name)} (${unit})` : canonLabel(s.name)] = s.values[i]));
     return r;
   });
 }
@@ -114,7 +118,10 @@ export function categoryRows(c: CategorySet): Row[] {
 export function tableRows(t: TableSet): Row[] {
   return t.rows.map((row) => {
     const r: Row = {};
-    t.columns.forEach((c) => (r[c.unit ? `${c.label} (${c.unit})` : c.label] = row[c.key] ?? null));
+    t.columns.forEach((c) => {
+      const unit = canonUnit(c.unit);
+      r[unit ? `${canonLabel(c.label)} (${unit})` : canonLabel(c.label)] = row[c.key] ?? null;
+    });
     return r;
   });
 }

@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import { ArrowDown, ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight, ChevronsUpDown } from 'lucide-react';
 import type { Column, TableSet } from '@/types/api';
 import { formatDate, formatNumber, withUnit } from '@/lib/format';
-import { canonLabel, canonUnit, clampDecimals } from '@/config/naming';
+import { canonLabel, canonUnit, clampDecimals, metricOf } from '@/config/naming';
+import { metric } from '@/config/metrics';
 import { classify } from '@/config/palettes';
 import { Pill } from '@/components/ui/Pill';
 import { registerExport, tableRows } from '@/lib/exporter';
@@ -54,6 +55,14 @@ export function cellFormat(c: Column, row?: Record<string, Val>): Column {
   return decimals === c.decimals && unit === c.unit ? c : { ...c, decimals, unit };
 }
 
+/** The good direction of a trend / delta column without one: the register metric its label (or unit) names, else up. */
+export function goodDirectionOf(c: Column): 'up' | 'down' | 'neutral' {
+  const id = metricOf(c.label);
+  if (id) return metric(id).goodDirection;
+  if (/°C/.test(c.unit ?? '') || /\btemp/i.test(c.label)) return 'down';
+  return 'up';
+}
+
 /** A column's unit as the header prints it: "(mm)", or "(per decade)" for a rate suffix like "/decade". */
 export function headerUnit(unit: string | undefined): string | undefined {
   const u = canonUnit(unit);
@@ -71,7 +80,7 @@ export function renderCell(col: Column, v: Val, rowIndex: number, row?: Record<s
     case 'trend':
     case 'delta':
       return typeof v === 'number' ? (
-        <TrendCell v={v} good={c.goodDirection ?? 'up'} unit={c.unit} decimals={c.decimals} />
+        <TrendCell v={v} good={c.goodDirection ?? goodDirectionOf(col)} unit={c.unit} decimals={c.decimals} />
       ) : (
         String(v)
       );

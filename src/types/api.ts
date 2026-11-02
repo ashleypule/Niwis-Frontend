@@ -12,6 +12,8 @@ export const Num = z.number().nullable();
 export const ComponentSchema = z.object({
   key: z.string(),
   asOf: z.string().nullable().optional(),
+  /** last day of the component's period (monthly / annual values) */
+  periodEnd: z.string().nullable().optional(),
   source: z.array(z.string()).optional(),
   isStale: z.boolean().optional(),
 });

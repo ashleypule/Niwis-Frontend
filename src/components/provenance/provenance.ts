@@ -57,10 +57,13 @@ export function panelProvenance(
   if (p.kind === 'sample') return { kind: 'sample', detail: p.detail };
   if (p.kind !== 'live') return NO_MARKER;
   const b = q.data as Body;
+  // the end of the period for monthly / annual values ("as of Dec 2025" for the year 2025, stamped 2025-01-01); a
+  // set without its own periodEnd takes the newest of its components' (a KPI strip, a table of several sources)
+  const ends = (b.components ?? []).map((c) => c.periodEnd).filter((d): d is string => !!d);
+  const asOf = b.periodEnd ?? (ends.length && !b.isStale ? ends.sort()[ends.length - 1] : undefined) ?? b.asOf;
   return {
     kind: 'live',
-    // the end of the period for monthly / annual values ("as of Dec 2025" for the year 2025, stamped 2025-01-01)
-    asOf: b.periodEnd ?? b.asOf,
+    asOf,
     source: b.source,
     isStale: b.isStale || b.components?.some((c) => c.isStale),
     components: b.components,
@@ -96,7 +99,9 @@ export function monthYear(iso: string | null | undefined): string {
 
 /** Date the stale marker shows: the oldest stale component (or the panel's own as-of). */
 export function staleDate(p: PanelProvenance): string | undefined {
-  const stale = (p.components ?? []).filter((c) => c.isStale && c.asOf).map((c) => c.asOf!);
+  const stale = (p.components ?? [])
+    .filter((c) => c.isStale && (c.periodEnd ?? c.asOf))
+    .map((c) => (c.periodEnd ?? c.asOf)!);
   if (stale.length) return stale.sort()[0];
   if (!p.isStale || !p.asOf) return undefined;
   // stale, but its own as-of is recent: it mixes sources (e.g. a table of tables), so no single date applies
@@ -116,7 +121,9 @@ export function sourceTooltip(p: PanelProvenance): string {
   if (p.source?.length) lines.push(`Source tables: ${p.source.join(', ')}`);
   if (p.components?.length)
     lines.push(
-      ...p.components.map((c) => `${c.key}: data to ${monthYear(c.asOf) || 'n/a'}${c.isStale ? ' (stale)' : ''}`),
+      ...p.components.map(
+        (c) => `${c.key}: data to ${monthYear(c.periodEnd ?? c.asOf) || 'n/a'}${c.isStale ? ' (stale)' : ''}`,
+      ),
     );
   if (p.baseline) lines.push(`Baseline: ${p.baseline}`);
   if (p.aggregation) lines.push(`Aggregation: ${AGGREGATION[p.aggregation] ?? p.aggregation}`);

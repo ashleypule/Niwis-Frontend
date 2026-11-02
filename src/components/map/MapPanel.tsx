@@ -5,7 +5,7 @@ import type { ModuleId } from '@/config/modules';
 import type { QueryParams } from '@/api/client';
 import { useMapLayer } from '@/api/queries/core';
 import type { MapLayer } from '@/types/api';
-import { getScale } from '@/config/palettes';
+import { legendTitle, scaleOf } from './scale';
 import { Card, Tabs } from '@/components/ui/Card';
 import { ErrorState, UnavailableState, useElapsed } from '@/components/feedback/PanelBoundary';
 import { isUnavailable, provenanceOf } from '@/api/client';
@@ -73,12 +73,12 @@ export interface MapPanelProps {
 export function Legend({ layer, collapsible = false }: { layer?: MapLayer; collapsible?: boolean }) {
   const [open, setOpen] = useState(true);
   if (!layer) return null;
-  const sc = getScale(layer.scale);
+  const sc = scaleOf(layer);
   return (
     <div
       className="rounded-lg border border-line bg-surface/95 p-2 text-[11px] shadow-card"
       data-testid="map-legend"
-      data-scale={layer.scale}
+      data-scale={sc.id}
       data-unit={layer.unit}
     >
       <button
@@ -88,7 +88,7 @@ export function Legend({ layer, collapsible = false }: { layer?: MapLayer; colla
         aria-expanded={open}
         disabled={!collapsible}
       >
-        <span className="leading-tight">{layer.title}</span>
+        <span className="leading-tight">{legendTitle(layer)}</span>
         {collapsible && <span className="text-muted">{open ? '−' : '+'}</span>}
       </button>
       {open && (
@@ -372,8 +372,10 @@ export function MapPanel({
           <Tabs label="Map layer" value={active} onChange={setActive} options={tabOptions} />
         </div>
       )}
-      <div className="flex gap-3" style={{ height }}>
-        <div className="hidden w-[210px] shrink-0 overflow-y-auto pr-1 wide:block">{layerControl}</div>
+      <div className="flex flex-1 gap-3" style={{ minHeight: height }}>
+        <div className="hidden w-[210px] shrink-0 overflow-y-auto pr-1 wide:block" style={{ maxHeight: height }}>
+          {layerControl}
+        </div>
         <div className="flex min-w-0 flex-1 flex-col max-md:h-[60vh]">{map}</div>
       </div>
       <div className="mt-2 md:hidden">

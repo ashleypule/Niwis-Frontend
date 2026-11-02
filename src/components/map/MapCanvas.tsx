@@ -12,6 +12,7 @@ import { classify, colorFor } from '@/config/palettes';
 import { formatNumber, withUnit } from '@/lib/format';
 import { panelProvenance, type PanelProvenance } from '@/components/provenance/provenance';
 import { labelPoint, SA_BOUNDS, type GeoFC } from './geo';
+import { scaleOf } from './scale';
 import type { BaseId, PointLayerDef } from './MapPanel';
 
 export interface MapCanvasProps {
@@ -283,8 +284,8 @@ function tipHtml(name: string, value: string, extra?: string) {
 
 function valueText(layer: MapLayer, v: number | string | null | undefined): string {
   if (v == null) return 'No data';
-  if (typeof v === 'string') return classify(layer.scale, v)?.label ?? v;
-  const bin = classify(layer.scale, v);
+  if (typeof v === 'string') return classify(scaleOf(layer), v)?.label ?? v;
+  const bin = classify(scaleOf(layer), v);
   const dec = Math.abs(v) < 1 ? 2 : Math.abs(v) < 10 ? 1 : 0;
   return `${withUnit(formatNumber(v, dec), layer.unit)}${bin ? ` · ${bin.label.replace(/^[^A-Za-z]*\s/, '')}` : ''}`;
 }
@@ -312,7 +313,7 @@ function ThematicLayerView({
           return {
             color: sel ? '#0b1f3a' : '#ffffff',
             weight: sel ? 2.5 : 0.6,
-            fillColor: colorFor(layer.scale, layer.values![id] ?? null),
+            fillColor: colorFor(scaleOf(layer), layer.values![id] ?? null),
             fillOpacity: 0.92,
           };
         },
@@ -344,7 +345,7 @@ function ThematicLayerView({
           {
             renderer: canvas,
             stroke: false,
-            fillColor: colorFor(layer.scale, v),
+            fillColor: colorFor(scaleOf(layer), v),
             fillOpacity: 0.95,
             interactive: true,
           },
@@ -380,7 +381,7 @@ function PointsView({
     for (const p of pts) {
       const sel = selected === p.id;
       const r = 4 + (p.size ?? 0.3) * 9;
-      const color = colorFor(layer.scale, p.value);
+      const color = colorFor(scaleOf(layer), p.value);
       const opts = {
         renderer: canvas,
         radius: sel ? r + 3 : r,

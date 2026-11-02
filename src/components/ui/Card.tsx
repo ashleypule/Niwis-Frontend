@@ -124,7 +124,11 @@ export function Tabs<T extends string>({
   label: string;
 }) {
   return (
-    <div role="tablist" aria-label={label} className="flex max-w-full overflow-x-auto rounded-lg bg-surface-2 p-0.5">
+    <div
+      role="tablist"
+      aria-label={label}
+      className="flex min-w-0 max-w-full overflow-x-auto rounded-lg bg-surface-2 p-0.5"
+    >
       {options.map((o) => (
         <button
           key={o.value}

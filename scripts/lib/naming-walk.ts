@@ -88,7 +88,8 @@ export async function collectLabels(page: Page, route: string): Promise<LabelIte
       const title = txt(h2);
       const prov = sec.getAttribute('data-provenance') ?? undefined;
       const base = { panel: title, prov };
-      if (title) out.push({ kind: 'title', text: title, ...base });
+      const cat = !!sec.closest('[data-category-chart]');
+      if (title) out.push({ kind: 'title', text: title, cat, ...base });
       const ctx = sec.querySelector(':scope > header .truncate');
       if (ctx && txt(ctx)) out.push({ kind: 'context', text: txt(ctx), ...base });
       const info = h2?.querySelector('svg')?.getAttribute('aria-label');

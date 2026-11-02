@@ -30,9 +30,13 @@ export function ForecastKpis({
   const status = queryStatus(q, 104);
   if (status || !q.data) return <div data-provenance={prov.kind}>{status}</div>;
   const cols = q.data.columns;
-  const last = cols[cols.length - 1];
-  const cur = cols.find((c) => /current|baseline/i.test(c.label));
-  const mid = cols.length > 3 ? cols[Math.floor(cols.length / 2)] : undefined;
+  // the horizon columns ("3 months" … "24 months", "2030" … "2070"): the furthest is the headline, never a trailing
+  // model / skill / p-value column
+  const horizons = cols.filter((c) => /^\d{4}$|\b\d+\s*months?\b|\bh\d+\b/i.test(c.label));
+  const numeric = cols.filter((c) => c.type === 'number');
+  const last = horizons[horizons.length - 1] ?? numeric[numeric.length - 1] ?? cols[cols.length - 1];
+  const cur = cols.find((c) => /current|baseline|now/i.test(c.label));
+  const mid = horizons.length > 2 ? horizons[Math.floor((horizons.length - 1) / 2)] : undefined;
   // a number is shown with its column's decimals and the row's unit, as the table under it does
   const show = (c: Column, r: Record<string, string | number | null>) => {
     const v = r[c.key];

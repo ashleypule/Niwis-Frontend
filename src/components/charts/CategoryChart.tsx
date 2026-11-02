@@ -169,7 +169,7 @@ export function CategoryChart({
   const chips = (
     <div className="w-full min-w-0">
       <div
-        className="-mx-1 flex flex-nowrap items-center gap-1.5 overflow-x-auto px-1 pb-1 sm:flex-wrap"
+        className="-mx-1 flex flex-wrap items-center gap-1.5 px-1 pb-1"
         role="group"
         aria-label={`${group.label}: variables`}
       >

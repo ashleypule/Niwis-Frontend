@@ -81,6 +81,7 @@ export function registerValue(kpi: Kpi, metricUnit: string): { value: number | n
   if (kpi.metric === 'exploitationIndex' && unit === '%' && value != null) {
     value = value / 100;
     unit = '';
+    return { value, unit, decimals: md.decimals };
   }
   return { value, unit, decimals: registerDecimals(kpi.metric, unit, kpi.decimals ?? md.decimals) };
 }

@@ -9,6 +9,11 @@ import { AlertsList } from '@/components/alerts/AlertsList';
 import { Row } from '@/components/layout/Grid';
 import { entityNoun, useSelectedEntity } from '@/components/entity/useSelectedEntity';
 
+/** Series keys each Blue Drop parameter group must return (the backend's `group` selector is not honoured yet). */
+const MICRO = ['ecoli', 'e_coli', 'coliforms', 'total_coliforms', 'faecal'];
+const NUTRIENTS = ['nitrate', 'tds', 'ec', 'sulphate', 'chloride', 'fluoride'];
+const METALS = ['lead', 'arsenic', 'iron', 'manganese', 'cadmium', 'chromium', 'mercury'];
+
 /** Shared layout for Green Drop (wastewater) and Blue Drop (drinking water) compliance pages. */
 export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-drop' | 'blue-drop'> }) {
   const mod = moduleById(module);
@@ -90,7 +95,9 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
               metric="params"
               title={`Microbiological Parameters (Selected ${short})`}
               context={ctx}
-              extra={{ ...p, group: 'micro' }}
+              extra={p}
+              // the backend does not honour `group` yet (every group returns nitrate / fluoride / THMs): the panel says so
+              tabs={[{ value: 'micro', label: 'Microbiological', params: { group: 'micro' }, expect: MICRO }]}
               height={210}
             />
           )}
@@ -130,7 +137,8 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
               metric="params"
               title={`Nutrients and Salts (Selected ${short})`}
               context={ctx}
-              extra={{ ...p, group: 'nutrients' }}
+              extra={p}
+              tabs={[{ value: 'nutrients', label: 'Nutrients', params: { group: 'nutrients' }, expect: NUTRIENTS }]}
               height={220}
             />
             <SeriesPanel
@@ -138,7 +146,8 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
               metric="params"
               title={`Metals and Trace Elements (Selected ${short})`}
               context={ctx}
-              extra={{ ...p, group: 'metals' }}
+              extra={p}
+              tabs={[{ value: 'metals', label: 'Metals', params: { group: 'metals' }, expect: METALS }]}
               height={220}
             />
           </>

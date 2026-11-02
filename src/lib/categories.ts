@@ -345,9 +345,13 @@ export function applyColumnLabels(set: SeriesSet, lookup: Map<string, CategoryVa
     const axisUnit = set.axes[s.axis ?? 0]?.unit;
     return v && (v.unit === axisUnit || (noUnit(v.unit) && noUnit(axisUnit))) ? v : undefined;
   };
+  // a column plotted twice (this year / previous year) keeps the series' own names: one label per series
+  const shared = new Set(
+    set.series.map((s) => s.source?.[0]).filter((src, i, a) => src != null && a.indexOf(src) !== i),
+  );
   const series = set.series.map((s) => {
     const v = varOf(s);
-    return v ? { ...s, name: v.label } : s;
+    return v && !shared.has(s.source?.[0]) ? { ...s, name: v.label } : s;
   });
   const axes = set.axes.map((a, i) => {
     const on = set.series.filter((s) => (s.axis ?? 0) === i && s.kind !== 'band');

@@ -6,6 +6,7 @@ import { MatrixLegend } from '@/components/charts/MatrixLegend';
 import { useMapLayer } from '@/api/queries/core';
 import { MapPanel } from './MapPanel';
 import { panelProvenance } from '@/components/provenance/provenance';
+import { legendTitle, scaleOf } from './scale';
 
 /** Compact map with horizon / year tabs (projection and forecast maps). */
 export function YearMap({
@@ -31,7 +32,7 @@ export function YearMap({
   const all = { ...params, [paramKey]: v };
   const q = useMapLayer(module, layer, all);
   return (
-    <Card title={title} context={q.data?.title} provenance={panelProvenance(q, module)}>
+    <Card title={title} context={q.data ? legendTitle(q.data) : undefined} provenance={panelProvenance(q, module)}>
       <div className="mb-2">
         <Tabs
           label={`${title} horizon`}
@@ -48,7 +49,7 @@ export function YearMap({
         mini
         height={height}
       />
-      {q.data && <MatrixLegend scale={q.data.scale} />}
+      {q.data && <MatrixLegend scale={scaleOf(q.data)} />}
     </Card>
   );
 }

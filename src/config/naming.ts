@@ -68,8 +68,6 @@ export const UNIT_CANON: Record<string, string> = {
   '/yr': 'per year',
   '/year': 'per year',
   '/month': 'per month',
-  score: '',
-  WQI: '',
   'bn m³/yr': 'Mm³/year',
   'million people': 'people',
 };
@@ -287,7 +285,7 @@ export const CLASS_LABELS: Record<string, string[]> = {
   exploitation: ['Very Low', 'Low', 'Moderate', 'High', 'Very High', 'Over-exploited'],
   flowStatus: ['High flow', 'Normal', 'Low flow', 'Data delayed', 'Offline'],
   status: ['Normal', 'Watch', 'Low', 'Warning', 'Critical', 'Under maintenance'],
-  risk: ['Low', 'Moderate', 'Medium', 'High', 'Very high', 'Extreme', 'Critical'],
+  risk: ['Low', 'Moderate', 'Medium', 'High', 'Very High', 'Extreme', 'Critical'],
   severity: ['Critical', 'High', 'Moderate', 'Low', 'Info'],
   trendClass: ['Rising', 'Stable', 'Declining'],
   pass: ['Compliant', 'Non-compliant'],
@@ -305,7 +303,7 @@ export const CLASS_LABELS: Record<string, string[]> = {
   progress: ['Completed', 'On track', 'In progress', 'At risk', 'Delayed', 'Not started', 'Planned'],
   response: ['Intervention', 'In progress', 'Planned', 'Monitoring'],
   stress: ['Low', 'Low–medium', 'Medium', 'High', 'Extremely high'],
-  index01: ['Very low', 'Low', 'Medium', 'High', 'Very high'],
+  index01: ['Very Low', 'Low', 'Medium', 'High', 'Very High'],
 };
 
 /** Class part of a legend / bin label: "−1.6 to −1.3 D2 Severe Drought" → "D2 Severe Drought"; "Excellent (90–100)" → "Excellent". */
@@ -361,7 +359,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   tmean: ['Tavg', 'Tmean', 'Mean temperature', 'Average temperature', 'Temperature'],
   tmax: ['Tmax', 'Maximum temperature', 'Max temperature'],
   tmin: ['Tmin', 'Minimum temperature', 'Min temperature'],
-  tempAnomaly: ['Temperature anomaly'],
+  tempAnomaly: ['Temperature anomaly', 'Temp anomaly', 'Tavg anomaly', 'Temp change', 'Temperature change'],
   tempTrend: ['Warming trend', 'Temperature trend'],
   hotDays: ['Hot days', 'Heatwave days', 'Heat days', 'Extreme heat days'],
   heatwaveDuration: ['Heatwave duration'],
@@ -397,7 +395,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   rootZoneSoilMoisture: ['Root-zone soil moisture', 'Root zone soil moisture'],
   soilMoistureAnomaly: ['Soil moisture anomaly'],
   vegStressArea: ['Area under stress', 'Area under vegetation stress', 'Vegetation stress'],
-  vegAnomaly: ['Vegetation anomaly', 'NDVI anomaly'],
+  vegAnomaly: ['Vegetation anomaly', 'NDVI anomaly', 'NDVI change'],
   runoff: [
     'Annual runoff',
     'Runoff depth',
@@ -780,6 +778,8 @@ export function unitInLabel(text: string): string | undefined {
   const m = /\(([^()]*)\)\s*$/.exec(text.trim());
   if (!m) return undefined;
   const u = m[1].trim();
+  // a description in parentheses ("% of area in D1–D4", "% change", "Selected District") is not a unit
+  if (/\s(of|change|in|per)\s|^%\s+\w/.test(u) && !UNITS.includes(canonUnit(u))) return undefined;
   return UNITS.includes(canonUnit(u)) || CATALOGUE_ONLY_UNITS.includes(u) || /^[%°]/.test(u) || u in UNIT_CANON
     ? u
     : undefined;
@@ -836,7 +836,7 @@ export function checkItems(items: LabelItem[]): Violation[] {
     out.push({ route: it.route, kind: it.kind, text: it.text, rule, detail });
   for (const it of items) {
     const text = it.text ?? '';
-    const isCatalogue = it.kind === 'chip' || it.kind === 'table-block';
+    const isCatalogue = it.kind === 'chip' || it.kind === 'table-block' || (it.kind === 'title' && it.cat === true);
     // units in parentheses, in the register's spelling
     if (
       ['title', 'kpi', 'axis', 'header', 'field', 'chip', 'series', 'legend-title', 'tab', 'layer', 'context'].includes(
@@ -861,7 +861,13 @@ export function checkItems(items: LabelItem[]): Violation[] {
       for (const d of DEPRECATED) if (d.re.test(text)) add(it, 'deprecated', `use ${d.use}`);
     }
     // a live panel's title naming the mock-up's stations / gauges / boreholes / works over district data
-    if (it.kind === 'title' && it.prov === 'live' && MOCKUP_WORDS.test(text) && !/\bdistricts?\b/i.test(text))
+    if (
+      it.kind === 'title' &&
+      !isCatalogue &&
+      it.prov === 'live' &&
+      MOCKUP_WORDS.test(text) &&
+      !/\bdistricts?\b/i.test(text)
+    )
       add(it, 'mockup', 'names stations / gauges / boreholes / works / sites; the live data are per district');
     if (it.kind === 'kpi' && !it.forecast) {
       const metric = str(it.metric) ?? '';
