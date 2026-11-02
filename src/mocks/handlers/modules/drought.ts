@@ -340,7 +340,7 @@ export const drought: ModuleHandlers = {
       return seriesSet(
         'dam-flows',
         [
-          { unit: '%', label: 'Storage', min: 0, max: 100 },
+          { unit: '% FSC', label: 'Storage', min: 0, max: 100 },
           { unit: 'Mm³', label: 'Monthly volume' },
         ],
         [
@@ -495,7 +495,7 @@ export const drought: ModuleHandlers = {
         id: 'storage-vs-spi',
         xType: 'value',
         xUnit: 'SPI-3 at dam',
-        axes: [{ unit: '%', label: 'Storage', min: 0, max: 100 }],
+        axes: [{ unit: '% FSC', label: 'Storage', min: 0, max: 100 }],
         series: [
           { key: 'large', name: 'Large dams', kind: 'scatter', data: pts('Large'), color: '#1565C0' },
           { key: 'medium', name: 'Medium dams', kind: 'scatter', data: pts('Medium'), color: '#2E9E5B' },
@@ -1209,7 +1209,7 @@ export const drought: ModuleHandlers = {
     },
     population: (ctx) => {
       const sets = settlementsIn(ctx.scope);
-      const pop = (mi: number) => atRisk(sets, mi).reduce((s, x) => s + x.population, 0) / 1000;
+      const pop = (mi: number) => atRisk(sets, mi).reduce((s, x) => s + x.population, 0);
       const hist: [number, number | null][] = [];
       for (let mi = ctx.last - 11; mi <= ctx.last; mi++) hist.push([mi, pop(mi)]);
       const x0 = hist[hist.length - 1][1] ?? 0;
@@ -1225,7 +1225,7 @@ export const drought: ModuleHandlers = {
       const f = forecastSeries(hist, fc);
       return seriesSet(
         'population-forecast',
-        [{ unit: 'thousand people', label: 'Population at risk', min: 0 }],
+        [{ unit: 'people', label: 'Population at risk', min: 0 }],
         [
           band('band', f.names.band, f.band, { color: '#90CAF9' }),
           area('obs', 'Observed', f.observed, { color: '#1565C0' }),

@@ -631,7 +631,7 @@ export const waterQuality: ModuleHandlers = {
           line(`${p}-f`, `${paramDef(p).label} forecast`, f.median, { color, dash: true }),
         ];
       });
-      return seriesSet('params-forecast', [{ unit: 'mg/L or NTU', label: 'Concentration' }], series, {
+      return seriesSet('params-forecast', [{ unit: 'mixed', label: 'Concentration' }], series, {
         asOf: miToIso(ctx.last),
       });
     },
@@ -716,7 +716,7 @@ function plantEntity(p: Plant) {
     lat: p.lat,
     lon: p.lon,
     image: (wwtw ? 'wwtw' : 'wtp') as 'wwtw' | 'wtp',
-    status: { scale: wwtw ? 'greenDrop' : 'blueDrop', id: band, label: `${p.score}% (${band})` },
+    status: { scale: wwtw ? 'greenDrop' : 'blueDrop', id: band, label: band },
     fields: [
       { label: wwtw ? 'WWTW name' : 'System name', value: p.name },
       { label: 'Municipality (WSA)', value: p.municipalityName },
@@ -805,7 +805,7 @@ export const greenDrop: ModuleHandlers = {
         status: {
           scale: 'risk',
           id: mean(list.map((p) => p.score)) >= 60 ? 'Low' : mean(list.map((p) => p.score)) >= 45 ? 'Moderate' : 'High',
-          label: 'Downstream risk',
+          label: mean(list.map((p) => p.score)) >= 60 ? 'Low' : mean(list.map((p) => p.score)) >= 45 ? 'Moderate' : 'High',
         },
       }),
     ];
@@ -817,7 +817,7 @@ export const greenDrop: ModuleHandlers = {
         id: 'gd-trend',
         xType: 'category',
         axes: [
-          { unit: 'WWTWs', label: 'Number of plants' },
+          { unit: 'plants', label: 'Number of plants' },
           { unit: '%', label: 'Compliance rate', min: 0, max: 100 },
         ],
         series: [
@@ -1561,8 +1561,8 @@ export const rwqo: ModuleHandlers = {
         id: 'rwqo-eco',
         xType: 'category',
         axes: [
-          { unit: 'score', label: 'SASS5 / FIBI / IHI' },
-          { unit: '', label: 'ASPT', min: 0, max: 10 },
+          { unit: '', label: 'SASS5 / ASPT' },
+          { unit: '%', label: 'FIBI / IHI', min: 0, max: 100 },
         ],
         series: [
           bar(
@@ -1797,7 +1797,7 @@ export const rwqo: ModuleHandlers = {
       lat: x.station.lat,
       lon: x.station.lon,
       image: x.waterBody === 'Dam' ? 'dam' : 'river',
-      status: { scale: 'ecological', id: x.pes, label: `PES ${x.pes}` },
+      status: { scale: 'ecological', id: x.pes, label: x.pes },
       fields: [
         { label: 'Water body', value: x.waterBody },
         { label: 'River / system', value: x.station.river },

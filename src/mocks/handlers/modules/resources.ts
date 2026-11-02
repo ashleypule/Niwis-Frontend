@@ -140,7 +140,7 @@ export const iwrm: ModuleHandlers = {
                   : b.stress >= 0.2
                     ? 'Low-medium'
                     : 'Low',
-          label: `${stressLabel(b.stress)} risk`,
+          label: stressLabel(b.stress),
         },
       }),
       kpi('status', 'programmeProgress', null, {
@@ -149,7 +149,7 @@ export const iwrm: ModuleHandlers = {
         status: {
           scale: 'progress',
           id: b.balance > 0 ? 'On Track' : 'At Risk',
-          label: b.balance > 0 ? 'Balance positive' : 'Demand exceeds yield',
+          label: b.balance > 0 ? 'On Track' : 'At Risk',
         },
       }),
     ];
@@ -460,7 +460,7 @@ export const waterQuantity: ModuleHandlers = {
         status: {
           scale: 'stress',
           id: b.stress >= 0.8 ? 'Extreme' : b.stress >= 0.6 ? 'High' : b.stress >= 0.4 ? 'Medium' : 'Low',
-          label: `${stressLabel(b.stress)} risk`,
+          label: stressLabel(b.stress),
         },
       }),
     ];
@@ -1349,7 +1349,7 @@ export const tariffs: ModuleHandlers = {
           },
           {
             key: 'e',
-            name: 'Water expenditure (% of income)',
+            name: 'Water expenditure (%)',
             values: ys.map((y) => m.affordability / Math.pow(1.045 / 1.05, yearOf(ctx) - y)),
             color: '#E53935',
             kind: 'line',
@@ -1573,7 +1573,7 @@ export const tariffs: ModuleHandlers = {
       const f = forecastSeries(hist, fc);
       return seriesSet(
         'affordability-forecast',
-        [{ unit: '% of income', label: 'Water bill share', min: 0 }],
+        [{ unit: '%', label: 'Water bill share', min: 0 }],
         [
           band('band', f.names.band, f.band, { color: '#BBDEFB' }),
           line('obs', 'Historical', f.observed, { color: '#13233A' }),
@@ -1798,13 +1798,13 @@ export const settlements: ModuleHandlers = {
       const a = affected(setIn(ctx));
       return categories(
         'by-type',
-        'thousand people',
+        'people',
         [...types],
         [
           {
             key: 'v',
             name: 'Population affected',
-            values: types.map((t) => a.filter((x) => x.type === t).reduce((s, x) => s + x.population, 0) / 1000),
+            values: types.map((t) => a.filter((x) => x.type === t).reduce((s, x) => s + x.population, 0)),
           },
         ],
         { colors: ['#8E44AD', '#2E9E5B', '#E95F35', '#F2A900', '#1565C0'] },

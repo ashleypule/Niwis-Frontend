@@ -58,6 +58,8 @@ export const UNIT_CANON: Record<string, string> = {
   '—': '',
   '-': '',
   '% of income': '%',
+  'days/yr': 'days/year',
+  '% change': '%',
   '%FSC': '% FSC',
   '% fsc': '% FSC',
   'breaks/100 km/yr': 'breaks/100 km/year',
@@ -181,6 +183,11 @@ export const UNITS: readonly string[] = [
   'per decade',
   'per year',
   'per month',
+  'days/year',
+  'events/decade',
+  'projects',
+  'R/month',
+  'WWTWs',
   '× guideline',
 ];
 
@@ -516,6 +523,9 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   staticReserve: ['Static reserve', 'Groundwater in storage'],
   boreholes: [
     'Monitoring boreholes',
+    'Total WWTWs',
+    'Water supply systems',
+    'RWQO monitoring sites',
     'Boreholes',
     'Districts with aquifer records',
     'Districts with WWTW records',
@@ -542,6 +552,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   ],
   wqCompliance: [
     'Compliance rate',
+    'Sites in PES A/B',
     'SANS 241 compliance',
     'Water quality (compliance)',
     'Microbiological compliance',
@@ -693,7 +704,7 @@ export function canonLabel(text: string): string {
 }
 
 /** Spellings the register retired: the renames above, plus wording only a page or the backend can change. */
-export const DEPRECATED: { re: RegExp; use: string }[] = [
+export const DEPRECATED: { re: RegExp; use: string; live?: boolean }[] = [
   { re: /\b(?:SPI|SPEI|SSI|SGI)[ -]?\d+[ -]?months?\b/i, use: 'SPI-n' },
   { re: /\b(?:SPI|SPEI|SSI|SGI) \d+\b/, use: 'SPI-n' },
   { re: /%FSC\b/, use: '% FSC' },
@@ -704,7 +715,7 @@ export const DEPRECATED: { re: RegExp; use: string }[] = [
   { re: /\b(?:Mm³|mm|m³)\/yr\b/, use: '…/year' },
   { re: /\bdeg ?C\b/, use: '°C' },
   { re: /\bE\.coli\b/, use: 'E. coli' },
-  { re: /1981\s*[–-]\s*2010|1961\s*[–-]\s*1990/, use: 'the baseline from the response (e.g. 2000–2026 mean)' },
+  { re: /1981\s*[–-]\s*2010|1961\s*[–-]\s*1990/, use: 'the baseline from the response (e.g. 2000–2026 mean)', live: true },
   { re: /\bSPI-?3 ≤ −1\.5\b/, use: 'area in D2–D4' },
   { re: /\(—\)|\(no unit\)/, use: 'index (a unitless axis)' },
 ];
@@ -864,7 +875,8 @@ export function checkItems(items: LabelItem[]): Violation[] {
       !catalogueSeries &&
       ['title', 'kpi', 'series', 'axis', 'header', 'tab', 'layer', 'legend-title', 'stage', 'field'].includes(it.kind)
     ) {
-      for (const d of DEPRECATED) if (d.re.test(text)) add(it, 'deprecated', `use ${d.use}`);
+      for (const d of DEPRECATED)
+        if (d.re.test(text) && (!d.live || it.prov === 'live')) add(it, 'deprecated', `use ${d.use}`);
     }
     // a live panel's title naming the mock-up's stations / gauges / boreholes / works over district data
     if (
@@ -936,7 +948,12 @@ export function checkItems(items: LabelItem[]): Violation[] {
     if (it.kind === 'series' && it.seriesType !== 'pie') {
       const axis = str(it.axis) ?? '';
       const u = unitInLabel(text);
-      if (u != null && axis && canonUnit(u) !== canonUnit(unitInLabel(axis) ?? axis))
+      if (
+        u != null &&
+        axis &&
+        !/\(unit per parameter\)$/.test(axis) &&
+        canonUnit(u) !== canonUnit(unitInLabel(axis) ?? axis)
+      )
         add(it, 'unit', `series unit "${u}" differs from its axis "${axis}"`);
     }
     if (it.kind === 'legend-title') {

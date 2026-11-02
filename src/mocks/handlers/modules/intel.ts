@@ -179,7 +179,7 @@ export const ai: ModuleHandlers = {
       kpi('reservoir', 'storagePct', null, {
         label: 'Reservoir Outlook (12 months)',
         text: fc[5].median < -0.5 ? 'Declining' : 'Stable',
-        status: { scale: 'trendClass', id: fc[5].median < -0.5 ? 'Declining' : 'Stable', label: 'National storage' },
+        status: { scale: 'trendClass', id: fc[5].median < -0.5 ? 'Declining' : 'Stable', label: fc[5].median < -0.5 ? 'Declining' : 'Stable' },
       }),
       kpi('alerts', 'damAlerts', 14, { label: 'AI Early Warnings (Active)', sublabel: 'Across all modules' }),
       kpi('runs', 'recordsIngested', 1248, {
@@ -371,10 +371,10 @@ export const dataIntegration: ModuleHandlers = {
         unit: '',
         sublabel: `of ${s.feeds} (${Math.round((s.active / s.feeds) * 100)}% operational)`,
       }),
-      kpi('records', 'recordsIngested', (s.records * 365) / 1e9, {
+      kpi('records', 'recordsIngested', s.records * 365, {
         label: 'Records (12 Months)',
-        unit: 'billion',
-        decimals: 2,
+        unit: 'records',
+        decimals: 0,
         delta: 18,
         deltaUnit: '%',
         deltaLabel: 'vs previous year',
@@ -440,7 +440,7 @@ export const dataIntegration: ModuleHandlers = {
       const base = [110, 45, 28, 18, 10];
       return seriesSet(
         'ingestion',
-        [{ unit: 'M records', label: 'Records ingested' }],
+        [{ unit: 'records', label: 'Records ingested' }],
         TYPES.map((t, i) =>
           bar(
             t,
@@ -470,7 +470,7 @@ export const dataIntegration: ModuleHandlers = {
         [
           col.text('p', 'Pipeline'),
           col.text('s', 'Source'),
-          col.num('r', 'Records (24 h)', 'M', 2),
+          col.num('r', 'Records (24 h)', 'records', 0),
           col.text('t', 'Last updated'),
           col.cls('st', 'Status', 'feed'),
         ],
@@ -481,7 +481,7 @@ export const dataIntegration: ModuleHandlers = {
           return {
             p,
             s,
-            r: f.length ? f.reduce((a, x) => a + x.recordsPerDay, 0) / 1e6 : 0.2,
+            r: f.length ? f.reduce((a, x) => a + x.recordsPerDay, 0) : 200_000,
             t: formatDate(new Date(APP.asOf.getTime() - lat * 60_000 - k * 600_000), 'datetime'),
             st: bad > 0.15 ? 'Degraded' : bad > 0.05 ? 'Delayed' : 'Online',
           };
