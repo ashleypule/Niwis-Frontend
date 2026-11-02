@@ -166,6 +166,43 @@ annual values carry `periodEnd` and are no longer stale. #8–#13 are new (datab
 - **Frontend:** the chart shows the error with its request id and Retry; with lazy loading it is requested only when
   scrolled into view. `npm run fixtures:record -- --only=<text>` re-records just the affected fixtures.
 
+## 15. Presentation items from audit step 2 (naming, units, dates) — for step 3
+
+Found by the naming register check (`npm run naming:check`, docs/NAMING_REGISTER.md) on 2026-10-30. The frontend
+canonicalises at render where it can (`canonUnit`, `canonLabel`, `axisName`); the backend's own strings would make the
+register hold without those rewrites.
+
+- **Unit spellings** in KPI / axis / column `unit`: `Mm³/yr`, `mm/yr`, `Ml/day`, `°C/dec`, `/decade` (statistics
+  tables), `bn m³/yr`. Register: `Mm³/year`, `mm/year` (the catalogue's spelling), `ML/day`, `°C/decade`, column rates
+  as "per decade". The catalogue columns in `kWh/Ml`, `R/Ml`, `Ml/day` (13.2, 18.x) are shown as sent.
+- **Axis labels that repeat the unit**: forecast responses send `axes: [{label: "Monthly rainfall (mm)", unit: "mm"}]`
+  (also "Monthly mean flow (m³/s)", "Depth to water (m bgl)", "Tavg anomaly (°C)", "WQI (0–100)" with unit "WQI",
+  "Monthly runoff (mm)" with unit "mm/month"). Send the label without the unit.
+- **Unitless axes** sent as unit `—` (SPI, NDVI, SSI series) or `score` (RWQO ecological indices), and `mixed` on the
+  water-quality range breakdown: send `""` (the frontend shows "index"), or one unit per axis.
+- **Green / Blue Drop trend breakdown**: axis unit `WWTWs (districts)` / `systems (districts)` with label "Districts":
+  send unit `districts`.
+- **RWQO `ecological` series**: SASS5 and ASPT (unitless) share one "score" axis with FIBI (%) and IHI (%): send two
+  axes (the frontend splits them by the unit in the series name).
+- **Category breakdowns with `axis: 1` and no `axis2Unit`** (tariffs `cost-vs-tariff`, `muni-nrw`): ECharts threw on
+  the missing axis; the frontend now builds it from the unit in the series name. Send `axis2Unit`.
+- **Selectors not honoured**: rwqo `timeseries?metric=params&param=…` returns dissolved oxygen for every `param`;
+  blue-drop `timeseries?metric=params&group=…` returns nitrate / fluoride / THMs for every `group`. The panels say the
+  selection is not served (like the vegetation `set` case, #1).
+- **Retired spellings in derived names**: rainfall `intensity` series "R20mm days (district mean)" and its note,
+  rainfall map layer "R20mm days"; the frontend renames to "Heavy rain days (R20mm)" but the note still says "R20mm
+  days".
+- **Catalogue label** "E. Coli (cfu/100 mL)" (12.3): "E. coli".
+- **Decimals**: groundwater `abstraction` KPI `decimals: 1` in Mm³/year (register 0); groundwater-reserve `aquifers`
+  table Recharge / Abstraction decimals 1; EI 3 dp there, 2 dp elsewhere.
+- **Exploitation index KPI in %** (17.2) while the map, the table and spec §11.3 use the ratio (0.17): send the ratio.
+- **Entity cards carry no `periodEnd`** (KPIs do): the marker reads "as of Jan 2025" for annual 2025 fields.
+- **`18_1` 2026 snapshot** KPIs / layers carry `periodEnd: 2026-12-31` (a future date): "as of Dec 2026".
+- **water-quantity map** "Mean annual runoff by district (16.1)" names the `runoff` scale (mm bins) for a layer in
+  Mm³/year: the classes did not fit the data; the frontend derives quantile classes. Send a scale for the layer's unit.
+- **Class label casing** in tables: "Very low" / "Very high" exploitation classes (register ids "Very Low" / "Very
+  High"); PES "D – Largely modified" vs "D Largely modified" (register: no dash).
+
 ## Not backend bugs (fixed in the frontend)
 
 - Log axes (flow-duration curve, flood frequency) ran 1–10 under values of 400–5 400 m³/s: the FDC ends at 0 flow, and

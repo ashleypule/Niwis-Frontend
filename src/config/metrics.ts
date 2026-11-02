@@ -100,8 +100,8 @@ export const METRICS = {
   climateRisk: m('Climate risk index', '', 2, 'down', 'CSIR / derived', '§4', 'index01'),
   seaLevel: m('Sea level anomaly', 'mm', 0, 'down', 'SANHO / derived', '§4'),
   // ---- Vegetation (§5)
-  ndvi: m('NDVI', '', 2, 'up', 'SANSA / MODIS', '§5.1', 'ndvi'),
-  evi: m('EVI', '', 2, 'up', 'SANSA / MODIS', '§5.1', 'ndvi'),
+  ndvi: m('NDVI', '', 3, 'up', 'SANSA / MODIS', '§5.1', 'ndvi'),
+  evi: m('EVI', '', 3, 'up', 'SANSA / MODIS', '§5.1', 'ndvi'),
   savi: m('SAVI', '', 2, 'up', 'SANSA / Landsat', '§5.1', 'ndvi'),
   msavi2: m('MSAVI2', '', 2, 'up', 'SANSA / Landsat', '§5.1', 'ndvi'),
   vci: m('VCI', '%', 0, 'up', 'SANSA / derived', '§5.1', 'vci'),
@@ -110,7 +110,7 @@ export const METRICS = {
   vpi: m('VPI', '%', 0, 'up', 'SANSA / derived', '§5.1', 'vci'),
   asi: m('Agricultural Stress Index', '%', 0, 'down', 'FAO / SANSA', '§5.1'),
   svi: m('SVI', '', 2, 'up', 'SANSA / derived', '§5.1', 'spi'),
-  ndwi: m('NDWI', '', 2, 'up', 'SANSA', '§5.1', 'ndvi'),
+  ndwi: m('NDWI', '', 3, 'up', 'SANSA', '§5.1', 'ndvi'),
   ndii: m('NDII', '', 2, 'up', 'SANSA', '§5.1', 'ndvi'),
   lst: m('Land surface temperature', '°C', 1, 'down', 'SANSA / MODIS', '§5.1', 'lst'),
   soilMoisture: m('Surface soil moisture', 'm³/m³', 2, 'up', 'SANSA / Sentinel-1', '§3.2', 'soilMoisture'),
@@ -152,7 +152,7 @@ export const METRICS = {
   gwLevelAnomaly: m(
     'Groundwater level anomaly',
     'm',
-    1,
+    2,
     'up',
     'DWS NGA / derived',
     '§10.1',
@@ -192,7 +192,7 @@ export const METRICS = {
   complianceRate: m('Compliance rate', '%', 0, 'up', 'DWS', '§13–14'),
   sass5: m('SASS5 score', '', 0, 'up', 'DWS / WRC', '§15.1'),
   aspt: m('ASPT', '', 1, 'up', 'DWS', '§15.1'),
-  fibi: m('Fish Index of Biotic Integrity', '%', 0, 'up', 'SANBI / DWS', '§15.1'),
+  fibi: m('Fish Index of Biotic Integrity', '%', 1, 'up', 'SANBI / DWS', '§15.1'),
   rwqoCompliance: m('RWQO compliance', '%', 0, 'up', 'DWS', '§15'),
   // ---- WRM / quantity (§16, §17)
   availability: m('Water availability', 'Mm³/year', 0, 'up', 'DWS', '§16.1'),
@@ -205,10 +205,10 @@ export const METRICS = {
   allocationUse: m('Allocation utilisation', '%', 0, 'neutral', 'DWS', '§17'),
   // ---- Services (§18)
   populationServed: m('Population served', 'people', 0, 'up', 'Stats SA / DWS', '§18.1'),
-  pipedAccess: m('Piped water access', '%', 0, 'up', 'Stats SA / DWS', '§18.1', 'coverage'),
+  pipedAccess: m('Piped water access', '%', 1, 'up', 'Stats SA / DWS', '§18.1', 'coverage'),
   sanitationAccess: m('Sanitation access (RDP)', '%', 0, 'up', 'Stats SA / DWS', '§18.1', 'coverage'),
-  nrw: m('Non-revenue water', '%', 0, 'down', 'Municipalities', '§18.2', 'nrw'),
-  reliability: m('Supply reliability', '%', 0, 'up', 'Municipalities', '§18.4'),
+  nrw: m('Non-revenue water', '%', 1, 'down', 'Municipalities', '§18.2', 'nrw'),
+  reliability: m('Supply reliability', '%', 1, 'up', 'Municipalities', '§18.4'),
   interruptions: m('Unplanned interruptions', 'events', 0, 'down', 'Municipal call centres', '§18.2'),
   pipeFailureRate: m('Pipe failure rate', 'breaks/100 km/year', 1, 'down', 'Municipalities', '§18.2'),
   // ---- Tariffs (§19)
@@ -222,7 +222,7 @@ export const METRICS = {
   altSupplyCoverage: m('Alternative supply coverage', '%', 0, 'up', 'DWS / municipalities', '§20'),
   interventions: m('Active interventions', 'settlements', 0, 'up', 'DWS / municipalities', '§20'),
   // ---- Platform (§21–24)
-  dataQuality: m('Data quality score', '%', 0, 'up', 'NIWIS QC engine', '§23.1'),
+  dataQuality: m('Data quality score', '%', 1, 'up', 'NIWIS QC engine', '§23.1'),
   feedLatency: m('Average feed latency', 'min', 0, 'down', 'NIWIS', '§21'),
   recordsIngested: m('Records ingested', 'records', 0, 'up', 'NIWIS', '§21'),
   programmeProgress: m('Programme progress', '%', 0, 'up', 'DWS PMO', '§24'),

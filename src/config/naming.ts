@@ -205,15 +205,21 @@ export function clampDecimals(unit: string | undefined, decimals: number | undef
   return range ? Math.min(range[1], Math.max(range[0], decimals)) : decimals;
 }
 
-/** Decimals a KPI shows: the metric's own (metrics.ts) unless the backend's hint lies inside the unit's range. */
+/**
+ * Decimals a KPI shows: the register's for the metric (metrics.ts) when the KPI is in the metric's unit — one rule
+ * on every page — else the backend's hint clamped to the unit's range (a count noun, a KPI in another unit).
+ */
 export function registerDecimals(metricId: string, unit: string, decimals: number): number {
   const md = (METRICS as Record<string, MetricDef | undefined>)[metricId];
-  const range = UNIT_DECIMALS[canonUnit(unit)];
-  if (!md) return clampDecimals(unit, decimals) ?? decimals;
-  // a metric's unit is the register's; a KPI in another unit (a count noun) follows the unit rule
-  if (canonUnit(md.unit) !== canonUnit(unit)) return clampDecimals(unit, decimals) ?? decimals;
-  if (range && (decimals < range[0] || decimals > range[1])) return md.decimals;
-  return decimals;
+  if (!md || canonUnit(md.unit) !== canonUnit(unit)) return clampDecimals(unit, decimals) ?? decimals;
+  return md.decimals;
+}
+
+/** The register metric a table column plots, when its label names one in the column's unit. */
+export function columnMetric(label: string, unit: string | undefined): MetricDef | undefined {
+  const id = metricOf(label);
+  const md = id ? (METRICS as Record<string, MetricDef | undefined>)[id] : undefined;
+  return md && canonUnit(md.unit) === canonUnit(unit) ? md : undefined;
 }
 
 /**
@@ -378,7 +384,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   cwr: ['Crop water requirement'],
   irrigationDemand: ['Irrigation demand', 'Irrigation water demand'],
   climateRisk: ['Climate risk index', 'Climate risk', 'Vulnerability index', 'Climate vulnerability'],
-  ndvi: ['NDVI'],
+  ndvi: ['NDVI', 'NDVI change', 'Mean NDVI'],
   evi: ['EVI'],
   savi: ['SAVI'],
   msavi2: ['MSAVI2'],
@@ -395,7 +401,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   rootZoneSoilMoisture: ['Root-zone soil moisture', 'Root zone soil moisture'],
   soilMoistureAnomaly: ['Soil moisture anomaly'],
   vegStressArea: ['Area under stress', 'Area under vegetation stress', 'Vegetation stress'],
-  vegAnomaly: ['Vegetation anomaly', 'NDVI anomaly', 'NDVI change'],
+  vegAnomaly: ['Vegetation anomaly', 'NDVI anomaly'],
   runoff: [
     'Annual runoff',
     'Runoff depth',
@@ -565,7 +571,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
   freeChlorine: ['Free chlorine', 'Free chlorine residual', 'Chlorine'],
   greenDropScore: ['Green Drop score', 'Green Drop', 'Effluent compliance score', 'Effluent compliance'],
   blueDropScore: ['Blue Drop score', 'Blue Drop', 'SANS 241 compliance score'],
-  complianceRate: ['Compliance rate', 'Excellent / Good', 'Compliance', 'Compliance score'],
+  complianceRate: ['Compliance rate', 'Excellent / Good', 'Compliance', 'Compliance score', 'Score'],
   sass5: ['SASS5', 'SASS5 score', 'Mean SASS5 score'],
   aspt: ['ASPT', 'Mean ASPT'],
   fibi: ['FIBI', 'Fish index', 'Fish Index of Biotic Integrity', 'Fish community integrity'],

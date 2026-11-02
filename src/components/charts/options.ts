@@ -104,8 +104,7 @@ export function axisName(rawUnit0: string | undefined, rawLabel?: string): strin
   if (m && rawUnit && !/^[\d.,–\s%-]+$/.test(m[1])) label = label.slice(0, m.index).trim();
   if (rawUnit === 'mixed') return label ? `${label} (unit per parameter)` : 'value (unit per parameter)';
   if (!unit) return label || 'index';
-  // "District-months in D2 or worse" + "district-months": the unit is already the label's noun
-  if (label.toLowerCase().includes(unit.toLowerCase()) && /[a-z]{3,}/i.test(unit)) return label;
+  if (label.toLowerCase() === unit.toLowerCase()) return unit;
   return label ? `${label} (${unit})` : unit;
 }
 

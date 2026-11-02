@@ -6,6 +6,7 @@ import type { QueryParams } from '@/api/client';
 import { useMapLayer } from '@/api/queries/core';
 import type { MapLayer } from '@/types/api';
 import { legendTitle, scaleOf } from './scale';
+import type { ScaleDef } from '@/config/palettes';
 import { Card, Tabs } from '@/components/ui/Card';
 import { ErrorState, UnavailableState, useElapsed } from '@/components/feedback/PanelBoundary';
 import { isUnavailable, provenanceOf } from '@/api/client';
@@ -70,6 +71,12 @@ export interface MapPanelProps {
   fixedLayer?: ThematicLayer;
 }
 
+/** The legend's rows, most severe / highest first; classes that share a colour (synonyms) are listed once. */
+export function legendBins(sc: ScaleDef): ScaleDef['bins'] {
+  const seen = new Set<string>();
+  return [...sc.bins].reverse().filter((b) => (seen.has(b.color) ? false : (seen.add(b.color), true)));
+}
+
 export function Legend({ layer, collapsible = false }: { layer?: MapLayer; collapsible?: boolean }) {
   const [open, setOpen] = useState(true);
   if (!layer) return null;
@@ -93,7 +100,7 @@ export function Legend({ layer, collapsible = false }: { layer?: MapLayer; colla
       </button>
       {open && (
         <ul className="max-h-[190px] space-y-0.5 overflow-y-auto">
-          {[...sc.bins].reverse().map((b) => (
+          {legendBins(sc).map((b) => (
             <li key={b.label} className="flex items-center gap-1.5 text-ink-2">
               <span
                 className="h-3 w-4 shrink-0 rounded-sm border border-black/10"

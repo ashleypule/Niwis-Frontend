@@ -41,6 +41,18 @@ export async function settle(page: Page) {
       .waitForFunction(() => !document.querySelector('[aria-busy="true"]'), undefined, { timeout: 150_000 })
       .catch(() => undefined);
   }
+  // the backend's per-IP rate limit (600 / min): panels that answered 429 are asked again before the page is read
+  for (let i = 0; i < 4; i++) {
+    const limited = page.locator('[data-state="error"]', { hasText: 'Too many requests' });
+    if (!(await limited.count())) break;
+    await page.waitForTimeout(8_000);
+    for (const b of await limited.getByRole('button', { name: /try again/i }).all())
+      await b.click().catch(() => undefined);
+    await page.waitForTimeout(4_000);
+    await page
+      .waitForFunction(() => !document.querySelector('[aria-busy="true"]'), undefined, { timeout: 60_000 })
+      .catch(() => undefined);
+  }
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(500);
 }
@@ -97,12 +109,20 @@ export async function collectLabels(page: Page, route: string): Promise<LabelIte
       sec.querySelectorAll('[data-chart]').forEach((c) => {
         const o = JSON.parse(c.getAttribute('data-chart') ?? '{}') as {
           y: { name: string; type: string; min: number | null }[];
-          s: { name: string; type: string; axis: number }[];
+          s: { name: string; type: string; axis: number; cat?: boolean }[];
           divider: boolean;
         };
         (o.y ?? []).forEach((a) => out.push({ kind: 'axis', text: a.name, axisType: a.type, ...base }));
         (o.s ?? []).forEach((s) =>
-          out.push({ kind: 'series', text: s.name, seriesType: s.type, axis: o.y?.[s.axis]?.name ?? '', ...base }),
+          out.push({
+            kind: 'series',
+            text: s.name,
+            seriesType: s.type,
+            axis: o.y?.[s.axis]?.name ?? '',
+            // a database column drawn under its catalogue label (never renamed)
+            cat: s.cat === true || cat,
+            ...base,
+          }),
         );
         if (o.divider) out.push({ kind: 'divider', text: 'Historical | Forecast', ...base });
       });

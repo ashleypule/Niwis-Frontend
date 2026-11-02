@@ -188,7 +188,7 @@ async function main() {
   try {
     const queue = [...combos];
     await Promise.all(
-      Array.from({ length: Math.min(3, queue.length) }, async () => {
+      Array.from({ length: Math.min(2, queue.length) }, async () => {
         while (queue.length) await run(queue.shift()!);
       }),
     );

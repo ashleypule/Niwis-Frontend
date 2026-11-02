@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { ArrowDown, ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight, ChevronsUpDown } from 'lucide-react';
 import type { Column, TableSet } from '@/types/api';
 import { formatDate, formatNumber, withUnit } from '@/lib/format';
-import { canonLabel, canonUnit, clampDecimals, metricOf } from '@/config/naming';
+import { canonLabel, canonUnit, clampDecimals, columnMetric, metricOf } from '@/config/naming';
 import { metric } from '@/config/metrics';
 import { classify } from '@/config/palettes';
 import { Pill } from '@/components/ui/Pill';
@@ -49,9 +49,11 @@ export function cellFormat(c: Column, row?: Record<string, Val>): Column {
   const num = (v: Val) => (typeof v === 'number' ? v : undefined);
   const rowDecimals = row ? (trend ? num(row.trendDecimals) : num(row.decimals)) : undefined;
   const rowUnit = row && !trend && !c.unit && typeof row.unit === 'string' ? row.unit : undefined;
-  // the register's spelling of the unit, and decimals inside the register's range for that unit
+  // the register's spelling of the unit, and the register's decimals: the metric's when the column plots a register
+  // metric in its unit (SPI 2, NDVI 3, % FSC 1 on every page), else the row's / column's hint inside the unit's range
   const unit = canonUnit(rowUnit ?? c.unit) || undefined;
-  const decimals = clampDecimals(unit, rowDecimals ?? c.decimals);
+  const md = trend || rowUnit ? undefined : columnMetric(c.label, unit);
+  const decimals = md ? md.decimals : clampDecimals(unit, rowDecimals ?? c.decimals);
   return decimals === c.decimals && unit === c.unit ? c : { ...c, decimals, unit };
 }
 

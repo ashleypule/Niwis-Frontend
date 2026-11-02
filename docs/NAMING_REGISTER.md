@@ -26,7 +26,7 @@
 
 | Unit | Decimals | Retired spellings |
 | --- | --- | --- |
-| (none: index, ratio, count) | 0–3 | `pH units`, `pH unit`, `index`, `no unit`, `—`, `-`, `score`, `WQI` |
+| (none: index, ratio, count) | 0–3 | `pH units`, `pH unit`, `index`, `no unit`, `—`, `-` |
 | `mm` | 0–1 |  |
 | `mm/day` | 1–2 |  |
 | `mm/month` | 0–1 |  |
@@ -149,7 +149,7 @@ Catalogue units shown as sent although the register spells them differently (bac
 | `exploitation` | Exploitation index (abstraction / recharge) | Very Low / Low / Moderate / High / Very High / Over-exploited | < 0.1, 0.1–0.3, 0.3–0.5, 0.5–0.7, 0.7–1, ≥ 1 |
 | `flowStatus` | Gauging station status | High flow / Normal / Low flow / Data delayed / Offline |  |
 | `status` | Status | Normal / Watch / Low / Warning / Critical / Under maintenance |  |
-| `risk` | Risk level | Low / Moderate / Medium / High / Very high / Extreme / Critical |  |
+| `risk` | Risk level | Low / Moderate / Medium / High / Very High / Extreme / Critical |  |
 | `severity` | Alert severity | Critical / High / Moderate / Low / Info |  |
 | `trendClass` | Trend | Rising / Stable / Declining |  |
 | `pass` | Compliance | Compliant / Non-compliant |  |
@@ -160,7 +160,7 @@ Catalogue units shown as sent although the register spells them differently (bac
 | `progress` | Delivery status | Completed / On track / In progress / At risk / Delayed / Not started / Planned |  |
 | `response` | Response status | Intervention / In progress / Planned / Monitoring |  |
 | `stress` | Water stress index (demand / availability) | Low / Low–medium / Medium / High / Extremely high | < 0.2, 0.2–0.4, 0.4–0.6, 0.6–0.8, ≥ 0.8 |
-| `index01` | Index (0–1) | Very low / Low / Medium / High / Very high | < 0.2, 0.2–0.4, 0.4–0.6, 0.6–0.8, ≥ 0.8 |
+| `index01` | Index (0–1) | Very Low / Low / Medium / High / Very High | < 0.2, 0.2–0.4, 0.4–0.6, 0.6–0.8, ≥ 0.8 |
 
 ## Retired spellings
 
@@ -207,7 +207,7 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `tmean` | Mean temperature | `°C` | 1 | `temperature` | neutral |  | Tavg; Tmean; Mean temperature; Average temperature; Temperature | §4.1 |
 | `tmax` | Max temperature | `°C` | 1 | `temperature` | neutral |  | Tmax; Maximum temperature; Max temperature | §4.1 |
 | `tmin` | Min temperature | `°C` | 1 | `temperature` | neutral |  | Tmin; Minimum temperature; Min temperature | §4.1 |
-| `tempAnomaly` | Temperature anomaly | `°C` | 1 | `tempAnomaly` | down |  | Temperature anomaly | §4.1 |
+| `tempAnomaly` | Temperature anomaly | `°C` | 1 | `tempAnomaly` | down |  | Temperature anomaly; Temp anomaly; Tavg anomaly; Temp change; Temperature change | §4.1 |
 | `tempTrend` | Temperature trend | `°C/decade` | 2 | `tempTrend` | down |  | Warming trend; Temperature trend | §4.1 |
 | `hotDays` | Hot days (Tmax > 35 °C) | `days` | 0 | `days` | down |  | Hot days; Heatwave days; Heat days; Extreme heat days | §4.1 |
 | `heatwaveDuration` | Heatwave duration | `days` | 0 | — | down |  | Heatwave duration | §4.1 |
@@ -217,10 +217,10 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `vpd` | Vapour pressure deficit | `kPa` | 2 | — | down |  | VPD; Vapour pressure deficit | §4.4 |
 | `cwr` | Crop water requirement | `mm` | 0 | — | down |  | Crop water requirement | §4.5 |
 | `irrigationDemand` | Irrigation water demand | `mm` | 0 | — | down |  | Irrigation demand; Irrigation water demand | §4.5 |
-| `climateRisk` | Climate risk index | — | 2 | `index01` | down | Very low / Low / Medium / High / Very high | Climate risk index; Climate risk; Vulnerability index; Climate vulnerability | §4 |
+| `climateRisk` | Climate risk index | — | 2 | `index01` | down | Very Low / Low / Medium / High / Very High | Climate risk index; Climate risk; Vulnerability index; Climate vulnerability | §4 |
 | `seaLevel` | Sea level anomaly | `mm` | 0 | — | down |  |  | §4 |
-| `ndvi` | NDVI | — | 2 | `ndvi` | up |  | NDVI | §5.1 |
-| `evi` | EVI | — | 2 | `ndvi` | up |  | EVI | §5.1 |
+| `ndvi` | NDVI | — | 3 | `ndvi` | up |  | NDVI; NDVI change; Mean NDVI | §5.1 |
+| `evi` | EVI | — | 3 | `ndvi` | up |  | EVI | §5.1 |
 | `savi` | SAVI | — | 2 | `ndvi` | up |  | SAVI | §5.1 |
 | `msavi2` | MSAVI2 | — | 2 | `ndvi` | up |  | MSAVI2 | §5.1 |
 | `vci` | VCI | `%` | 0 | `vci` | up | Excellent / Good / Fair / Poor / Very Poor | VCI; Vegetation Condition Index; Vegetation condition | §5.1 |
@@ -229,7 +229,7 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `vpi` | VPI | `%` | 0 | `vci` | up | Excellent / Good / Fair / Poor / Very Poor | VPI | §5.1 |
 | `asi` | Agricultural Stress Index | `%` | 0 | — | down |  | ASI; Agricultural Stress Index | §5.1 |
 | `svi` | SVI | — | 2 | `spi` | up |  | SVI | §5.1 |
-| `ndwi` | NDWI | — | 2 | `ndvi` | up |  | NDWI | §5.1 |
+| `ndwi` | NDWI | — | 3 | `ndvi` | up |  | NDWI | §5.1 |
 | `ndii` | NDII | — | 2 | `ndvi` | up |  | NDII | §5.1 |
 | `lst` | Land surface temperature | `°C` | 1 | `lst` | down |  | LST; Land surface temperature; Land Surface Temp | §5.1 |
 | `soilMoisture` | Surface soil moisture | `m³/m³` | 2 | `soilMoisture` | up |  | Soil moisture; Surface soil moisture; Soil Moisture (Surface); SM | §3.2 |
@@ -265,7 +265,7 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `rsi` | Reservoir Storage Index | — | 2 | `spi` | up |  | Reservoir Storage Index; RSI | §8.2 |
 | `daysToEmpty` | Days to empty | `days` | 0 | — | up |  | Days to empty | §8.2 |
 | `gwLevel` | Groundwater level | `m bgl` | 1 | `gwDepth` | down |  | Groundwater level; Depth to water; Mean groundwater level; Water level; Depth to groundwater; Depth; Level | §10.1 |
-| `gwLevelAnomaly` | Groundwater level anomaly | `m` | 1 | — | up |  | Level anomaly; Groundwater level anomaly; Groundwater levels | §10.1 |
+| `gwLevelAnomaly` | Groundwater level anomaly | `m` | 2 | — | up |  | Level anomaly; Groundwater level anomaly; Groundwater levels | §10.1 |
 | `sgi` | SGI | — | 2 | `spi` | up |  | SGI; Standardised Groundwater Index; Groundwater (SGI); Groundwater index | §10.1 |
 | `recharge` | Recharge | `mm/year` | 0 | — | up |  | Recharge; Estimated recharge; Direct recharge; Recharge rate; Mean annual recharge; Recharge potential | §10.1 |
 | `rechargeVolume` | Recharge | `Mm³/year` | 0 | — | up |  | Total recharge; Recharge volume; Groundwater availability | §11.2 |
@@ -295,10 +295,10 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `freeChlorine` | Free chlorine residual | `mg/L` | 2 | — | neutral |  | Free chlorine; Free chlorine residual; Chlorine | §14.1 |
 | `greenDropScore` | Green Drop score | `%` | 0 | `greenDrop` | up | Excellent / Good / Moderate / Poor / Critical | Green Drop score; Green Drop; Effluent compliance score; Effluent compliance | §13 |
 | `blueDropScore` | Blue Drop score | `%` | 0 | `blueDrop` | up | Excellent / Good / Moderate / Poor / Critical | Blue Drop score; Blue Drop; SANS 241 compliance score | §14 |
-| `complianceRate` | Compliance rate | `%` | 0 | — | up |  | Compliance rate; Excellent / Good; Compliance; Compliance score | §13–14 |
+| `complianceRate` | Compliance rate | `%` | 0 | — | up |  | Compliance rate; Excellent / Good; Compliance; Compliance score; Score | §13–14 |
 | `sass5` | SASS5 score | — | 0 | — | up |  | SASS5; SASS5 score; Mean SASS5 score | §15.1 |
 | `aspt` | ASPT | — | 1 | — | up |  | ASPT; Mean ASPT | §15.1 |
-| `fibi` | Fish Index of Biotic Integrity | `%` | 0 | — | up |  | FIBI; Fish index; Fish Index of Biotic Integrity; Fish community integrity | §15.1 |
+| `fibi` | Fish Index of Biotic Integrity | `%` | 1 | — | up |  | FIBI; Fish index; Fish Index of Biotic Integrity; Fish community integrity | §15.1 |
 | `rwqoCompliance` | RWQO compliance | `%` | 0 | — | up |  | RWQO compliance; Objectives met | §15 |
 | `availability` | Water availability | `Mm³/year` | 0 | — | up |  | Water availability; Utilisable water availability; Total water availability; Surface water availability; Groundwater availability; Utilisable yield; Availability | §16.1 |
 | `demand` | Water demand | `Mm³/year` | 0 | — | down |  | Water demand; Total water demand; Municipal water demand; Demand; Sectoral water demand | §16.1 |
@@ -309,10 +309,10 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `transfers` | Inter-basin transfers | `Mm³/year` | 0 | — | neutral |  | Inter-basin transfers; Transfers; Inter-Basin Transfers | §17.1 |
 | `allocationUse` | Allocation utilisation | `%` | 0 | — | neutral |  | Allocation utilisation; Licensed allocation utilised; Allocation | §17 |
 | `populationServed` | Population served | `people` | 0 | — | up |  | Population served; Households served; Households | §18.1 |
-| `pipedAccess` | Piped water access | `%` | 0 | `coverage` | up |  | Piped water access; Piped water; Water services access; Coverage; Basic (RDP) access; Service coverage | §18.1 |
+| `pipedAccess` | Piped water access | `%` | 1 | `coverage` | up |  | Piped water access; Piped water; Water services access; Coverage; Basic (RDP) access; Service coverage | §18.1 |
 | `sanitationAccess` | Sanitation access (RDP) | `%` | 0 | `coverage` | up |  | Sanitation access; Sanitation | §18.1 |
-| `nrw` | Non-revenue water | `%` | 0 | `nrw` | down |  | NRW; Non-revenue water; System water losses; Water losses | §18.2 |
-| `reliability` | Supply reliability | `%` | 0 | — | up |  | Supply reliability; System reliability; Service reliability; Water supply reliability; Reliability | §18.4 |
+| `nrw` | Non-revenue water | `%` | 1 | `nrw` | down |  | NRW; Non-revenue water; System water losses; Water losses | §18.2 |
+| `reliability` | Supply reliability | `%` | 1 | — | up |  | Supply reliability; System reliability; Service reliability; Water supply reliability; Reliability | §18.4 |
 | `interruptions` | Unplanned interruptions | `events` | 0 | — | down |  | Interruptions; Service interruptions; Unplanned interruptions | §18.2 |
 | `pipeFailureRate` | Pipe failure rate | `breaks/100 km/year` | 1 | — | down |  | Pipe failure rate; Pipe failures; Bursts | §18.2 |
 | `tariff` | Average domestic tariff | `R/kL` | 2 | `tariff` | neutral |  | Tariff; Average domestic tariff; Municipal tariff; Average municipal tariff; Bulk water tariff; Average bulk water tariff; Water tariff; Domestic tariff; Block tariff | §19.2 |
@@ -320,10 +320,10 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `revenue` | Revenue | `R million` | 0 | — | up |  | Revenue; Raw water revenue; Bulk water revenue; Municipal water revenue; Total revenue | §19 |
 | `affordability` | Water bill share of household income | `%` | 1 | — | down |  | Affordability; Water bill share; Household affordability; Water bill as % of household income | §19.2 |
 | `costRecovery` | Cost recovery | `%` | 0 | — | up |  | Cost recovery; Cost recovery ratio | §19.2 |
-| `droughtExposure` | Drought exposure index | — | 2 | `index01` | down | Very low / Low / Medium / High / Very high | Drought exposure index; Drought exposure; Exposure | §20 |
+| `droughtExposure` | Drought exposure index | — | 2 | `index01` | down | Very Low / Low / Medium / High / Very High | Drought exposure index; Drought exposure; Exposure | §20 |
 | `altSupplyCoverage` | Alternative supply coverage | `%` | 0 | — | up |  | Alternative supply coverage; Alternative supply | §20 |
 | `interventions` | Active interventions | `settlements` | 0 | — | up |  | Active interventions; Interventions | §20 |
-| `dataQuality` | Data quality score | `%` | 0 | — | up |  | Data quality score; Data quality; Datasets with metadata; Standards compliance; Completeness | §23.1 |
+| `dataQuality` | Data quality score | `%` | 1 | — | up |  | Data quality score; Data quality; Datasets with metadata; Standards compliance; Completeness | §23.1 |
 | `feedLatency` | Average feed latency | `min` | 0 | — | down |  | Feed latency; Average feed latency; Average data latency; Data latency; Latency | §21 |
 | `recordsIngested` | Records ingested | `records` | 0 | — | up |  | Records ingested; Records; Data providers; Active data feeds; Data domains; Total datasets; Access requests; Modules raising alerts; Provinces affected; Values judged; Samples analysed; Feeds; Forecast runs; Data feeds live | §21 |
 | `programmeProgress` | Programme progress | `%` | 0 | — | up |  | Programme progress; Overall progress; IWRM sustainability status; Progress; Current phase; Sub-phases completed | §24 |
@@ -959,7 +959,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 
 - Derived metrics: 142 (140 with accepted spellings).
 - Database columns: 520 rows over 20 modules.
-- Units: 106 spellings; retired spellings: 54.
+- Units: 106 spellings; retired spellings: 52.
 - Conflicting names resolved: 13 patterns (table above).
 - Catalogue units outside the register's spelling (backend item): 18_3_sansa_eo_support_for_services_masters.Drought_Severity_PDSI: unit "index"; 19_1_raw_water_tariff_master.MAR_demand_ratio: unit "—".
 
