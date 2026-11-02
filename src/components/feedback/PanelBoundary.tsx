@@ -70,7 +70,7 @@ export function ComputingState({ detail, height, compact }: { detail?: string; h
     >
       <Loader2 className="h-5 w-5 animate-spin text-muted" aria-hidden="true" />
       <p className="text-sm font-semibold text-ink-2">Computing this forecast…</p>
-      <p className={compact ? 'line-clamp-2 text-xs text-muted' : 'max-w-sm text-xs text-muted'}>
+      <p className={compact ? 'line-clamp-3 text-xs text-muted' : 'max-w-sm text-xs text-muted'}>
         {detail ?? 'The backend is computing this answer.'} This panel checks again in a minute.
       </p>
     </div>

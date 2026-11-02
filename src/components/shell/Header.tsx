@@ -113,7 +113,7 @@ export function Header() {
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h1 className="line-clamp-2 text-xl font-bold leading-tight tracking-tight sm:truncate sm:text-2xl">
+            <h1 className="line-clamp-3 text-xl font-bold leading-tight tracking-tight sm:text-2xl lg:line-clamp-2">
               {title}
             </h1>
             <SampleDataBadge />
@@ -125,7 +125,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/85 hover:bg-white/15 md:w-80"
+            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/85 hover:bg-white/15 md:w-56 lg:w-80"
             aria-label="Search locations, dams, stations and pages (Ctrl+K)"
           >
             <Search className="h-4 w-4" aria-hidden="true" />

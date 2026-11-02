@@ -77,7 +77,7 @@ export function Card({
         >
           <div className="min-w-0 flex-1">
             <h2
-              className={clsx('line-clamp-3 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
+              className={clsx('line-clamp-4 text-[15px] font-semibold leading-tight', band ? 'text-white' : 'text-ink')}
             >
               {shownTitle}
               {shownInfo && (
@@ -88,7 +88,7 @@ export function Card({
             </h2>
             {shownContext && (
               <div
-                className={clsx('line-clamp-2 text-xs leading-snug', band ? 'text-white/75' : 'text-muted')}
+                className={clsx('line-clamp-3 text-xs leading-snug', band ? 'text-white/75' : 'text-muted')}
                 title={typeof shownContext === 'string' ? shownContext : undefined}
               >
                 {shownContext}

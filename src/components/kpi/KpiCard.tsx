@@ -202,11 +202,8 @@ export function KpiCard({
         </div>
       )}
       <div className="mt-0.5 flex items-center justify-between gap-2 text-[11px] text-muted">
-        {/* a reason wraps to three lines ("Latest valid SGI is Aug 2024 (more than 90 days old)"); a delta label one */}
-        <span
-          className={missing ? 'line-clamp-3 leading-snug' : 'truncate'}
-          title={missing ? kpi.unavailableReason : undefined}
-        >
+        {/* a reason wraps in full ("Latest valid SGI is Aug 2024 (more than 90 days old)"); a delta label takes one line */}
+        <span className={missing ? 'leading-snug' : 'truncate'} title={missing ? kpi.unavailableReason : undefined}>
           {missing ? (kpi.unavailableReason ?? 'Not available') : kpi.deltaLabel}
         </span>
       </div>
