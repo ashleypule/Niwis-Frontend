@@ -30,7 +30,7 @@ export default function ClimateForecastPage() {
           ]}
         />
       </div>
-      <ForecastKpis module="climate" metric="forecast-summary" extra={p} />
+      <ForecastKpis module="climate" metric="forecast-summary" />
       <Row className="md:grid-cols-2">
         <SeriesPanel
           module="climate"
@@ -97,8 +97,8 @@ export default function ClimateForecastPage() {
           title="Projected Water Availability Change (%)"
           params={p}
         />
-        <TablePanel module="climate" metric="forecast-summary" title="Climate Indicator Forecast Summary" extra={p} />
-        <TablePanel module="climate" metric="risk-outlook" title="Climate Risk Outlook (2050)" extra={p} />
+        <TablePanel module="climate" metric="forecast-summary" title="Climate Indicator Forecast Summary" />
+        <TablePanel module="climate" metric="risk-outlook" title="Climate Risk Outlook (2050)" />
       </Row>
       <Row>
         <SeriesPanel

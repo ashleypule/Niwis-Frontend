@@ -125,7 +125,7 @@ export default function RunoffPage() {
         <CategoryPanel
           module="runoff"
           metric="by-province"
-          title="Runoff Status by Province (Stations)"
+          title="Runoff Status by Province"
           variant="stacked100"
           height={240}
         />

@@ -266,7 +266,7 @@ export const CategorySetSchema = z.object({
       axis: z.number().optional(),
     }),
   ),
-  /** one unit per category when `unit` is "mixed" (vegetation drivers) */
+  /** one unit per category (vegetation drivers, water-quality range); `unit` is then "" */
   units: z.array(z.string()).optional(),
   /** headline shown inside donuts */
   center: z.object({ value: z.string(), label: z.string() }).optional(),

@@ -224,8 +224,8 @@ export const LIVE_REQUESTS: ManifestEntry[] = [
   bd(C, 'climate', 'risk-index'),
   fc(CF, 'climate', 'temp-anomaly'),
   fc(CF, 'climate', 'hot-days'),
-  tb(CF, 'climate', 'forecast-summary', { scenario: 'rcp85' }),
-  tb(CF, 'climate', 'risk-outlook', { scenario: 'rcp85' }),
+  tb(CF, 'climate', 'forecast-summary'),
+  tb(CF, 'climate', 'risk-outlook'),
   ts(CF, 'climate', 'indicator-trends', { scenario: 'rcp85' }),
   ...many((k) => bd(CF, 'climate', 'projection-bars', { scenario: 'rcp85', kind: k }), ['heat', 'drought', 'extreme']),
   ...many(

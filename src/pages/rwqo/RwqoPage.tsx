@@ -16,10 +16,12 @@ export default function RwqoPage() {
   // live: one record per district (no monitoring sites in the database)
   const noun = entityNoun('rwqo', 'Site');
   const ctx = site.name ? `[${noun}: ${site.name}]` : undefined;
-  // `expect`: the series keys a tab must get back (BACKEND_ISSUES: `param` is not honoured yet, DO comes back for every
-  // parameter), so a tab never shows another parameter's values under its own name
+  // `expect`: the series keys a tab must get back, so a tab never shows another parameter's values under its own name
   const EXPECT: Record<string, string[]> = {
     do: ['do'],
+    tds: ['tds'],
+    tn: ['tn'],
+    tp: ['tp'],
     ph: ['ph'],
     ec: ['ec', 'tds'],
     turbidity: ['turbidity'],
@@ -67,9 +69,9 @@ export default function RwqoPage() {
             extra={p}
             tabs={tabs([
               ['do', 'DO'],
-              ['ph', 'pH'],
-              ['ec', 'EC'],
-              ['turbidity', 'Turbidity'],
+              ['tds', 'TDS'],
+              ['tn', 'TN'],
+              ['tp', 'TP'],
             ])}
             height={190}
           />

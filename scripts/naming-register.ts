@@ -15,6 +15,7 @@ import {
   UNITS,
   canonUnit,
   metricRows,
+  AXIS_ONLY_UNITS,
 } from '../src/config/naming';
 import { SCALES } from '../src/config/palettes';
 
@@ -228,6 +229,15 @@ async function main() {
   const out = resolve(ROOT, 'docs/NAMING_REGISTER.md');
   writeFileSync(out, `${lines.join('\n')}\n`);
   console.log(`docs/NAMING_REGISTER.md: ${rows.length} metrics, ${n} catalogue rows`);
+  // the backend's response check reads the same list (app/core/response_checks.py)
+  const backend = resolve(ROOT, '../Niwis Backend/reference');
+  if (existsSync(backend)) {
+    writeFileSync(
+      resolve(backend, 'units.json'),
+      `${JSON.stringify({ source: 'Niwis Frontend/src/config/naming.ts (npm run naming:register)', units: UNITS, axisOnly: AXIS_ONLY_UNITS }, null, 2)}\n`,
+    );
+    console.log('../Niwis Backend/reference/units.json written');
+  }
 }
 
 void main();

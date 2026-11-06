@@ -166,7 +166,9 @@ annual values carry `periodEnd` and are no longer stale. #8–#13 are new (datab
 - **Frontend:** the chart shows the error with its request id and Retry; with lazy loading it is requested only when
   scrolled into view. `npm run fixtures:record -- --only=<text>` re-records just the affected fixtures.
 
-## 15. Presentation items from audit step 2 (naming, units, dates) — for step 3
+## 15. Presentation items from audit step 2 (naming, units, dates) — fixed in step 3 (2026-11-02)
+
+All fixed in the backend (`Niwis Backend/docs/AUDIT_STEP1_DATA.md`, `CONTRACT_CHANGES.md` §20); the backend's response check now fails on any off-register unit, repeated axis unit or second axis without `axis2Unit`.
 
 Found by the naming register check (`npm run naming:check`, docs/NAMING_REGISTER.md) on 2026-10-30. The frontend
 canonicalises at render where it can (`canonUnit`, `canonLabel`, `axisName`); the backend's own strings would make the

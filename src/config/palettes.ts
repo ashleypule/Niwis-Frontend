@@ -223,6 +223,14 @@ export const SCALES = {
     { label: '0.2–0.3', color: '#2B8CBE', min: 0.2, max: 0.3, ink: '#fff' },
     { label: '> 0.3', color: '#045A8D', min: 0.3, ink: '#fff' },
   ]),
+  volume: s('volume', 'Water volume (Mm³/year)', 'Mm³/year', [
+    { label: '< 250', color: '#F1EEF6', max: 250 },
+    { label: '250–500', color: '#D0D1E6', min: 250, max: 500 },
+    { label: '500–1 000', color: '#A6BDDB', min: 500, max: 1000 },
+    { label: '1 000–2 000', color: '#74A9CF', min: 1000, max: 2000 },
+    { label: '2 000–4 000', color: '#2B8CBE', min: 2000, max: 4000, ink: '#fff' },
+    { label: '≥ 4 000', color: '#045A8D', min: 4000, ink: '#fff' },
+  ]),
   flow: s('flow', 'River flow (m³/s)', 'm³/s', [
     { label: '< 1 Critical', color: '#B2182B', max: 1, ink: '#fff' },
     { label: '1–10 Very low', color: '#EF8A62', min: 1, max: 10 },

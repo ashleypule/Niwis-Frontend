@@ -529,7 +529,8 @@ export function categoryOption(
 ): EChartsOption {
   const ariaDesc = `${set.title ?? 'Chart'} by ${set.categories.length} categories.`;
   const b = base(t, ariaDesc);
-  const unit = set.unit;
+  // one unit per category (`units`): the value axis says so instead of printing one
+  const unit = set.units?.length ? 'mixed' : set.unit;
   const tooltip = {
     ...(b.tooltip as Obj),
     trigger: variant === 'donut' ? 'item' : 'axis',

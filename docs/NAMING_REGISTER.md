@@ -39,7 +39,7 @@
 | `°C` | 1–2 | `deg C`, `degC` |
 | `°C/decade` | 2–3 | `°C/dec` |
 | `°C·days` | 0–1 |  |
-| `%` | 0–1 | `% of income` |
+| `%` | 0–1 | `% of income`, `% change` |
 | `% FSC` | 0–1 | `%FSC`, `% fsc` |
 | `pp` | 0–1 |  |
 | `%/year` | 0–3 |  |
@@ -132,9 +132,17 @@
 | `per decade` | 0–3 | `/decade` |
 | `per year` | 0–3 | `/yr`, `/year` |
 | `per month` | 0–3 | `/month` |
+| `days/year` | 0–3 | `days/yr` |
+| `events/decade` | 0–3 |  |
+| `projects` | 0–3 |  |
+| `R/month` | 0–3 |  |
+| `WWTWs` | 0–3 |  |
 | `× guideline` | 0–3 |  |
+| `years` | 0–3 |  |
+| `class` | 0–3 |  |
+| `% of time exceeded` | 0–3 |  |
 
-Catalogue units shown as sent although the register spells them differently (backend item): `kWh/Ml`, `R/Ml`, `Ml/day`.
+Catalogue units shown as sent although the register spells them differently (backend item): .
 
 ## Class labels (colour scales)
 
@@ -251,7 +259,7 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `eflowCompliance` | Ecological flow compliance | `%` | 0 | — | up |  | Ecological flow compliance; E-flow compliance; E-flow | §15.3 |
 | `floodAlerts` | Flood alerts | — | 0 | — | down |  | Flood alerts | §9 |
 | `stationsLowFlow` | Stations with low flow | `%` | 0 | — | down |  | Stations with low flow; Districts with low flow; Low flow | §9 |
-| `stationsHighFlow` | Stations with high flow | `%` | 0 | — | neutral |  | Stations with high flow; Districts with high flow; High flow; Districts with rising levels; Stations with normal flow | §9 |
+| `stationsHighFlow` | Stations with high flow | `%` | 0 | — | neutral |  | Stations with high flow; Districts with high flow; High flow; Districts with rising levels; Stations with normal flow; Districts with normal flow | §9 |
 | `gaugingStations` | Active gauging stations | — | 0 | — | up |  | Gauging stations; Active gauging stations | §9 |
 | `storagePct` | Storage | `% FSC` | 1 | `storage` | up | Very low / Low / Moderate / High / Very high | Storage; Dam storage; Storage level; Total storage; % FSC; Reservoir storage; Storage (FSC); Dam Storage (FSC); Reservoir outlook | §8.1 |
 | `storageVolume` | Storage volume | `Mm³` | 0 | — | up |  | Storage volume; Current volume; Volume | §8.1 |
@@ -273,12 +281,12 @@ for the same variable (KPI labels, series names); anything else is reported by t
 | `exploitationIndex` | Exploitation index | — | 2 | `exploitation` | down | Very Low / Low / Moderate / High / Very High / Over-exploited | Exploitation index; EI | §11.3 |
 | `dynamicReserve` | Dynamic reserve | `Mm³/year` | 0 | — | up |  | Dynamic reserve; Renewable reserve | §11.1 |
 | `staticReserve` | Static reserve | `Mm³` | 0 | — | up |  | Static reserve; Groundwater in storage | §11.1 |
-| `boreholes` | Monitoring boreholes | — | 0 | — | up |  | Monitoring boreholes; Boreholes; Districts with aquifer records; Districts with WWTW records; Districts with drinking-water records; Districts with RWQO records; Monitoring stations; Treatment plants; Water treatment plants; Reservoirs; Pump stations; Pipelines | §10 |
+| `boreholes` | Monitoring boreholes | — | 0 | — | up |  | Monitoring boreholes; Total WWTWs; Water supply systems; RWQO monitoring sites; Boreholes; Districts with aquifer records; Districts with WWTW records; Districts with drinking-water records; Districts with RWQO records; Monitoring stations; Treatment plants; Water treatment plants; Reservoirs; Pump stations; Pipelines | §10 |
 | `boreholesAtRisk` | Boreholes at risk | — | 0 | — | down |  | Boreholes at risk; High-risk districts; High-risk stations | §10 |
 | `aquifersAtRisk` | Aquifers at risk | — | 0 | — | down |  | Aquifers at risk; Districts at risk | §11 |
 | `gwsAnomaly` | GRACE groundwater storage anomaly | `cm` | 1 | — | up |  | GRACE; Groundwater storage anomaly | §10.3 |
 | `wqi` | Water Quality Index | — | 0 | `wqi` | up | Excellent / Good / Fair / Poor / Very Poor | WQI; Water Quality Index; Average WQI; CCME WQI; River WQ status; Overall drinking water status; Receiving water impact | §12 |
-| `wqCompliance` | SANS 241 compliance | `%` | 0 | — | up |  | Compliance rate; SANS 241 compliance; Water quality (compliance); Microbiological compliance; Dams with good quality; Groundwater quality; Districts in PES A/B; Guideline compliance | §14.1 |
+| `wqCompliance` | SANS 241 compliance | `%` | 0 | — | up |  | Compliance rate; Sites in PES A/B; SANS 241 compliance; Water quality (compliance); Microbiological compliance; Dams with good quality; Groundwater quality; Districts in PES A/B; Guideline compliance | §14.1 |
 | `stationsExceeding` | Stations exceeding limits | `%` | 0 | — | down |  | Stations exceeding limits; Districts exceeding limits; Districts in poor quality; Exceeding | §12 |
 | `ph` | pH | — | 1 | — | neutral |  | pH | §12.2 |
 | `ec` | Electrical conductivity | `mS/m` | 0 | — | down |  | EC; Electrical conductivity; Conductivity | §12.1 |
@@ -556,7 +564,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | runoff_variables_master | §7.1 | `Curve_Number_CN` | Curve Number CN | — | 0–3 | withheld | constant 72.9 |
 | runoff_variables_master | §7.1 | `Peak_Flow_Rates_m3s` | Peak Flow Rates (m³/s) | `m³/s` | 0–2 | withheld | flow scaled to the constant 6 500 km² area |
 | runoff_variables_master | §7.1 | `Baseflow_Component_m3s` | Baseflow Component (m³/s) | `m³/s` | 0–2 | withheld | only the baseflow index (ratio to total flow, same area scaling) is served |
-| runoff_variables_master | §7.1 | `Dominant_LandCover_Class` | Dominant LandCover Class | — | 0–3 | withheld | one constant class for every district |
+| runoff_variables_master | §7.1 | `Dominant_LandCover_Class` | Dominant LandCover Class | — | 0–3 | withheld | one constant class for every district; land-cover shares per district come from 9_2 (the page's land-cover breakdown and catchment-characteristics group) |
 | runoff_variables_master | §7.1 | `Impervious_Surface_Fraction_percent` | Impervious Surface Fraction (%) | `%` | 0–1 | withheld | constant 4.5 % |
 | 7.2_derived_runoff_indicators_master | §7.2 | `Runoff_Anomaly_percent` | Runoff Anomaly (%) | `%` | 0–1 | live | = (month's modelled runoff − same-month mean of all months 2000–2026) / that mean (r = 1.00000 with runoff_variables_master); the baseline includes the partial year 2026, as the DB's rainfall anomalies do |
 | 7.2_derived_runoff_indicators_master | §7.2 | `Runoff_Ratio_Trend_percent_per_yr` | Runoff Ratio Trend (%/year) | `%/year` | 0–3 | withheld | one constant (0.04) in every row |
@@ -568,6 +576,23 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 7.2_derived_runoff_indicators_master | §7.2 | `Flood_Flow_50yr_m3s` | Flood Flow 50yr (m³/s) | `m³/s` | 0–2 | withheld | a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
 | 7.2_derived_runoff_indicators_master | §7.2 | `Flood_Flow_100yr_m3s` | Flood Flow 100yr (m³/s) | `m³/s` | 0–2 | withheld | a monthly value, not a flood-frequency statistic: = 0.93 × the month's peak flow in runoff_variables_master (r = 1.000, scaled to the constant 6 500 km² area); the return periods are fixed multiples of it (×1.33, 1.75, 2.25, 2.83, 3.50) in every district |
 | 7.2_derived_runoff_indicators_master | §7.2 | `Hydrological_Response_Time_hours` | Hydrological Response Time (h) | `h` | 0–3 | withheld | one constant (12.5 h) in every row |
+| 9_2_catchment_characteristics_master | §9.2 | `catchment_area_km2` | Catchment Area (km²) | `km²` | 0 | live | = the district's area (r = 0.9993 with 11_1 aquifer extent; Namakwa 126 966 km²) |
+| 9_2_catchment_characteristics_master | §9.2 | `water_bodies_pct` | Water Bodies (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `tree_cover_pct` | Tree Cover (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `shrubland_fynbos_pct` | Shrubland Fynbos (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `grassland_pct` | Grassland (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `cropland_agri_pct` | Cropland Agri (%) | `%` | 0–1 | withheld | identical to grassland_pct in every row (16 744 / 16 744) |
+| 9_2_catchment_characteristics_master | §9.2 | `wetland_pct` | Wetland (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `builtup_urban_pct` | Builtup Urban (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `bare_soil_mining_pct` | Bare Soil Mining (%) | `%` | 0–1 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `dominant_hsg` | Dominant HSG | — | 0–3 | live |  |
+| 9_2_catchment_characteristics_master | §9.2 | `hsg_a_pct` | HSG A (%) | `%` | 0–1 | live | three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| 9_2_catchment_characteristics_master | §9.2 | `hsg_b_pct` | HSG B (%) | `%` | 0–1 | live | three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| 9_2_catchment_characteristics_master | §9.2 | `hsg_c_pct` | HSG C (%) | `%` | 0–1 | live | three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| 9_2_catchment_characteristics_master | §9.2 | `hsg_d_pct` | HSG D (%) | `%` | 0–1 | live | three fixed profiles, one per dominant soil group (A: 30 districts, B: 4, C: 18); they restate the class |
+| 9_2_catchment_characteristics_master | §9.2 | `mean_slope_degrees` | Mean Slope (°) | `°` | 0–3 | withheld | one value (4.5°) in every row, identical in all 52 districts |
+| 9_2_catchment_characteristics_master | §9.2 | `mean_twi` | Mean TWI | — | 0–3 | withheld | one value (7.85) in every row, identical in all 52 districts |
+| 9_2_catchment_characteristics_master | §9.2 | `vegetation_cover_pct` | Vegetation Cover (%) | `%` | 0–1 | withheld | one value (65.4 %) in every row, identical in all 52 districts |
 
 ### dams (backend)
 
@@ -709,7 +734,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 12.2_chemical_water_quality_master | §12.2 | `Sulphate` | Sulphate (mg/L) | `mg/L` | 1–3 | live | name has no unit; spec §12.2 gives mg/L |
 | 12.2_chemical_water_quality_master | §12.2 | `Chloride` | Chloride (mg/L) | `mg/L` | 1–3 | live | name has no unit; spec §12.2 gives mg/L |
 | 12.2_chemical_water_quality_master | §12.2 | `Fluoride` | Fluoride (mg/L) | `mg/L` | 1–3 | live | name has no unit; spec §12.2 gives mg/L |
-| 12.3_biological_water_quality_master | §12.3 | `E. coli` | E. Coli (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §12.3 gives cfu/100 mL |
+| 12.3_biological_water_quality_master | §12.3 | `E. coli` | E. coli (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §12.3 gives cfu/100 mL |
 | 12.3_biological_water_quality_master | §12.3 | `Total coliforms` | Total Coliforms (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §12.3 gives cfu/100 mL |
 | 12.3_biological_water_quality_master | §12.3 | `Chlorophyll-a` | Chlorophyll-a (µg/L) | `µg/L` | 1–2 | live | name has no unit; spec §12.3 gives µg/L |
 | 12.3_biological_water_quality_master | §12.3 | `Blue-green algae` | Blue-green Algae (cells/mL) | `cells/mL` | 0–3 | live | name has no unit; spec §12.3 gives cells/mL |
@@ -731,7 +756,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 17_1_water_quantity_assessment_transfers_master | §17.1 | `Orange_River_System_Transfer_m3_day` | Orange River System Transfer (m³/day) | `m³/day` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
 | 17_1_water_quantity_assessment_transfers_master | §17.1 | `Thukela_Vaal_Emergency_Regular_Transfer_m3_day` | Thukela Vaal Emergency Regular Transfer (m³/day) | `m³/day` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
 | 17_1_water_quantity_assessment_transfers_master | §17.1 | `Transfer_Loss_Seepage_Evaporation_m3_day` | Transfer Loss Seepage Evaporation (m³/day) | `m³/day` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
-| 17_1_water_quantity_assessment_transfers_master | §17.1 | `Transfer_Pumping_Energy_kWh_Ml` | Transfer Pumping Energy (kWh/Ml) | `kWh/Ml` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
+| 17_1_water_quantity_assessment_transfers_master | §17.1 | `Transfer_Pumping_Energy_kWh_Ml` | Transfer Pumping Energy (kWh/ML) | `kWh/ML` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
 | 17_1_water_quantity_assessment_transfers_master | §17.1 | `Donor_Basin_Storage_FSC_pct` | Donor Basin Storage (% FSC) | `% FSC` | 0–1 | live | 10–15.3 % FSC in every row (the Katse Dam is usually far fuller): shown as stored |
 | 17_1_water_quantity_assessment_transfers_master | §17.1 | `Receiving_System_Demand_Deficit_m3_day` | Receiving System Demand Deficit (m³/day) | `m³/day` | 0–3 | live | Served up to Dec 2024: zero in every district and month from January 2025 (filled, not measured): served to December 2024 |
 | 17_2_national_water_balance_master | §17.2 | `MAP_Mm3` | MAP (Mm³) | `Mm³` | 0 | withheld | ≈ 3 200 Mm³ per month (≈ 38 000 Mm³/year) where South Africa's mean annual precipitation is ≈ 600 000 Mm³ (490 mm over 1.22 million km²): 15 × too low for its unit |
@@ -784,7 +809,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 13.1_wastewater_effluent_quality_master | §13.1 | `Total_Inorganic_Nitrogen` | Total Inorganic Nitrogen (mg/L) | `mg/L` | 1–3 | live | name has no unit; spec §13.1 gives mg/L |
 | 13.1_wastewater_effluent_quality_master | §13.1 | `Total_Phosphorus` | Total Phosphorus (mg/L) | `mg/L` | 1–3 | live | name has no unit; spec §13.1 gives mg/L |
 | 13.1_wastewater_effluent_quality_master | §13.1 | `Heavy_Metals` | Heavy Metals (µg/L) | `µg/L` | 1–2 | live | name has no unit; spec §13.1 gives µg/L |
-| 13.1_wastewater_effluent_quality_master | §13.1 | `E_coli` | E Coli (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §13.1 gives cfu/100 mL |
+| 13.1_wastewater_effluent_quality_master | §13.1 | `E_coli` | E coli (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §13.1 gives cfu/100 mL |
 | 13.1_wastewater_effluent_quality_master | §13.1 | `Faecal_coliforms` | Faecal Coliforms (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §13.1 gives cfu/100 mL |
 | 13.1_wastewater_effluent_quality_master | §13.1 | `Helminth_eggs` | Helminth Eggs (eggs/L) | `eggs/L` | 0–3 | live | name has no unit; spec §13.1 gives eggs/L |
 | 13.2_WWTW_operational_master | §13.2 | `chlorine_dosing` | Chlorine Dosing (mg/L) | `mg/L` | 1–3 | withheld | name has no unit; spec §13.2 gives mg/L |
@@ -810,8 +835,8 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 14.1_SANS_241_compliance_master | §14.1 | `Colour_Compliant` | Colour Compliant (%) | `%` | 0–1 | withheld | a yes / no compliance flag, served as % compliant (100 = compliant; scope values = % of the area) |
 | 14.1_SANS_241_compliance_master | §14.1 | `Temperature_Value` | Temperature Value (°C) | `°C` | 1–2 | withheld | name has no unit; spec §14.1 gives °C |
 | 14.1_SANS_241_compliance_master | §14.1 | `Temperature_Compliant` | Temperature Compliant (%) | `%` | 0–1 | withheld | a yes / no compliance flag, served as % compliant (100 = compliant; scope values = % of the area) |
-| 14.1_SANS_241_compliance_master | §14.1 | `E_coli_Value` | E Coli Value (cfu/100 mL) | `cfu/100 mL` | 0 | withheld | name has no unit; spec §14.1 gives cfu/100 mL |
-| 14.1_SANS_241_compliance_master | §14.1 | `E_coli_Compliant` | E Coli Compliant (%) | `%` | 0–1 | withheld | a yes / no compliance flag, served as % compliant (100 = compliant; scope values = % of the area) |
+| 14.1_SANS_241_compliance_master | §14.1 | `E_coli_Value` | E coli Value (cfu/100 mL) | `cfu/100 mL` | 0 | withheld | name has no unit; spec §14.1 gives cfu/100 mL |
+| 14.1_SANS_241_compliance_master | §14.1 | `E_coli_Compliant` | E coli Compliant (%) | `%` | 0–1 | withheld | a yes / no compliance flag, served as % compliant (100 = compliant; scope values = % of the area) |
 | 14.1_SANS_241_compliance_master | §14.1 | `Total_Coliforms_Value` | Total Coliforms Value (cfu/100 mL) | `cfu/100 mL` | 0 | live | name has no unit; spec §14.1 gives cfu/100 mL |
 | 14.1_SANS_241_compliance_master | §14.1 | `Total_Coliforms_Compliant` | Total Coliforms Compliant (%) | `%` | 0–1 | withheld | a yes / no compliance flag, served as % compliant (100 = compliant; scope values = % of the area) |
 | 14.1_SANS_241_compliance_master | §14.1 | `pH_Value` | pH Value | — | 0–3 | withheld | identical to 13.1 ph (wastewater effluent) in all 16 744 district-months; pH from −0.54 to 3.33 is impossible |
@@ -896,17 +921,17 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 18_1_water_access_and_coverage_master | §18.1 | `Reliable Water Households` | Reliable Water Households (households) | `households` | 0–3 | live | name has no unit; spec §18.1 gives households |
 | 18_1_water_access_and_coverage_master | §18.1 | `Reliable Water Percentage` | Reliable Water Percentage (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
 | 18_1_water_access_and_coverage_master | §18.1 | `Households Below RDP / Backlog (#)` | Households Below RDP / Backlog (#) (households) | `households` | 0–3 | live | name has no unit; spec §18.1 gives households |
-| 18_1_water_access_and_coverage_master | §18.1 | `Households Below RDP / Backlog (%)` | Households Below RDP / Backlog (%) (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Households Below RDP / Backlog (%)` | Households Below RDP / Backlog (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
 | 18_1_water_access_and_coverage_master | §18.1 | `Annual New Connections Installed (#/year)` | Annual New Connections Installed (#/year) (connections/year) | `connections/year` | 0–3 | live | name has no unit; spec §18.1 gives connections/year |
 | 18_1_water_access_and_coverage_master | §18.1 | `Piped Water Inside Dwelling (#)` | Piped Water Inside Dwelling (#) (households) | `households` | 0–3 | live | name has no unit; spec §18.1 gives households |
 | 18_1_water_access_and_coverage_master | §18.1 | `Piped Water On Site / Yard Tap (#)` | Piped Water on Site / Yard Tap (#) (households) | `households` | 0–3 | live | name has no unit; spec §18.1 gives households |
 | 18_1_water_access_and_coverage_master | §18.1 | `Communal Standpipe < 200m (#)` | Communal Standpipe < 200m (#) (households) | `households` | 0–3 | live | name has no unit; spec §18.1 gives households |
-| 18_1_water_access_and_coverage_master | §18.1 | `Piped Water Inside Dwelling (%)` | Piped Water Inside Dwelling (%) (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
-| 18_1_water_access_and_coverage_master | §18.1 | `Piped Water On Site / Yard Tap (%)` | Piped Water on Site / Yard Tap (%) (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
-| 18_1_water_access_and_coverage_master | §18.1 | `Communal Standpipe < 200m (%)` | Communal Standpipe < 200m (%) (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
-| 18_1_water_access_and_coverage_master | §18.1 | `Distance to Nearest Water Point for Unserved HH (km)` | Distance to Nearest Water Point For Unserved HH (km) (km) | `km` | 0–3 | withheld | name has no unit; spec §18.1 gives km |
-| 18_1_water_access_and_coverage_master | §18.1 | `Schools with Piped Water (%)` | Schools With Piped Water (%) (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
-| 18_1_water_access_and_coverage_master | §18.1 | `Clinics with Piped Water (%)` | Clinics With Piped Water (%) (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Piped Water Inside Dwelling (%)` | Piped Water Inside Dwelling (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Piped Water On Site / Yard Tap (%)` | Piped Water on Site / Yard Tap (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Communal Standpipe < 200m (%)` | Communal Standpipe < 200m (%) | `%` | 0–1 | withheld | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Distance to Nearest Water Point for Unserved HH (km)` | Distance to Nearest Water Point For Unserved HH (km) | `km` | 0–3 | withheld | name has no unit; spec §18.1 gives km |
+| 18_1_water_access_and_coverage_master | §18.1 | `Schools with Piped Water (%)` | Schools With Piped Water (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
+| 18_1_water_access_and_coverage_master | §18.1 | `Clinics with Piped Water (%)` | Clinics With Piped Water (%) | `%` | 0–1 | live | name has no unit; spec §18.1 gives % |
 | 18_2_infrastructure_operational_master | §18.2 | `System input volume (litres)` | System Input Volume (litres) (L/year) | `L/year` | 0–3 | live | name has no unit; spec §18.2 gives L/year |
 | 18_2_infrastructure_operational_master | §18.2 | `Revenue water (litres)` | Revenue Water (litres) (L/year) | `L/year` | 0–3 | live | name has no unit; spec §18.2 gives L/year |
 | 18_2_infrastructure_operational_master | §18.2 | `Non-Revenue water (litres)` | Non-Revenue Water (litres) (L/year) | `L/year` | 0–3 | live | name has no unit; spec §18.2 gives L/year |
@@ -922,7 +947,7 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 | 18_2_infrastructure_operational_master | §18.2 | `System_Supply_Pressure_kPa_bar` | System Supply Pressure KPa Bar (kPa) | `kPa` | 1–2 | live | name has no unit; spec §18.2 gives kPa |
 | 18_2_infrastructure_operational_master | §18.2 | `Daily_Unplanned_Supply_Interruptions_events_per_day` | Daily Unplanned Supply Interruptions Events per Day (events/day) | `events/day` | 0–3 | live | name has no unit; spec §18.2 gives events/day |
 | 18_2_infrastructure_operational_master | §18.2 | `Average_Duration_Of_Outages_hours_per_event` | Average Duration of Outages Hours per Event (h) | `h` | 0–3 | withheld | name has no unit; spec §18.2 gives h |
-| 18_2_infrastructure_operational_master | §18.2 | `Pump_Station_Energy_Consumption_kWh_Ml` | Pump Station Energy Consumption (kWh/Ml) | `kWh/Ml` | 0–3 | live | name has no unit; spec §18.2 gives kWh/Ml |
+| 18_2_infrastructure_operational_master | §18.2 | `Pump_Station_Energy_Consumption_kWh_Ml` | Pump Station Energy Consumption (kWh/ML) | `kWh/ML` | 0–3 | live | name has no unit; spec §18.2 gives kWh/ML |
 | 18_2_infrastructure_operational_master | §18.2 | `Load_Shedding_Induced_Interruptions_hours_per_day` | Load Shedding Induced Interruptions Hours per Day (h/day) | `h/day` | 0–3 | live | name has no unit; spec §18.2 gives h/day |
 | 18_2_infrastructure_operational_master | §18.2 | `Pipe_Failure_Rate_breaks_per_100km_year` | Pipe Failure Rate Breaks per 100km Year (breaks/100 km/year) | `breaks/100 km/year` | 0–3 | live | name has no unit; spec §18.2 gives breaks/100 km/year |
 | 18_3_sansa_eo_support_for_services_masters | §18.3 | `Settlement_Extent_Built_km2` | Settlement Extent Built (km²) | `km²` | 0 | live | name has no unit; spec §18.3 gives km² |
@@ -936,20 +961,20 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 
 | Table | Spec | Column | Display label | Unit | Decimals | Status | Note |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 19_1_raw_water_tariff_master | §19.1 | `Raw water abstraction tariff (R/m³)` | Raw Water Abstraction Tariff (R/m³) (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
-| 19_1_raw_water_tariff_master | §19.1 | `Drought-season surcharge (R/m³)` | Drought-season Surcharge (R/m³) (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
-| 19_1_raw_water_tariff_master | §19.1 | `Capital investment recovery charge (R/m³)` | Capital Investment Recovery Charge (R/m³) (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
-| 19_1_raw_water_tariff_master | §19.1 | `Reservoir storage % (scarcity trigger) (% FSC)` | Reservoir Storage % (scarcity Trigger) (% FSC) (% FSC) | `% FSC` | 0–1 | live | name has no unit; spec §19.1 gives % FSC |
-| 19_1_raw_water_tariff_master | §19.1 | `Inter-basin transfer cost component (R/Ml)` | Inter-basin Transfer Cost Component (R/Ml) (R/Ml) | `R/Ml` | 0–3 | live | name has no unit; spec §19.1 gives R/Ml |
-| 19_1_raw_water_tariff_master | §19.1 | `Energy cost per Ml transferred (R/Ml)` | Energy Cost per Ml Transferred (R/Ml) (R/Ml) | `R/Ml` | 0–3 | live | name has no unit; spec §19.1 gives R/Ml |
-| 19_1_raw_water_tariff_master | §19.1 | `MAR_demand_ratio` | MAR Demand Ratio (—) | `—` | 0–3 | live | name has no unit; spec §19.1 gives — |
+| 19_1_raw_water_tariff_master | §19.1 | `Raw water abstraction tariff (R/m³)` | Raw Water Abstraction Tariff (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
+| 19_1_raw_water_tariff_master | §19.1 | `Drought-season surcharge (R/m³)` | Drought-season Surcharge (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
+| 19_1_raw_water_tariff_master | §19.1 | `Capital investment recovery charge (R/m³)` | Capital Investment Recovery Charge (R/m³) | `R/m³` | 2 | live | name has no unit; spec §19.1 gives R/m³ |
+| 19_1_raw_water_tariff_master | §19.1 | `Reservoir storage % (scarcity trigger) (% FSC)` | Reservoir Storage % (scarcity Trigger) (% FSC) | `% FSC` | 0–1 | live | name has no unit; spec §19.1 gives % FSC |
+| 19_1_raw_water_tariff_master | §19.1 | `Inter-basin transfer cost component (R/Ml)` | Inter-basin Transfer Cost Component (R/ML) | `R/ML` | 0–3 | live | name has no unit; spec §19.1 gives R/ML |
+| 19_1_raw_water_tariff_master | §19.1 | `Energy cost per Ml transferred (R/Ml)` | Energy Cost per Ml Transferred (R/ML) | `R/ML` | 0–3 | live | name has no unit; spec §19.1 gives R/ML |
+| 19_1_raw_water_tariff_master | §19.1 | `MAR_demand_ratio` | MAR Demand Ratio | — | 0–3 | live | name has no unit; spec §19.1 gives — |
 | 19_1_raw_water_tariff_master | §19.1 | `SPI/SPEI category (D0–D4 affects pricing) (dimensionless)` | SPI/SPEI Category (D0–D4 Affects Pricing) (dimensionless) | — | 0–3 | live | a text drought class per row; the drought page classes are computed from the indices |
 | 19_2_municipal_water_tariff_master | §19.2 | `Block tariff rates (R/kL per consumption block)` | Block Tariff Rates (R/kL per Consumption Block) (R/kL) | `R/kL` | 2 | live | name has no unit; spec §19.2 gives R/kL |
-| 19_2_municipal_water_tariff_master | §19.2 | `6 kL/month free allocation status (L/household/month)` | 6 KL/month Free Allocation Status (L/household/month) (L/household/month) | `L/household/month` | 0–3 | withheld | name has no unit; spec §19.2 gives L/household/month |
-| 19_2_municipal_water_tariff_master | §19.2 | `Average treatment cost per kL produced (R/kL)` | Average Treatment Cost per KL Produced (R/kL) (R/kL) | `R/kL` | 2 | live | name has no unit; spec §19.2 gives R/kL |
-| 19_2_municipal_water_tariff_master | §19.2 | `Electricity cost for pumping and treatment (R/kWh)` | Electricity Cost For Pumping and Treatment (R/kWh) (kWh/Ml) | `kWh/Ml` | 0–3 | live | name has no unit; spec §19.2 gives kWh/Ml |
-| 19_2_municipal_water_tariff_master | §19.2 | `Infrastructure replacement and maintenance cost (R/year)` | Infrastructure Replacement and Maintenance Cost (R/year) (R/year) | `R/year` | 0–3 | live | name has no unit; spec §19.2 gives R/year |
-| 19_2_municipal_water_tariff_master | §19.2 | `CPI and PPI affecting operational costs (%)` | CPI and PPI Affecting Operational Costs (%) (%) | `%` | 0–1 | live | name has no unit; spec §19.2 gives % |
+| 19_2_municipal_water_tariff_master | §19.2 | `6 kL/month free allocation status (L/household/month)` | 6 KL/month Free Allocation Status (L/household/month) | `L/household/month` | 0–3 | withheld | name has no unit; spec §19.2 gives L/household/month |
+| 19_2_municipal_water_tariff_master | §19.2 | `Average treatment cost per kL produced (R/kL)` | Average Treatment Cost per KL Produced (R/kL) | `R/kL` | 2 | live | name has no unit; spec §19.2 gives R/kL |
+| 19_2_municipal_water_tariff_master | §19.2 | `Electricity cost for pumping and treatment (R/kWh)` | Electricity Cost For Pumping and Treatment (R/kWh) (kWh/ML) | `kWh/ML` | 0–3 | live | name has no unit; spec §19.2 gives kWh/ML |
+| 19_2_municipal_water_tariff_master | §19.2 | `Infrastructure replacement and maintenance cost (R/year)` | Infrastructure Replacement and Maintenance Cost (R/year) | `R/year` | 0–3 | live | name has no unit; spec §19.2 gives R/year |
+| 19_2_municipal_water_tariff_master | §19.2 | `CPI and PPI affecting operational costs (%)` | CPI and PPI Affecting Operational Costs (%) | `%` | 0–1 | live | name has no unit; spec §19.2 gives % |
 | 19_3_water_quality_cost_master | §19.3 | `Source water (Turbidity and contamination)` | Source Water (Turbidity and Contamination) (R/year) | `R/year` | 0–3 | live | name has no unit; spec §19.3 gives R/year |
 | 19_3_water_quality_cost_master | §19.3 | `Chemical dosing cost` | Chemical Dosing Cost (R/kL) | `R/kL` | 2 | live | name has no unit; spec §19.3 gives R/kL |
 | 19_3_water_quality_cost_master | §19.3 | `Algal bloom treatment` | Algal Bloom Treatment (R/year) | `R/year` | 0–3 | live | name has no unit; spec §19.3 gives R/year |
@@ -958,8 +983,8 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 ## Summary
 
 - Derived metrics: 142 (140 with accepted spellings).
-- Database columns: 520 rows over 20 modules.
-- Units: 106 spellings; retired spellings: 52.
+- Database columns: 537 rows over 20 modules.
+- Units: 114 spellings; retired spellings: 54.
 - Conflicting names resolved: 13 patterns (table above).
-- Catalogue units outside the register's spelling (backend item): 18_3_sansa_eo_support_for_services_masters.Drought_Severity_PDSI: unit "index"; 19_1_raw_water_tariff_master.MAR_demand_ratio: unit "—".
+- Catalogue units outside the register's spelling (backend item): 18_3_sansa_eo_support_for_services_masters.Drought_Severity_PDSI: unit "index".
 

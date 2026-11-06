@@ -107,7 +107,7 @@ export default function GroundwaterPage() {
         <CategoryPanel
           module="groundwater"
           metric="status"
-          title="Borehole Status Distribution"
+          title="Groundwater Status Distribution"
           variant="donut"
           height={180}
         />

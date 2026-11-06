@@ -189,10 +189,18 @@ export const UNITS: readonly string[] = [
   'R/month',
   'WWTWs',
   '× guideline',
+  // axis-only words the backend sends for a value axis or category set: return period, class column, x axis of a
+  // flow-duration curve (audit step 3)
+  'years',
+  'class',
+  '% of time exceeded',
 ];
 
-/** Catalogue units shown as sent although the register spells them differently (a backend item, step 3). */
-export const CATALOGUE_ONLY_UNITS: readonly string[] = ['kWh/Ml', 'R/Ml', 'Ml/day'];
+/** Allowed on an axis only (rule 3: indices and ratios have no unit on a value and `index` on an axis). */
+export const AXIS_ONLY_UNITS: readonly string[] = ['index'];
+
+/** Catalogue units shown as sent although the register spells them differently: none since audit step 3. */
+export const CATALOGUE_ONLY_UNITS: readonly string[] = [];
 
 /** The register's spelling of a unit ('' for none). */
 export function canonUnit(u: string | null | undefined): string {
@@ -455,6 +463,7 @@ export const ALIASES: Partial<Record<keyof typeof METRICS, string[]>> = {
     'High flow',
     'Districts with rising levels',
     'Stations with normal flow',
+    'Districts with normal flow',
   ],
   gaugingStations: ['Gauging stations', 'Active gauging stations'],
   storagePct: [

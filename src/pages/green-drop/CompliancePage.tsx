@@ -96,7 +96,6 @@ export function CompliancePage({ module }: { module: Extract<ModuleId, 'green-dr
               title={`Microbiological Parameters (Selected ${short})`}
               context={ctx}
               extra={p}
-              // the backend does not honour `group` yet (every group returns nitrate / fluoride / THMs): the panel says so
               tabs={[{ value: 'micro', label: 'Microbiological', params: { group: 'micro' }, expect: MICRO }]}
               height={210}
             />
