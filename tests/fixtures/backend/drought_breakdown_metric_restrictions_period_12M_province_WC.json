@@ -1,1 +1,1 @@
-{"status":501,"requestId":"16fd35a6b55f4c31","body":{"error":"Water restrictions are not in the database","code":"DATA_UNAVAILABLE","detail":"Water restrictions are not in the database","missing":["restrictions"]}}
+{"status":501,"requestId":"a0715e7866154ec1","body":{"error":"Water restrictions are not in the database","code":"DATA_UNAVAILABLE","detail":"Water restrictions are not in the database","missing":["restrictions"]}}
