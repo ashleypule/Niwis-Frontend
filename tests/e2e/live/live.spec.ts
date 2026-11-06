@@ -14,6 +14,20 @@ const MODULES = (
 )
   .split(',')
   .filter(Boolean);
+/** Pages with the shared "Database variables" section (DatabaseVariables.tsx); the later pages show their tables in
+ *  their own panels. A page listed here that loses the section fails. */
+const DB_VARIABLE_PAGES = new Set([
+  'rainfall',
+  'drought',
+  'climate',
+  'vegetation',
+  'runoff',
+  'dams',
+  'surface-water',
+  'groundwater',
+  'groundwater-reserve',
+  'water-quality',
+]);
 
 interface Kpi {
   id: string;
@@ -87,6 +101,7 @@ for (const module of MODULES) {
     await page.goto(`/${module}`, { waitUntil: 'load' });
     // first loads after a backend restart can take ~20 s per request
     await expect(page.getByTestId('kpi-strip').getByRole('article').first()).toBeVisible({ timeout: 120_000 });
+    await scrollThrough(page);
     await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 120_000 });
     await expect(page.locator('[data-marker="live"]').first()).toBeVisible();
 
@@ -145,6 +160,7 @@ test('dams: the reservoir card equals the API', async ({ page, request }) => {
 // one database category chart per module: the newest value in the chart's data table equals the API's
 for (const module of MODULES) {
   test(`${module}: a database category chart equals the API`, async ({ page, request }) => {
+    test.skip(!DB_VARIABLE_PAGES.has(module), `${module}: no Database variables section on this page`);
     const cat = (await (await request.get(`${BACKEND}/api/v1/${module}/categories`, { timeout: 60_000 })).json()) as {
       tables: CatTable[];
     };
@@ -177,8 +193,9 @@ for (const module of MODULES) {
 
     await page.goto(`/${module}`, { waitUntil: 'load' });
     const chart = page.locator(`[data-category-chart="${pick.t.id}/${pick.g.id}"]`);
-    // charts load as they scroll into view
-    await chart.scrollIntoViewIfNeeded({ timeout: 180_000 });
+    // the Database variables section and its charts load as they near the viewport
+    for (let i = 0; i < 12 && !(await chart.count()); i++) await scrollThrough(page, 5_000);
+    await chart.scrollIntoViewIfNeeded({ timeout: 60_000 });
     await expect(chart.locator('[data-chart]')).toBeVisible({ timeout: 180_000 });
     const title = `${pick.t.label} · ${pick.g.label}${pick.t.specTag ? ` · ${pick.t.specTag}` : ''}`;
     await chart.getByRole('button', { name: `${title} options` }).click();
@@ -204,10 +221,16 @@ for (const width of [1440, 390]) {
   for (const module of MODULES) {
     test(`${module}: screenshot at ${width} px`, async ({ page }) => {
       await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+      const hasCategories = DB_VARIABLE_PAGES.has(module);
       await page.goto(`/${module}`, { waitUntil: 'load' });
-      await expect(page.getByTestId('database-variables')).toBeVisible({ timeout: 180_000 });
-      await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 180_000 });
-      await loadAll(page);
+      await scrollThrough(page);
+      if (hasCategories) {
+        const section = page.getByTestId('database-variables');
+        await expect(section).toBeVisible({ timeout: 180_000 });
+        await section.scrollIntoViewIfNeeded();
+        await expect(page.locator('[data-category-chart]').first()).toBeAttached({ timeout: 180_000 });
+        await loadAll(page);
+      } else await untilLoaded(page);
       await expect(page.locator('[data-state="deferred"]')).toHaveCount(0);
       await expect(page.locator('[data-state="error"]')).toHaveCount(0);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -216,6 +239,16 @@ for (const width of [1440, 390]) {
       await page.screenshot({ path: `tests/screenshots/live/${module}-${width}.png`, fullPage: true });
     });
   }
+}
+
+/** Panels request their data as they near the viewport: scroll through the page as a reader would, then back up. */
+async function scrollThrough(page: Page, settleMs = 0) {
+  for (let y = 0; y < (await page.evaluate(() => document.body.scrollHeight)); y += 600) {
+    await page.evaluate((top) => window.scrollTo(0, top), y);
+    await page.waitForTimeout(150);
+  }
+  if (settleMs) await page.waitForTimeout(settleMs);
+  await page.evaluate(() => window.scrollTo(0, 0));
 }
 
 /** Category charts load lazily: bring every placeholder into view, then wait for the data. */
@@ -228,7 +261,14 @@ async function loadAll(page: Page) {
       .catch(() => undefined); // replaced by the chart while scrolling
     await page.waitForTimeout(100);
   }
-  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 120_000 });
+  await untilLoaded(page);
+}
+
+/** Panels that re-rendered after a pass load when they are next in view: pass again until none is loading. */
+async function untilLoaded(page: Page) {
+  const busy = page.locator('[aria-busy="true"]');
+  for (let i = 0; i < 3 && (await busy.count()); i++) await scrollThrough(page, 3_000);
+  await expect(busy).toHaveCount(0, { timeout: 120_000 });
 }
 
 test.afterAll(() => {

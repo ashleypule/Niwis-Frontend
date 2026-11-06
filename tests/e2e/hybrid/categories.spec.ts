@@ -355,7 +355,7 @@ test('a column that ends before the period offers its last available months, for
   await expect(chart.getByTestId('data-ends')).toBeVisible();
 });
 
-test('drought: meteorological rainfall and temperature charts, derived SGI KPI, cascade from 9_1 and 10_1', async ({
+test('drought: meteorological rainfall and temperature charts, no headline SGI, cascade from 9_1 and 10_1', async ({
   page,
 }) => {
   const tables = await catalogue(page, 'drought');
@@ -369,10 +369,11 @@ test('drought: meteorological rainfall and temperature charts, derived SGI KPI, 
   await open(page, '/drought');
   for (const g of [...live(/rainfall/i), ...live(/^temp/i)])
     await expect(page.locator(`[data-category-chart="${met.id}/${g.id}"] [data-chart]`), g.label).toBeVisible();
-  const kpi = page.getByRole('article', { name: /^SGI( \(area-weighted mean\))?:/ });
-  await expect(kpi).toHaveAttribute('aria-label', /[+−-]?\d\.\d\d/);
+  // backend D50: the derived SGI is a chart, never a headline value — the KPI says why
+  const kpi = page.getByRole('article', { name: /^SGI:/ });
+  await expect(kpi).toHaveAttribute('aria-label', /Derived SGI does not track known droughts reliably/);
   const cascade = page.locator('section[aria-label^="Drought Cascade"]');
-  // streamflow from the 9_1 flows (SSI-3); groundwater = the SGI derived from the 10_1 levels (backend D49)
+  // streamflow from the 9_1 flows (SSI-3); the groundwater stage is null with the same reason (backend D50)
   await expect(cascade).toContainText('Streamflow (SSI-3 of district flow)');
-  await expect(cascade).toContainText('Groundwater (SGI, derived)');
+  await expect(cascade).toContainText('Groundwater (SGI)');
 });
