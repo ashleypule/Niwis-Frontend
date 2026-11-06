@@ -146,9 +146,7 @@ export function KpiCard({
           </h3>
           {sublabel && (
             // three lines: the drought class sub-value ("85 % of area in D1–D4 · …") and the backend's method notes
-            <p className="text-[11px] leading-tight text-muted [overflow-wrap:anywhere]">
-              {sublabel}
-            </p>
+            <p className="text-[11px] leading-tight text-muted [overflow-wrap:anywhere]">{sublabel}</p>
           )}
         </div>
       </div>

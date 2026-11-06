@@ -6,7 +6,7 @@
 import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import type { ZodType, ZodTypeDef } from 'zod';
-import { COMPUTING_RECHECK_MS, apiGet, isComputing, type QueryParams } from '../client';
+import { COMPUTING_RECHECK_MS, apiGet, isComputing, isWarming, type QueryParams } from '../client';
 import { API_PREFIX, endpoints } from '../endpoints';
 import {
   AlertListSchema,
@@ -38,9 +38,9 @@ import type { CategoryVariable } from '@/types/api';
 
 const STALE = 5 * 60_000;
 
-/** Ask again in a minute while the backend says it is still computing the answer (on-demand page forecasts). */
+/** Ask again in a minute while the backend is still computing the answer (on-demand page forecasts) or warming up. */
 const recheckWhileComputing = (query: { state: { error: unknown } }) =>
-  isComputing(query.state.error) ? COMPUTING_RECHECK_MS : false;
+  isComputing(query.state.error) || isWarming(query.state.error) ? COMPUTING_RECHECK_MS : false;
 
 /** Global filter params, memoised. Pass `scoped: false` for datasets that ignore the location scope. */
 export function useFilterParams(extra: QueryParams = {}, opts: { scoped?: boolean } = {}): QueryParams {

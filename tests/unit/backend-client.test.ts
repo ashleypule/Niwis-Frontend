@@ -172,6 +172,26 @@ describe('errors never fall back to sample data', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
     vi.useRealTimers();
   });
+
+  it('503 WARMING_UP → waits Retry-After and tries again; still warming → a "warming" error, not a failure', async () => {
+    const { apiGet, isWarming, isRetryable } = await load(HYBRID);
+    vi.useFakeTimers();
+    const warming = () =>
+      json(503, { error: 'The data are loading after a restart', code: 'WARMING_UP' }, { 'retry-after': '1' });
+    fetchMock.mockResolvedValueOnce(warming()).mockResolvedValueOnce(json(200, { id: 'x', value: 1 }));
+    let p = apiGet('/api/v1/drought/summary', {}, Body);
+    await vi.advanceTimersByTimeAsync(1100);
+    await expect(p).resolves.toMatchObject({ value: 1 });
+    fetchMock.mockReset().mockImplementation(() => Promise.resolve(warming()));
+    p = apiGet('/api/v1/drought/summary', {}, Body);
+    const caught = p.catch((e: unknown) => e);
+    await vi.advanceTimersByTimeAsync(2500);
+    const err = await caught;
+    expect(isWarming(err)).toBe(true); // the panel shows "Loading data…" and asks again in a minute
+    expect(isRetryable(err)).toBe(false);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    vi.useRealTimers();
+  });
 });
 
 describe('provenance stamping', () => {

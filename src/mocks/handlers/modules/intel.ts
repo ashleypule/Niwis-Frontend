@@ -179,7 +179,11 @@ export const ai: ModuleHandlers = {
       kpi('reservoir', 'storagePct', null, {
         label: 'Reservoir Outlook (12 months)',
         text: fc[5].median < -0.5 ? 'Declining' : 'Stable',
-        status: { scale: 'trendClass', id: fc[5].median < -0.5 ? 'Declining' : 'Stable', label: fc[5].median < -0.5 ? 'Declining' : 'Stable' },
+        status: {
+          scale: 'trendClass',
+          id: fc[5].median < -0.5 ? 'Declining' : 'Stable',
+          label: fc[5].median < -0.5 ? 'Declining' : 'Stable',
+        },
       }),
       kpi('alerts', 'damAlerts', 14, { label: 'AI Early Warnings (Active)', sublabel: 'Across all modules' }),
       kpi('runs', 'recordsIngested', 1248, {

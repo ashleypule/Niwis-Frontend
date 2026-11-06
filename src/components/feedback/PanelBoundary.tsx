@@ -1,6 +1,6 @@
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, DatabaseZap, Loader2 } from 'lucide-react';
-import { isComputing, isUnavailable, type ApiError } from '@/api/client';
+import { isComputing, isUnavailable, isWarming, type ApiError } from '@/api/client';
 
 /** Per-panel error boundary: one failing chart never blanks the page. */
 export class PanelBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -72,6 +72,24 @@ export function ComputingState({ detail, height, compact }: { detail?: string; h
       <p className="text-sm font-semibold text-ink-2">Computing this forecast…</p>
       <p className={compact ? 'text-xs leading-snug text-muted' : 'max-w-sm text-xs text-muted'}>
         {detail ?? 'The backend is computing this answer.'} This panel checks again in a minute.
+      </p>
+    </div>
+  );
+}
+
+/** 503 WARMING_UP / DATABASE_BUSY: the data come in a moment — a loading state that re-asks, never an error. */
+export function WarmingState({ height, compact }: { height?: number; compact?: boolean }) {
+  return (
+    <div
+      data-state="warming"
+      role="status"
+      className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-line bg-surface-2/50 p-4 text-center"
+      style={{ minHeight: height }}
+    >
+      <Loader2 className="h-5 w-5 animate-spin text-muted" aria-hidden="true" />
+      <p className="text-sm font-semibold text-ink-2">Loading data…</p>
+      <p className={compact ? 'text-xs leading-snug text-muted' : 'max-w-sm text-xs text-muted'}>
+        The data service is preparing these figures. This panel checks again in a minute.
       </p>
     </div>
   );
@@ -160,6 +178,7 @@ interface QueryLike {
 export function queryStatus(q: QueryLike, height?: number, opts: { compact?: boolean } = {}): ReactNode | null {
   if (q.isError && isComputing(q.error))
     return <ComputingState detail={(q.error as { detail?: string }).detail} height={height} compact={opts.compact} />;
+  if (q.isError && isWarming(q.error)) return <WarmingState height={height} compact={opts.compact} />;
   if (q.isError && isUnavailable(q.error))
     return <UnavailableState detail={(q.error as { detail?: string }).detail} height={height} compact={opts.compact} />;
   if (q.isError) return <ErrorState error={q.error} onRetry={() => void q.refetch()} height={height} />;

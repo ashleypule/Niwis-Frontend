@@ -25,6 +25,7 @@ export type ApiErrorKind =
   | 'unprocessable'
   | 'rate-limited'
   | 'busy'
+  | 'warming'
   | 'unavailable';
 
 export class ApiError extends Error {
@@ -66,6 +67,13 @@ export const isUnavailable = (e: unknown): e is DataUnavailable =>
 
 /** A 501 the backend will turn into 200 by itself: the panel shows "Computing…" and the query asks again later. */
 export const isComputing = (e: unknown): boolean => isUnavailable(e) && !!(e as DataUnavailable).computing;
+
+/**
+ * 503 WARMING_UP (the backend is loading data after a restart) or DATABASE_BUSY: the answer comes shortly. apiGet waits as
+ * the server asks and tries again; if it is still not ready the panel shows "Loading data" and asks again in a minute.
+ */
+export const isWarming = (e: unknown): boolean => (e as ApiError | null)?.kind === 'warming';
+const WARMING_CODES = new Set(['WARMING_UP', 'DATABASE_BUSY']);
 
 /** How long a panel waits before asking again for an answer that is being computed. */
 export const COMPUTING_RECHECK_MS = 60_000;
@@ -201,8 +209,8 @@ export async function apiGet<T>(
   if (token) headers.Authorization = `Bearer ${token}`;
 
   let res = await fetchWithTimeout(url, { headers }, signal, APP.requestTimeoutMs);
-  // 429: back off as the server asks (twice at most), then give up with a rate-limited error
-  for (let i = 0; res.status === 429 && i < 2; i++) {
+  // 429 and 503: back off as the server asks (twice at most), then give up with a rate-limited / warming-up error
+  for (let i = 0; (res.status === 429 || res.status === 503) && i < 2; i++) {
     await sleep(retryAfterMs(res), signal);
     res = await fetchWithTimeout(url, { headers }, signal, APP.requestTimeoutMs);
   }
@@ -221,6 +229,8 @@ export async function apiGet<T>(
       }
       throw new DataUnavailable(detail, missing, rid, url);
     }
+    if (res.status === 503 && WARMING_CODES.has(body?.code ?? ''))
+      throw new ApiError('warming', body?.error ?? 'The data are loading; try again in a minute.', 503, body, rid, url);
     if (res.status === 400) console.warn('[api] 400 Bad Request', url, body);
     if (res.status === 404 && live) console.warn('[api] 404 on a live endpoint', url, body);
     const kind: ApiErrorKind =

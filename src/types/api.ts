@@ -448,7 +448,7 @@ export type RefList = z.infer<typeof RefListSchema>;
 /** Error body: `{error, issues?}` from the contract, plus the backend's optional `code` and 501 / 500 fields. */
 export const ApiErrorBodySchema = z.object({
   error: z.string(),
-  /** BAD_REQUEST | NOT_FOUND | RATE_LIMITED | DATA_UNAVAILABLE */
+  /** BAD_REQUEST | NOT_FOUND | RATE_LIMITED | DATA_UNAVAILABLE | WARMING_UP | DATABASE_BUSY (503, Retry-After) */
   code: z.string().optional(),
   issues: z.array(z.unknown()).optional(),
   /** 501 DATA_UNAVAILABLE */

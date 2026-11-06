@@ -724,7 +724,11 @@ export const DEPRECATED: { re: RegExp; use: string; live?: boolean }[] = [
   { re: /\b(?:Mm³|mm|m³)\/yr\b/, use: '…/year' },
   { re: /\bdeg ?C\b/, use: '°C' },
   { re: /\bE\.coli\b/, use: 'E. coli' },
-  { re: /1981\s*[–-]\s*2010|1961\s*[–-]\s*1990/, use: 'the baseline from the response (e.g. 2000–2026 mean)', live: true },
+  {
+    re: /1981\s*[–-]\s*2010|1961\s*[–-]\s*1990/,
+    use: 'the baseline from the response (e.g. 2000–2026 mean)',
+    live: true,
+  },
   { re: /\bSPI-?3 ≤ −1\.5\b/, use: 'area in D2–D4' },
   { re: /\(—\)|\(no unit\)/, use: 'index (a unitless axis)' },
 ];
