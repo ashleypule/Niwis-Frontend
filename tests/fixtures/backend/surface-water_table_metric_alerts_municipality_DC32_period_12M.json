@@ -1,1 +1,1 @@
-{"status":501,"requestId":"9c09f625439c4633","body":{"error":"No surface-water alert service in the database","code":"DATA_UNAVAILABLE","detail":"No surface-water alert service in the database","missing":["table:surface-water:alerts"]}}
+{"status":501,"requestId":"3892810805cd4fee","body":{"error":"No surface-water alert service in the database","code":"DATA_UNAVAILABLE","detail":"No surface-water alert service in the database","missing":["table:surface-water:alerts"]}}

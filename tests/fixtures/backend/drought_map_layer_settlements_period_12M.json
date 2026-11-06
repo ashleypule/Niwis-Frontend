@@ -1,1 +1,1 @@
-{"status":501,"requestId":"dff6c9f021f9468e","body":{"error":"No settlement register in the database","code":"DATA_UNAVAILABLE","detail":"No settlement register in the database","missing":["settlements"]}}
+{"status":501,"requestId":"50952cc17a8a40da","body":{"error":"No settlement register in the database","code":"DATA_UNAVAILABLE","detail":"No settlement register in the database","missing":["settlements"]}}
