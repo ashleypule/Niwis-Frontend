@@ -14,6 +14,7 @@ const RELEASE = process.argv.some((a) => a === '--project=release' || a === 'rel
 
 export default defineConfig({
   testDir: 'tests/e2e',
+  globalSetup: RELEASE || LIVE ? undefined : './tests/e2e/global-setup.ts',
   timeout: 90_000,
   fullyParallel: false,
   workers: 2,
@@ -69,7 +70,7 @@ export default defineConfig({
           },
           {
             command:
-              'npm run build:fixtures && npx vite preview --mode fixtures --outDir dist-fixtures --port 4174 --strictPort',
+              'node scripts/ensure-fixtures-bundle.mjs && npx vite preview --mode fixtures --outDir dist-fixtures --port 4174 --strictPort',
             port: 4174,
             reuseExistingServer: true,
             timeout: 240_000,
