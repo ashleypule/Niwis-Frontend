@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { useBreakdown, useTable } from '@/api/queries/core';
+import { useTable } from '@/api/queries/core';
 import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/feedback/PanelBoundary';
 import { RingGauge } from '@/components/viz/RingGauge';
@@ -94,23 +94,20 @@ export function DataQualityCard() {
 /** Resource & budget overview (spec §24.4). */
 export function BudgetCard() {
   const q = useTable('roadmap', 'resources');
-  const b = useBreakdown('roadmap', 'budget');
   return (
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
       <Card title="Human Resources (FTE)">
         {q.data ? <DataTable table={q.data} caption="Human resources" /> : <Skeleton height={170} />}
       </Card>
-      {b.data ? (
-        <CategoryPanel
-          module="roadmap"
-          metric="budget"
-          title="Budget Allocation (R million)"
-          variant="donut"
-          height={190}
-        />
-      ) : (
-        <Skeleton height={230} />
-      )}
+      {/* the panel loads its own data and says "Not yet available" on a 501; gating it on the data left a skeleton
+          up for good when the budget is not in the database (audit step 4) */}
+      <CategoryPanel
+        module="roadmap"
+        metric="budget"
+        title="Budget Allocation (R million)"
+        variant="donut"
+        height={190}
+      />
     </div>
   );
 }
