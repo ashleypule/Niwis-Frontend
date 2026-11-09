@@ -314,3 +314,12 @@ table,
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
+/* ------------------------------------------------------------------ legibility on phones */
+/* Provenance lines, KPI sub-labels and table names are 11 px; on a phone they are a large share of the text, and text
+   under 12 px is hard to read there (Lighthouse "legible font sizes" fails above 40 %). Desktop keeps the denser size. */
+@media (max-width: 639.98px) {
+  .text-\[11px\] {
+    font-size: 12px;
+  }
+}

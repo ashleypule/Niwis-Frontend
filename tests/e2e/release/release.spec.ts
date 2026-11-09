@@ -71,8 +71,12 @@ for (const route of ROUTES) {
     await expect(page.locator('[data-state="error"]')).toHaveCount(0);
     if (route === '/') await expect(page.getByTestId('kpi-strip').locator('[data-marker="live"]')).toHaveCount(6);
     if (LIVE_PAGES.has(route)) await expect(page.locator('[data-marker="live"]').first()).toBeVisible();
+    // the later pages are live where their tables allow (green-drop, alerts… are wholly live), so each shows Live or
+    // "Not yet available" panels, never neither
     else if (route !== '/reports')
-      await expect(page.locator('[data-state="unavailable"]').first()).toBeVisible({ timeout: 30_000 });
+      await expect(page.locator('[data-marker="live"], [data-state="unavailable"]').first()).toBeVisible({
+        timeout: 30_000,
+      });
     await page.screenshot({ path: `tests/screenshots/release/${route === '/' ? 'overview' : route.slice(1)}.png` });
     expect(errors).toEqual([]);
   });
