@@ -36,6 +36,19 @@
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
 
+## System audit step 4 — consistency, reliability, release (2026-11-06 to 2026-11-09)
+
+The backend's `docs/AUDIT_SUMMARY.md` has the whole audit; `docs/SYSTEM_OVERVIEW.md` (here and there) explains the system.
+
+- D50 / D51 in the client: no headline derived SGI (the KPI and cascade stage say why); flows shown as the largest
+  district's, never summed.
+- Live tests scroll every panel into view; category checks only on the ten pages with a Database variables section
+  (`docs/backend/UI_VERIFICATION.md`: 74 passed, 11 skipped).
+- Release check on a clean clone (production stack): `test:release` 25 / 25. It now also requires every panel to finish
+  loading (`expectAllLoaded`, `tests/e2e/scroll.ts`). Fixed: the Overview budget panel kept a skeleton for good on a 501;
+  11 px text is 12 px on phones (Lighthouse "legible font sizes"); the release check accepts the wholly live later pages.
+- Lighthouse (`docs/LIGHTHOUSE.md`): mobile 89 / 89 / 90, desktop 99 / 100 / 99, accessibility 100, best practices 96.
+
 ## System audit step 2 — naming, units and presentation (2026-10-30 to 2026-11-02)
 
 Brief: `docs/NAMING_REGISTER.md` (the register), `src/config/naming.ts` (its source and the check),

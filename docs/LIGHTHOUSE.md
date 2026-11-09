@@ -6,7 +6,34 @@ serving `npm run build:release` with gzip and the production CSP, the API on the
 Lighthouse's default profile (simulated slow 4G, 4× CPU slowdown). Each page was measured three times; the table gives
 the median run (by performance) and all three performance scores.
 
-## Current (23 October 2026)
+## Current (9 November 2026, audit step 4 release check)
+
+Same method, on a clean clone of both repositories. No regression from 23 October: mobile is level or higher, desktop
+within one point (Dams' three runs 97, 100, 99), accessibility 100 everywhere. Mobile best practices had fallen to 93
+before the release fix: the provenance lines and KPI sub-labels added in audit steps 3–4 made 11 px text 47–70 % of a
+phone's text, failing "legible font sizes"; below 640 px that text is now 12 px (`src/index.css`), 98–100 % legible.
+The Overview's desktop CLS rose from 0.003 to 0.021 (still well under the 0.1 "good" limit).
+
+### Mobile
+
+| Page               | Performance (runs)  | Accessibility | Best practices | FCP   | LCP   | TBT    | CLS |
+| ------------------ | ------------------- | ------------- | -------------- | ----- | ----- | ------ | --- |
+| Overview `/`       | **89** (88, 89, 89) | **100**       | 96             | 2.4 s | 3.4 s | 40 ms  | 0   |
+| Drought `/drought` | **89** (91, 88, 89) | **100**       | 96             | 2.3 s | 3.2 s | 130 ms | 0   |
+| Dams `/dams`       | **90** (90, 90, 90) | **100**       | 96             | 2.3 s | 3.2 s | 50 ms  | 0   |
+
+### Desktop (`--preset=desktop`)
+
+| Page               | Performance (runs)     | Accessibility | Best practices | FCP   | LCP   | TBT  | CLS   |
+| ------------------ | ---------------------- | ------------- | -------------- | ----- | ----- | ---- | ----- |
+| Overview `/`       | **99** (99, 99, 99)    | **100**       | 96             | 0.6 s | 0.8 s | 0 ms | 0.021 |
+| Drought `/drought` | **100** (100, 99, 100) | **100**       | 96             | 0.5 s | 0.7 s | 0 ms | 0.004 |
+| Dams `/dams`       | **99** (97, 100, 99)   | **100**       | 96             | 0.6 s | 0.8 s | 0 ms | 0.004 |
+
+Best practices stays at 96 rather than 100 for one audit, "errors in console": the browser logs every 501 (a panel the
+database cannot fill) as a failed resource. That is the API's documented answer, not an error.
+
+## 23 October 2026 (after the mobile performance work; the baseline)
 
 ### Mobile
 
