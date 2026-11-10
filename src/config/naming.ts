@@ -717,6 +717,13 @@ export const DEPRECATED: { re: RegExp; use: string; live?: boolean }[] = [
   { re: /\b(?:SPI|SPEI|SSI|SGI)[ -]?\d+[ -]?months?\b/i, use: 'SPI-n' },
   { re: /\b(?:SPI|SPEI|SSI|SGI) \d+\b/, use: 'SPI-n' },
   { re: /%FSC\b/, use: '% FSC' },
+  // two SSI series exist (backend D53): river flow (9_1: Drought KPI and cascade, Surface Water) and modelled runoff
+  // (Runoff page); a live label always says which
+  {
+    re: /^(?![\s\S]*(?:river flow|modelled runoff))[\s\S]*(?:\bSSI\b|Streamflow Index)/i,
+    use: 'SSI-n (river flow) or SSI-n (modelled runoff)',
+    live: true,
+  },
   { re: /\bR20 ?mm days\b/i, use: 'Heavy rain days (R20mm)' },
   { re: /\bStandardized\b/, use: 'Standardised' },
   { re: /\bMm3\b|\bm3\b|\bkm2\b/, use: 'Mm³ / m³ / km²' },
@@ -936,8 +943,9 @@ export function checkItems(items: LabelItem[]): Violation[] {
         if (inParens == null && UNITS.includes(cu) && cu !== '') {
           if (cu !== u) add(it, 'unit', `axis "${name}" should say "${cu}"`);
         } else if (inParens == null) {
-          // a bare label: fine when it names a unitless register variable ("SPI-3", "Drought exposure index")
-          const id = metricOf(name);
+          // a bare label: fine when it names a unitless register variable ("SPI-3", "Drought exposure index"); an
+          // SSI's source ("SSI (modelled runoff)", D53) is not part of the variable's name
+          const id = metricOf(name.replace(/\s*\((?:river flow|modelled runoff)\)$/i, ''));
           const md = id ? (METRICS as Record<string, MetricDef | undefined>)[id] : undefined;
           if (!md || canonUnit(md.unit) !== '')
             add(it, 'axis', `axis "${name}" has no unit (and names no unitless register variable)`);

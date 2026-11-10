@@ -177,6 +177,7 @@ Catalogue units shown as sent although the register spells them differently (bac
 | `\b(?:SPI\|SPEI\|SSI\|SGI)[ -]?\d+[ -]?months?\b` | SPI-n |
 | `\b(?:SPI\|SPEI\|SSI\|SGI) \d+\b` | SPI-n |
 | `%FSC\b` | % FSC |
+| `^(?![\s\S]*(?:river flow\|modelled runoff))[\s\S]*(?:\bSSI\b\|Streamflow Index)` | SSI-n (river flow) or SSI-n (modelled runoff) |
 | `\bR20 ?mm days\b` | Heavy rain days (R20mm) |
 | `\bStandardized\b` | Standardised |
 | `\bMm3\b\|\bm3\b\|\bkm2\b` | Mm³ / m³ / km² |
@@ -985,6 +986,6 @@ appears once per page). Decimals follow the unit rule above. Colour: the chart s
 - Derived metrics: 142 (140 with accepted spellings).
 - Database columns: 537 rows over 20 modules.
 - Units: 114 spellings; retired spellings: 54.
-- Conflicting names resolved: 13 patterns (table above).
+- Conflicting names resolved: 14 patterns (table above).
 - Catalogue units outside the register's spelling (backend item): 18_3_sansa_eo_support_for_services_masters.Drought_Severity_PDSI: unit "index".
 

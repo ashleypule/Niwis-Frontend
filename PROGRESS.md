@@ -36,7 +36,7 @@
 - The programme risk count on the Roadmap summary is static, pending a risk-register endpoint.
 - The ECharts vendor chunk (about 240 kB gzipped) is split out and loaded after the app shell with the first page. The mock engine (about 210 kB gzipped) loads only in mock mode.
 
-## System audit step 4 — consistency, reliability, release (2026-11-06 to 2026-11-09)
+## System audit step 4 — consistency, reliability, release (2026-11-06 to 2026-11-10)
 
 The backend's `docs/AUDIT_SUMMARY.md` has the whole audit; `docs/SYSTEM_OVERVIEW.md` (here and there) explains the system.
 
@@ -48,6 +48,9 @@ The backend's `docs/AUDIT_SUMMARY.md` has the whole audit; `docs/SYSTEM_OVERVIEW
   loading (`expectAllLoaded`, `tests/e2e/scroll.ts`). Fixed: the Overview budget panel kept a skeleton for good on a 501;
   11 px text is 12 px on phones (Lighthouse "legible font sizes"); the release check accepts the wholly live later pages.
 - Lighthouse (`docs/LIGHTHOUSE.md`): mobile 89 / 89 / 90, desktop 99 / 100 / 99, accessibility 100, best practices 96.
+- Backend D53: an SSI always names its source. "SSI-3 (river flow)" on Drought (KPI and cascade stage) and Surface water;
+  "SSI (modelled runoff)" on Runoff. The naming register flags a bare SSI on a live page (`src/config/naming.ts`,
+  `tests/unit/naming.test.ts`); chart axes keep the source (`axisName`). Backend D54: the runoff anomaly KPI ends at the last complete month, like its chart.
 
 ## System audit step 2 — naming, units and presentation (2026-10-30 to 2026-11-02)
 

@@ -1,1 +1,1 @@
-{"status":501,"requestId":"b24c3036ae244f26","body":{"error":"No climate risk index or projections in the database","code":"DATA_UNAVAILABLE","detail":"No climate risk index or projections in the database","missing":["risk-index"]}}
+{"status":501,"requestId":"b9972b93fa264a10","body":{"error":"No climate risk index or projections in the database","code":"DATA_UNAVAILABLE","detail":"No climate risk index or projections in the database","missing":["risk-index"]}}

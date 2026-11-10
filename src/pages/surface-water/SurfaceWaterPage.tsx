@@ -17,7 +17,7 @@ const LIVE_LAYERS = [
   { id: 'discharge', label: 'River discharge (district)' },
   { id: 'flow-status', label: 'Flow status' },
   { id: 'flow-anomaly', label: 'Flow anomaly' },
-  { id: 'ssi', label: 'SSI-3 (from discharge)' },
+  { id: 'ssi', label: 'SSI-3 (river flow)' },
   { id: 'stations', label: 'Gauging stations' },
   { id: 'catchment-runoff', label: 'Catchment runoff' },
 ];

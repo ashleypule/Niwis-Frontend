@@ -373,7 +373,7 @@ test('drought: meteorological rainfall and temperature charts, no headline SGI, 
   const kpi = page.getByRole('article', { name: /^SGI:/ });
   await expect(kpi).toHaveAttribute('aria-label', /Derived SGI does not track known droughts reliably/);
   const cascade = page.locator('section[aria-label^="Drought Cascade"]');
-  // streamflow from the 9_1 flows (SSI-3); the groundwater stage is null with the same reason (backend D50)
-  await expect(cascade).toContainText('Streamflow (SSI-3 of district flow)');
+  // streamflow from the 9_1 flows, named as the Drought KPI (SSI-3 (river flow), backend D53); the groundwater stage is null with the same reason (backend D50)
+  await expect(cascade).toContainText('Streamflow: SSI-3 (river flow)');
   await expect(cascade).toContainText('Groundwater (SGI)');
 });

@@ -125,7 +125,18 @@ export const METRICS = {
   runoffCoefficient: m('Runoff coefficient', '', 2, 'neutral', 'DWS / derived', '§7.1', 'runoffCoeff'),
   baseflowIndex: m('Baseflow index (BFI)', '', 2, 'up', 'DWS / derived', '§9.1'),
   peakFlow: m('Peak flow (Qmax)', 'm³/s', 0, 'neutral', 'DWS', '§9.1'),
-  ssi: m('SSI', '', 2, 'up', 'DWS / derived', '§3.3', 'spi', 'Standardised Streamflow Index'),
+  ssi: m(
+    'SSI',
+    '',
+    2,
+    'up',
+    'DWS / derived',
+    '§3.3',
+    'spi',
+    'Standardised Streamflow Index, always named with its source (backend D53): "SSI-n (river flow)" from the 9_1 ' +
+      'district flows (Drought KPI and cascade, Surface Water) or "SSI-n (modelled runoff)" from the runoff model ' +
+      '(Runoff page)',
+  ),
   discharge: m('River discharge', 'm³/s', 1, 'up', 'DWS telemetry', '§9.1', 'flow'),
   stage: m('Water level (stage)', 'm', 2, 'neutral', 'DWS telemetry', '§9.1'),
   sediment: m('Suspended sediment', 'mg/L', 0, 'down', 'DWS', '§9.1'),

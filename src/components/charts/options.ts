@@ -99,9 +99,11 @@ export function axisName(rawUnit0: string | undefined, rawLabel?: string): strin
   if (!unit && rawLabel && /^index( value)?$/i.test(rawLabel.trim())) return 'index';
   let label = canonLabel((rawLabel ?? '').trim());
   // a trailing parenthesis that is a unit or an explanation ("(% of area, mean of months)") goes: the unit follows,
-  // the explanation is in the panel's note; a range like "(0–100)" stays
+  // the explanation is in the panel's note; a range like "(0–100)" stays, and so does an SSI's source ("SSI (river
+  // flow)", "SSI (modelled runoff)"), which the naming register requires (backend D53)
   const m = TRAILING_UNIT.exec(label);
-  if (m && rawUnit && !/^[\d.,–\s%-]+$/.test(m[1])) label = label.slice(0, m.index).trim();
+  if (m && rawUnit && !/^[\d.,–\s%-]+$/.test(m[1]) && !/^(river flow|modelled runoff)$/i.test(m[1].trim()))
+    label = label.slice(0, m.index).trim();
   if (rawUnit === 'mixed') return label ? `${label} (unit per parameter)` : 'value (unit per parameter)';
   if (!unit) return label || 'index';
   if (label.toLowerCase() === unit.toLowerCase()) return unit;
